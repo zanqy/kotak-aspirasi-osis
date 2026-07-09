@@ -74,7 +74,8 @@
 | [Next.js](https://nextjs.org/) | 14.2.35 | Framework React (App Router) |
 | [React](https://react.dev/) | ^18 | Library UI |
 | [TypeScript](https://www.typescriptlang.org/) | ^5 | Type safety |
-| [Supabase](https://supabase.com/) | ^2.109.0 | Database, Auth, API |
+| [Supabase](https://supabase.com/) | ^2.109.0 | Database, Auth, Realtime |
+| [Supabase SSR](https://supabase.com/docs/guides/auth/server-side) | ^0.12.0 | Server-side auth helpers & cookies |
 | [Resend](https://resend.com/) | ^6.17.1 | Email service |
 | [Tailwind CSS](https://tailwindcss.com/) | ^3.4.1 | Styling |
 | [ESLint](https://eslint.org/) | ^8 | Linting |
@@ -127,9 +128,10 @@
 ```
 
 **Client-Server Flow:**
-- Public pages menggunakan **Service Role Client** untuk akses langsung ke database tanpa autentikasi pengguna
-- Dashboard pages menggunakan **Browser Client** (anon key) untuk autentikasi
-- API Routes menggunakan **Service Role Client** untuk bypass RLS (karena autentikasi sudah ditangani di middleware)
+- Public pages menggunakan **Service Role Client** (`createServiceClient()`) untuk akses langsung ke database tanpa autentikasi pengguna
+- Dashboard pages menggunakan **Browser Client** (`createBrowserClient()`) untuk autentikasi dan realtime subscription
+- API Routes menggunakan **Service Role Client** untuk bypass RLS (karena autentikasi sudah ditangani di middleware/auth-api)
+- Server-side helper: [`lib/supabase-server.ts`](lib/supabase-server.ts) menyediakan `createServerSupabaseClient()` menggunakan `@supabase/ssr` untuk konteks server yang membutuhkan cookie handling
 - Middleware menangani proteksi route dashboard dan pengecekan status user
 
 ---
@@ -264,11 +266,11 @@ Fungsi `update_updated_at()` secara otomatis mengisi `updated_at = now()` setiap
 
 **Alur:**
 1. Siswa membuka halaman utama (`/`)
-2. Memilih kategori (opsional)
-3. Menulis isi aspirasi
-4. Mengisi email (opsional — hanya untuk menerima kode tiket via email)
+2. Memilih kategori (opsional) via custom dropdown
+3. Menulis isi aspirasi di textarea
+4. Mengisi email (opsional — hanya untuk menerima kode tiket via email, tidak disimpan untuk identifikasi)
 5. Sistem menghasilkan kode tiket unik format `ASP-XXXX` (inkremental berdasarkan total aspirasi)
-6. Data aspirasi disimpan ke database
+6. Data aspirasi disimpan ke database dengan status `menunggu`
 7. **Jika email diisi:**
    - Sistem mengirim email berisi kode tiket melalui Resend
    - Status email dicatat (`terkirim` / `gagal`)
@@ -276,8 +278,13 @@ Fungsi `update_updated_at()` secara otomatis mengisi `updated_at = now()` setiap
 8. Halaman menampilkan kode tiket dengan opsi salin dan cek status
 
 **Validasi:**
-- Isi aspirasi wajib diisi
-- Email tidak divalidasi format (hanya optional)
+- Isi aspirasi wajib diisi (tidak boleh kosong)
+- Email tidak divalidasi format (hanya opsional, dikirim via Resend)
+- Kategori opsional — bisa dikosongkan
+
+**State setelah submit:**
+- Halaman berganti ke tampilan konfirmasi dengan kode tiket
+- Tombol "Salin Kode" (copy to clipboard) dan "Cek Status Aspirasi →"
 
 **Kode Tiket Generation:**
 ```typescript
@@ -290,19 +297,30 @@ generateKodeTiket(total: number): string
 
 **File:** [`app/cek-aspirasi/page.tsx`](app/cek-aspirasi/page.tsx), [`app/api/aspirasi/[kode]/route.ts`](app/api/aspirasi/[kode]/route.ts)
 
+**4 State yang dihandle:**
+
+1. **State 1 — Input kode:** Input kode tiket dengan letter-spacing lebar + tombol "Cek Status"
+2. **State 2 — Loading:** Skeleton loading animation saat fetch data
+3. **State 3 — Error / Tidak ditemukan:** Input border merah (`#fff0f0` / `#f5b8b8`), pesan error, tombol "Coba Lagi"
+4. **State 4 — Data ditemukan:** Menampilkan meta (status, waktu, kategori) + chat thread
+
 **Alur:**
 1. Siswa membuka `/cek-aspirasi` (dengan atau tanpa parameter `?kode=ASP-XXXX`)
-2. Memasukkan kode tiket
-3. Sistem mencari aspirasi berdasarkan kode tiket (case-insensitive, di-uppercase)
+2. Memasukkan kode tiket (otomatis di-uppercase, case-insensitive)
+3. Sistem mencari aspirasi berdasarkan kode tiket
 4. **Jika ditemukan:**
-   - Menampilkan informasi: status, waktu kirim, kategori
-   - Menampilkan chat bubble berisi aspirasi awal
-   - Menampilkan balasan dari Humas OSIS (jika ada)
-   - Jika status `dibalas`, siswa dapat membalas
+   - Menampilkan informasi: status (badge), waktu kirim, kategori
+   - Menampilkan chat thread dengan bubble:
+     - **Pesan siswa** → gelembung kanan, navy `#49769f`, label "Kamu"
+     - **Balasan Humas** → gelembung kiri, putih + border, label "Humas OSIS"
+   - Jika status `dibalas`, input area aktif untuk membalas
+   - **Realtime subscription:** Update pesan dan status baru muncul otomatis tanpa refresh
 5. **Jika tidak ditemukan:**
-   - Menampilkan error "Kode tiket tidak ditemukan"
+   - Input border merah dengan background `#fff0f0`
+   - Pesan error: "Kode tiket tidak ditemukan. Pastikan kode yang kamu masukkan benar."
+   - Tombol "Coba Lagi" untuk mereset
 
-**Keamanan:** Email siswa (`email_siswa`) tidak disertakan dalam response API.
+**Keamanan:** Email siswa (`email_siswa`) tidak disertakan dalam response API (di-delete sebelum dikirim).
 
 ### 5.3 Publik: Kirim Pesan Balasan (Siswa)
 
@@ -361,18 +379,31 @@ generateKodeTiket(total: number): string
 **File:** [`app/dashboard/aspirasi/[id]/page.tsx`](app/dashboard/aspirasi/[id]/page.tsx), [`app/api/dashboard/aspirasi/[id]/route.ts`](app/api/dashboard/aspirasi/[id]/route.ts), [`app/api/dashboard/aspirasi/[id]/pesan/route.ts`](app/api/dashboard/aspirasi/[id]/pesan/route.ts)
 
 **Alur Detail:**
-1. Menampilkan informasi aspirasi: kode tiket, kategori, waktu masuk, penangan, penerusan
-2. Menampilkan chat thread (aspirasi awal + semua balasan)
+1. Menampilkan informasi aspirasi: kode tiket + badge status, kategori, waktu masuk, penangan, penerusan
+2. Menampilkan chat thread dengan urutan:
+   - **Pesan siswa** → gelembung kiri, putih + border, label "Anonim"
+   - **Balasan Humas** → gelembung kanan, navy `#49769f`, label nama anggota yang membalas
+   - Perbedaan orientasi dengan halaman publik (di publik: siswa=kanan, humas=kiri)
 3. **Membalas:**
-   - Input teks + tombol kirim
+   - Input teks + tombol kirim dengan placeholder "Balas sebagai Humas OSIS..."
    - Pesan disimpan dengan `pengirim = 'humas'` dan `user_id` dari session
    - Status aspirasi otomatis berubah menjadi `dibalas` jika sebelumnya `menunggu` atau `diproses`
-   - **Jika email siswa ada & status_email terkirim:** Kirim notifikasi email balasan
+   - **Jika email siswa ada & status_email terkirim:** Kirim notifikasi email balasan via Resend
    - Aktivitas dicatat di tabel `aktivitas`
+   - **Realtime subscription:** Pesan baru dan update status muncul otomatis
 4. **Meneruskan ke divisi lain:**
+   - Tombol "Teruskan ke divisi lain →" meng-expand input field
    - Input nama divisi + simpan
    - Status berubah menjadi `diteruskan`
    - Field `diteruskan_ke` diisi dengan nama divisi
+
+**Catatan Chat Orientation:**
+| View | Pengirim | Posisi | Style |
+|------|----------|--------|-------|
+| Publik (`/cek-aspirasi`) | Siswa (Kamu) | Kanan | Navy, teks putih |
+| Publik (`/cek-aspirasi`) | Humas OSIS | Kiri | Putih + border |
+| Dashboard | Siswa (Anonim) | Kiri | Putih + border |
+| Dashboard | Humas (nama anggota) | Kanan | Navy, teks putih |
 
 ### 5.8 Dashboard: Kelola Anggota
 
@@ -447,10 +478,10 @@ kirimEmail(to: string, subject: string, html: string): Promise<boolean>
 | Komponen | File | Props | Fungsi |
 |----------|------|-------|--------|
 | `Badge` | [`components/ui/Badge.tsx`](components/ui/Badge.tsx) | `status` | Menampilkan badge status dengan warna sesuai tipe |
-| `Button` | [`components/ui/Button.tsx`](components/ui/Button.tsx) | `variant`, `children`, `onClick`, `disabled` | Tombol dengan beberapa varian style |
-| `Dropdown` | [`components/ui/Dropdown.tsx`](components/ui/Dropdown.tsx) | `options`, `value`, `onChange`, `placeholder` | Dropdown select dengan click-outside close |
+| `Button` | [`components/ui/Button.tsx`](components/ui/Button.tsx) | `variant: 'primary' \| 'secondary' \| 'success' \| 'danger'`, `children`, `onClick`, `disabled` | Tombol dengan 4 varian style: primary (biru solid), secondary (outline), success (hijau), danger (merah) |
+| `Dropdown` | [`components/ui/Dropdown.tsx`](components/ui/Dropdown.tsx) | `options: string[]`, `value`, `onChange`, `placeholder` | Custom dropdown (bukan native select) dengan animasi arrow rotate, click-outside close, dan centang pada item terpilih |
 | `ChatBubble` | [`components/ui/ChatBubble.tsx`](components/ui/ChatBubble.tsx) | `isi`, `pengirim`, `label`, `waktu` | Bubble chat untuk tampilan percakapan |
-| `StatCard` | [`components/ui/StatCard.tsx`](components/ui/StatCard.tsx) | `number`, `label`, `color` | Kartu statistik dengan warna berbeda |
+| `StatCard` | [`components/ui/StatCard.tsx`](components/ui/StatCard.tsx) | `number`, `label`, `color?: 'default' \| 'yellow' \| 'green' \| 'purple'` | Kartu statistik dengan 4 varian warna (default navy, yellow, green, purple) |
 | `AspirasiItem` | [`components/ui/AspirasiItem.tsx`](components/ui/AspirasiItem.tsx) | `kode`, `waktu`, `preview`, `status`, `kategori`, `onClick` | Item daftar aspirasi |
 
 ---
@@ -461,23 +492,29 @@ kirimEmail(to: string, subject: string, html: string): Promise<boolean>
 
 | Fungsi | Deskripsi |
 |--------|-----------|
-| `generateKodeTiket(total)` | Menghasilkan kode tiket format `ASP-XXXX` berdasarkan jumlah total aspirasi |
+| `generateKodeTiket(total)` | Menghasilkan kode tiket format `ASP-XXXX` (4 digit zero-padded) berdasarkan jumlah total aspirasi |
 | `formatWaktu(date)` | Memformat waktu relatif (Baru saja, X menit lalu, X jam lalu, X hari lalu, atau tanggal lengkap) |
-| `getInisial(name)` | Mengambil inisial dari nama (contoh: "John Doe" → "JD") |
+| `getInisial(name)` | Mengambil inisial dari nama (contoh: "John Doe" → "JD"), fallback "?" jika kosong |
 
 **File:** [`lib/supabase.ts`](lib/supabase.ts)
 
 | Fungsi | Deskripsi |
 |--------|-----------|
-| `createBrowserClient()` | Membuat Supabase client untuk browser (anon key, session persist) |
-| `createServiceClient()` | Membuat Supabase client untuk server (service role key, tanpa session) |
+| `createBrowserClient()` | Membuat Supabase client untuk browser (anon key, session persist, auto-refresh token) — singleton |
+| `createServiceClient()` | Membuat Supabase client untuk server (service role key, tanpa session, tanpa auto-refresh) |
+
+**File:** [`lib/supabase-server.ts`](lib/supabase-server.ts)
+
+| Fungsi | Deskripsi |
+|--------|-----------|
+| `createServerSupabaseClient()` | Membuat Supabase client menggunakan `@supabase/ssr` untuk server-side rendering — cookie getter/setter no-op (sesuai konteks) |
 
 **File:** [`lib/resend.ts`](lib/resend.ts)
 
 | Fungsi | Deskripsi |
 |--------|-----------|
-| `getResendClient()` | Membuat Resend client |
-| `kirimEmail(to, subject, html)` | Mengirim email, mengembalikan `boolean` sukses/gagal |
+| `getResendClient()` | Membuat Resend client instance |
+| `kirimEmail(to, subject, html)` | Mengirim email via Resend, mengembalikan `boolean` sukses/gagal |
 
 ---
 
@@ -661,18 +698,25 @@ Semua fitur Humas +:
 
 ## 14. Desain Sistem
 
+### Vibe
+- Soft & friendly — bersih, rounded, tidak overwhelming
+- Whitespace cukup, elemen purposeful
+- Mobile-first (max-width `480px`)
+
 ### Color Palette
 
 | Warna | Hex | Penggunaan |
 |-------|-----|------------|
-| Blue Primary | `#49769f` | Header, badges, teks utama |
-| Blue Light | `#7bbde8` | Tombol primary, aksen |
-| Blue Surface | `#f4f9fc` | Background form, chat area |
-| Blue Border | `#c8dde8` | Border, garis pemisah |
-| Blue Text | `#6ea2b3` | Teks sekunder, placeholder |
-| Blue Text Dark | `#1a3d47` | Teks utama gelap |
-| Blue Muted | `#a8c8d4` | Teks tersier, dekoratif |
-| Blue Header | `#a8d4e8` | Teks header, icon |
+| Navy | `#49769f` | Header, badges utama, teks utama, chat bubble kanan |
+| Ocean | `#4e8ea2` | Link, tombol sekunder |
+| Teal | `#6ea2b3` | Subtext, label, placeholder |
+| Sky | `#7bbde8` | Tombol primary, aksen, centang dropdown |
+| White | `#ffffff` | Background utama |
+| Blue Tint | `#f4f9fc` | Background form, chat area, stat card default |
+| Light Blue | `#c8dde8` | Border default, garis pemisah |
+| Dark | `#1a3d47` | Teks utama |
+| Header Text | `#a8d4e8` | Teks header, icon nav |
+| Muted | `#a8c8d4` | Teks tersier, tab tidak aktif |
 | Green | `#1a7a4a` | Success, "Dibalas" |
 | Green Light | `#f0fbf6` | Background success |
 | Green Border | `#a8e8c4` | Border success |
@@ -683,24 +727,43 @@ Semua fitur Humas +:
 | Purple Light | `#f5f0fc` | Background diteruskan |
 | Purple Border | `#d4b8f0` | Border diteruskan |
 | Red Text | `#c0392b` | Error, danger, "Tolak", "Hapus" |
-| Red Light | `#fff0f0` | Background error |
+| Red Light | `#fff0f0` | Background error input |
 | Red Border | `#f5b8b8` | Border error |
 
 ### Typography
 
-- **Font:** System UI (sans-serif), dengan Geist dari Next.js Font
+- **Font:** System UI stack (system-ui, -apple-system, sans-serif), dengan Geist dari Next.js Font
 - **Scale:**
-  - Header besar: `26px`
-  - Kode tiket: `28px` monospace
-  - Judul halaman: `15px`
+  - Header besar (Hero): `26px`
+  - Kode tiket (konfirmasi): `28px` monospace `tracking-[0.1em]`
+  - Judul halaman (dashboard): `15px`
+  - Angka stat card: `26px` semibold
   - Teks normal: `13px` – `14px`
   - Teks kecil: `11px` – `12px`
 
 ### Layout
 
-- **Max width konten:** `480px` (mobile-first)
-- **Border radius:** `14px` (umum), `18px` (chat bubble), `10px` – `12px` (kecil)
+- **Max width konten:** `480px` (mobile-first), di-center dengan `mx-auto`
+- **Border radius:**
+  - Card utama (login): `20px`
+  - Input, button, dropdown: `14px`
+  - Chat bubble: `18px 18px 4px 18px` (kanan), `18px 18px 18px 4px` (kiri)
+  - Badge: `9999px` (pill)
+  - Avatar: `50%` (circle)
+  - Tombol kecil: `8px` – `12px`
 - **Shadow:** `0 4px 20px rgba(73,118,159,0.12)` (dropdown)
+
+### Status Badge Colors
+
+| Status | Background | Text | Border |
+|--------|------------|------|--------|
+| Menunggu | `#eaf4f8` | `#4e8ea2` | `#c8dde8` |
+| Diproses | `#fff9ec` | `#9a7000` | `#ffe9a0` |
+| Dibalas | `#f0fbf6` | `#1a7a4a` | `#a8e8c4` |
+| Diteruskan | `#f5f0fc` | `#6a3fa0` | `#d4b8f0` |
+| Pending | `#fff9ec` | `#9a7000` | `#ffe9a0` |
+| Admin | `#49769f` | `white` | — (solid) |
+| Member | `#eaf4f8` | `#4e8ea2` | — (solid) |
 
 ---
 
@@ -718,4 +781,4 @@ Semua fitur Humas +:
 
 ---
 
-> **Catatan:** Dokumentasi ini mencakup seluruh kodebase per tanggal Juli 2026. Beberapa detail mungkin berubah seiring perkembangan aplikasi.
+> **Catatan:** Dokumentasi ini mencakup seluruh kodebase per Juli 2026. Beberapa detail mungkin berubah seiring perkembangan aplikasi.
