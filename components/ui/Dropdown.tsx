@@ -1,89 +1,63 @@
 "use client";
 
 import { useState, useRef, useEffect } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import { IconChevronDown, IconCheck } from "@tabler/icons-react";
 
 interface DropdownProps {
   options: string[];
   value: string;
   onChange: (val: string) => void;
-  placeholder: string;
+  placeholder?: string;
 }
 
-export default function Dropdown({
-  options,
-  value,
-  onChange,
-  placeholder,
-}: DropdownProps) {
+export default function Dropdown({ options, value, onChange, placeholder = "Pilih..." }: DropdownProps) {
   const [open, setOpen] = useState(false);
-  const containerRef = useRef<HTMLDivElement>(null);
+  const ref = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    function handleClickOutside(e: MouseEvent) {
-      if (
-        containerRef.current &&
-        !containerRef.current.contains(e.target as Node)
-      ) {
-        setOpen(false);
-      }
-    }
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
+    const handler = (e: MouseEvent) => {
+      if (ref.current && !ref.current.contains(e.target as Node)) setOpen(false);
+    };
+    document.addEventListener("mousedown", handler);
+    return () => document.removeEventListener("mousedown", handler);
   }, []);
 
   return (
-    <div ref={containerRef} className="relative w-full">
+    <div ref={ref} className="relative">
       <button
         type="button"
         onClick={() => setOpen(!open)}
-        className="w-full bg-[#f4f9fc] border border-[#c8dde8] rounded-[14px] px-4 py-3.5 text-[14px] text-left flex items-center justify-between outline-none"
+        className="w-full border-[1.5px] border-[#DCE8FF] rounded-lg px-3 py-[9px] text-[13px] text-navy bg-white outline-none transition-all duration-400 focus:border-blue focus:shadow-[0_0_0_4px_rgba(29,111,255,0.06)] hover:border-blue-light flex items-center justify-between gap-2"
       >
-        <span className={value ? "text-[#1a3d47]" : "text-[#6ea2b3]"}>
-          {value || placeholder}
-        </span>
-        <svg
-          className={`w-4 h-4 text-[#6ea2b3] transition-transform duration-200 ${
-            open ? "rotate-180" : ""
-          }`}
-          fill="none"
-          stroke="currentColor"
-          viewBox="0 0 24 24"
-        >
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            strokeWidth={2}
-            d="M19 9l-7 7-7-7"
-          />
-        </svg>
+        <span className={value ? "text-navy" : "text-gray-400"}>{value || placeholder}</span>
+        <motion.span animate={{ rotate: open ? 180 : 0 }} transition={{ duration: 0.3 }}>
+          <IconChevronDown size={14} className="text-gray-400" />
+        </motion.span>
       </button>
-      {open && (
-        <div
-          className="absolute z-50 mt-1 w-full bg-white border border-[#c8dde8] rounded-[14px] overflow-hidden"
-          style={{ boxShadow: "0 4px 20px rgba(73,118,159,0.12)" }}
-        >
-          {options.map((option) => (
-            <button
-              key={option}
-              type="button"
-              onClick={() => {
-                onChange(option);
-                setOpen(false);
-              }}
-              className={`w-full px-4 py-3 text-[14px] text-left flex items-center justify-between border-b border-[#f0f7fa] last:border-b-0 hover:bg-[#f4f9fc] transition-colors ${
-                value === option
-                  ? "text-[#49769f] font-medium"
-                  : "text-[#1a3d47]"
-              }`}
-            >
-              <span>{option}</span>
-              {value === option && (
-                <span className="text-[#7bbde8] text-[16px]">✓</span>
-              )}
-            </button>
-          ))}
-        </div>
-      )}
+      <AnimatePresence>
+        {open && (
+          <motion.div
+            className="absolute top-full left-0 right-0 mt-1 bg-white border border-[#DCE8FF] rounded-lg shadow-[0_4px_20px_rgba(29,111,255,0.12)] z-50 overflow-hidden"
+            initial={{ opacity: 0, y: -8, scale: 0.96 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: -8, scale: 0.96 }}
+            transition={{ duration: 0.2, ease: [0.22, 1, 0.36, 1] }}
+          >
+            {options.map((opt) => (
+              <button
+                key={opt}
+                type="button"
+                onClick={() => { onChange(opt); setOpen(false); }}
+                className={`w-full text-left px-3 py-2 text-[13px] flex items-center justify-between transition-colors hover:bg-blue-pale ${opt === value ? "text-blue font-medium" : "text-navy"}`}
+              >
+                {opt}
+                {opt === value && <IconCheck size={14} className="text-blue" />}
+              </button>
+            ))}
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }

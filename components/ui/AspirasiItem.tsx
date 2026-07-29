@@ -1,7 +1,8 @@
 "use client";
 
-import Badge from "./Badge";
 import { formatWaktu } from "@/lib/utils";
+import Badge from "./Badge";
+import { IconChevronRight } from "@tabler/icons-react";
 
 interface AspirasiItemProps {
   kode: string;
@@ -12,34 +13,26 @@ interface AspirasiItemProps {
   onClick?: () => void;
 }
 
-export default function AspirasiItem({
-  kode,
-  waktu,
-  preview,
-  status,
-  kategori,
-  onClick,
-}: AspirasiItemProps) {
+export default function AspirasiItem({ kode, waktu, preview, status, kategori, onClick }: AspirasiItemProps) {
   return (
     <button
       onClick={onClick}
-      className="w-full text-left px-[18px] py-3.5 border-b border-[#f0f7fa] hover:bg-[#f4f9fc] transition-colors"
+      className="w-full text-left px-[18px] py-3.5 border-b border-gray-100 hover:bg-gray-50 transition-colors flex items-center gap-3"
     >
-      <div className="flex items-center justify-between mb-2">
-        <span className="text-[13px] font-medium text-[#49769f]">{kode}</span>
-        <span className="text-[11px] text-[#a8c8d4]">{formatWaktu(waktu)}</span>
+      <div className="flex-1 min-w-0">
+        <div className="flex items-center justify-between mb-1.5">
+          <span className="text-[13px] font-display font-semibold text-blue">{kode}</span>
+          <span className="text-[11px] text-gray-400">{formatWaktu(waktu)}</span>
+        </div>
+        <p className="text-[13px] text-navy leading-[1.5] line-clamp-2 mb-1.5">{preview}</p>
+        <div className="flex items-center gap-2">
+          <Badge status={status} />
+          {kategori && (
+            <span className="text-[11px] text-gray-400 bg-gray-100 rounded-full px-2.5 py-0.5">{kategori}</span>
+          )}
+        </div>
       </div>
-      <p className="text-[13px] text-[#1a3d47] leading-[1.5] line-clamp-2 mb-2">
-        {preview}
-      </p>
-      <div className="flex items-center gap-2">
-        <Badge status={status} />
-        {kategori && (
-          <span className="text-[11px] text-[#6ea2b3] bg-[#f4f9fc] rounded-full px-2.5 py-0.5">
-            {kategori}
-          </span>
-        )}
-      </div>
+      <IconChevronRight size={16} className="text-gray-400 flex-shrink-0" />
     </button>
   );
 }

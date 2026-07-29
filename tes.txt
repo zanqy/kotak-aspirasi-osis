@@ -1,0 +1,543 @@
+# 🚀 Prompt Engineer — Spesifikasi Animasi & Transisi Super Lengkap
+
+```markdown
+# KOTAK ASPIRASI OSIS — IMPLEMENTASI ANIMASI & TRANSISI SUPER LENGKAP
+
+---
+
+## KONTEKS PROYEK
+
+**Project:** Kotak Aspirasi OSIS  
+**Stack:** Next.js 14 (App Router) + Supabase + Resend + Tailwind CSS  
+**Current State:** Aplikasi sudah berfungsi penuh (CRUD aspirasi, dashboard, chat, realtime).  
+**Goal:** Tambahkan sistem animasi dan transisi yang membuat aplikasi terasa hidup, mulus, dan delightful — dengan pengalaman berbeda untuk first visit vs navigasi internal.
+
+**Prinsip Dasar:**
+- Motion with purpose (feedback, guidance, continuity, delight)
+- Subtle & fast (150–500ms, kecuali entrance 2.5–3 detik)
+- Mobile-first & performant (pakai transform/opacity, hindari layout thrashing)
+- Respect `prefers-reduced-motion` (harus fallback ke no-animation)
+- Konsisten di seluruh aplikasi
+
+---
+
+## ARSITEKTUR ANIMASI YANG DIINGINKAN
+
+### 1. Dua Mode Animasi
+
+| Mode | Trigger | Durasi | Karakteristik |
+|------|---------|--------|---------------|
+| **First Visit (Full Experience)** | `sessionStorage.getItem('hasVisited') === null` | 2.5–3 detik | Semua efek hidup (typewriter, garis ditarik, stagger, spring) |
+| **Navigation (Quick Transition)** | `sessionStorage.hasVisited = 'true'` | 0.4–0.6 detik | Hanya fade + slide horizontal, tanpa efek berat |
+
+**State Management:**
+- Gunakan `sessionStorage` dengan key `'hasVisited'`
+- Set `'true'` setelah animasi first visit selesai
+- Pada hard refresh, tetap full experience
+
+---
+
+### 2. First Visit — Entrance Animation (Landing Page)
+
+**Deskripsi:** Halaman utama (`/`) saat pertama kali dibuka. Semua animasi berjalan **parallel dengan stagger**, bukan sequential.
+
+#### Timeline Lengkap (Total 2.8 detik)
+
+| Waktu Mulai | Elemen | Efek | Durasi | Easing | Detail Teknis |
+|-------------|--------|------|--------|--------|---------------|
+| **0.0s** | Background & Hero Judul | Fade in (opacity 0→1) | 600ms | `ease-out` | Background halaman muncul, teks judul besar muncul |
+| **0.3s** | Hero Heading (Typewriter) | Typewriter effect | 1.7s | `linear` | Huruf per huruf, cursor berkedip, setelah selesai cursor hilang |
+| **0.5s** | Garis Form "Ditarik" | `scaleX(0 → 1)` | 1.3s | `ease-out` | Garis horizontal memanjang dari kiri ke kanan, `transform-origin: left`, warna `#c8dde8` |
+| **0.7s** | Container Form (Card) | `opacity 0→1` + `translateY(20px→0)` | 1.2s | `ease-out` | Muncul di atas garis, background putih dengan shadow |
+| **1.0s** | Dropdown Kategori | `translateY(15px→0)` + `opacity 0→1` | 0.8s | `ease-out` | Muncul dari bawah |
+| **1.2s** | Textarea | `translateY(15px→0)` + `opacity 0→1` | 0.8s | `ease-out` | Muncul dari bawah |
+| **1.4s** | Input Email | `translateY(15px→0)` + `opacity 0→1` | 0.8s | `ease-out` | Muncul dari bawah |
+| **1.6s** | Tombol Kirim | `scale(0.5 → 1.05 → 1)` + `opacity 0→1` | 0.9s | Spring `cubic-bezier(0.34, 1.56, 0.64, 1)` | Membesar dengan efek pegas, shadow muncul bersamaan |
+
+**Catatan Penting:**
+- Semua delay bersifat **relative terhadap start time masing-masing**, bukan menunggu sebelumnya selesai. Inilah yang membuat terasa "bersamaan tapi tidak bersamaan".
+- Typewriter hanya untuk **hero heading** (bukan seluruh teks).
+- Garis "ditarik" adalah elemen dekoratif di atas form — bisa berupa `div` dengan `height: 2px` dan `background: #c8dde8` yang di-`scaleX`.
+
+---
+
+### 3. Navigation — Horizontal Slide Transition
+
+**Deskripsi:** Setiap pindah halaman di dalam dashboard atau dari landing ke halaman lain (kecuali first visit), gunakan **slide horizontal** dengan durasi cepat.
+
+**Implementasi:**
+- Gunakan `AnimatePresence` dari Framer Motion (atau CSS transition dengan `transform: translateX`)
+- **Arah slide:** bergantung arah navigasi:
+  - Ke halaman **lebih dalam** (misal `/dashboard` → `/dashboard/aspirasi`): slide **kiri** (halaman baru masuk dari kanan)
+  - Ke halaman **lebih tinggi** (back, misal `/dashboard/aspirasi/123` → `/dashboard/aspirasi`): slide **kanan** (halaman baru masuk dari kiri)
+- **Durasi:** 400ms
+- **Easing:** `ease-in-out`
+- **Layer:** Halaman baru menutupi halaman lama (seperti native app)
+
+**Spesifikasi Teknis:**
+- Gunakan `motion.div` dengan `initial`, `animate`, `exit`
+- Untuk menentukan arah, gunakan `usePathname()` dan bandingkan depth URL, atau simpan history stack di context.
+
+---
+
+### 4. Dashboard — First Visit Experience (Setelah Login)
+
+**Deskripsi:** Saat user pertama kali masuk ke `/dashboard` (setelah login), halaman juga punya entrance animation, tapi lebih ringan dari landing page.
+
+**Efek yang Muncul (parallel, total 1.5 detik):**
+
+| Waktu Mulai | Elemen | Efek | Durasi |
+|-------------|--------|------|--------|
+| 0.0s | Navbar & Bottom Bar | Fade in | 400ms |
+| 0.2s | Stat Cards (4 kartu) | Stagger muncul (masing-masing 100ms delay), `scale(0.9→1)` + `opacity 0→1` | 500ms per kartu |
+| 0.4s | Angka di Stat Card | Count-up animation (0 → angka real) | 800ms (ease-out) |
+| 0.6s | Daftar Aspirasi Terbaru (5 item) | Stagger muncul (60ms antar item), `translateY(10px→0)` + `opacity 0→1` | 400ms per item |
+
+**Catatan:**
+- Ini hanya untuk **first visit ke dashboard** setelah login.
+- Navigasi antar tab (Overview → Aspirasi → Anggota) pakai **horizontal slide** (seperti point 3), bukan entrance lagi.
+
+---
+
+### 5. Detail & Chat — Micro-Interactions
+
+#### A. Chat Bubble Masuk (Saat Halaman Detail Dibuka)
+- Bubble muncul dari **sisi masing-masing** (siswa dari kiri, humas dari kanan) dengan stagger 150ms antar bubble.
+- Durasi per bubble: 350ms, `ease-out`.
+
+#### B. Pesan Baru via Realtime
+- Bubble baru muncul dengan **slide up + fade** (dari bawah) di akhir thread.
+- Scroll otomatis ke bawah dengan `scrollIntoView({ behavior: 'smooth' })`.
+
+#### C. Tombol "Teruskan ke Divisi Lain"
+- Saat diklik, form tambahan (input divisi + tombol simpan) muncul dengan **slide down** (height auto, durasi 300ms, ease-out).
+- Saat ditutup, slide up dengan durasi 250ms.
+
+#### D. Input Balasan (Dashboard & Publik)
+- Saat di-fokus, **expand height** secara halus (dari 40px ke 80px, durasi 200ms).
+- Placeholder naik ke atas (floating label) dengan transisi 150ms.
+
+#### E. Toast Notifikasi (Email Terkirim, dll)
+- Muncul dari **atas** dengan slide down + fade, durasi 400ms.
+- Hilang setelah 4 detik dengan fade out 300ms.
+
+---
+
+### 6. Halaman Cek Status (Publik) — Animasi
+
+**First Visit:**
+- Input kode: muncul dengan slide up + fade (0.5s setelah halaman dimuat)
+- Tombol "Cek Status": muncul 200ms setelah input
+
+**Hasil Ditemukan:**
+- Card detail: slide up + fade (400ms)
+- Badge status: scale pop (0.8→1, 300ms, spring)
+- Chat bubble: stagger 150ms (dari atas ke bawah)
+
+**Error / Tidak Ditemukan:**
+- Input border merah dengan **shake** (3x goyang 5°, durasi 400ms)
+- Pesan error: fade in + slide down (300ms)
+
+**Loading Skeleton:**
+- Shimmer effect (gradien berjalan) selama fetch data
+
+---
+
+### 7. Login Page — Animasi
+
+**First Visit:**
+- Form login muncul dengan stagger:
+  - 0.0s: Logo/Ilustrasi (fade in, 400ms)
+  - 0.3s: Input Email (slide up, 400ms)
+  - 0.5s: Input Password (slide up, 400ms)
+  - 0.7s: Tombol Login (scale up + spring, 500ms)
+  - 0.9s: Tombol Google (scale up, 400ms)
+
+**Error Login:**
+- Input border merah + shake (sama seperti di atas)
+- Pesan error: fade in + slide down
+
+**Loading State:**
+- Tombol login berubah jadi spinner (teks hilang, spinner muncul, durasi 200ms)
+
+---
+
+## IMPLEMENTASI TEKNIS
+
+### Library & Tools
+
+| Tool | Fungsi | Alasan |
+|------|--------|--------|
+| **Framer Motion** | Animasi komponen React (entrance, exit, stagger, gesture) | Powerfull, integrasi bagus dengan Next.js App Router, support `AnimatePresence` |
+| **Tailwind CSS** | Styling & utility classes | Sudah dipakai, untuk transisi sederhana bisa pakai `transition-all` |
+| **Custom Hooks** | `useAnimationState`, `useTypewriter`, `useCountUp` | Encapsulasi logic, reusable |
+
+> **Catatan:** Bisa juga gunakan CSS transitions + custom hooks untuk menghindari bundle size Framer Motion, tapi Framer Motion lebih ekspresif untuk parallel + stagger yang kompleks.
+
+---
+
+### Struktur Folder Baru
+
+```
+components/
+├── animations/
+│   ├── EntranceWrapper.tsx       # Wrapper untuk first-visit animation
+│   ├── Typewriter.tsx            # Komponen typewriter effect
+│   ├── LineDraw.tsx              # Garis "ditarik" dekoratif
+│   ├── StaggerContainer.tsx      # Stagger children dengan Framer Motion
+│   ├── PageTransition.tsx        # Horizontal slide transition wrapper
+│   └── MotionProvider.tsx        # Context untuk mode animasi (full / quick)
+│
+├── hooks/
+│   ├── useFirstVisit.ts          # Cek sessionStorage, return boolean
+│   ├── useTypewriter.ts          # Logic typewriter (return teks, cursor, done)
+│   ├── useCountUp.ts             # Count-up animation (return angka)
+│   └── usePrefersReducedMotion.ts # Deteksi prefers-reduced-motion
+│
+└── (existing components)
+    ├── ui/
+    └── layout/
+```
+
+---
+
+### File yang Perlu Dimodifikasi / Dibuat
+
+#### 1. **`app/layout.tsx`**
+- Tambahkan `MotionProvider` untuk menyediakan mode animasi global.
+- Bungkus children dengan `PageTransition` (untuk horizontal slide).
+
+#### 2. **`app/page.tsx`** (Landing)
+- Tambahkan `EntranceWrapper` (first-visit) + `LineDraw` di atas form.
+- Ganti heading dengan `Typewriter`.
+- Form elements dibungkus dengan `StaggerContainer`.
+- Tombol Kirim pakai `motion.button` dengan spring effect.
+
+#### 3. **`app/cek-aspirasi/page.tsx`**
+- Tambahkan entrance animation untuk input dan tombol.
+- Hasil card & chat pakai `StaggerContainer`.
+- Error state: tambahkan shake animation.
+
+#### 4. **`app/dashboard/page.tsx`** (Overview)
+- Bungkus dengan `EntranceWrapper` (hanya untuk first visit ke dashboard).
+- Stat cards pakai `StaggerContainer` + `useCountUp`.
+- Daftar aspirasi terbaru pakai `StaggerContainer` (60ms delay).
+
+#### 5. **`app/dashboard/aspirasi/[id]/page.tsx`** (Detail)
+- Chat bubble pakai `StaggerContainer` dengan arah dari sisi masing-masing.
+- Tambahkan realtime subscription dengan animasi masuk pesan baru.
+
+#### 6. **`app/dashboard/login/page.tsx`**
+- Form elements pakai `StaggerContainer` (delay 200ms antar elemen).
+- Tombol Google & Login pakai `motion.button` scale effect.
+
+#### 7. **`middleware.ts`**
+- **Tidak perlu diubah** — proteksi route tetap jalan.
+
+#### 8. **`components/layout/BottomTabBar.tsx`**
+- Tambahkan indikator active dengan transisi (geser halus).
+- Saat pindah tab, trigger `PageTransition` (horizontal slide).
+
+#### 9. **`components/ui/StatCard.tsx`**
+- Tambahkan prop `animate` (boolean) untuk trigger count-up.
+
+#### 10. **`components/ui/ChatBubble.tsx`**
+- Tambahkan prop `delay` untuk stagger.
+- Arah masuk (dari kiri/kanan) berdasarkan `pengirim`.
+
+#### 11. **`lib/utils.ts`**
+- Tambahkan helper `getAnimationMode()` untuk cek first visit.
+
+---
+
+### Spesifikasi Teknis Detail
+
+#### A. `useFirstVisit` Hook
+```typescript
+// hooks/useFirstVisit.ts
+export function useFirstVisit(key: string = 'hasVisited'): boolean {
+  const [isFirst, setIsFirst] = useState(true);
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+    const visited = sessionStorage.getItem(key);
+    if (visited === 'true') {
+      setIsFirst(false);
+    } else {
+      sessionStorage.setItem(key, 'true');
+      setIsFirst(true);
+    }
+  }, [key]);
+  return isFirst;
+}
+```
+
+#### B. `Typewriter` Component
+```typescript
+interface TypewriterProps {
+  text: string;
+  speed?: number; // ms per character
+  onComplete?: () => void;
+}
+// Implementasi: state `displayText`, `cursor`, `isDone`
+// Gunakan useEffect dengan interval, clear saat unmount
+// Cursor berkedip dengan keyframes CSS
+```
+
+#### C. `LineDraw` Component
+```tsx
+// components/animations/LineDraw.tsx
+<motion.div
+  className="h-[2px] bg-[#c8dde8] w-full"
+  initial={{ scaleX: 0 }}
+  animate={{ scaleX: 1 }}
+  transition={{ duration: 1.3, ease: 'easeOut', delay: 0.5 }}
+  style={{ transformOrigin: 'left' }}
+/>
+```
+
+#### D. `StaggerContainer` Wrapper
+```tsx
+// components/animations/StaggerContainer.tsx
+<motion.div
+  initial="hidden"
+  animate="visible"
+  variants={{
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.1,
+        delayChildren: 0.2,
+      },
+    },
+  }}
+>
+  {children}
+</motion.div>
+```
+Setiap child harus punya variants:
+```tsx
+const itemVariants = {
+  hidden: { opacity: 0, y: 15 },
+  visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: 'easeOut' } },
+};
+```
+
+#### E. `PageTransition` (Horizontal Slide)
+```tsx
+// components/animations/PageTransition.tsx
+import { motion, AnimatePresence } from 'framer-motion';
+
+export function PageTransition({ children, direction = 'left' }) {
+  const isLeft = direction === 'left';
+  return (
+    <AnimatePresence mode="wait">
+      <motion.div
+        key={usePathname()}
+        initial={{ x: isLeft ? 300 : -300, opacity: 0 }}
+        animate={{ x: 0, opacity: 1 }}
+        exit={{ x: isLeft ? -300 : 300, opacity: 0 }}
+        transition={{ duration: 0.4, ease: 'easeInOut' }}
+      >
+        {children}
+      </motion.div>
+    </AnimatePresence>
+  );
+}
+```
+**Penentuan arah:** bandingkan depth path dengan `pathname.split('/').length`. Jika lebih dalam → left, jika kembali → right.
+
+#### F. `useCountUp` Hook
+```typescript
+// hooks/useCountUp.ts
+export function useCountUp(target: number, duration: number = 800) {
+  const [count, setCount] = useState(0);
+  useEffect(() => {
+    const start = performance.now();
+    const animate = (now: number) => {
+      const progress = Math.min((now - start) / duration, 1);
+      setCount(Math.floor(progress * target));
+      if (progress < 1) requestAnimationFrame(animate);
+    };
+    requestAnimationFrame(animate);
+  }, [target, duration]);
+  return count;
+}
+```
+
+#### G. `prefers-reduced-motion` Handling
+```typescript
+// hooks/usePrefersReducedMotion.ts
+export function usePrefersReducedMotion() {
+  const [prefersReduced, setPrefersReduced] = useState(false);
+  useEffect(() => {
+    const mediaQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
+    setPrefersReduced(mediaQuery.matches);
+    const handler = (e: MediaQueryListEvent) => setPrefersReduced(e.matches);
+    mediaQuery.addEventListener('change', handler);
+    return () => mediaQuery.removeEventListener('change', handler);
+  }, []);
+  return prefersReduced;
+}
+```
+**Implementasi:** Di setiap komponen animasi, jika `prefersReduced === true`, langsung render tanpa animation (atau dengan duration 0).
+
+---
+
+### Animasi Realtime (Pesan Baru di Chat)
+
+**Skenario:** Saat ada pesan baru masuk via Supabase Realtime, bubble baru muncul dengan animasi.
+
+**Implementasi:**
+1. Subscription di `useEffect` di halaman detail.
+2. Saat ada pesan baru, tambahkan ke state `messages`.
+3. Untuk bubble baru, gunakan:
+```tsx
+<motion.div
+  initial={{ opacity: 0, y: 20 }}
+  animate={{ opacity: 1, y: 0 }}
+  transition={{ duration: 0.3, ease: 'easeOut' }}
+>
+  <ChatBubble ... />
+</motion.div>
+```
+4. Setelah render, scroll ke bawah:
+```tsx
+useEffect(() => {
+  const el = document.getElementById('chat-container');
+  if (el) el.scrollTo({ top: el.scrollHeight, behavior: 'smooth' });
+}, [messages]);
+```
+
+---
+
+### Performance Optimization
+
+- **Semua animasi menggunakan `transform` dan `opacity`** (tidak memicu layout/reflow).
+- **Gunakan `will-change: transform, opacity`** pada elemen yang dianimasi (tapi hati-hati overuse).
+- **Batch DOM updates** untuk stagger (Framer Motion handle ini otomatis).
+- **Lazy load Framer Motion?** Tidak perlu, karena sudah digunakan di banyak halaman.
+- **Gunakan `useMemo`/`useCallback`** untuk variants yang tidak berubah.
+
+---
+
+### Testing & QA Checklist
+
+**Functional:**
+- [ ] First visit ke landing: semua animasi berjalan sesuai timeline (2.8s total).
+- [ ] Reload halaman (hard refresh): animasi penuh lagi.
+- [ ] Navigasi internal (dari landing ke halaman lain): horizontal slide, durasi 400ms.
+- [ ] Navigasi antar tab dashboard: horizontal slide.
+- [ ] Login first visit: animasi masuk sesuai stagger.
+- [ ] Dashboard first visit (setelah login): stat card count-up, list stagger.
+- [ ] Halaman detail chat: bubble muncul dengan stagger.
+- [ ] Pesan baru via realtime: muncul dengan slide-up + fade, auto-scroll.
+- [ ] Halaman cek status: input animasi, hasil card & chat stagger.
+- [ ] Error state: shake + pesan error.
+- [ ] Tombol "Teruskan ke divisi": ekspansi slide down/up.
+- [ ] Input balasan: expand smooth saat fokus.
+- [ ] Toast notifikasi: slide down from top, hilang otomatis.
+
+**Accessibility:**
+- [ ] `prefers-reduced-motion` terdeteksi dan semua animasi dinonaktifkan (durasi 0).
+- [ ] Focus management: saat pindah halaman, fokus pindah ke heading utama (untuk screen reader).
+- [ ] Animasi tidak menyebabkan epilepsi (tidak ada flashing > 3Hz).
+
+**Performance:**
+- [ ] Lighthouse score tetap ≥ 90 (Performance, Accessibility, Best Practices).
+- [ ] Tidak ada layout shift (CLS) akibat animasi.
+- [ ] Di HP entry-level, frame rate tetap 60fps.
+
+---
+
+## DELIVERABLE AKHIR
+
+Setelah implementasi, hasil yang diharapkan:
+
+1. ✅ Semua halaman memiliki entrance animation sesuai mode (full vs quick).
+2. ✅ Navigasi antar halaman menggunakan horizontal slide (400ms).
+3. ✅ Dashboard memiliki animasi stat card (count-up) dan list stagger.
+4. ✅ Chat memiliki bubble stagger dan realtime animation.
+5. ✅ Tombol, form input, dan elemen interaktif memiliki micro-interactions.
+6. ✅ `prefers-reduced-motion` dihormati (fallback ke no-animation).
+7. ✅ Kode terorganisir di folder `components/animations/` dan `hooks/`.
+8. ✅ Tidak ada regresi pada fungsionalitas existing.
+
+---
+
+## INSTRUKSI UNTUK AI AGENT
+
+Berdasarkan spesifikasi di atas, kerjakan langkah-langkah berikut:
+
+1. **Instal Framer Motion** (jika belum):
+   ```bash
+   npm install framer-motion
+   ```
+
+2. **Buat semua file baru** di `components/animations/` dan `hooks/` sesuai struktur di atas.
+
+3. **Implementasikan `useFirstVisit`** dan integrasikan ke `app/page.tsx`, `app/dashboard/page.tsx`, `app/cek-aspirasi/page.tsx`, `app/dashboard/login/page.tsx`.
+
+4. **Implementasikan `PageTransition`** dan bungkus layout utama di `app/layout.tsx` dengan provider untuk menentukan arah slide.
+
+5. **Modifikasi `app/page.tsx`**:
+   - Tambahkan `Typewriter` untuk heading.
+   - Tambahkan `LineDraw` di atas form.
+   - Bungkus form elements dengan `StaggerContainer`.
+   - Tombol Kirim pakai `motion.button` dengan spring.
+
+6. **Modifikasi `app/dashboard/page.tsx`**:
+   - Bungkus dengan `EntranceWrapper` (hanya first visit).
+   - Stat cards pakai `useCountUp`.
+   - List item pakai `StaggerContainer` (60ms delay).
+
+7. **Modifikasi `app/cek-aspirasi/page.tsx`**:
+   - Input dan tombol entrance animation.
+   - Hasil card & chat pakai stagger.
+   - Error state: shake animation.
+
+8. **Modifikasi `app/dashboard/aspirasi/[id]/page.tsx`**:
+   - Chat bubble masuk dengan stagger.
+   - Realtime pesan baru: slide-up + auto-scroll.
+
+9. **Modifikasi `app/dashboard/login/page.tsx`**:
+   - Form elements stagger.
+   - Tombol scale effect.
+
+10. **Modifikasi komponen UI**:
+    - `StatCard`: tambahkan prop `animate` untuk count-up.
+    - `ChatBubble`: tambahkan prop `delay` dan arah masuk.
+
+11. **Tambahkan `prefers-reduced-motion`** ke semua komponen animasi (gunakan `usePrefersReducedMotion`).
+
+12. **Testing & debugging**: Pastikan semua berjalan mulus, tidak ada error, dan performa tetap baik.
+
+---
+
+## CATATAN TAMBAHAN
+
+- **Gunakan `'use client'`** di semua komponen yang menggunakan Framer Motion atau hooks browser.
+- **Untuk `AnimatePresence`**, pastikan key unik (gunakan `pathname` atau `router.asPath`).
+- **Efek spring** pada tombol: `transition={{ type: 'spring', stiffness: 300, damping: 20 }}`.
+- **Jangan lupa import** `motion` dari `'framer-motion'`.
+- **Semua durasi dan delay** sudah dispesifikasi di atas — patuhi dengan ketat.
+
+---
+
+## REFERENSI VISUAL (Opsional)
+
+Bayangkan experience seperti:
+- **Linear.app** — entrance animasi yang smooth dan terkoordinasi.
+- **Arc Browser** — transisi halaman dengan slide horizontal.
+- **Stripe Dashboard** — stat card dengan count-up.
+- **Notion** — typewriter effect di heading.
+
+Tapi dengan **vibe Kotak Aspirasi**: soft, friendly, rounded, mobile-first.
+
+---
+
+**Selamat mengerjakan! 🚀**  
+Jangan ragu untuk bertanya jika ada hal yang kurang jelas.
+```
+
+---

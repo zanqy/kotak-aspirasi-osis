@@ -1,36 +1,36 @@
 "use client";
 
+import { useCountUp } from "@/hooks/useCountUp";
+import { motion } from "framer-motion";
+
 interface StatCardProps {
   number: number;
   label: string;
-  color?: string;
+  color?: "default" | "yellow" | "green" | "purple";
+  animate?: boolean;
 }
 
-const colorMap: Record<string, { bg: string; text: string; border: string }> = {
-  default: { bg: "#f4f9fc", text: "#49769f", border: "#d0e8ef" },
-  yellow: { bg: "#fff9ec", text: "#9a7000", border: "#ffe9a0" },
-  green: { bg: "#f0fbf6", text: "#1a7a4a", border: "#a8e8c4" },
-  purple: { bg: "#f5f0fc", text: "#6a3fa0", border: "#d4b8f0" },
+const colorMap = {
+  default: { bg: "bg-blue-pale", text: "text-blue", border: "border-blue/10" },
+  yellow: { bg: "bg-amber-50", text: "text-amber-700", border: "border-amber-200" },
+  green: { bg: "bg-emerald-50", text: "text-emerald-700", border: "border-emerald-200" },
+  purple: { bg: "bg-purple-50", text: "text-purple-700", border: "border-purple-200" },
 };
 
-export default function StatCard({ number, label, color }: StatCardProps) {
-  const c = colorMap[color || "default"] || colorMap.default;
+export default function StatCard({ number, label, color = "default", animate = false }: StatCardProps) {
+  const c = colorMap[color];
+  const displayNumber = useCountUp(number, 800, animate);
 
   return (
-    <div
-      className="rounded-[14px] border p-4 flex flex-col"
-      style={{
-        backgroundColor: c.bg,
-        borderColor: c.border,
-      }}
+    <motion.div
+      className={`rounded-[14px] border p-4 flex flex-col ${c.bg} ${c.border}`}
+      whileHover={{ y: -2, scale: 1.02 }}
+      transition={{ type: "spring", stiffness: 300, damping: 20 }}
     >
-      <span
-        className="text-[26px] font-semibold leading-tight"
-        style={{ color: c.text }}
-      >
-        {number}
+      <span className={`text-[26px] font-display font-semibold leading-tight ${c.text}`}>
+        {displayNumber}
       </span>
-      <span className="text-[12px] text-[#6ea2b3] mt-1">{label}</span>
-    </div>
+      <span className="text-[12px] text-gray-400 mt-1">{label}</span>
+    </motion.div>
   );
 }

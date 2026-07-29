@@ -1,7 +1,7 @@
 # 📋 Kotak Aspirasi OSIS — Dokumentasi Lengkap
 
-> **Versi:** 0.1.0  
-> **Stack:** Next.js 14 + Supabase + Resend  
+> **Versi:** 0.1.0
+> **Stack:** Next.js 14 + Supabase + Resend + Framer Motion
 > **Tujuan:** Sistem pengelolaan aspirasi siswa untuk OSIS (Humas)
 
 ---
@@ -13,6 +13,7 @@
   - [1. Gambaran Umum](#1-gambaran-umum)
   - [2. Tech Stack](#2-tech-stack)
   - [3. Arsitektur Aplikasi](#3-arsitektur-aplikasi)
+    - [3.1 Struktur Folder Lengkap](#31-struktur-folder-lengkap)
   - [4. Struktur Database](#4-struktur-database)
     - [4.1 Tabel `users`](#41-tabel-users)
     - [4.2 Tabel `aspirasi`](#42-tabel-aspirasi)
@@ -40,6 +41,8 @@
     - [8.1 Layout Components](#81-layout-components)
     - [8.2 UI Components](#82-ui-components)
   - [9. Utility Functions](#9-utility-functions)
+  - [9a. Custom Hooks](#9a-custom-hooks)
+  - [9b. Komponen Animasi](#9b-komponen-animasi)
   - [10. Middleware \& Proteksi Route](#10-middleware--proteksi-route)
   - [11. Environment Variables](#11-environment-variables)
   - [12. Cara Setup \& Instalasi](#12-cara-setup--instalasi)
@@ -49,6 +52,7 @@
     - [13.3 Untuk Admin](#133-untuk-admin)
   - [14. Desain Sistem](#14-desain-sistem)
   - [15. Catatan Keamanan](#15-catatan-keamanan)
+  - [16. Catatan Teknis & Saran Improvement](#16-catatan-teknis--saran-improvement)
 
 ---
 
@@ -78,6 +82,7 @@
 | [Supabase SSR](https://supabase.com/docs/guides/auth/server-side) | ^0.12.0 | Server-side auth helpers & cookies |
 | [Resend](https://resend.com/) | ^6.17.1 | Email service |
 | [Tailwind CSS](https://tailwindcss.com/) | ^3.4.1 | Styling |
+| [Framer Motion](https://www.framer.com/motion/) | ^12.42.2 | Animasi |
 | [ESLint](https://eslint.org/) | ^8 | Linting |
 
 ---
@@ -133,6 +138,121 @@
 - API Routes menggunakan **Service Role Client** untuk bypass RLS (karena autentikasi sudah ditangani di middleware/auth-api)
 - Server-side helper: [`lib/supabase-server.ts`](lib/supabase-server.ts) menyediakan `createServerSupabaseClient()` menggunakan `@supabase/ssr` untuk konteks server yang membutuhkan cookie handling
 - Middleware menangani proteksi route dashboard dan pengecekan status user
+
+### 3.1 Struktur Folder Lengkap
+
+```
+📦 kotak-aspirasi-osis/
+├── .eslintrc.json                    # Konfigurasi ESLint
+├── .gitignore                        # Git ignore rules
+├── middleware.ts                     # Proteksi route dashboard & API
+├── next.config.mjs                   # Konfigurasi Next.js
+├── package.json                      # Dependencies & scripts
+├── package-lock.json
+├── postcss.config.mjs                # Konfigurasi PostCSS (Tailwind)
+├── tailwind.config.ts                # Konfigurasi Tailwind CSS
+├── tsconfig.json                     # Konfigurasi TypeScript
+│
+├── README.md                         # README utama project
+│
+├── app/                              # 📁 Next.js App Router
+│   ├── favicon.ico
+│   ├── globals.css                   # Global styles + Tailwind
+│   ├── layout.tsx                    # Root layout (html, body, metadata)
+│   ├── page.tsx                      # 🏠 Landing page + form aspirasi publik
+│   │
+│   ├── cek-aspirasi/
+│   │   └── page.tsx                  # 🔍 Cek status aspirasi (publik)
+│   │
+│   ├── dashboard/
+│   │   ├── page.tsx                  # 📊 Overview dashboard
+│   │   ├── login/
+│   │   │   └── page.tsx              # 🔐 Halaman login (email + Google)
+│   │   ├── aspirasi/
+│   │   │   ├── page.tsx              # 📋 List semua aspirasi
+│   │   │   └── [id]/
+│   │   │       └── page.tsx          # 💬 Detail & chat aspirasi
+│   │   └── anggota/
+│   │       └── page.tsx              # 👥 Manajemen anggota (admin only)
+│   │
+│   ├── fonts/
+│   │   ├── GeistVF.woff              # Font Geist (Variable)
+│   │   └── GeistMonoVF.woff          # Font Geist Mono (Variable)
+│   │
+│   └── api/                          # ⚡ API Routes
+│       ├── aspirasi/
+│       │   ├── route.ts              # POST — Submit aspirasi baru
+│       │   └── [kode]/
+│       │       ├── route.ts          # GET — Detail aspirasi by kode tiket
+│       │       └── pesan/
+│       │           └── route.ts      # POST — Kirim pesan dari siswa
+│       │
+│       ├── auth/
+│       │   ├── login/
+│       │   │   └── route.ts          # POST — Login email/password
+│       │   ├── login/google/
+│       │   │   └── route.ts          # POST — Login Google OAuth
+│       │   ├── callback/
+│       │   │   └── route.ts          # GET — OAuth callback (set cookies)
+│       │   ├── logout/
+│       │   │   └── route.ts          # POST — Logout (clear cookies)
+│       │   └── session/
+│       │       └── route.ts          # GET — Cek session user
+│       │
+│       └── dashboard/
+│           ├── aspirasi/
+│           │   ├── route.ts          # GET — List aspirasi (filter, search)
+│           │   └── [id]/
+│           │       ├── route.ts      # GET — Detail aspirasi by id
+│           │       │                 # PATCH — Update aspirasi
+│           │       └── pesan/
+│           │           └── route.ts  # POST — Kirim balasan dari humas
+│           │
+│           └── anggota/
+│               ├── route.ts          # GET — List anggota
+│               └── [id]/
+│                   └── route.ts      # PATCH — Approve/reject anggota
+│                                     # DELETE — Hapus anggota
+│
+├── components/                       # 🧩 React Components
+│   ├── layout/
+│   │   ├── ClientLayout.tsx          # Client wrapper (MotionProvider + PageTransition)
+│   │   ├── DashboardNav.tsx          # Top nav bar dashboard (title, back, avatar)
+│   │   └── BottomTabBar.tsx          # Bottom tab bar (Overview, Aspirasi, Anggota)
+│   ├── ui/
+│   │   ├── AspirasiItem.tsx          # Item daftar aspirasi
+│   │   ├── Badge.tsx                 # Badge status (7 varian warna)
+│   │   ├── Button.tsx                # Tombol (4 variant: primary, secondary, success, danger)
+│   │   ├── ChatBubble.tsx            # Bubble chat (kiri/kanan)
+│   │   ├── Dropdown.tsx              # Custom dropdown (bukan native select)
+│   │   └── StatCard.tsx              # Kartu statistik (4 varian warna)
+│   └── animations/                   # 🎬 Komponen Animasi
+│       ├── EntranceWrapper.tsx       # Wrapper animasi masuk (scale + fade)
+│       ├── LineDraw.tsx              # Animasi garis SVG yang menggambar sendiri
+│       ├── MotionProvider.tsx        # Context provider untuk preferensi animasi
+│       ├── PageTransition.tsx        # Transisi halaman horizontal slide
+│       ├── StaggerContainer.tsx      # Container dengan stagger animation untuk children
+│       └── Typewriter.tsx            # Efek typewriter mengetik teks
+│
+├── hooks/                            # 🪝 Custom React Hooks
+│   ├── useCountUp.ts                 # Animasi angka count-up (0 → target)
+│   ├── useFirstVisit.ts             # Deteksi kunjungan pertama via sessionStorage
+│   ├── usePrefersReducedMotion.ts   # Deteksi preferensi reduced motion user
+│   └── useTypewriter.ts             # Hook untuk efek typewriter
+│
+├── lib/                              # 📚 Library & Utilities
+│   ├── auth-api.ts                   # verifyAuth() & verifyAuthDashboard()
+│   ├── resend.ts                     # Resend client & kirimEmail()
+│   ├── supabase-server.ts            # createServerSupabaseClient() — @supabase/ssr
+│   ├── supabase.ts                   # createBrowserClient() & createServiceClient()
+│   └── utils.ts                      # generateKodeTiket(), formatWaktu(), getInisial(), getAnimationMode()
+│
+├── supabase/
+│   └── migration.sql                 # Database schema: tabel, enum, index, RLS, trigger
+│
+└── docs/
+    └── README-LENGKAP.md             # 📖 Dokumentasi lengkap ini
+```
 
 ---
 
@@ -488,6 +608,8 @@ kirimEmail(to: string, subject: string, html: string): Promise<boolean>
 
 ## 9. Utility Functions
 
+### lib/utils.ts
+
 **File:** [`lib/utils.ts`](lib/utils.ts)
 
 | Fungsi | Deskripsi |
@@ -495,6 +617,9 @@ kirimEmail(to: string, subject: string, html: string): Promise<boolean>
 | `generateKodeTiket(total)` | Menghasilkan kode tiket format `ASP-XXXX` (4 digit zero-padded) berdasarkan jumlah total aspirasi |
 | `formatWaktu(date)` | Memformat waktu relatif (Baru saja, X menit lalu, X jam lalu, X hari lalu, atau tanggal lengkap) |
 | `getInisial(name)` | Mengambil inisial dari nama (contoh: "John Doe" → "JD"), fallback "?" jika kosong |
+| `getAnimationMode()` | Mengecek sessionStorage untuk menentukan mode animasi: `'full'` (first visit) atau `'quick'` (navigasi) |
+
+### lib/supabase.ts
 
 **File:** [`lib/supabase.ts`](lib/supabase.ts)
 
@@ -503,11 +628,15 @@ kirimEmail(to: string, subject: string, html: string): Promise<boolean>
 | `createBrowserClient()` | Membuat Supabase client untuk browser (anon key, session persist, auto-refresh token) — singleton |
 | `createServiceClient()` | Membuat Supabase client untuk server (service role key, tanpa session, tanpa auto-refresh) |
 
+### lib/supabase-server.ts
+
 **File:** [`lib/supabase-server.ts`](lib/supabase-server.ts)
 
 | Fungsi | Deskripsi |
 |--------|-----------|
 | `createServerSupabaseClient()` | Membuat Supabase client menggunakan `@supabase/ssr` untuk server-side rendering — cookie getter/setter no-op (sesuai konteks) |
+
+### lib/resend.ts
 
 **File:** [`lib/resend.ts`](lib/resend.ts)
 
@@ -515,6 +644,92 @@ kirimEmail(to: string, subject: string, html: string): Promise<boolean>
 |--------|-----------|
 | `getResendClient()` | Membuat Resend client instance |
 | `kirimEmail(to, subject, html)` | Mengirim email via Resend, mengembalikan `boolean` sukses/gagal |
+
+### lib/auth-api.ts
+
+**File:** [`lib/auth-api.ts`](lib/auth-api.ts)
+
+| Fungsi | Deskripsi |
+|--------|-----------|
+| `verifyAuth(request)` | Memverifikasi autentikasi dari request (Authorization header atau cookie), mengembalikan user ID & email atau error response |
+| `verifyAuthDashboard(request, allowedRoles?)` | Verifikasi auth + cek status & role user di tabel `users`. Optional filter role (`'admin'` / `'member'`) |
+
+---
+
+## 9a. Custom Hooks
+
+### hooks/useFirstVisit.ts
+
+**File:** [`hooks/useFirstVisit.ts`](hooks/useFirstVisit.ts)
+
+Mendeteksi apakah user pertama kali mengunjungi halaman tertentu dalam session ini. Menggunakan `sessionStorage` dengan key yang bisa dikustomisasi.
+
+| Parameter | Tipe | Deskripsi |
+|-----------|------|-----------|
+| `storageKey` | `string` | Key sessionStorage (default: `'hasVisited'`) |
+
+**Return:** `boolean` — `true` jika first visit, `false` jika sudah pernah.
+
+**Cara pakai:**
+```typescript
+const isFirstVisit = useFirstVisit("hasVisitedLanding");
+const shouldAnimate = isFirstVisit && !reducedMotion;
+```
+
+### hooks/usePrefersReducedMotion.ts
+
+**File:** [`hooks/usePrefersReducedMotion.ts`](hooks/usePrefersReducedMotion.ts)
+
+Mendeteksi preferensi user terhadap animasi berkurang (aksesibilitas) via CSS media query `prefers-reduced-motion`.
+
+**Return:** `boolean` — `true` jika user memilih reduced motion.
+
+### hooks/useCountUp.ts
+
+**File:** [`hooks/useCountUp.ts`](hooks/useCountUp.ts)
+
+Animasi angka yang naik dari 0 ke target dalam durasi tertentu. Dipakai di komponen [`StatCard`](components/ui/StatCard.tsx).
+
+| Parameter | Tipe | Deskripsi |
+|-----------|------|-----------|
+| `target` | `number` | Angka target akhir |
+| `duration` | `number` | Durasi animasi dalam ms (default: 800) |
+| `animate` | `boolean` | Trigger untuk memulai animasi |
+
+**Return:** `number` — Angka yang teranimasi (berubah secara progresif).
+
+### hooks/useTypewriter.ts
+
+**File:** [`hooks/useTypewriter.ts`](hooks/useTypewriter.ts)
+
+Hook untuk efek typewriter — menampilkan teks karakter per karakter.
+
+| Parameter | Tipe | Deskripsi |
+|-----------|------|-----------|
+| `text` | `string` | Teks yang akan diketik |
+| `speed` | `number` | Kecepatan dalam ms per karakter |
+
+**Return:** `string` — Teks yang sudah diketik sejauh ini.
+
+---
+
+## 9b. Komponen Animasi
+
+Semua komponen animasi ada di folder [`components/animations/`](components/animations/).
+
+| Komponen | File | Fungsi |
+|----------|------|--------|
+| `MotionProvider` | [`components/animations/MotionProvider.tsx`](components/animations/MotionProvider.tsx) | Context provider yang membungkus aplikasi. Menyediakan konfigurasi Framer Motion global (reduced motion, dll) |
+| `PageTransition` | [`components/animations/PageTransition.tsx`](components/animations/PageTransition.tsx) | Animasi transisi antar halaman dengan efek horizontal slide (kiri/kanan). Dibungkus di [`ClientLayout`](components/layout/ClientLayout.tsx) |
+| `EntranceWrapper` | [`components/animations/EntranceWrapper.tsx`](components/animations/EntranceWrapper.tsx) | Wrapper untuk animasi masuk elemen (scale + fade). Juga mengekspor `springScaleVariants` untuk digunakan di komponen lain |
+| `StaggerContainer` | [`components/animations/StaggerContainer.tsx`](components/animations/StaggerContainer.tsx) | Container yang men-stagger animasi children-nya. Juga mengekspor `staggerItemVariants` untuk digunakan di item individual |
+| `Typewriter` | [`components/animations/Typewriter.tsx`](components/animations/Typewriter.tsx) | Komponen efek typewriter — menampilkan teks dengan efek mengetik. Menerima props `text`, `speed`, dan `onComplete` callback |
+| `LineDraw` | [`components/animations/LineDraw.tsx`](components/animations/LineDraw.tsx) | Animasi garis SVG yang menggambar dirinya sendiri (path length animation). Digunakan sebagai dekorasi di halaman landing |
+
+**Sistem Animasi Cerdas:**
+- **First visit:** Animasi penuh (typewriter, line draw, stagger, entrance) — dideteksi via [`useFirstVisit`](hooks/useFirstVisit.ts) yang menyimpan flag di `sessionStorage`
+- **Navigasi selanjutnya:** Animasi quick (tanpa delay besar, tanpa typewriter/line draw)
+- **Reduced motion:** Semua animasi di-skip jika user mengaktifkan `prefers-reduced-motion` — dideteksi via [`usePrefersReducedMotion`](hooks/usePrefersReducedMotion.ts)
 
 ---
 
@@ -778,6 +993,38 @@ Semua fitur Humas +:
 5. **Kode tiket** menggunakan format sederhana (inkremental) — tidak dirancang sebagai kode kriptografis
 6. **Rate limiting** tidak diterapkan di version ini (perlu dipertimbangkan untuk produksi)
 7. **Environment variables** berisi credential sensitif — jangan commit ke repositori publik
+
+---
+
+## 16. Catatan Teknis & Saran Improvement
+
+### Observasi Arsitektur
+
+1. **Kode tiket sequential** — `ASP-{counter}` berdasarkan total count aspirasi. Rentan collision kalau ada penghapusan data, tapi untuk skala sekolah masih aman. Saran: gunakan kombinasi timestamp + random string.
+
+2. **Service Role Key dipake di semua API** — Semua API routes menggunakan `SUPABASE_SERVICE_ROLE_KEY` yang bypass RLS. Idealnya pake anon key + andalkan RLS policies aja biar lebih aman dan sesuai prinsip least privilege.
+
+3. **Belum ada pagination** — [`List aspirasi`](app/dashboard/aspirasi/page.tsx) ngambil semua data tanpa limit. Bakal bermasalah kalau data udah banyak (1000+). Saran: tambah `limit` dan `offset` parameter di API.
+
+4. **Rate limiting** — Belum ada proteksi terhadap spam submit aspirasi. Saran: tambah rate limiting di API publik atau minimal throttle di client.
+
+### Performa
+
+5. **Realtime subscriptions** — Dua channel terpisah per aspirasi (pesan + status). Untuk skala besar, pertimbangkan filter yang lebih ketat atau gunakan single channel dengan event type.
+
+6. **Cookie-based auth** — Session cuma 1 jam (Max-Age=3600). Ini udah cukup baik, tapi perlu handle refresh token secara eksplisit di middleware.
+
+### UX
+
+7. **Animasi cerdas** — Sistem deteksi first visit via `sessionStorage` + dukungan `prefers-reduced-motion` udah sangat baik untuk aksesibilitas.
+
+8. **Mobile-first** — Semua halaman dibatasi `max-w-[480px]`. Ini bagus untuk konsistensi, tapi perlu dipertimbangkan untuk adaptasi tablet/desktop.
+
+### Keamanan
+
+9. **Email siswa dihapus dari response** — Privacy-aware, email cuma dipake kirim notifikasi sekali. Ini praktik yang baik.
+
+10. **Anonimitas terjaga** — Siswa ga perlu login, cukup kode tiket. Pastikan kode tiket cukup panjang/random untuk mencegah brute force.
 
 ---
 

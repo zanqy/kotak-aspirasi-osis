@@ -1,41 +1,36 @@
 "use client";
 
+import { motion } from "framer-motion";
+
 interface ButtonProps {
-  variant: "primary" | "secondary" | "danger" | "success";
+  variant?: "primary" | "secondary" | "success" | "danger";
   children: React.ReactNode;
   onClick?: () => void;
-  type?: "button" | "submit";
   disabled?: boolean;
+  type?: "button" | "submit";
   className?: string;
+  icon?: React.ReactNode;
 }
 
-const variantStyles: Record<ButtonProps["variant"], string> = {
-  primary:
-    "bg-[#7bbde8] text-white rounded-[14px] py-3.5 w-full font-medium text-[14px]",
-  secondary:
-    "bg-white text-[#4e8ea2] border border-[#c8dde8] rounded-[14px] py-3 w-full font-medium text-[14px]",
-  danger:
-    "bg-[#fff0f0] text-[#c0392b] border border-[#f5b8b8] rounded-[8px] px-3 py-1.5 text-[12px] font-medium",
-  success:
-    "bg-[#f0fbf6] text-[#1a7a4a] border border-[#a8e8c4] rounded-[8px] px-3 py-1.5 text-[12px] font-medium",
+const variants = {
+  primary: "bg-gradient-to-br from-blue to-blue-dark text-white border-none hover:-translate-y-0.5 hover:shadow-[0_12px_32px_rgba(29,111,255,0.3)]",
+  secondary: "bg-white text-blue border-[1.5px] border-[#DCE8FF] hover:bg-blue-pale hover:-translate-y-0.5 hover:border-blue hover:shadow-[0_8px_28px_rgba(29,111,255,0.1)]",
+  success: "bg-gradient-to-br from-emerald-500 to-emerald-600 text-white border-none hover:-translate-y-0.5 hover:shadow-[0_12px_32px_rgba(34,197,94,0.3)]",
+  danger: "bg-gradient-to-br from-red-500 to-red-600 text-white border-none hover:-translate-y-0.5 hover:shadow-[0_12px_32px_rgba(239,68,68,0.3)]",
 };
 
-export default function Button({
-  variant,
-  children,
-  onClick,
-  type = "button",
-  disabled = false,
-  className = "",
-}: ButtonProps) {
+export default function Button({ variant = "primary", children, onClick, disabled, type = "button", className = "", icon }: ButtonProps) {
   return (
-    <button
+    <motion.button
       type={type}
       onClick={onClick}
       disabled={disabled}
-      className={`${variantStyles[variant]} transition-opacity hover:opacity-90 disabled:opacity-50 disabled:cursor-not-allowed ${className}`}
+      className={`inline-flex items-center justify-center gap-1.5 py-[11px] px-5 rounded-[9px] text-[13px] font-display font-semibold transition-all duration-500 active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed ${variants[variant]} ${className}`}
+      whileHover={{ scale: 1.01 }}
+      whileTap={{ scale: 0.96 }}
     >
+      {icon}
       {children}
-    </button>
+    </motion.button>
   );
 }

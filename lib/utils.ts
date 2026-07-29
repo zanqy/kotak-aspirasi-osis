@@ -33,3 +33,13 @@ export function getInisial(name: string): string {
     parts[parts.length - 1].charAt(0).toUpperCase()
   );
 }
+
+/**
+ * Cek mode animasi dari sessionStorage.
+ * Return 'full' untuk first visit, 'quick' untuk navigasi.
+ */
+export function getAnimationMode(): "full" | "quick" {
+  if (typeof window === "undefined") return "full";
+  const visited = sessionStorage.getItem("hasVisited");
+  return visited === "true" ? "quick" : "full";
+}

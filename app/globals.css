@@ -2,34 +2,129 @@
 @tailwind components;
 @tailwind utilities;
 
+/* ============================================================ */
+/* CSS VARIABLES */
+/* ============================================================ */
 :root {
-  --background: #ffffff;
-  --foreground: #1a3d47;
+  --blue: #1D6FFF;
+  --blue-dark: #0A3FCC;
+  --blue-light: #60AFFF;
+  --blue-pale: #EBF2FF;
+  --navy: #0D1B3E;
+  --white: #fff;
+  --gray-50: #F8FAFF;
+  --gray-100: #EEF2FA;
+  --gray-400: #94A3B8;
+  --gray-700: #334155;
+  --radius: 10px;
+  --background: #F8FAFF;
+  --foreground: #0D1B3E;
 }
 
-* {
-  box-sizing: border-box;
-}
-
+/* ============================================================ */
+/* BASE */
+/* ============================================================ */
 body {
-  color: var(--foreground);
-  background: var(--background);
-  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+  font-family: 'Inter', system-ui, sans-serif;
+  background: var(--gray-50);
+  min-height: 100vh;
+  overflow-x: hidden;
+  color: var(--navy);
 }
 
-@layer utilities {
-  .text-balance {
-    text-wrap: balance;
+/* ============================================================ */
+/* SCROLLBAR */
+/* ============================================================ */
+::-webkit-scrollbar {
+  width: 4px;
+}
+::-webkit-scrollbar-thumb {
+  background: var(--blue);
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--blue-dark);
+}
+
+/* ============================================================ */
+/* FOCUS VISIBLE */
+/* ============================================================ */
+:focus-visible {
+  outline: 2px solid var(--blue);
+  outline-offset: 2px;
+}
+
+/* ============================================================ */
+/* SHIMMER LOADING */
+/* ============================================================ */
+.shimmer {
+  background: linear-gradient(
+    90deg,
+    #EEF2FA 0%,
+    #F8FAFF 40%,
+    #EEF2FA 80%
+  );
+  background-size: 300% 100%;
+  animation: shimmer 2s linear infinite;
+  border-radius: 8px;
+}
+
+/* ============================================================ */
+/* PARTICLES (desktop only) */
+/* ============================================================ */
+.particles {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 0;
+  overflow: hidden;
+}
+
+.particle {
+  position: absolute;
+  border-radius: 50%;
+  background: rgba(29, 111, 255, 0.10);
+  animation: floatParticle linear infinite;
+}
+
+@media (max-width: 768px) {
+  .particles {
+    display: none;
   }
 }
 
-/* Custom scrollbar for filter tabs */
+/* ============================================================ */
+/* HIDE SCROLLBAR UTILITY */
+/* ============================================================ */
 .hide-scrollbar::-webkit-scrollbar {
   display: none;
 }
 .hide-scrollbar {
   -ms-overflow-style: none;
   scrollbar-width: none;
+}
+
+/* ============================================================ */
+/* SAFE AREA (mobile bottom) */
+/* ============================================================ */
+.safe-bottom {
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+}
+
+/* ============================================================ */
+/* SR-ONLY */
+/* ============================================================ */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
 }
