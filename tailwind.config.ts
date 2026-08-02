@@ -26,8 +26,8 @@ const config: Config = {
         foreground: "var(--foreground)",
       },
       fontFamily: {
-        sans: ["var(--font-inter)", "system-ui", "-apple-system", "sans-serif"],
-        display: ["var(--font-space-grotesk)", "var(--font-inter)", "system-ui", "sans-serif"],
+        sans: ["'Inter'", "system-ui", "-apple-system", "sans-serif"],
+        display: ["'Space Grotesk'", "'Inter'", "system-ui", "sans-serif"],
       },
       borderRadius: {
         DEFAULT: "10px",
