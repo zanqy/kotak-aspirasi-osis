@@ -21,7 +21,7 @@
             --card: #FCF9F2;
             --ink: #1F1A15;
             --ink-soft: #5C5042;
-            --ink-faint: #998B75;
+            --ink-faint: #7A6B54;
             --seal: #D9A036;
             --seal-bright: #F0B94A;
             --seal-glow: rgba(217, 160, 54, 0.28);
@@ -248,6 +248,58 @@
             .progress-rail {
                 display: block;
             }
+        }
+
+        .autoscroll-toggle {
+            position: fixed;
+            right: 26px;
+            bottom: 28px;
+            z-index: 50;
+            width: 42px;
+            height: 42px;
+            border-radius: 50%;
+            border: 1px solid rgba(244, 235, 216, 0.25);
+            background: rgba(28, 23, 18, 0.55);
+            backdrop-filter: blur(6px);
+            -webkit-backdrop-filter: blur(6px);
+            color: var(--paper);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 16px;
+            transition: border-color 0.3s ease, background-color 0.3s ease, transform 0.3s var(--ease-spring);
+        }
+        .autoscroll-toggle:hover {
+            border-color: var(--seal);
+            background: rgba(28, 23, 18, 0.8);
+        }
+        .autoscroll-toggle:active {
+            transform: scale(0.94);
+        }
+        .autoscroll-toggle .ring {
+            position: absolute;
+            inset: -3px;
+            border-radius: 50%;
+            border: 1.5px solid var(--seal);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        .autoscroll-toggle.playing .ring {
+            opacity: 0.6;
+            animation: autoscrollPulse 1.8s ease-in-out infinite;
+        }
+        @keyframes autoscrollPulse {
+            0%, 100% { transform: scale(1); opacity: 0.5; }
+            50% { transform: scale(1.12); opacity: 0.1; }
+        }
+        .autoscroll-toggle .sr-label {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            overflow: hidden;
+            clip: rect(0 0 0 0);
+            white-space: nowrap;
         }
 
         .story {
@@ -490,7 +542,6 @@
             opacity: 0;
             pointer-events: none;
             transition: opacity 0.5s var(--ease-out-q), transform 0.6s var(--ease-spring);
-            will-change: transform, opacity;
         }
         .form-card-wrapper.visible {
             pointer-events: auto;
@@ -850,6 +901,32 @@
         }
         .field.shake {
             animation: shake 0.5s cubic-bezier(.36, .07, .19, .97) both;
+        }
+        .field-error {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 11.5px;
+            color: var(--wax);
+            margin-top: 2px;
+            max-height: 0;
+            opacity: 0;
+            overflow: hidden;
+            transition: max-height 0.35s var(--ease-out-q), opacity 0.3s ease, margin-top 0.35s ease;
+        }
+        .field-error.show {
+            max-height: 40px;
+            opacity: 1;
+            margin-top: 6px;
+        }
+        .field-error i {
+            font-size: 13px;
+            flex-shrink: 0;
+        }
+        .field.has-error .field-underline::after {
+            background: var(--wax);
+            width: 100%;
+            box-shadow: none;
         }
         @keyframes shake {
             10%,
@@ -1388,6 +1465,13 @@
     </nav>
     <div class="progress-rail"><div class="progress-fill" id="progressFill"></div></div>
 
+    <!-- AUTO-SCROLL PLAY/PAUSE -->
+    <button type="button" class="autoscroll-toggle playing" id="autoscrollToggle" aria-pressed="true">
+        <span class="ring" aria-hidden="true"></span>
+        <i class="ti ti-player-pause-filled" id="autoscrollIcon" aria-hidden="true"></i>
+        <span class="sr-label" id="autoscrollLabel">Jeda gulir otomatis</span>
+    </button>
+
     <!-- STORY -->
     <section class="story" id="story">
         <div class="stage" id="stage">
@@ -1447,7 +1531,7 @@
                     <div class="envelope-body" id="envelopeBody">
                         <div class="intro-mini" id="fmIntro">Tulis di sini</div>
                         <h3 id="fmTitle">Suratmu, <em>didengar sungguhan.</em></h3>
-                        <form id="aspirasiForm" onsubmit="handleSubmit(event)" novalidate>
+                        <form id="aspirasiForm" novalidate>
                             <div style="display:grid; grid-template-columns:1fr 1fr; gap:18px; margin-bottom:4px;">
                                 <div class="field" id="fldKategori">
                                     <label for="kategori">Kategori Topik <span class="opt">(opsional)</span></label>
@@ -1466,6 +1550,7 @@
                                     <div class="field-underline" id="ulEmail">
                                         <input type="email" id="email" placeholder="Hanya untuk mengirim kode tiket">
                                     </div>
+                                    <div class="field-error" id="errEmail" role="alert"><i class="ti ti-alert-circle" aria-hidden="true"></i> <span>Format email belum benar. Contoh: nama@email.com</span></div>
                                 </div>
                             </div>
                             <div class="field" id="fldAspirasi" style="margin-bottom:10px;">
@@ -1474,13 +1559,14 @@
                                     <textarea id="aspirasi" placeholder="Boleh soal sekolah, boleh cuma ingin cerita. Mulai dari mana saja — kami akan baca sampai selesai." required maxlength="1200"></textarea>
                                 </div>
                                 <div class="char-count" id="charCount">0 / 1200</div>
+                                <div class="field-error" id="errAspirasi" role="alert"><i class="ti ti-alert-circle" aria-hidden="true"></i> <span>Harap isi suratmu terlebih dahulu.</span></div>
                             </div>
                             <div class="field-actions" id="fldActions">
                                 <button type="submit" class="btn-seal" id="btnKirim">
                                     <i class="ti ti-send" aria-hidden="true"></i>
                                     <span id="btnKirimText">Segel & Kirim</span>
                                 </button>
-                                <button type="button" class="btn-track" onclick="openStatusModal()">Lacak Status Surat</button>
+                                <button type="button" class="btn-track" id="btnOpenStatus">Lacak Status Surat</button>
                             </div>
                         </form>
                         <div class="side-note" id="fmNote"><i class="ti ti-shield-lock" aria-hidden="true"></i> Identitasmu 100% rahasia. Kami tidak pernah meminta nama.</div>
@@ -1509,7 +1595,7 @@
          ============================================================ -->
     <div class="modal-overlay" id="statusModal">
         <div class="modal-box" id="modalBox">
-            <button class="modal-close" onclick="closeStatusModal()" aria-label="Tutup">
+            <button class="modal-close" id="btnCloseModal" aria-label="Tutup">
                 <i class="ti ti-x"></i>
             </button>
             <div class="modal-inner">
@@ -1533,7 +1619,7 @@
                 <label class="registry-label" for="statusInput">Masukkan Kode Tiket Surat</label>
                 <div class="search-row">
                     <input type="text" id="statusInput" placeholder="OSIS-XXXXXXXXX" autocomplete="off">
-                    <button type="button" class="btn-lacak" id="btnLacak" onclick="submitStatusCheck()">
+                    <button type="button" class="btn-lacak" id="btnLacak">
                         <i class="ti ti-search"></i> Lacak
                     </button>
                 </div>
@@ -1548,8 +1634,8 @@
                     <div class="result-message" id="resultMessage"></div>
                     <div class="result-privacy-note"><i class="ti ti-eye-off"></i> Suratmu tetap tersimpan aman dan anonim di sini — tidak berpindah tempat.</div>
                     <div class="modal-actions-bottom">
-                        <button type="button" onclick="closeStatusModal()">Tutup</button>
-                        <button type="button" class="primary" onclick="resetStatusCheck()">Cek Surat Lain</button>
+                        <button type="button" id="btnCloseBottom">Tutup</button>
+                        <button type="button" class="primary" id="btnResetCheck">Cek Surat Lain</button>
                     </div>
                 </div>
             </div>
@@ -1633,8 +1719,13 @@
 
         /* ============================================================
            AMBIENT MOTES
+           Dikurangi drastis (atau dimatikan) jika pengguna meminta
+           reduced motion, dan jumlah partikel diskalakan ke lebar layar
+           supaya perangkat kelas bawah tidak terbebani.
            ============================================================ */
+        var prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
         (function() {
+            if (prefersReducedMotion) return;
             var layer = document.getElementById('stageMotes');
             var n = window.innerWidth < 700 ? 14 : 26;
             var motes = [];
@@ -1922,7 +2013,9 @@
         function whisperTick() { whisperClock += 1; var t = whisperClock * 0.016;
             whisperEls.forEach(function(el, i) { var vis = whisperVisibility[i] || 0; if (vis <= 0.001) { el.style.opacity =
                         0; return; }
-                el.style.opacity = (vis * maxOpacity).toFixed(3); var d = whisperDrift[i]; var driftY = Math.sin(t * d
+                el.style.opacity = (vis * maxOpacity).toFixed(3);
+                if (prefersReducedMotion) { el.style.transform = 'translate3d(0,0,0)'; return; }
+                var d = whisperDrift[i]; var driftY = Math.sin(t * d
                     .speedY + d.phase) * d.ampY; var driftX = Math.cos(t * d.speedX + d.phase) * d.ampX; var driftRot = Math
                     .sin(t * d.speedY * 0.5 + d.phase) * d.rot; var baseY = whisperBaseY[i] || 0; var z = el.dataset.z;
                 el.style.transform = 'translate3d(' + driftX.toFixed(1) + 'px,' + (baseY + driftY).toFixed(1) + 'px,' +
@@ -1930,9 +2023,13 @@
             requestAnimationFrame(whisperTick); }
         requestAnimationFrame(whisperTick);
 
-        function idleTiltTick() { updateScroll();
-            requestAnimationFrame(idleTiltTick); }
-        requestAnimationFrame(idleTiltTick);
+        // idleTiltTick hanya perlu berjalan terus-menerus untuk efek tilt 3D
+        // mengikuti kursor; jika reduced motion diminta, cukup panggil sekali
+        // saat scroll/resize (sudah ditangani listener lain) dan hentikan RAF ini.
+        if (!prefersReducedMotion) {
+            (function idleTiltTick() { updateScroll();
+                requestAnimationFrame(idleTiltTick); })();
+        }
 
         /* ============================================================
            FORM LOGIC
@@ -1961,17 +2058,45 @@
         function shakeField(el) { el.classList.add('shake');
             setTimeout(function() { el.classList.remove('shake'); }, 500); }
 
+        function showFieldError(field, errorEl) {
+            field.classList.add('has-error');
+            errorEl.classList.add('show');
+            shakeField(field);
+        }
+
+        function clearFieldError(field, errorEl) {
+            field.classList.remove('has-error');
+            errorEl.classList.remove('show');
+        }
+
+        var errAspirasi = document.getElementById('errAspirasi');
+        var errEmail = document.getElementById('errEmail');
+        var fieldAspirasiEl = document.getElementById('fldAspirasi');
+        var fieldEmailEl = document.getElementById('fldEmail');
+
+        // Bersihkan pesan error begitu pengguna mulai memperbaiki isian
+        aspirasiEl.addEventListener('input', function() {
+            if (aspirasiEl.value.trim()) clearFieldError(fieldAspirasiEl, errAspirasi);
+        });
+        document.getElementById('email').addEventListener('input', function() {
+            var v = document.getElementById('email').value.trim();
+            if (!v || v.includes('@')) clearFieldError(fieldEmailEl, errEmail);
+        });
+
         function handleSubmit(e) {
             e.preventDefault();
             var textarea = document.getElementById('aspirasi');
             var text = textarea.value.trim();
             var field = textarea.closest('.field');
-            if (!text) { shakeField(field);
+            if (!text) { showFieldError(field, errAspirasi);
                 textarea.focus(); return; }
-            var email = document.getElementById('email').value.trim();
-            if (email && !email.includes('@')) { var ef = document.getElementById('email').closest('.field');
-                shakeField(ef);
-                document.getElementById('email').focus(); return; }
+            clearFieldError(field, errAspirasi);
+            var emailInput = document.getElementById('email');
+            var email = emailInput.value.trim();
+            if (email && !email.includes('@')) { var ef = emailInput.closest('.field');
+                showFieldError(ef, errEmail);
+                emailInput.focus(); return; }
+            clearFieldError(fieldEmailEl, errEmail);
             flapContainer.classList.add('closed');
             envelopeSeal.classList.add('pressed');
             var code = 'OSIS-' + Math.random().toString(36).substr(2, 9).toUpperCase();
@@ -1996,6 +2121,8 @@
                     document.getElementById('aspirasiForm').reset();
                     charCount.classList.remove('show');
                     charCount.textContent = '0 / 1200';
+                    clearFieldError(fieldAspirasiEl, errAspirasi);
+                    clearFieldError(fieldEmailEl, errEmail);
                     flapContainer.classList.remove('closed');
                     envelopeSeal.classList.remove('pressed');
                 }, 3000);
@@ -2104,9 +2231,77 @@
             }, 900 + Math.random() * 500);
         }
 
+        /* ============================================================
+           UNOBTROSIVE JS — semua event dipasang di sini, bukan lewat
+           atribut onclick/onsubmit di HTML
+           ============================================================ */
+        document.getElementById('aspirasiForm').addEventListener('submit', handleSubmit);
+        document.getElementById('btnOpenStatus').addEventListener('click', openStatusModal);
+        document.getElementById('btnCloseModal').addEventListener('click', closeStatusModal);
+        document.getElementById('btnLacak').addEventListener('click', submitStatusCheck);
+        document.getElementById('btnCloseBottom').addEventListener('click', closeStatusModal);
+        document.getElementById('btnResetCheck').addEventListener('click', resetStatusCheck);
         statusModal.addEventListener('click', function(e) { if (e.target === statusModal) closeStatusModal(); });
         statusInput.addEventListener('keydown', function(e) { if (e.key === 'Enter') submitStatusCheck(); });
         document.addEventListener('keydown', function(e) { if (e.key === 'Escape') closeStatusModal(); });
+
+        /* ============================================================
+           TOMBOL PLAY/PAUSE AUTO-SCROLL
+           Memberi indikator visual + kontrol eksplisit, selain
+           pause-otomatis saat pengguna scroll manual.
+           ============================================================ */
+        var autoscrollToggle = document.getElementById('autoscrollToggle');
+        var autoscrollIcon = document.getElementById('autoscrollIcon');
+        var autoscrollLabel = document.getElementById('autoscrollLabel');
+        var userPausedManually = false;
+
+        function setAutoscrollUI(isPlaying) {
+            autoscrollToggle.classList.toggle('playing', isPlaying);
+            autoscrollToggle.setAttribute('aria-pressed', isPlaying ? 'true' : 'false');
+            autoscrollIcon.className = isPlaying ? 'ti ti-player-pause-filled' : 'ti ti-player-play-filled';
+            autoscrollLabel.textContent = isPlaying ? 'Jeda gulir otomatis' : 'Lanjutkan gulir otomatis';
+        }
+
+        autoscrollToggle.addEventListener('click', function() {
+            if (userPausedManually || manualPause) {
+                // Lanjutkan
+                userPausedManually = false;
+                manualPause = false;
+                if (resumeTimer) clearTimeout(resumeTimer);
+                if (window.scrollY < storyBottomY() - 1) { autoScrollEnabled = true; }
+                setAutoscrollUI(true);
+            } else {
+                // Jeda permanen sampai ditekan lagi
+                userPausedManually = true;
+                manualPause = true;
+                if (resumeTimer) clearTimeout(resumeTimer);
+                setAutoscrollUI(false);
+            }
+        });
+
+        // Jika pengguna men-scroll manual, tombol ikut menunjukkan status "jeda"
+        // selama masa jeda otomatis (RESUME_DELAY) berlangsung.
+        var _origPause = pauseAutoScroll;
+        pauseAutoScroll = function() {
+            if (userPausedManually) return; // sudah dijeda manual, jangan diubah timer-nya
+            _origPause();
+            setAutoscrollUI(false);
+            if (resumeTimer) clearTimeout(resumeTimer);
+            resumeTimer = setTimeout(function() {
+                manualPause = false;
+                if (!userPausedManually) setAutoscrollUI(true);
+            }, RESUME_DELAY);
+        };
+
+        // Saat auto-scroll berhenti karena sudah sampai bawah halaman
+        (function watchAutoScrollEnd() {
+            var checkInterval = setInterval(function() {
+                if (!autoScrollEnabled && !userPausedManually) {
+                    setAutoscrollUI(false);
+                    clearInterval(checkInterval);
+                }
+            }, 500);
+        })();
     </script>
 </body>
 </html>

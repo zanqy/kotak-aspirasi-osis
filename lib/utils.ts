@@ -2,6 +2,20 @@ export function generateKodeTiket(total: number): string {
   return `ASP-${(total + 1).toString().padStart(4, "0")}`;
 }
 
+/**
+ * Generate kode tiket unik tanpa bergantung pada query count ke database.
+ * Menggunakan kombinasi timestamp + angka acak sehingga tetap unik meskipun
+ * query count gagal (misal karena RLS atau masalah koneksi).
+ */
+export function generateKodeTiketUnik(): string {
+  const ts = Date.now().toString(36).toUpperCase().slice(-4);
+  const rand = Math.floor(Math.random() * 1296) // 36^2
+    .toString(36)
+    .toUpperCase()
+    .padStart(2, "0");
+  return `ASP-${ts}${rand}`;
+}
+
 export function formatWaktu(date: string | Date): string {
   const now = new Date();
   const then = new Date(date);

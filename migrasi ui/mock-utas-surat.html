@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mock — Utas Surat Berbalas</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700;9..144,ital,450&family=Inter:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.30.0/dist/tabler-icons.min.css">
+<style>
+:root{
+  --paper:#F1E9D8; --paper-deep:#E7DCC4; --card:#FBF7EE;
+  --ink:#2B2620; --ink-soft:#6B5F4C; --ink-faint:#A69A80;
+  --seal:#E0A526; --seal-deep:#B5810E; --line:#D8CBA9; --ok:#4F7942;
+  --shadow-paper:0 1px 0 rgba(43,38,32,0.05), 0 18px 40px -20px rgba(43,38,32,0.35);
+  --shadow-lift:0 1px 0 rgba(43,38,32,0.06), 0 28px 60px -24px rgba(43,38,32,0.45);
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{
+  font-family:'Inter',sans-serif; background:var(--paper); color:var(--ink);
+  -webkit-font-smoothing:antialiased; padding:32px 16px 60px;
+}
+::selection{background:var(--seal); color:var(--ink);}
+
+.compare-wrap{ max-width:1180px; margin:0 auto; }
+.compare-title{ text-align:center; margin-bottom:8px; }
+.compare-title h1{ font-family:'Fraunces',serif; font-weight:600; font-size:24px; }
+.compare-title p{ font-size:12.5px; color:var(--ink-soft); margin-top:4px; }
+
+.compare-grid{
+  display:grid; grid-template-columns:1fr 1fr; gap:26px; margin-top:30px; align-items:start;
+}
+@media (max-width:880px){ .compare-grid{ grid-template-columns:1fr; } }
+
+.side-label{
+  font-family:'Fraunces',serif; font-weight:600; font-size:15px; margin-bottom:10px;
+  display:flex; align-items:center; gap:8px; color:var(--ink-soft);
+}
+.side-label i{ color:var(--seal-deep); }
+
+/* ============================================================
+   PANEL — kartu surat yang membungkus kedua mock-up
+   ============================================================ */
+.mock-panel{
+  background:var(--card); border:1px solid var(--line); border-radius:6px;
+  box-shadow:var(--shadow-paper); position:relative; overflow:hidden;
+}
+.mock-panel::before{
+  content:''; position:absolute; inset:9px; border:1.5px dashed var(--line);
+  border-radius:2px; pointer-events:none; z-index:0;
+}
+.mock-panel::after{
+  content:''; position:absolute; top:0; right:0; width:0; height:0;
+  border-style:solid; border-width:0 30px 30px 0; border-color:transparent var(--paper-deep) transparent transparent;
+  filter:drop-shadow(-2px 2px 3px rgba(43,38,32,0.1)); z-index:0;
+}
+.mock-panel-inner{ position:relative; z-index:1; padding:18px 18px 0; }
+
+/* header tiket kecil di dalam panel */
+.thread-head{
+  display:flex; align-items:center; justify-content:space-between; gap:10px;
+  padding-bottom:14px; border-bottom:1.5px solid var(--line); margin-bottom:16px; flex-wrap:wrap;
+}
+.thread-ticket{
+  font-family:'Space Mono',monospace; font-size:11px; color:var(--seal-deep);
+  background:rgba(224,165,38,0.08); border:1px solid rgba(224,165,38,0.25);
+  padding:5px 11px; border-radius:3px;
+}
+.thread-status{
+  font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:0.4px;
+  padding:3px 10px; border-radius:99px; background:rgba(79,121,66,0.15); color:var(--ok);
+}
+
+/* ============================================================
+   UTAS SURAT — pengganti chat bubble
+   ============================================================ */
+.thread-body{ display:flex; flex-direction:column; gap:0; padding-bottom:16px; max-height:400px; overflow-y:auto; }
+.thread-body::-webkit-scrollbar{ width:6px; }
+.thread-body::-webkit-scrollbar-thumb{ background:var(--ink-faint); border-radius:4px; }
+
+.letter-entry{
+  padding:14px 4px 16px; border-bottom:1px dashed var(--line);
+}
+.letter-entry:last-child{ border-bottom:none; }
+
+.entry-meta{
+  display:flex; align-items:center; justify-content:space-between; margin-bottom:7px; gap:8px;
+}
+.entry-who{
+  display:flex; align-items:center; gap:7px;
+  font-family:'Fraunces',serif; font-weight:600; font-size:12.5px;
+}
+.entry-who .who-dot{
+  width:7px; height:7px; border-radius:50%; flex-shrink:0;
+}
+.entry-who.role-siswa{ color:var(--ink); }
+.entry-who.role-siswa .who-dot{ background:var(--ink-faint); }
+.entry-who.role-humas{ color:var(--seal-deep); }
+.entry-who.role-humas .who-dot{ background:var(--seal); }
+.entry-time{ font-size:10.5px; color:var(--ink-faint); font-family:'Space Mono',monospace; }
+
+.entry-text{
+  font-size:13.5px; line-height:1.65; color:var(--ink); padding-left:16px;
+}
+.letter-entry.role-humas .entry-text{
+  background:var(--paper-deep); padding:11px 14px; border-radius:3px; border-left:3px solid var(--seal);
+  margin-left:16px;
+}
+.letter-entry.role-siswa .entry-text{
+  padding-left:16px; border-left:3px solid var(--line); margin-left:0;
+  padding:2px 0 2px 14px;
+}
+
+/* system note (perubahan status di tengah utas, bukan pesan) */
+.system-note{
+  display:flex; align-items:center; gap:10px; padding:6px 4px; margin:2px 0;
+}
+.system-note::before, .system-note::after{ content:''; flex:1; height:1px; background:var(--line); }
+.system-note span{
+  font-size:10px; text-transform:uppercase; letter-spacing:0.5px; color:var(--ink-faint);
+  white-space:nowrap; display:flex; align-items:center; gap:5px;
+}
+.system-note i{ font-size:11px; }
+
+/* ============================================================
+   FORM BALAS — di bawah utas
+   ============================================================ */
+.reply-form{ padding:14px 4px 18px; border-top:1.5px solid var(--line); }
+.reply-form textarea{
+  width:100%; font-family:'Inter',sans-serif; font-size:13px; color:var(--ink);
+  background:var(--paper); border:1.5px solid var(--line); border-radius:3px;
+  padding:10px 12px; min-height:64px; resize:vertical; outline:none; margin-bottom:10px;
+  transition:border-color 0.25s ease, box-shadow 0.25s ease;
+}
+.reply-form textarea:focus{ border-color:var(--seal-deep); box-shadow:0 0 0 3px rgba(224,165,38,0.18); }
+.reply-form-foot{ display:flex; align-items:center; justify-content:space-between; gap:10px; }
+.reply-hint{ font-size:11px; color:var(--ink-faint); }
+.btn-send{
+  background:var(--ink); color:var(--paper); border:none; border-radius:3px;
+  padding:9px 18px; font-family:'Fraunces',serif; font-weight:600; font-size:12.5px;
+  display:flex; align-items:center; gap:7px; cursor:pointer;
+  transition:transform 0.25s cubic-bezier(0.34,1.56,0.64,1), background 0.25s ease;
+}
+.btn-send:hover{ background:#3a332a; transform:translateY(-1px); }
+
+/* state: belum bisa balas (status belum "dibalas") */
+.reply-locked{
+  padding:16px 4px 18px; border-top:1.5px solid var(--line);
+  display:flex; align-items:center; gap:10px;
+  font-size:12px; color:var(--ink-faint);
+}
+.reply-locked i{ font-size:18px; color:var(--ink-faint); }
+
+/* ============================================================
+   SISI HUMAS — panel lebih ramping, ada dropdown status di atas utas
+   ============================================================ */
+.humas-toolbar{
+  display:flex; align-items:center; gap:8px; padding-bottom:12px; margin-bottom:2px; flex-wrap:wrap;
+}
+.humas-select{
+  font-family:'Inter',sans-serif; font-size:12px; color:var(--ink);
+  background:var(--paper); border:1.5px solid var(--line); border-radius:3px;
+  padding:7px 10px; outline:none; cursor:pointer;
+}
+.humas-note{ font-size:10.5px; color:var(--ink-faint); margin-left:auto; }
+
+.annotation{
+  font-size:11.5px; color:var(--ink-soft); background:rgba(224,165,38,0.07);
+  border:1px dashed rgba(224,165,38,0.35); border-radius:4px; padding:8px 12px; margin-top:14px;
+  line-height:1.55;
+}
+.annotation b{ color:var(--seal-deep); }
+</style>
+</head>
+<body>
+
+<div class="compare-wrap">
+  <div class="compare-title">
+    <h1>Utas Surat Berbalas — Mock Dua Sisi</h1>
+    <p>Bukan chat bubble app biasa — tiap pesan tampil sebagai lembar pesan pendek dalam satu utas kronologis.</p>
+  </div>
+
+  <div class="compare-grid">
+
+    <!-- ============ SISI SISWA ============ -->
+    <div>
+      <div class="side-label"><i class="ti ti-user"></i> Sisi siswa — /cek-aspirasi</div>
+      <div class="mock-panel">
+        <div class="mock-panel-inner">
+
+          <div class="thread-head">
+            <span class="thread-ticket"><i class="ti ti-ticket"></i> ASP-7F3K</span>
+            <span class="thread-status">Dibalas</span>
+          </div>
+
+          <div class="thread-body">
+
+            <div class="letter-entry role-siswa">
+              <div class="entry-meta">
+                <div class="entry-who role-siswa"><span class="who-dot"></span>Kamu</div>
+                <div class="entry-time">28 Jul, 09:14</div>
+              </div>
+              <div class="entry-text">Kantin selalu penuh banget pas jam istirahat pertama, jadi banyak yang gak kebagian tempat duduk. Mungkin bisa ditambah meja atau jam istirahat dibagi dua gelombang?</div>
+            </div>
+
+            <div class="system-note"><span><i class="ti ti-arrow-right"></i> Status diubah ke Diproses</span></div>
+
+            <div class="letter-entry role-humas">
+              <div class="entry-meta">
+                <div class="entry-who role-humas"><span class="who-dot"></span>Humas OSIS</div>
+                <div class="entry-time">28 Jul, 14:02</div>
+              </div>
+              <div class="entry-text">Terima kasih masukannya! Sebelum diteruskan ke kesiswaan, boleh tau kantin mana yang dimaksud — kantin utama atau kantin belakang lab?</div>
+            </div>
+
+            <div class="letter-entry role-siswa">
+              <div class="entry-meta">
+                <div class="entry-who role-siswa"><span class="who-dot"></span>Kamu</div>
+                <div class="entry-time">28 Jul, 16:40</div>
+              </div>
+              <div class="entry-text">Kantin utama, yang deket lapangan.</div>
+            </div>
+
+            <div class="system-note"><span><i class="ti ti-arrow-right"></i> Status diubah ke Dibalas</span></div>
+
+            <div class="letter-entry role-humas">
+              <div class="entry-meta">
+                <div class="entry-who role-humas"><span class="who-dot"></span>Humas OSIS</div>
+                <div class="entry-time">29 Jul, 08:15</div>
+              </div>
+              <div class="entry-text">Sudah kami teruskan ke bagian sarana. Rencananya jam istirahat pertama akan dibagi dua gelombang mulai semester depan. Terima kasih ya!</div>
+            </div>
+
+          </div>
+
+          <div class="reply-form">
+            <textarea placeholder="Tulis balasan kamu di sini..."></textarea>
+            <div class="reply-form-foot">
+              <span class="reply-hint">Balasanmu tetap anonim untuk humas</span>
+              <button class="btn-send"><i class="ti ti-send"></i> Kirim</button>
+            </div>
+          </div>
+
+        </div>
+      </div>
+      <div class="annotation">
+        <b>Catatan:</b> kotak balas cuma muncul kalau status = <code>dibalas</code>. Kalau status masih <code>menunggu</code>/<code>diproses</code>, bagian bawah diganti pesan pasif (lihat versi di bawah).
+      </div>
+
+      <!-- variasi: status belum "dibalas" -->
+      <div class="mock-panel" style="margin-top:18px;">
+        <div class="mock-panel-inner">
+          <div class="thread-head">
+            <span class="thread-ticket"><i class="ti ti-ticket"></i> ASP-9K2M</span>
+            <span class="thread-status" style="background:rgba(181,84,30,0.13); color:#B5541E;">Diproses</span>
+          </div>
+          <div class="thread-body" style="max-height:none;">
+            <div class="letter-entry role-siswa">
+              <div class="entry-meta">
+                <div class="entry-who role-siswa"><span class="who-dot"></span>Kamu</div>
+                <div class="entry-time">30 Jul, 10:02</div>
+              </div>
+              <div class="entry-text">Wifi lab komputer sering mati pas jam TIK.</div>
+            </div>
+          </div>
+          <div class="reply-locked">
+            <i class="ti ti-clock-hour-4"></i>
+            <span>Menunggu balasan dari OSIS — kamu bisa membalas begitu humas merespons suratmu.</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ============ SISI HUMAS ============ -->
+    <div>
+      <div class="side-label"><i class="ti ti-shield-check"></i> Sisi humas — panel detail dashboard</div>
+      <div class="mock-panel">
+        <div class="mock-panel-inner">
+
+          <div class="thread-head">
+            <span class="thread-ticket"><i class="ti ti-ticket"></i> ASP-7F3K</span>
+            <span class="thread-status">Dibalas</span>
+          </div>
+
+          <div class="humas-toolbar">
+            <select class="humas-select">
+              <option>Surat Masuk</option>
+              <option>Diproses</option>
+              <option selected>Dibalas</option>
+              <option>Diteruskan</option>
+            </select>
+            <span class="humas-note">Kategori: Fasilitas</span>
+          </div>
+
+          <div class="thread-body">
+
+            <div class="letter-entry role-siswa">
+              <div class="entry-meta">
+                <div class="entry-who role-siswa"><span class="who-dot"></span>Siswa (anonim)</div>
+                <div class="entry-time">28 Jul, 09:14</div>
+              </div>
+              <div class="entry-text">Kantin selalu penuh banget pas jam istirahat pertama, jadi banyak yang gak kebagian tempat duduk. Mungkin bisa ditambah meja atau jam istirahat dibagi dua gelombang?</div>
+            </div>
+
+            <div class="system-note"><span><i class="ti ti-arrow-right"></i> Kamu mengubah status ke Diproses</span></div>
+
+            <div class="letter-entry role-humas">
+              <div class="entry-meta">
+                <div class="entry-who role-humas"><span class="who-dot"></span>Kamu (Humas)</div>
+                <div class="entry-time">28 Jul, 14:02</div>
+              </div>
+              <div class="entry-text">Terima kasih masukannya! Sebelum diteruskan ke kesiswaan, boleh tau kantin mana yang dimaksud — kantin utama atau kantin belakang lab?</div>
+            </div>
+
+            <div class="letter-entry role-siswa">
+              <div class="entry-meta">
+                <div class="entry-who role-siswa"><span class="who-dot"></span>Siswa (anonim)</div>
+                <div class="entry-time">28 Jul, 16:40</div>
+              </div>
+              <div class="entry-text">Kantin utama, yang deket lapangan.</div>
+            </div>
+
+          </div>
+
+          <div class="reply-form">
+            <textarea placeholder="Tulis balasan untuk siswa ini..."></textarea>
+            <div class="reply-form-foot">
+              <span class="reply-hint">Terkirim &amp; tercatat di log aktivitas</span>
+              <button class="btn-send"><i class="ti ti-send"></i> Kirim balasan</button>
+            </div>
+          </div>
+
+        </div>
+      </div>
+      <div class="annotation">
+        <b>Beda dari sisi siswa:</b> humas selalu bisa balas kapan saja (gak terkunci status), dan ada dropdown ubah status + label kategori langsung di atas utas — biar gak perlu pindah panel buat dua aksi itu.
+      </div>
+    </div>
+
+  </div>
+</div>
+
+</body>
+</html>

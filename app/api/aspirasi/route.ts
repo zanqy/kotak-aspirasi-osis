@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createServiceClient } from "@/lib/supabase";
-import { generateKodeTiket } from "@/lib/utils";
+import { generateKodeTiketUnik } from "@/lib/utils";
 import { kirimEmail } from "@/lib/resend";
 
 export async function POST(request: NextRequest) {
@@ -17,20 +17,14 @@ export async function POST(request: NextRequest) {
 
     const supabase = createServiceClient();
 
-    // Count total aspirasi
-    const { count, error: countError } = await supabase
-      .from("aspirasi")
-      .select("*", { count: "exact", head: true });
+    // DEBUG: cek env terbaca
+    console.log("[DEBUG] URL:", process.env.NEXT_PUBLIC_SUPABASE_URL);
+    console.log("[DEBUG] SERVICE_KEY ada:", !!process.env.SUPABASE_SERVICE_ROLE_KEY);
 
-    if (countError) {
-      return NextResponse.json(
-        { error: "Gagal menghitung data" },
-        { status: 500 }
-      );
-    }
-
-    const total = count || 0;
-    const kode_tiket = generateKodeTiket(total);
+    // Generate kode tiket unik tanpa bergantung pada query count.
+    // Query count sebelumnya rawan gagal (RLS / koneksi) sehingga memicu
+    // error "Gagal menghitung data".
+    const kode_tiket = generateKodeTiketUnik();
 
     let status_email: "terkirim" | "gagal" | "tidak_ada" = "tidak_ada";
 
@@ -49,6 +43,7 @@ export async function POST(request: NextRequest) {
       .single();
 
     if (insertError) {
+      console.error("[DEBUG] insertError:", JSON.stringify(insertError, null, 2));
       return NextResponse.json(
         { error: "Gagal menyimpan aspirasi" },
         { status: 500 }
@@ -96,7 +91,8 @@ export async function POST(request: NextRequest) {
     }
 
     return NextResponse.json({ kode_tiket });
-  } catch {
+  } catch (err) {
+    console.error("[DEBUG] catch error:", err);
     return NextResponse.json(
       { error: "Terjadi kesalahan server" },
       { status: 500 }

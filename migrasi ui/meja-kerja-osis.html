@@ -1,0 +1,836 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>Meja Kerja — Humas OSIS</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,500;9..144,600;9..144,700;9..144,ital,450&family=Inter:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.30.0/dist/tabler-icons.min.css">
+
+<style>
+/* ============================================================
+   TOKENS — identik dengan ref 2, ini "kertas" yang sama dipakai
+   di seluruh sistem (halaman siswa & meja kerja pengurus)
+   ============================================================ */
+:root{
+  --paper:      #F1E9D8;
+  --paper-deep: #E7DCC4;
+  --card:       #FBF7EE;
+  --ink:        #2B2620;
+  --ink-soft:   #6B5F4C;
+  --ink-faint:  #A69A80;
+  --seal:       #E0A526;
+  --seal-deep:  #B5810E;
+  --line:       #D8CBA9;
+  --ok:         #4F7942;
+  --warn:       #B5541E;
+  --radius-card: 3px;
+  --shadow-paper: 0 1px 0 rgba(43,38,32,0.05), 0 18px 40px -20px rgba(43,38,32,0.35);
+  --shadow-lift:  0 1px 0 rgba(43,38,32,0.06), 0 28px 60px -24px rgba(43,38,32,0.45);
+}
+
+*{margin:0;padding:0;box-sizing:border-box;}
+@media (prefers-reduced-motion: reduce){
+  *{animation-duration:0.01ms !important; animation-iteration-count:1 !important; transition-duration:0.01ms !important;}
+}
+
+body{
+  font-family:'Inter',sans-serif;
+  background:
+    radial-gradient(1000px 500px at 85% -10%, rgba(224,165,38,0.06), transparent 60%),
+    var(--paper);
+  background-image:
+    radial-gradient(1000px 500px at 85% -10%, rgba(224,165,38,0.06), transparent 60%),
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.02'/%3E%3C/svg%3E"),
+    linear-gradient(var(--paper), var(--paper));
+  color:var(--ink);
+  min-height:100vh;
+  -webkit-font-smoothing:antialiased;
+}
+::selection{background:var(--seal); color:var(--ink);}
+::-webkit-scrollbar{width:8px;}
+::-webkit-scrollbar-track{background:var(--paper-deep);}
+::-webkit-scrollbar-thumb{background:var(--ink-faint); border-radius:4px;}
+:focus-visible{outline:2.5px solid var(--seal-deep); outline-offset:3px; border-radius:2px;}
+
+@keyframes riseIn{ from{opacity:0; transform:translateY(22px);} to{opacity:1; transform:translateY(0);} }
+@keyframes riseInSm{ from{opacity:0; transform:translateY(12px);} to{opacity:1; transform:translateY(0);} }
+@keyframes unfold{
+  0%{opacity:0; transform:perspective(900px) rotateX(-8deg) translateY(24px) scale(0.98);}
+  100%{opacity:1; transform:perspective(900px) rotateX(0deg) translateY(0) scale(1);}
+}
+@keyframes stampIn{
+  0%{opacity:0; transform:scale(2) rotate(-14deg);}
+  55%{opacity:1; transform:scale(0.94) rotate(4deg);}
+  75%{transform:scale(1.03) rotate(-2deg);}
+  100%{transform:scale(1) rotate(-6deg);}
+}
+@keyframes floatSlow{
+  0%,100%{transform:translateY(0) rotate(-1.4deg);}
+  50%{transform:translateY(-5px) rotate(-0.6deg);}
+}
+@keyframes marquee{ from{transform:translateX(0);} to{transform:translateX(-50%);} }
+@keyframes shake{
+  10%,90%{transform:translateX(-1px);} 20%,80%{transform:translateX(2px);}
+  30%,50%,70%{transform:translateX(-4px);} 40%,60%{transform:translateX(4px);}
+}
+@keyframes spin{to{transform:rotate(360deg);}}
+@keyframes flapOpen{
+  0%{transform:rotateX(0deg);}
+  100%{transform:rotateX(-165deg);}
+}
+@keyframes pinDrop{
+  0%{opacity:0; transform:translateY(-14px) rotate(0deg) scale(0.6);}
+  60%{opacity:1;}
+  100%{opacity:1; transform:translateY(0) rotate(-8deg) scale(1);}
+}
+
+/* ============================================================
+   LOADER
+   ============================================================ */
+.page-loader{
+  position:fixed; inset:0; z-index:9999; background:var(--paper);
+  display:flex; align-items:center; justify-content:center;
+  transition:opacity 0.7s ease, visibility 0.7s ease;
+}
+.page-loader.hidden{opacity:0; visibility:hidden; pointer-events:none;}
+.loader-mark{width:42px; height:42px; border:2.5px solid var(--line); border-top-color:var(--seal); border-radius:50%; animation:spin 0.9s linear infinite;}
+
+/* ============================================================
+   MASTHEAD — kop meja kerja, senada dengan ref 2
+   ============================================================ */
+.masthead{
+  padding:20px clamp(20px,4vw,52px) 16px;
+  display:flex; align-items:flex-end; justify-content:space-between;
+  border-bottom:2px solid var(--ink);
+  opacity:0; animation:riseInSm 0.7s ease 0.1s forwards;
+  gap:16px; flex-wrap:wrap;
+}
+.masthead-id{display:flex; align-items:center; gap:12px;}
+.seal-mark{
+  width:40px; height:40px; border-radius:50%; background:var(--seal);
+  display:flex; align-items:center; justify-content:center;
+  font-family:'Fraunces',serif; font-weight:700; font-size:16px; color:var(--ink);
+  flex-shrink:0; box-shadow:0 3px 0 var(--seal-deep);
+  transition:transform 0.35s cubic-bezier(0.34,1.56,0.64,1);
+}
+.masthead-id:hover .seal-mark{transform:rotate(-8deg) scale(1.05);}
+.masthead-name{font-family:'Fraunces',serif; font-weight:600; font-size:19px; line-height:1.1;}
+.masthead-sub{font-size:11px; color:var(--ink-soft); letter-spacing:0.4px; margin-top:2px;}
+.masthead-right{display:flex; align-items:center; gap:14px;}
+.pengurus-chip{
+  display:flex; align-items:center; gap:10px;
+  font-size:11.5px; color:var(--ink-soft); text-align:right; line-height:1.4;
+}
+.pengurus-chip b{color:var(--ink); font-weight:600;}
+.pengurus-avatar{
+  width:34px; height:34px; border-radius:50%; background:var(--ink); color:var(--paper);
+  display:flex; align-items:center; justify-content:center;
+  font-family:'Fraunces',serif; font-weight:700; font-size:13px; flex-shrink:0;
+}
+.btn-icon-ghost{
+  width:36px; height:36px; border-radius:50%; border:1.5px solid var(--line);
+  background:transparent; color:var(--ink-soft); display:flex; align-items:center; justify-content:center;
+  cursor:pointer; transition:all 0.25s ease; font-size:15px;
+}
+.btn-icon-ghost:hover{border-color:var(--ink); color:var(--ink); background:var(--card);}
+
+/* ticker — sama persis motifnya dgn ref 2, kontennya diganti konteks pengurus */
+.ticker-wrap{
+  overflow:hidden; border-bottom:1px solid var(--line); background:var(--paper-deep);
+  opacity:0; animation:riseInSm 0.6s ease 0.25s forwards;
+}
+.ticker{ display:flex; gap:40px; white-space:nowrap; padding:6px 0; width:max-content; animation:marquee 34s linear infinite; }
+.ticker span{ font-size:10.5px; letter-spacing:0.6px; color:var(--ink-faint); text-transform:uppercase; font-weight:600; }
+.ticker span i{color:var(--seal-deep); margin-right:6px;}
+
+/* ============================================================
+   RUANG UTAMA
+   ============================================================ */
+.workspace{ padding:clamp(24px,4vw,44px) clamp(20px,4vw,52px) 60px; max-width:1320px; margin:0 auto; }
+
+/* --- baris judul + map arsip (tab kategori bergaya folder) --- */
+.workspace-head{
+  display:flex; align-items:flex-end; justify-content:space-between; gap:16px; flex-wrap:wrap;
+  margin-bottom:22px;
+  opacity:0; animation:riseInSm 0.7s ease 0.35s forwards;
+}
+.workspace-head h1{ font-family:'Fraunces',serif; font-weight:600; font-size:clamp(24px,3vw,30px); letter-spacing:-0.3px; }
+.workspace-head .sub{ font-size:12.5px; color:var(--ink-soft); margin-top:5px; max-width:440px; line-height:1.5; }
+
+.search-row{ display:flex; align-items:center; gap:8px; background:var(--card); border:1.5px solid var(--line); border-radius:99px; padding:9px 16px; min-width:230px; }
+.search-row input{ border:none; background:transparent; outline:none; font-size:12.5px; color:var(--ink); width:100%; font-family:'Inter',sans-serif; }
+.search-row i{color:var(--ink-faint);}
+
+/* --- rak stempel: pengganti "stat cards", bentuknya stempel ditempel miring --- */
+.stamp-rack{
+  display:grid; grid-template-columns:repeat(4,1fr); gap:18px;
+  margin-bottom:30px;
+}
+.stamp-tile{
+  position:relative;
+  background:var(--card); border:1px solid var(--line); border-radius:var(--radius-card);
+  padding:18px 20px 16px; box-shadow:var(--shadow-paper);
+  cursor:pointer; transition:transform 0.3s cubic-bezier(0.34,1.56,0.64,1), box-shadow 0.3s ease;
+  opacity:0; animation:unfold 0.7s cubic-bezier(0.22,1,0.36,1) forwards;
+}
+.stamp-tile:nth-child(1){animation-delay:0.5s;}
+.stamp-tile:nth-child(2){animation-delay:0.6s;}
+.stamp-tile:nth-child(3){animation-delay:0.7s;}
+.stamp-tile:nth-child(4){animation-delay:0.8s;}
+.stamp-tile:hover{ transform:translateY(-4px); box-shadow:var(--shadow-lift); }
+.stamp-tile.is-active{ border-color:var(--seal-deep); box-shadow:0 0 0 2px rgba(224,165,38,0.25), var(--shadow-lift); }
+/* jahitan dashed - konsisten dgn signature elemen lain di halaman ini */
+.stamp-tile::before{
+  content:''; position:absolute; inset:7px; border:1.5px dashed var(--line);
+  border-radius:2px; pointer-events:none;
+}
+/* sudut kertas terlipat */
+.stamp-tile::after{
+  content:''; position:absolute; top:0; right:0; width:0; height:0;
+  border-style:solid; border-width:0 28px 28px 0; border-color:transparent var(--paper-deep) transparent transparent;
+  filter:drop-shadow(-2px 2px 3px rgba(43,38,32,0.10));
+}
+.stamp-label{
+  font-size:10.5px; font-weight:700; text-transform:uppercase; letter-spacing:0.6px;
+  color:var(--ink-faint); margin-bottom:4px; display:flex; align-items:center; gap:6px;
+  position:relative; z-index:1;
+}
+.stamp-label i{ color:var(--seal-deep); font-size:13px; }
+.stamp-n{ font-family:'Space Mono',monospace; font-weight:700; font-size:30px; line-height:1.1; color:var(--ink); position:relative; z-index:1; }
+.stamp-change{ font-size:11px; color:var(--ink-soft); margin-top:4px; display:flex; align-items:center; gap:4px; position:relative; z-index:1; }
+.stamp-change .up{ color:var(--ok); }
+.stamp-change .down{ color:#b34a4a; }
+/* label stempel kecil di pojok, gaya "cap arsip", bukan lencana bulat besar */
+.stamp-badge{
+  position:absolute; bottom:12px; right:14px;
+  font-family:'Fraunces',serif; font-weight:700; font-size:9px; text-transform:uppercase; letter-spacing:0.5px;
+  color:var(--ink-faint); transform:rotate(-6deg);
+  opacity:0.55; border:1px solid var(--line); border-radius:2px; padding:1px 8px;
+  background:var(--paper-deep); pointer-events:none;
+}
+
+/* ============================================================
+   ARSIP LAYOUT — map folder kiri, meja tulis kanan
+   ============================================================ */
+.archive-layout{ display:grid; grid-template-columns:1.45fr 1fr; gap:22px; align-items:start; }
+@media (max-width:1080px){ .archive-layout{grid-template-columns:1fr;} }
+
+/* --- FOLDER TABS: kategori sebagai tab map arsip fisik --- */
+.folder-panel{
+  opacity:0; animation:unfold 0.85s cubic-bezier(0.22,1,0.36,1) 0.9s forwards;
+}
+.folder-tabs{ display:flex; gap:2px; padding-left:14px; }
+.folder-tab{
+  font-family:'Fraunces',serif; font-size:12.5px; font-weight:600;
+  padding:9px 18px 11px; border-radius:8px 8px 0 0;
+  background:var(--paper-deep); color:var(--ink-soft);
+  border:1.5px solid var(--line); border-bottom:none;
+  cursor:pointer; position:relative; top:2px; transition:all 0.2s ease;
+}
+.folder-tab:hover{ color:var(--ink); }
+.folder-tab.active{
+  background:var(--card); color:var(--ink); top:0; z-index:2;
+  box-shadow:0 -3px 10px -6px rgba(43,38,32,0.2);
+}
+
+.folder-body{
+  background:var(--card); border:1.5px solid var(--line); border-radius:0 6px 6px 6px;
+  box-shadow:var(--shadow-paper); position:relative;
+}
+/* jahitan dashed - signature elemen ref 2, dipertahankan */
+.folder-body::before{
+  content:''; position:absolute; inset:9px; border:1.5px dashed var(--line);
+  border-radius:2px; pointer-events:none; z-index:0;
+}
+.folder-body-inner{ position:relative; z-index:1; padding:4px 0; }
+
+.folder-meta-row{
+  display:flex; align-items:center; justify-content:space-between;
+  padding:14px 22px 10px; font-size:11px; color:var(--ink-faint);
+}
+
+/* --- amplop dalam list: setiap surat adalah amplop kecil, bukan row generik --- */
+.envelope-item{
+  display:flex; align-items:flex-start; gap:14px;
+  margin:0 18px 14px; padding:14px 16px;
+  background:var(--paper); border:1.5px solid var(--line); border-radius:4px;
+  cursor:pointer; position:relative;
+  transition:transform 0.25s cubic-bezier(0.34,1.56,0.64,1), border-color 0.25s ease, box-shadow 0.25s ease;
+}
+.envelope-item:last-child{ margin-bottom:22px; }
+.envelope-item::before{
+  /* lipatan flap amplop mini di kiri atas tiap item */
+  content:''; position:absolute; top:0; left:0; width:0; height:0;
+  border-style:solid; border-width:14px 14px 0 0; border-color:var(--line) transparent transparent transparent;
+  border-radius:4px 0 0 0;
+}
+.envelope-item:hover{ transform:translateX(3px); border-color:var(--ink-faint); }
+.envelope-item.is-open{
+  border-color:var(--seal-deep); background:var(--card);
+  box-shadow:0 0 0 2px rgba(224,165,38,0.16), var(--shadow-paper);
+}
+.envelope-item.is-unread::after{
+  content:''; position:absolute; top:14px; right:14px; width:8px; height:8px; border-radius:50%;
+  background:var(--seal); box-shadow:0 0 0 3px rgba(224,165,38,0.25);
+}
+.env-item-seal{
+  width:36px; height:36px; border-radius:50%; flex-shrink:0;
+  background:var(--paper-deep); color:var(--ink-soft);
+  display:flex; align-items:center; justify-content:center; font-size:15px;
+  transition:background 0.25s ease, color 0.25s ease;
+}
+.envelope-item.is-unread .env-item-seal{ background:var(--seal); color:var(--ink); }
+.env-item-body{ flex:1; min-width:0; }
+.env-item-top{ display:flex; align-items:center; gap:8px; margin-bottom:4px; flex-wrap:wrap; }
+.env-item-code{ font-family:'Space Mono',monospace; font-size:10.5px; color:var(--ink-faint); letter-spacing:0.4px; }
+.env-item-snippet{
+  font-size:13px; color:var(--ink-soft); line-height:1.45;
+  display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden;
+}
+.envelope-item.is-unread .env-item-snippet{ color:var(--ink); font-weight:500; }
+.env-item-foot{ display:flex; align-items:center; gap:10px; margin-top:7px; font-size:10.5px; color:var(--ink-faint); }
+
+.wax-chip{
+  font-size:9.5px; font-weight:700; text-transform:uppercase; letter-spacing:0.3px;
+  padding:3px 9px; border-radius:99px; flex-shrink:0; white-space:nowrap;
+  display:inline-flex; align-items:center; gap:4px;
+}
+.wax-chip.baru{ background:rgba(224,165,38,0.18); color:var(--seal-deep); }
+.wax-chip.diteruskan{ background:rgba(107,95,76,0.15); color:var(--ink-soft); }
+.wax-chip.diproses{ background:rgba(181,84,30,0.13); color:var(--warn); }
+.wax-chip.selesai{ background:rgba(79,121,66,0.15); color:var(--ok); }
+
+.empty-folder{ padding:60px 20px; text-align:center; color:var(--ink-faint); }
+.empty-folder i{ font-size:30px; display:block; margin-bottom:10px; }
+.empty-folder p{ font-size:12.5px; max-width:220px; margin:0 auto; line-height:1.6; }
+
+/* ============================================================
+   MEJA TULIS — panel detail dibuka seperti amplop sungguhan
+   ============================================================ */
+.desk-panel{ position:sticky; top:22px; }
+.desk-empty{
+  background:var(--card); border:1.5px dashed var(--line); border-radius:6px;
+  padding:60px 26px; text-align:center; color:var(--ink-faint);
+}
+.desk-empty i{ font-size:30px; margin-bottom:12px; display:block; }
+.desk-empty p{ font-size:12.5px; line-height:1.6; max-width:220px; margin:0 auto; }
+
+.opened-envelope{
+  perspective:1000px;
+}
+.opened-envelope-flap{
+  height:0; /* flap animasinya cuma sekali saat buka, dijaga simpel */
+}
+.letter-sheet{
+  background:var(--card); border:1.5px solid var(--line); border-radius:6px;
+  box-shadow:var(--shadow-lift); position:relative; padding:24px 24px 22px;
+  animation:unfold 0.5s cubic-bezier(0.22,1,0.36,1) forwards;
+}
+.letter-sheet::after{
+  content:''; position:absolute; top:0; right:0; width:0; height:0;
+  border-style:solid; border-width:0 30px 30px 0; border-color:transparent var(--paper-deep) transparent transparent;
+  filter:drop-shadow(-2px 2px 3px rgba(43,38,32,0.12));
+}
+.letter-stamp-corner{
+  position:absolute; top:-10px; right:22px; width:46px; height:46px; border-radius:50%;
+  background:radial-gradient(circle at 34% 30%, var(--seal), var(--seal-deep));
+  display:flex; align-items:center; justify-content:center;
+  font-family:'Fraunces',serif; font-weight:700; font-size:9px; color:var(--ink); text-align:center; line-height:1.15;
+  box-shadow:0 4px 0 rgba(0,0,0,0.15);
+  animation:stampIn 0.55s cubic-bezier(0.34,1.56,0.64,1) 0.15s both;
+}
+.letter-code{
+  font-family:'Space Mono',monospace; font-size:11.5px; color:var(--seal-deep);
+  background:rgba(224,165,38,0.08); border:1px solid rgba(224,165,38,0.25);
+  padding:6px 12px; display:inline-block; border-radius:3px; margin-bottom:14px;
+}
+.letter-cat-date{ display:flex; align-items:center; gap:8px; margin-bottom:14px; font-size:11px; color:var(--ink-faint); flex-wrap:wrap; }
+.letter-body-text{
+  font-family:'Fraunces',serif; font-style:italic; font-size:14.5px; line-height:1.75; color:var(--ink);
+  padding:15px 17px; background:var(--paper-deep); border-radius:3px; border-left:3px solid var(--seal);
+  margin-bottom:20px;
+  position:relative;
+}
+/* garis-garis kertas surat halus di belakang teks, motif ref 2 (ink-lines) */
+.letter-body-text::before{
+  content:''; position:absolute; inset:0; border-radius:3px; pointer-events:none;
+  background-image:repeating-linear-gradient(to bottom, transparent 0, transparent 26px, rgba(43,38,32,0.05) 27px);
+  opacity:0.5;
+}
+
+.section-tag{ font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:1px; color:var(--ink-faint); margin-bottom:10px; display:flex; align-items:center; gap:6px; }
+.section-tag::after{ content:''; height:1px; background:var(--line); flex:1; }
+
+/* rel proses — direplikasi dari flow-rail ref 2, bukan stepper dashboard generik */
+.process-rail{ position:relative; display:flex; justify-content:space-between; margin-bottom:22px; padding:0 4px; }
+.process-rail::before{
+  content:''; position:absolute; top:14px; left:5%; right:5%; height:1.5px;
+  background:repeating-linear-gradient(90deg, var(--line) 0 8px, transparent 8px 14px); z-index:0;
+}
+.process-step{ position:relative; z-index:1; display:flex; flex-direction:column; align-items:center; text-align:center; flex:1; }
+.process-dot{
+  width:28px; height:28px; border-radius:50%; background:var(--card); border:1.5px solid var(--ink);
+  display:flex; align-items:center; justify-content:center; font-family:'Space Mono',monospace; font-weight:700; font-size:11px;
+  margin-bottom:8px; transition:background 0.3s ease, color 0.3s ease, transform 0.3s cubic-bezier(0.34,1.56,0.64,1);
+}
+.process-step.done .process-dot{ background:var(--seal); border-color:var(--seal); color:var(--ink); }
+.process-step.now .process-dot{ background:var(--ink); border-color:var(--ink); color:var(--paper); transform:scale(1.1); }
+.process-label{ font-size:9px; text-transform:uppercase; letter-spacing:0.4px; color:var(--ink-faint); line-height:1.3; max-width:70px; }
+.process-step.done .process-label,.process-step.now .process-label{ color:var(--ink); font-weight:700; }
+
+.desk-select{
+  width:100%; font-family:'Inter',sans-serif; font-size:13px; color:var(--ink);
+  background:var(--paper); border:1.5px solid var(--line); border-radius:3px;
+  padding:10px 12px; margin-bottom:12px; outline:none; cursor:pointer;
+  transition:border-color 0.3s ease, box-shadow 0.3s ease;
+}
+.desk-select:focus{ border-color:var(--seal-deep); box-shadow:0 0 0 3px rgba(224,165,38,0.18); }
+
+.desk-textarea{
+  width:100%; font-family:'Inter',sans-serif; font-size:13px; color:var(--ink);
+  background:var(--paper); border:1.5px solid var(--line); border-radius:3px;
+  padding:10px 12px; min-height:76px; resize:vertical; outline:none; margin-bottom:14px;
+  transition:border-color 0.3s ease, box-shadow 0.3s ease;
+}
+.desk-textarea:focus{ border-color:var(--seal-deep); box-shadow:0 0 0 3px rgba(224,165,38,0.18); }
+.desk-textarea.shake{ animation:shake 0.5s ease; }
+
+/* ============================================================
+   UTAS SURAT BERBALAS — pengganti kolom "catatan balasan" tunggal
+   ============================================================ */
+.thread-block{ margin-bottom:18px; }
+.thread-body{
+  display:flex; flex-direction:column; max-height:280px; overflow-y:auto;
+  border:1.5px solid var(--line); border-radius:4px; background:var(--paper);
+  padding:4px 14px;
+}
+.thread-body::-webkit-scrollbar{ width:6px; }
+.thread-body::-webkit-scrollbar-thumb{ background:var(--ink-faint); border-radius:4px; }
+
+.letter-entry{ padding:12px 2px 14px; border-bottom:1px dashed var(--line); }
+.letter-entry:last-child{ border-bottom:none; }
+.entry-meta{ display:flex; align-items:center; justify-content:space-between; margin-bottom:6px; gap:8px; }
+.entry-who{ display:flex; align-items:center; gap:6px; font-family:'Fraunces',serif; font-weight:600; font-size:12px; }
+.entry-who .who-dot{ width:6px; height:6px; border-radius:50%; flex-shrink:0; }
+.entry-who.role-siswa{ color:var(--ink); }
+.entry-who.role-siswa .who-dot{ background:var(--ink-faint); }
+.entry-who.role-humas{ color:var(--seal-deep); }
+.entry-who.role-humas .who-dot{ background:var(--seal); }
+.entry-time{ font-size:10px; color:var(--ink-faint); font-family:'Space Mono',monospace; }
+.entry-text{ font-size:13px; line-height:1.6; color:var(--ink); }
+.letter-entry.role-humas .entry-text{
+  background:var(--paper-deep); padding:10px 12px; border-radius:3px; border-left:3px solid var(--seal); margin-left:12px;
+}
+.letter-entry.role-siswa .entry-text{ padding-left:12px; border-left:3px solid var(--line); }
+
+.thread-system-note{ display:flex; align-items:center; gap:8px; padding:6px 2px; margin:0; }
+.thread-system-note::before,.thread-system-note::after{ content:''; flex:1; height:1px; background:var(--line); }
+.thread-system-note span{
+  font-size:9.5px; text-transform:uppercase; letter-spacing:0.4px; color:var(--ink-faint);
+  white-space:nowrap; display:flex; align-items:center; gap:4px;
+}
+
+.thread-reply-locked{
+  display:flex; align-items:center; gap:9px; padding:12px 2px; font-size:11.5px; color:var(--ink-faint);
+}
+.thread-reply-locked i{ font-size:16px; }
+
+.btn-seal-desk{
+  width:100%; background:var(--ink); color:var(--paper); border:none; border-radius:3px;
+  padding:12px; font-family:'Fraunces',serif; font-weight:600; font-size:14px;
+  display:flex; align-items:center; justify-content:center; gap:8px; cursor:pointer;
+  transition:transform 0.3s cubic-bezier(0.34,1.56,0.64,1), background 0.3s ease;
+}
+.btn-seal-desk:hover{ background:#3a332a; transform:translateY(-2px); }
+.btn-seal-desk:active{ transform:translateY(0) scale(0.98); }
+.btn-seal-desk.success{ background:var(--ok); }
+
+.desk-footnote{
+  display:flex; justify-content:space-between; font-size:10.5px; color:var(--ink-faint);
+  margin-top:16px; padding-top:14px; border-top:1px dashed var(--line);
+}
+
+/* pin kertas kecil di pojok panel meja - detail dekoratif, bukan fungsional */
+.desk-pin{
+  position:absolute; top:-8px; left:26px; width:16px; height:16px; border-radius:50%;
+  background:radial-gradient(circle at 35% 30%, #d94b3a, #8c2f1d);
+  box-shadow:0 3px 5px rgba(43,38,32,0.3);
+  animation:pinDrop 0.5s cubic-bezier(0.34,1.56,0.64,1) 0.3s both;
+}
+
+/* ============================================================
+   TOAST
+   ============================================================ */
+.toast{
+  position:fixed; left:50%; bottom:26px; transform:translateX(-50%) translateY(140%);
+  background:var(--ink); color:var(--paper); padding:14px 20px; border-radius:4px;
+  display:flex; align-items:center; gap:10px; box-shadow:var(--shadow-lift);
+  z-index:1000; transition:transform 0.5s cubic-bezier(0.22,1,0.36,1); font-size:13px;
+}
+.toast.show{ transform:translateX(-50%) translateY(0); }
+.toast .toast-icon{
+  width:26px; height:26px; border-radius:50%; background:var(--seal); color:var(--ink);
+  display:flex; align-items:center; justify-content:center; flex-shrink:0; font-size:13px;
+}
+
+/* ============================================================
+   RESPONSIVE
+   ============================================================ */
+@media (max-width:900px){
+  .masthead-right .pengurus-chip span{display:none;}
+  .stamp-rack{ grid-template-columns:repeat(2,1fr); }
+}
+@media (max-width:600px){
+  .masthead{ padding:16px 18px 14px; }
+  .workspace{ padding:22px 18px 40px; }
+  .stamp-rack{ gap:12px; }
+  .folder-tabs{ padding-left:6px; overflow-x:auto; }
+  .search-row{ min-width:0; width:100%; }
+  .workspace-head{ flex-direction:column; align-items:stretch; }
+}
+</style>
+</head>
+<body>
+
+<div class="page-loader" id="pageLoader"><div class="loader-mark"></div></div>
+
+<!-- MASTHEAD -->
+<header class="masthead">
+  <div class="masthead-id">
+    <div class="seal-mark">O</div>
+    <div>
+      <div class="masthead-name">Meja Kerja Humas</div>
+      <div class="masthead-sub">Kotak Suara · Kepengurusan 2024/2025</div>
+    </div>
+  </div>
+  <div class="masthead-right">
+    <div class="pengurus-chip"><span>Bertugas sebagai<br><b>Divisi Humas OSIS</b></span></div>
+    <div class="pengurus-avatar">H</div>
+    <button class="btn-icon-ghost" title="Keluar"><i class="ti ti-logout"></i></button>
+  </div>
+</header>
+
+<div class="ticker-wrap">
+  <div class="ticker" id="ticker">
+    <span><i class="ti ti-inbox"></i>Surat baru datang setiap hari, jangan biarkan menumpuk</span>
+    <span><i class="ti ti-clock"></i>Target balas dalam 3–5 hari kerja</span>
+    <span><i class="ti ti-lock"></i>Identitas pengirim tetap dirahasiakan dari sistem ini</span>
+    <span><i class="ti ti-inbox"></i>Surat baru datang setiap hari, jangan biarkan menumpuk</span>
+    <span><i class="ti ti-clock"></i>Target balas dalam 3–5 hari kerja</span>
+    <span><i class="ti ti-lock"></i>Identitas pengirim tetap dirahasiakan dari sistem ini</span>
+  </div>
+</div>
+
+<div class="workspace">
+
+  <div class="workspace-head">
+    <div>
+      <h1>Selamat bertugas, Humas 👋</h1>
+      <div class="sub">Ini meja arsip suratmu hari ini — buka amplopnya satu-satu, tentukan tindak lanjutnya.</div>
+    </div>
+    <div class="search-row">
+      <i class="ti ti-search"></i>
+      <input type="text" id="searchInput" placeholder="Cari kode tiket atau isi surat...">
+    </div>
+  </div>
+
+  <!-- RAK STEMPEL: pengganti stat card -->
+  <div class="stamp-rack" id="stampRack">
+    <div class="stamp-tile is-active" data-filter="semua">
+      <div class="stamp-label"><i class="ti ti-mail"></i>Total surat</div>
+      <div class="stamp-n" id="statTotal">0</div>
+      <div class="stamp-change"><span class="up">↑ 8</span> dari bulan lalu</div>
+      <div class="stamp-badge">Arsip</div>
+    </div>
+    <div class="stamp-tile" data-filter="baru">
+      <div class="stamp-label"><i class="ti ti-sparkles"></i>Belum dibuka</div>
+      <div class="stamp-n" id="statBaru">0</div>
+      <div class="stamp-change"><span class="down">↑ 3</span> butuh perhatian</div>
+      <div class="stamp-badge">Antre</div>
+    </div>
+    <div class="stamp-tile" data-filter="diproses">
+      <div class="stamp-label"><i class="ti ti-loader-2"></i>Diproses</div>
+      <div class="stamp-n" id="statProses">0</div>
+      <div class="stamp-change"><span class="up">↑ 5</span> sedang ditinjau</div>
+      <div class="stamp-badge">Proses</div>
+    </div>
+    <div class="stamp-tile" data-filter="selesai">
+      <div class="stamp-label"><i class="ti ti-check"></i>Selesai</div>
+      <div class="stamp-n" id="statSelesai">0</div>
+      <div class="stamp-change"><span class="up">↑ 2</span> sudah ditanggapi</div>
+      <div class="stamp-badge">Tuntas</div>
+    </div>
+  </div>
+
+  <div class="archive-layout">
+
+    <!-- FOLDER PANEL -->
+    <div class="folder-panel">
+      <div class="folder-tabs" id="folderTabs">
+        <button class="folder-tab active" data-cat="semua">Semua map</button>
+        <button class="folder-tab" data-cat="akademik">Akademik</button>
+        <button class="folder-tab" data-cat="fasilitas">Fasilitas</button>
+        <button class="folder-tab" data-cat="kegiatan">Kegiatan</button>
+        <button class="folder-tab" data-cat="lainnya">Lainnya</button>
+      </div>
+      <div class="folder-body">
+        <div class="folder-body-inner">
+          <div class="folder-meta-row">
+            <span id="folderCountLabel">0 surat dalam map ini</span>
+            <span>Diurutkan: terbaru dulu</span>
+          </div>
+          <div id="envelopeList"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- MEJA TULIS / DETAIL -->
+    <div class="desk-panel" id="deskPanel">
+      <div class="desk-empty" id="deskEmpty">
+        <i class="ti ti-mail-opened"></i>
+        <p>Klik salah satu amplop di map sebelah kiri untuk membukanya di sini.</p>
+      </div>
+      <div id="deskContent" style="display:none;"></div>
+    </div>
+
+  </div>
+</div>
+
+<div class="toast" id="toast">
+  <div class="toast-icon"><i class="ti ti-check"></i></div>
+  <div id="toastMsg">Status diperbarui</div>
+</div>
+
+<script>
+window.addEventListener('load', function(){
+  setTimeout(function(){ document.getElementById('pageLoader').classList.add('hidden'); }, 400);
+});
+
+/* ============================================================
+   DATA DUMMY
+   ============================================================ */
+var letters = [
+  { id: 1, code: 'OSIS-7F3K9QZ2A', cat: 'fasilitas', text: 'Kantin selalu penuh banget pas jam istirahat pertama, jadi banyak yang gak kebagian tempat duduk. Mungkin bisa ditambah meja atau jam istirahat kelas dibagi jadi dua gelombang?', status: 'baru', unread: true, date: '2 jam lalu' },
+  { id: 2, code: 'OSIS-9K2M1XPLQ', cat: 'akademik', text: 'Jadwal ulangan harian numpuk semua di minggu yang sama, jadi susah bagi waktu belajarnya. Bisa gak kalau dikoordinasikan antar guru mapel?', status: 'diproses', unread: true, date: '5 jam lalu' },
+  { id: 3, code: 'OSIS-3D8N4WYTR', cat: 'fasilitas', text: 'Wifi di lab komputer sering banget mati pas jam pelajaran TIK, jadi ketinggalan materi terus.', status: 'diteruskan', unread: false, date: '1 hari lalu' },
+  { id: 4, code: 'OSIS-5H1P7ZMKX', cat: 'kegiatan', text: 'Pengen banget kalau OSIS bisa adain lomba futsal antar kelas, biar ada kegiatan seru pas classmeeting nanti.', status: 'selesai', unread: false, date: '2 hari lalu' },
+  { id: 5, code: 'OSIS-2Q6T3VNBC', cat: 'fasilitas', text: 'Toilet di lantai 2 dekat ruang kelas XI kurang bersih, kadang gak ada air juga.', status: 'diproses', unread: false, date: '2 hari lalu' },
+  { id: 6, code: 'OSIS-8W4R2LKJH', cat: 'lainnya', text: 'Mading sekolah udah lama banget gak diganti isinya, mungkin bisa dibikin lomba mading antar kelas biar lebih hidup lagi.', status: 'baru', unread: true, date: '3 hari lalu' },
+  { id: 7, code: 'OSIS-1Y9U6BGTF', cat: 'akademik', text: 'Kelas jadi kepanasan banget kalau siang, apalagi kelas yang di lantai atas. AC-nya kadang gak nyala.', status: 'selesai', unread: false, date: '4 hari lalu' }
+];
+
+var statusStages = ['baru', 'diteruskan', 'diproses', 'selesai'];
+var statusLabels = { baru: 'Surat Masuk', diteruskan: 'Diteruskan', diproses: 'Diproses', selesai: 'Selesai' };
+var catLabels = { akademik: 'Akademik', fasilitas: 'Fasilitas', kegiatan: 'Kegiatan', lainnya: 'Lainnya' };
+
+/* histori percakapan per id surat — key = letter.id */
+var threads = {
+  1: [
+    { role: 'siswa', time: '2 jam lalu', text: 'Kantin selalu penuh banget pas jam istirahat pertama, jadi banyak yang gak kebagian tempat duduk.' }
+  ],
+  2: [
+    { role: 'siswa', time: '6 jam lalu', text: 'Jadwal ulangan harian numpuk semua di minggu yang sama, jadi susah bagi waktu belajarnya.' },
+    { role: 'humas', time: '5 jam lalu', text: 'Terima kasih masukannya, boleh tau ini kelas berapa ya biar bisa kami cek jadwalnya?' },
+    { role: 'siswa', time: '4 jam lalu', text: 'Kelas XI, jurusan IPA.' }
+  ],
+  4: [
+    { role: 'siswa', time: '2 hari lalu', text: 'Pengen banget kalau OSIS bisa adain lomba futsal antar kelas.' },
+    { role: 'humas', time: '2 hari lalu', text: 'Sudah kami teruskan ke divisi olahraga, rencananya masuk agenda classmeeting semester depan!' }
+  ]
+};
+
+var currentStampFilter = 'semua';
+var currentFolderCat = 'semua';
+var selectedId = null;
+
+/* ============================================================
+   STAT / RAK STEMPEL
+   ============================================================ */
+function renderStats() {
+  document.getElementById('statTotal').textContent = letters.length;
+  document.getElementById('statBaru').textContent = letters.filter(function(l){ return l.unread; }).length;
+  document.getElementById('statProses').textContent = letters.filter(function(l){ return l.status === 'diproses' || l.status === 'diteruskan'; }).length;
+  document.getElementById('statSelesai').textContent = letters.filter(function(l){ return l.status === 'selesai'; }).length;
+}
+
+/* ============================================================
+   FILTER + LIST AMPLOP
+   ============================================================ */
+function getFiltered() {
+  var q = document.getElementById('searchInput').value.trim().toLowerCase();
+  return letters.filter(function(l) {
+    if (currentStampFilter === 'baru' && !l.unread) return false;
+    if (currentStampFilter === 'diproses' && !(l.status === 'diproses' || l.status === 'diteruskan')) return false;
+    if (currentStampFilter === 'selesai' && l.status !== 'selesai') return false;
+    if (currentFolderCat !== 'semua' && l.cat !== currentFolderCat) return false;
+    if (q && l.code.toLowerCase().indexOf(q) === -1 && l.text.toLowerCase().indexOf(q) === -1) return false;
+    return true;
+  });
+}
+
+function renderList() {
+  var listEl = document.getElementById('envelopeList');
+  var filtered = getFiltered();
+  document.getElementById('folderCountLabel').textContent = filtered.length + ' surat dalam map ini';
+
+  if (filtered.length === 0) {
+    listEl.innerHTML = '<div class="empty-folder"><i class="ti ti-folder-x"></i><p>Map ini masih kosong. Coba ganti filter atau kata kunci pencarian.</p></div>';
+    return;
+  }
+
+  var html = '';
+  filtered.forEach(function(l) {
+    var openCls = (l.id === selectedId) ? ' is-open' : '';
+    var unreadCls = l.unread ? ' is-unread' : '';
+    html += '<div class="envelope-item' + openCls + unreadCls + '" data-id="' + l.id + '">';
+    html += '<div class="env-item-seal"><i class="ti ti-' + (l.unread ? 'mail' : 'mail-opened') + '"></i></div>';
+    html += '<div class="env-item-body">';
+    html += '<div class="env-item-top"><span class="env-item-code">' + l.code + '</span><span class="wax-chip ' + l.status + '">' + statusLabels[l.status] + '</span></div>';
+    html += '<div class="env-item-snippet">' + l.text + '</div>';
+    html += '<div class="env-item-foot"><i class="ti ti-tag"></i> ' + catLabels[l.cat] + ' &nbsp;·&nbsp; ' + l.date + '</div>';
+    html += '</div></div>';
+  });
+  listEl.innerHTML = html;
+
+  listEl.querySelectorAll('.envelope-item').forEach(function(row) {
+    row.addEventListener('click', function() { openDesk(parseInt(row.dataset.id, 10)); });
+  });
+}
+
+/* ============================================================
+   MEJA TULIS — buka amplop jadi surat + rel proses + form
+   ============================================================ */
+function buildProcessRail(currentStatus) {
+  var idx = statusStages.indexOf(currentStatus);
+  var html = '';
+  statusStages.forEach(function(stage, i) {
+    var cls = i < idx ? 'done' : (i === idx ? 'now' : '');
+    var icon = i <= idx ? 'ti-check' : (i + 1);
+    html += '<div class="process-step ' + cls + '">';
+    html += '<div class="process-dot">' + (i <= idx ? '<i class="ti ' + icon + '"></i>' : icon) + '</div>';
+    html += '<div class="process-label">' + statusLabels[stage] + '</div>';
+    html += '</div>';
+  });
+  return html;
+}
+
+function buildThread(letterId) {
+  var msgs = threads[letterId] || [];
+  var html = '<div class="thread-body">';
+  if (msgs.length === 0) {
+    html += '<div class="thread-system-note"><span><i class="ti ti-mail"></i> Belum ada percakapan untuk surat ini</span></div>';
+  } else {
+    msgs.forEach(function(m) {
+      var whoLabel = m.role === 'humas' ? 'Kamu (Humas)' : 'Siswa (anonim)';
+      html += '<div class="letter-entry role-' + m.role + '">';
+      html += '<div class="entry-meta"><div class="entry-who role-' + m.role + '"><span class="who-dot"></span>' + whoLabel + '</div><div class="entry-time">' + m.time + '</div></div>';
+      html += '<div class="entry-text">' + m.text + '</div></div>';
+    });
+  }
+  html += '</div>';
+  return html;
+}
+
+function openDesk(id) {
+  selectedId = id;
+  var letter = letters.filter(function(l){ return l.id === id; })[0];
+  if (!letter) return;
+
+  letter.unread = false;
+  renderStats();
+  renderList();
+
+  document.getElementById('deskEmpty').style.display = 'none';
+  var content = document.getElementById('deskContent');
+  content.style.display = 'block';
+
+  var html = '';
+  html += '<div class="opened-envelope">';
+  html += '<div class="letter-sheet">';
+  html += '<div class="desk-pin"></div>';
+  html += '<div class="letter-stamp-corner">SUARA<br>OSIS</div>';
+  html += '<div class="letter-code"><i class="ti ti-ticket"></i> ' + letter.code + '</div>';
+  html += '<div class="letter-cat-date"><i class="ti ti-tag"></i> ' + catLabels[letter.cat] + ' &nbsp;·&nbsp; ' + letter.date + '</div>';
+  html += '<div class="letter-body-text">' + letter.text + '</div>';
+
+  html += '<div class="section-tag">Rel Tindak Lanjut</div>';
+  html += '<div class="process-rail">' + buildProcessRail(letter.status) + '</div>';
+
+  html += '<div class="section-tag">Ubah Status</div>';
+  html += '<select class="desk-select" id="statusSelect">';
+  statusStages.forEach(function(stage) {
+    html += '<option value="' + stage + '"' + (stage === letter.status ? ' selected' : '') + '>' + statusLabels[stage] + '</option>';
+  });
+  html += '</select>';
+
+  html += '<div class="section-tag">Utas Percakapan</div>';
+  html += '<div class="thread-block" id="threadBlock">' + buildThread(id) + '</div>';
+  html += '<textarea class="desk-textarea" id="replyBox" placeholder="Tulis balasan untuk siswa ini..."></textarea>';
+
+  html += '<button class="btn-seal-desk" id="btnSaveStatus"><i class="ti ti-stamp"></i> <span id="btnSaveText">Segel &amp; simpan perubahan</span></button>';
+
+  html += '<div class="desk-footnote"><span>Arsip internal #' + letter.id + '</span><span><i class="ti ti-eye-off"></i> Pengirim anonim</span></div>';
+  html += '</div></div>';
+
+  content.innerHTML = html;
+
+  document.getElementById('btnSaveStatus').addEventListener('click', function() {
+    var newStatus = document.getElementById('statusSelect').value;
+    var replyText = document.getElementById('replyBox').value.trim();
+    var btn = document.getElementById('btnSaveStatus');
+    var btnText = document.getElementById('btnSaveText');
+    letter.status = newStatus;
+
+    if (replyText) {
+      if (!threads[id]) threads[id] = [];
+      threads[id].push({ role: 'humas', time: 'Baru saja', text: replyText });
+      document.getElementById('threadBlock').innerHTML = buildThread(id);
+      document.getElementById('replyBox').value = '';
+    }
+
+    btn.classList.add('success');
+    btnText.textContent = 'Tersegel!';
+    renderStats();
+    renderList();
+    showToast('Surat ' + letter.code + ' disegel dengan status "' + statusLabels[newStatus] + '"');
+    setTimeout(function(){ openDesk(id); }, 700);
+  });
+}
+
+/* ============================================================
+   HANDLERS FILTER
+   ============================================================ */
+document.querySelectorAll('.stamp-tile').forEach(function(el) {
+  el.addEventListener('click', function() {
+    document.querySelectorAll('.stamp-tile').forEach(function(n){ n.classList.remove('is-active'); });
+    el.classList.add('is-active');
+    currentStampFilter = el.dataset.filter;
+    renderList();
+  });
+});
+document.querySelectorAll('.folder-tab').forEach(function(el) {
+  el.addEventListener('click', function() {
+    document.querySelectorAll('.folder-tab').forEach(function(n){ n.classList.remove('active'); });
+    el.classList.add('active');
+    currentFolderCat = el.dataset.cat;
+    renderList();
+  });
+});
+document.getElementById('searchInput').addEventListener('input', renderList);
+
+function showToast(msg) {
+  var toast = document.getElementById('toast');
+  document.getElementById('toastMsg').textContent = msg;
+  toast.classList.add('show');
+  setTimeout(function(){ toast.classList.remove('show'); }, 3200);
+}
+
+/* INIT */
+renderStats();
+renderList();
+</script>
+</body>
+</html>

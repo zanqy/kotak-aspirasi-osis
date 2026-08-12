@@ -2,39 +2,44 @@
 
 import { useRouter } from "next/navigation";
 import { IconArrowLeft } from "@tabler/icons-react";
-import Badge from "@/components/ui/Badge";
 
 interface DashboardNavProps {
   title: string;
   subtitle?: string;
   showBack?: boolean;
-  badge?: { status: "menunggu" | "diproses" | "dibalas" | "diteruskan" };
   userName?: string;
 }
 
-export default function DashboardNav({ title, subtitle, showBack = false, badge, userName }: DashboardNavProps) {
+export default function DashboardNav({ title, subtitle, showBack = false, userName }: DashboardNavProps) {
   const router = useRouter();
   const initial = userName ? userName.charAt(0).toUpperCase() : "?";
 
   return (
-    <div className="bg-navy px-[18px] pt-9 pb-4 flex items-center gap-3">
-      {showBack && (
-        <button onClick={() => router.back()} className="text-white/60 hover:text-white transition-colors flex-shrink-0">
-          <IconArrowLeft size={20} />
-        </button>
-      )}
-      <div className="flex-1 min-w-0">
-        <div className="flex items-center gap-2">
-          <h1 className="font-display text-[15px] font-semibold text-white truncate">{title}</h1>
-          {badge && <Badge status={badge.status} />}
+    <div className="relative border-b-2 border-ink px-5 py-5 flex items-end justify-between gap-4 flex-wrap">
+      {/* Masthead ID - Seal mark */}
+      <div className="flex items-center gap-3">
+        <div className="w-10 h-10 rounded-full bg-seal flex items-center justify-center font-serif font-bold text-[16px] text-ink flex-shrink-0 shadow-[0_3px_0_var(--seal-deep)]">
+          OSIS
         </div>
-        {subtitle && <p className="text-[11px] text-white/50 truncate mt-0.5">{subtitle}</p>}
+        <div>
+          <h1 className="font-serif font-semibold text-[19px] leading-[1.1] text-ink">{title}</h1>
+          {subtitle && <p className="text-[11px] text-ink-soft tracking-[0.4px] mt-[2px]">{subtitle}</p>}
+        </div>
       </div>
-      {userName && (
-        <div className="w-8 h-8 rounded-full bg-gradient-to-br from-blue to-blue-light flex items-center justify-center flex-shrink-0">
-          <span className="text-[13px] font-semibold text-white">{initial}</span>
-        </div>
-      )}
+
+      {/* Right side - back button & user */}
+      <div className="flex items-center gap-3">
+        {showBack && (
+          <button onClick={() => router.back()} className="w-9 h-9 rounded-full border-[1.5px] border-line text-ink-soft hover:border-ink hover:text-ink bg-card flex items-center justify-center transition-all">
+            <IconArrowLeft size={18} />
+          </button>
+        )}
+        {userName && (
+          <div className="w-9 h-9 rounded-full bg-ink text-paper flex items-center justify-center font-serif font-bold text-[13px] flex-shrink-0">
+            {initial}
+          </div>
+        )}
+      </div>
     </div>
   );
 }

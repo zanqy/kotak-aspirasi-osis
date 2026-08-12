@@ -12,6 +12,13 @@ interface Aspirasi { id: string; kode_tiket: string; isi: string; kategori: stri
 
 const e = [0.22, 1, 0.36, 1] as const;
 
+// Ticker content for masthead
+const tickerItems = [
+  "Selamat Datang di Meja Kerja OSIS",
+  "Kelola aspirasi dengan rapi",
+  "Tanggapi setiap suara siswa",
+];
+
 export default function DashboardOverview() {
   const router = useRouter();
   const [userName, setUserName] = useState("");
@@ -39,29 +46,113 @@ export default function DashboardOverview() {
     fetchData();
   }, [router]);
 
+  // Map status untuk AspirasiItem
+  const mapStatus = (status: Aspirasi["status"]): "baru" | "diproses" | "diteruskan" | "selesai" => {
+    if (status === "menunggu") return "baru";
+    if (status === "dibalas") return "selesai";
+    return status;
+  };
+
   return (
-    <div className="min-h-screen bg-white">
-      <div className="max-w-[480px] mx-auto pb-16">
-        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.4, ease: e }}>
-          <DashboardNav title="Dashboard Humas" subtitle={`Selamat datang, ${userName}`} userName={userName} />
-        </motion.div>
-        <div className="grid grid-cols-2 gap-[10px] p-4">
-          {[{ n: stats.total, l: "Total aspirasi", c: "default" as const }, { n: stats.menunggu, l: "Belum dibalas", c: "yellow" as const }, { n: stats.dibalas, l: "Sudah dibalas", c: "green" as const }, { n: stats.diteruskan, l: "Diteruskan", c: "purple" as const }].map((card, i) => (
-            <motion.div key={card.l} initial={{ scale: 0.9, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} transition={{ duration: 0.5, ease: e, delay: 0.2 + i * 0.1 }}>
-              <StatCard number={card.n} label={card.l} color={card.c as "default" | "yellow" | "green" | "purple"} animate />
-            </motion.div>
+    <div className="min-h-screen" style={{ background: 'var(--paper)' }}>
+      {/* Ticker marquee */}
+      <div className="overflow-hidden border-b border-line bg-paper-deep">
+        <div className="flex gap-10 whitespace-nowrap py-1.5 px-4" style={{ animation: 'marquee 34s linear infinite', width: 'max-content' }}>
+          {[...tickerItems, ...tickerItems].map((item, i) => (
+            <span key={i} className="text-[10.5px] font-bold uppercase tracking-[0.6px] text-ink-faint">
+              ● {item}
+            </span>
           ))}
         </div>
-        <motion.p className="text-[13px] font-display font-semibold text-blue px-[18px] pt-1 pb-2" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.4, ease: e, delay: 0.6 }}>Terbaru masuk</motion.p>
-        {loading ? <div className="px-[18px] space-y-3">{[1,2,3].map((i) => <div key={i} className="animate-pulse"><div className="h-5 bg-gray-100 rounded w-24 mb-2" /><div className="h-4 bg-gray-100 rounded w-full mb-1" /><div className="h-4 bg-gray-100 rounded w-3/4" /></div>)}</div> :
-         terbaru.length === 0 ? <p className="text-[13px] text-gray-400 text-center py-10">Belum ada aspirasi</p> :
-         terbaru.map((item, i) => (
-          <motion.div key={item.id} initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4, ease: e, delay: 0.6 + i * 0.06 }}>
-            <AspirasiItem kode={item.kode_tiket} waktu={item.created_at} preview={item.isi} status={item.status} kategori={item.kategori || ""} onClick={() => router.push(`/dashboard/aspirasi/${item.id}`)} />
-          </motion.div>
-        ))}
-        <BottomTabBar active="overview" />
       </div>
+
+      <div className="max-w-[900px] mx-auto pb-20 px-4 pt-6">
+        <DashboardNav title="Dashboard OSIS" subtitle={`Selamat datang, ${userName}`} userName={userName} />
+
+        {/* Rak stempel - stat cards */}
+        <motion.div
+          className="grid grid-cols-2 md:grid-cols-4 gap-[18px] my-6"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.4, ease: e, delay: 0.35 }}
+        >
+          {[
+            { value: stats.total, label: "Total surat", badgeText: "Arsip", icon: "ti ti-mail", status: "" },
+            { value: stats.menunggu, label: "Belum dibuka", badgeText: "Antre", icon: "ti ti-mail-opened", status: "menunggu" },
+            { value: stats.dibalas, label: "Sudah dibalas", badgeText: "Tuntas", icon: "ti ti-check", status: "dibalas" },
+            { value: stats.diteruskan, label: "Diteruskan", badgeText: "Proses", icon: "ti ti-send", status: "diteruskan" },
+          ].map((card, i) => (
+            <motion.div
+              key={card.label}
+              initial={{ opacity: 0, y: 22 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.7, ease: e, delay: 0.5 + i * 0.1 }}
+            >
+              <StatCard
+                label={card.label}
+                value={card.value}
+                badgeText={card.badgeText}
+                icon={card.icon}
+                onClick={() => card.status && router.push(`/dashboard/aspirasi?status=${card.status}`)}
+              />
+            </motion.div>
+          ))}
+        </motion.div>
+
+        {/* Section title */}
+        <motion.p
+          className="text-[12.5px] font-bold text-ink-soft uppercase tracking-[1px] mb-4 flex items-center gap-3"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.4, ease: e, delay: 0.6 }}
+        >
+          <span className="flex-1 h-px bg-line" />
+          Terbaru Masuk
+        </motion.p>
+
+        {/* List aspirasi */}
+        {loading ? (
+          <div className="space-y-3">
+            {[1,2,3].map((i) => (
+              <div key={i} className="animate-pulse">
+                <div className="h-5 bg-paper-deep rounded w-24 mb-2" />
+                <div className="h-4 bg-paper-deep rounded w-full mb-1" />
+                <div className="h-4 bg-paper-deep rounded w-3/4" />
+              </div>
+            ))}
+          </div>
+        ) : terbaru.length === 0 ? (
+          <div className="text-center py-16 text-ink-faint">
+            <i className="ti ti-inbox text-[30px] block mb-2" />
+            <p className="text-[12.5px]">Belum ada aspirasi masuk</p>
+          </div>
+        ) : (
+          <div className="bg-card border border-line rounded-[6px] shadow-paper">
+            {terbaru.map((item, i) => (
+              <motion.div
+                key={item.id}
+                initial={{ opacity: 0, y: 15 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6, ease: e, delay: 0.6 + i * 0.08 }}
+              >
+                <AspirasiItem
+                  id={parseInt(item.id) || i}
+                  code={item.kode_tiket}
+                  category={item.kategori || "Lainnya"}
+                  excerpt={item.isi}
+                  status={mapStatus(item.status)}
+                  date={item.created_at}
+                  isUnread={item.status === "menunggu"}
+                  isSelected={false}
+                  onClick={() => router.push(`/dashboard/aspirasi/${item.id}`)}
+                />
+                {i < terbaru.length - 1 && <div className="h-px bg-line mx-[18px]" />}
+              </motion.div>
+            ))}
+          </div>
+        )}
+      </div>
+      <BottomTabBar active="overview" />
     </div>
   );
 }
