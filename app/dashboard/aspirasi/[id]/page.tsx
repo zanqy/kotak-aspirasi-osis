@@ -32,7 +32,7 @@ interface Aspirasi {
   created_at: string;
 }
 
-const _e = [0.22, 1, 0.36, 1] as const;
+const e = [0.22, 1, 0.36, 1] as const;
 
 const kategoriLabels: Record<string, string> = {
   akademik: "Akademik",
@@ -116,7 +116,6 @@ export default function AspirasiDetail() {
 
   const handleKirimBalasan = async () => {
     if (!balasan.trim()) return;
-    setSending(true);
     try {
       const res = await fetch(`/api/dashboard/aspirasi/${id}/pesan`, {
         method: "POST",
@@ -129,7 +128,7 @@ export default function AspirasiDetail() {
         setBalasan("");
         fetchDetail();
       }
-    } catch {} finally { setSending(false); }
+    } catch {}
   };
 
   const handleStatusChange = async () => {
