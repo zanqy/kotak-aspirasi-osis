@@ -118,7 +118,7 @@ function CekAspirasiContent() {
   const [error, setError] = useState("");
   const [data, setData] = useState<AspirasiData | null>(null);
   const [pesan, setPesan] = useState<Pesan[]>([]);
-  const [sending, setSending] = useState(false);
+  const [, setSending] = useState(false);
   const aspirationIdRef = useRef<string | null>(null);
   const queryKode = searchParams.get("kode");
 

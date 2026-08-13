@@ -39,7 +39,7 @@ const itemVariants: Variants = {
 };
 
 export default function AspirasiItem({
-  id,
+  id: _id,
   code,
   category,
   excerpt,

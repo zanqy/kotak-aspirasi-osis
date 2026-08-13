@@ -97,7 +97,7 @@ export default function EnvelopeForm({ onOpenStatus, onSubmitSuccess }: Props) {
     setErrors(prev => { const n = { ...prev }; delete n[field]; return n; });
   };
 
-  const stagger = (base: number) => staggerReady ? `${base}s` : "0s";
+  // (stagger removed - unused)
 
   return (
     <>

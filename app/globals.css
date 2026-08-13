@@ -187,34 +187,27 @@ body {
 }
 
 /* ============================================================ */
-/* PAPER THEME — GLOBAL OVERRIDE (halaman siswa & cek-aspirasi) */
-/* Dipindah dari app/page.module.css karena selector global murni */
-/* tidak boleh ada di CSS Module. Dashboard tetap aman karena     */
-/* memakai bg-white/bg-navy eksplisit di root div-nya sendiri.    */
+/* PAPER THEME — GLOBAL (dipakai di dashboard & landing)       */
+/* Halaman siswa override body/body styles via page.tsx masing2   */
 /* ============================================================ */
-body {
-  background-color: var(--bg-deep, #080706);
-  color: var(--paper, #F4EBD8);
-  overflow-x: hidden;
-}
 ::selection {
-  background: var(--seal, #D9A036);
-  color: var(--ink, #1F1A15);
+  background: var(--seal, #E0A526);
+  color: var(--ink, #2B2620);
 }
 ::-webkit-scrollbar {
-  width: 5px;
+  width: 8px;
 }
 ::-webkit-scrollbar-track {
-  background: var(--bg-deep, #080706);
+  background: var(--paper-deep, #E7DCC4);
 }
 ::-webkit-scrollbar-thumb {
-  background: var(--ink-soft, #5C5042);
-  border-radius: 10px;
+  background: var(--ink-faint, #A69A80);
+  border-radius: 4px;
 }
 :focus-visible {
-  outline: 2px solid var(--seal, #D9A036);
-  outline-offset: 4px;
-  border-radius: 1px;
+  outline: 2px solid var(--seal-deep, #B5810E);
+  outline-offset: 3px;
+  border-radius: 2px;
 }
 html {
   scroll-behavior: auto;

@@ -1,43 +1,9 @@
-"use client";
+import { redirect } from "next/navigation";
 
-import { useState, useCallback } from "react";
-import ScrollytellingStage from "@/components/landing/ScrollytellingStage";
-import EnvelopeForm from "@/components/landing/EnvelopeForm";
-import StatusModal from "@/components/landing/StatusModal";
-import PageLoader from "@/components/landing/PageLoader";
-import { IconCheck } from "@tabler/icons-react";
-import styles from "./page.module.css";
-
+// Redirect ke static HTML landing di /public/index.html
+// Dipakai agar SEO/search engine link tidak rusak (backward compatible),
+// dan agar request ke "/" dari siapapun otomatis dapat static HTML version
+// yang lebih ringan (no Next.js client bundle).
 export default function Home() {
-  const [statusOpen, setStatusOpen] = useState(false);
-  const [toast, setToast] = useState<{ show: boolean; kode: string }>({ show: false, kode: "" });
-
-  const handleSubmitSuccess = useCallback((kode: string) => {
-    setToast({ show: true, kode });
-    setTimeout(() => setToast({ show: false, kode: "" }), 4000);
-  }, []);
-
-  return (
-    <>
-      <PageLoader />
-
-      <ScrollytellingStage>
-        <EnvelopeForm
-          onOpenStatus={() => setStatusOpen(true)}
-          onSubmitSuccess={handleSubmitSuccess}
-        />
-      </ScrollytellingStage>
-
-      <StatusModal open={statusOpen} onClose={() => setStatusOpen(false)} />
-
-      {/* Toast */}
-      <div className={`${styles.toast}${toast.show ? ` ${styles.toastShow}` : ""}`}>
-        <div className={styles.toastIcon}><IconCheck size={18} aria-hidden="true" /></div>
-        <div>
-          <b>Surat Berhasil Mendarat</b>
-          <span>{toast.kode}</span>
-        </div>
-      </div>
-    </>
-  );
+  redirect("/index.html");
 }

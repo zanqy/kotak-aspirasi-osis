@@ -7,6 +7,12 @@ export async function middleware(request: NextRequest) {
 
   // Protect API dashboard routes
   if (path.startsWith("/api/dashboard/")) {
+    // Bypass untuk hardcoded admin
+    const isHardcodedAdmin = request.cookies.get("sb-hardcoded-admin")?.value === "true";
+    if (isHardcodedAdmin) {
+      return NextResponse.next();
+    }
+
     const accessToken = request.cookies.get("sb-access-token")?.value;
     const userId = request.cookies.get("sb-user-id")?.value;
 
@@ -46,6 +52,12 @@ export async function middleware(request: NextRequest) {
 
   // Protect dashboard page routes
   if (path.startsWith("/dashboard") && path !== "/dashboard/login") {
+    // Bypass untuk hardcoded admin
+    const isHardcodedAdmin = request.cookies.get("sb-hardcoded-admin")?.value === "true";
+    if (isHardcodedAdmin) {
+      return NextResponse.next();
+    }
+
     const accessToken = request.cookies.get("sb-access-token")?.value;
     const userId = request.cookies.get("sb-user-id")?.value;
 

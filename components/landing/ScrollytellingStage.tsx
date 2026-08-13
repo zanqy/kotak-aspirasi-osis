@@ -4,14 +4,7 @@ import { useState, useEffect, useRef, useCallback } from "react";
 import { usePrefersReducedMotion } from "@/hooks/usePrefersReducedMotion";
 import styles from "./ScrollytellingStage.module.css";
 
-const T = {
-  bgDeep: "#080706", bgSpot: "#1c1712", bgSpot2: "#120f0b",
-  paper: "#F4EBD8", paperDeep: "#E2D4B7", paperDark: "#C9B78F",
-  card: "#FCF9F2", ink: "#1F1A15", inkSoft: "#5C5042", inkFaint: "#7A6B54",
-  seal: "#D9A036", sealBright: "#F0B94A", sealGlow: "rgba(217, 160, 54, 0.28)",
-  sealDeep: "#A5730D", wax: "#8C2F1D", waxDeep: "#5E1D11",
-  waxGlow: "rgba(140, 47, 29, 0.35)", line: "#D4C4A3",
-} as const;
+// (T tokens removed - unused, token tersedia di tailwind config)
 
 const SCENES = [
   { eyebrow: "Sebelum kamu bicara", line1: "Ada yang kamu simpan sendiri —", line2: "ditulis, lalu ", em: "tidak pernah dikirim." },

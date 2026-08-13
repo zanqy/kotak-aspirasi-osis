@@ -1,6 +1,16 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createServiceClient } from "@/lib/supabase";
 
+const CORS_HEADERS = {
+  "Access-Control-Allow-Origin": "*",
+  "Access-Control-Allow-Methods": "POST, GET, OPTIONS",
+  "Access-Control-Allow-Headers": "Content-Type, Authorization",
+};
+
+export async function OPTIONS() {
+  return NextResponse.json({}, { headers: CORS_HEADERS });
+}
+
 export async function GET(
   _request: NextRequest,
   { params }: { params: { kode: string } }
@@ -18,11 +28,10 @@ export async function GET(
     if (error || !aspirasi) {
       return NextResponse.json(
         { error: "Kode tiket tidak ditemukan" },
-        { status: 404 }
+        { status: 404, headers: CORS_HEADERS }
       );
     }
 
-    // Get pesan
     const { data: pesan } = await supabase
       .from("pesan")
       .select("*")
@@ -33,12 +42,14 @@ export async function GET(
     const aspirasiData = { ...aspirasi };
     delete aspirasiData.email_siswa;
 
-    const response = NextResponse.json({
-      aspirasi: aspirasiData,
-      pesan: pesan || [],
-    });
+    const response = NextResponse.json(
+      {
+        aspirasi: aspirasiData,
+        pesan: pesan || [],
+      },
+      { headers: CORS_HEADERS }
+    );
 
-    // Prevent caching so data is always fresh
     response.headers.set("Cache-Control", "no-cache, no-store, must-revalidate");
     response.headers.set("Pragma", "no-cache");
     response.headers.set("Expires", "0");
@@ -47,7 +58,7 @@ export async function GET(
   } catch {
     return NextResponse.json(
       { error: "Terjadi kesalahan server" },
-      { status: 500 }
+      { status: 500, headers: CORS_HEADERS }
     );
   }
 }

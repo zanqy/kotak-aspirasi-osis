@@ -3,6 +3,18 @@ import { createServiceClient } from "@/lib/supabase";
 import { generateKodeTiketUnik } from "@/lib/utils";
 import { kirimEmail } from "@/lib/resend";
 
+// CORS headers — allow static HTML landing to fetch this API from same domain
+// or different origin (jaga-jaga kalau static dipisah host ke Cloudflare Pages dll)
+const CORS_HEADERS = {
+  "Access-Control-Allow-Origin": "*",
+  "Access-Control-Allow-Methods": "POST, GET, OPTIONS",
+  "Access-Control-Allow-Headers": "Content-Type, Authorization",
+};
+
+export async function OPTIONS() {
+  return NextResponse.json({}, { headers: CORS_HEADERS });
+}
+
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
@@ -11,24 +23,16 @@ export async function POST(request: NextRequest) {
     if (!isi || isi.trim() === "") {
       return NextResponse.json(
         { error: "Isi aspirasi tidak boleh kosong" },
-        { status: 400 }
+        { status: 400, headers: CORS_HEADERS }
       );
     }
 
     const supabase = createServiceClient();
 
-    // DEBUG: cek env terbaca
-    console.log("[DEBUG] URL:", process.env.NEXT_PUBLIC_SUPABASE_URL);
-    console.log("[DEBUG] SERVICE_KEY ada:", !!process.env.SUPABASE_SERVICE_ROLE_KEY);
-
-    // Generate kode tiket unik tanpa bergantung pada query count.
-    // Query count sebelumnya rawan gagal (RLS / koneksi) sehingga memicu
-    // error "Gagal menghitung data".
     const kode_tiket = generateKodeTiketUnik();
 
     let status_email: "terkirim" | "gagal" | "tidak_ada" = "tidak_ada";
 
-    // Insert aspirasi
     const { data: aspirasi, error: insertError } = await supabase
       .from("aspirasi")
       .insert({
@@ -46,11 +50,10 @@ export async function POST(request: NextRequest) {
       console.error("[DEBUG] insertError:", JSON.stringify(insertError, null, 2));
       return NextResponse.json(
         { error: "Gagal menyimpan aspirasi" },
-        { status: 500 }
+        { status: 500, headers: CORS_HEADERS }
       );
     }
 
-    // Kirim email jika ada
     if (email_siswa && email_siswa.trim() !== "") {
       const appUrl = process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000";
       const html = `
@@ -80,22 +83,17 @@ export async function POST(request: NextRequest) {
         .from("aspirasi")
         .update({ status_email })
         .eq("id", aspirasi.id);
-
-      // Insert notifikasi
-      await supabase.from("notifikasi").insert({
-        aspirasi_id: aspirasi.id,
-        tipe: "kode_tiket",
-        tujuan: email_siswa.trim(),
-        status_kirim: status_email === "terkirim" ? "sukses" : "gagal",
-      });
     }
 
-    return NextResponse.json({ kode_tiket });
+    return NextResponse.json(
+      { kode_tiket, status: aspirasi.status, status_email },
+      { headers: CORS_HEADERS }
+    );
   } catch (err) {
-    console.error("[DEBUG] catch error:", err);
+    console.error("Error:", err);
     return NextResponse.json(
       { error: "Terjadi kesalahan server" },
-      { status: 500 }
+      { status: 500, headers: CORS_HEADERS }
     );
   }
 }
