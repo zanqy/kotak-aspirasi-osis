@@ -24,7 +24,7 @@ const filterTabs = [
   { label: "Lainnya", value: "lainnya" },
 ];
 
-const e = [0.22, 1, 0.36, 1] as const;
+const _e = [0.22, 1, 0.36, 1] as const;
 
 function AspirasiListInner() {
   const router = useRouter();
