@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
-import { useParams, useRouter } from "next/navigation";
+import { useParams } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import DashboardNav from "@/components/layout/DashboardNav";
 import StatusRail from "@/components/ui/StatusRail";
@@ -9,7 +9,7 @@ import MessageThread from "@/components/ui/MessageThread";
 import ReplyComposer from "@/components/ui/ReplyComposer";
 import { formatWaktu } from "@/lib/utils";
 import { createBrowserClient } from "@/lib/supabase";
-import { IconArrowForward, IconArrowLeft } from "@tabler/icons-react";
+import { IconArrowForward } from "@tabler/icons-react";
 
 interface Pesan {
   id: string;
@@ -32,7 +32,7 @@ interface Aspirasi {
   created_at: string;
 }
 
-const e = [0.22, 1, 0.36, 1] as const;
+const _e = [0.22, 1, 0.36, 1] as const;
 
 const kategoriLabels: Record<string, string> = {
   akademik: "Akademik",
@@ -43,13 +43,11 @@ const kategoriLabels: Record<string, string> = {
 
 export default function AspirasiDetail() {
   const params = useParams();
-  const router = useRouter();
   const id = params.id as string;
   const [aspirasi, setAspirasi] = useState<Aspirasi | null>(null);
   const [pesan, setPesan] = useState<Pesan[]>([]);
   const [loading, setLoading] = useState(true);
   const [balasan, setBalasan] = useState("");
-  const [sending, setSending] = useState(false);
   const [showForward, setShowForward] = useState(false);
   const [forwardTo, setForwardTo] = useState("");
   const [userName, setUserName] = useState("");

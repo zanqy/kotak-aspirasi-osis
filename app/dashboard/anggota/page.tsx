@@ -17,7 +17,6 @@ interface User {
   avatar_url: string | null;
 }
 
-const e = [0.22, 1, 0.36, 1] as const;
 
 export default function AnggotaPage() {
   const router = useRouter();

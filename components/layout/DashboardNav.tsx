@@ -12,7 +12,6 @@ interface DashboardNavProps {
   role?: string;
 }
 
-const e = [0.22, 1, 0.36, 1] as const;
 
 export default function DashboardNav({ title, subtitle, showBack = false, userName, role }: DashboardNavProps) {
   const router = useRouter();
