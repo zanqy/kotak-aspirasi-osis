@@ -16,7 +16,8 @@ Web app untuk siswa kirim aspirasi **anonim** ke OSIS (Humas), bisa dilacak via 
 |-----------|--------|
 | Next.js 14 (App Router) | Framework |
 | TypeScript | Type safety |
-| Supabase | DB, Auth, Realtime |
+| Firebase (Auth + Firestore) | Auth, DB, Realtime |
+| Firebase Admin | Server-side SDK (session cookie, Firestore admin) |
 | Resend | Email notifikasi |
 | Tailwind CSS | Styling |
 | Framer Motion | Animasi |
@@ -34,8 +35,8 @@ Web app untuk siswa kirim aspirasi **anonim** ke OSIS (Humas), bisa dilacak via 
 
 ### Dashboard (Humas/Admin)
 
-1. **Login** di `/dashboard/login` → email/password atau Google OAuth
-2. **Middleware cek** session → cek status user (`pending`/`approved`/`rejected`) → redirect sesuai
+1. **Login** di `/dashboard/login` → email/password atau Google OAuth (Firebase JS SDK)
+2. **Session cookie** dibuat via `POST /api/auth/session` (dari ID token)
 3. **Overview** `/dashboard` → statistik + 5 aspirasi terbaru
 4. **Kelola aspirasi** `/dashboard/aspirasi` → filter status, search, klik detail
 5. **Detail & balas** `/dashboard/aspirasi/[id]` → chat thread, kirim balasan, teruskan ke divisi
@@ -55,18 +56,18 @@ menunggu → diproses → dibalas
 
 ---
 
-## 4. Struktur Database (5 Tabel)
+## 4. Struktur Database (Firestore — 5 Collection)
 
-| Tabel | Isi | Catatan |
-|-------|-----|---------|
-| `users` | Anggota humas (email, role, status) | Status: pending/approved/rejected |
-| `aspirasi` | Data aspirasi siswa | Kode tiket unik, status, email_siswa (opsional) |
-| `pesan` | Chat dua arah | pengirim: siswa/humas |
-| `notifikasi` | Log kirim email | tipe: kode_tiket/balasan/aspirasi_baru |
-| `aktivitas` | Log aktivitas humas | aksi + keterangan |
+| Collection | Isi | Catatan |
+|-----------|-----|---------|
+| `users/{uid}` | Anggota humas (email, role, status) | Doc ID = Firebase Auth UID |
+| `aspirasi/{id}` | Data aspirasi siswa | Kode tiket unik, status, email_siswa (opsional) |
+| `aspirasi/{id}/pesan/{pid}` | Chat dua arah | Subcollection, pengirim: siswa/humas |
+| `notifikasi/{id}` | Log kirim email | tipe: kode_tiket/balasan/aspirasi_baru |
+| `aktivitas/{id}` | Log aktivitas humas | aksi + keterangan |
 
-- **RLS aktif** di semua tabel
-- **Trigger auto `updated_at`** di `users` & `aspirasi`
+- **Security Rules** di [`firestore.rules`](../firestore.rules) (pengganti RLS)
+- **Composite indexes** di [`firestore.indexes.json`](../firestore.indexes.json)
 
 ---
 
@@ -74,19 +75,20 @@ menunggu → diproses → dibalas
 
 ```
 app/                  # Pages + API Routes (App Router)
-├── page.tsx          # Landing + form aspirasi
-├── cek-aspirasi/     # Cek status publik
+├── page.tsx          # Redirect ke /index.html (landing statik)
+├── cek-aspirasi/     # Cek status publik (realtime onSnapshot)
 ├── dashboard/        # Dashboard pages (overview, aspirasi, anggota, login)
 └── api/              # API routes (aspirasi/*, auth/*, dashboard/*)
 
 components/
 ├── layout/           # ClientLayout, DashboardNav, BottomTabBar
-├── ui/               # AspirasiItem, Badge, Button, ChatBubble, Dropdown, StatCard
-└── animations/       # EntranceWrapper, LineDraw, MotionProvider, PageTransition, dll
+├── ui/               # AspirasiItem, Badge, MessageThread, ReplyComposer, StatCard, StatusRail
+└── animations/       # MotionProvider, PageTransition
 
-hooks/                # useCountUp, useFirstVisit, usePrefersReducedMotion, useTypewriter
-lib/                  # supabase.ts, supabase-server.ts, resend.ts, auth-api.ts, utils.ts
-supabase/migration.sql
+hooks/                # useCountUp, useFirstVisit, usePrefersReducedMotion
+lib/                  # firebase.ts, firebase-client.ts, auth-api.ts, resend.ts, utils.ts
+firestore.rules
+firestore.indexes.json
 middleware.ts
 ```
 
@@ -94,14 +96,19 @@ middleware.ts
 
 ## 6. Poin Penting untuk AI
 
-### Supabase Client
+### Firebase Client
 
 | Konteks | Client | File |
 |---------|--------|------|
-| Public pages | `createServiceClient()` (Service Role) | [`lib/supabase.ts`](../lib/supabase.ts) |
-| Dashboard pages | `createBrowserClient()` (Browser) | [`lib/supabase.ts`](../lib/supabase.ts) |
-| API routes | `createServiceClient()` (Service Role, bypass RLS) | [`lib/supabase.ts`](../lib/supabase.ts) |
-| Server SSR | `createServerSupabaseClient()` (@supabase/ssr) | [`lib/supabase-server.ts`](../lib/supabase-server.ts) |
+| API routes (server) | `getAdminDb()` / `getAdminAuth()` (Admin SDK) | [`lib/firebase.ts`](../lib/firebase.ts) |
+| Login + realtime (browser) | `getClientAuth()` / `getClientDb()` (Client SDK) | [`lib/firebase-client.ts`](../lib/firebase-client.ts) |
+
+### Auth Flow
+
+1. Login client-side: `signInWithEmailAndPassword` / `signInWithPopup(GoogleAuthProvider)`
+2. Kirim `idToken` ke `POST /api/auth/session` → server buat session cookie httpOnly `fb-session`
+3. API routes verifikasi via `verifyAuthDashboard()` (Admin SDK `verifySessionCookie`)
+4. Logout: `signOut()` client SDK + `POST /api/auth/logout` (clear cookie)
 
 ### Privacy
 
@@ -118,24 +125,26 @@ middleware.ts
 
 | Variable | Keterangan |
 |----------|------------|
-| `NEXT_PUBLIC_SUPABASE_URL` | URL project Supabase |
-| `NEXT_PUBLIC_SUPABASE_ANON_KEY` | Anon key (client-safe) |
-| `SUPABASE_SERVICE_ROLE_KEY` | Service role key (**server-only**) |
+| `NEXT_PUBLIC_FIREBASE_API_KEY` | Web API key (client-safe) |
+| `NEXT_PUBLIC_FIREBASE_PROJECT_ID` | Project ID (client-safe) |
+| `FIREBASE_PROJECT_ID` | Project ID (server) |
+| `FIREBASE_CLIENT_EMAIL` | Service account email (**server-only**) |
+| `FIREBASE_PRIVATE_KEY` | Service account private key (**server-only**) |
 | `RESEND_API_KEY` | API key Resend |
 | `RESEND_FROM_EMAIL` | Email pengirim |
-| `ADMIN_EMAIL` / `ADMIN_PASSWORD` | Kredensial admin default |
 | `NEXT_PUBLIC_APP_URL` | Base URL (untuk link di email) |
 
 ### Middleware
 
-- Proteksi semua `/dashboard/*` → cek session + status user + role (untuk `/dashboard/anggota`)
+- Proteksi `/dashboard/*` → cek keberadaan cookie `fb-session` (Edge-compatible)
+- Verifikasi penuh session + role dilakukan di API routes (`verifyAuthDashboard`) dan `/api/auth/session`
 - File: [`middleware.ts`](../middleware.ts)
 
 ### Auth Helpers
 
-- [`verifyAuth()`](../lib/auth-api.ts) — verifikasi dari Authorization header/cookie
-- [`verifyAuthDashboard()`](../lib/auth-api.ts) — verifikasi + cek status & role di tabel `users`
+- [`verifyAuth()`](../lib/auth-api.ts) — verifikasi session cookie dari Authorization header/cookie
+- [`verifyAuthDashboard()`](../lib/auth-api.ts) — verifikasi + cek status & role di collection `users`
 
 ---
 
-> **Butuh detail lebih?** Buka [`docs/README-LENGKAP.md`](README-LENGKAP.md)
+> **Butuh detail lebih?** Buka [`docs/README-LENGKAP.md`](README-LENGKAP.md) · **Panduan migrasi**: [`docs/MIGRASI-FIREBASE.md`](MIGRASI-FIREBASE.md)

@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { createServiceClient } from "@/lib/supabase";
+import { getAdminDb } from "@/lib/firebase";
 import { kirimEmail } from "@/lib/resend";
 import { verifyAuthDashboard } from "@/lib/auth-api";
 
@@ -12,7 +12,7 @@ export async function POST(
   if (auth.error) return auth.error;
 
   try {
-    const supabase = createServiceClient();
+    const db = getAdminDb();
     const body = await request.json();
     const { isi } = body;
 
@@ -26,36 +26,34 @@ export async function POST(
     const userId = auth.user!.id;
 
     // Insert pesan
-    const { data: pesan, error } = await supabase
-      .from("pesan")
-      .insert({
+    const pesanRef = await db
+      .collection("aspirasi")
+      .doc(params.id)
+      .collection("pesan")
+      .add({
         aspirasi_id: params.id,
         isi: isi.trim(),
         pengirim: "humas",
         user_id: userId,
-      })
-      .select("*, users(name)")
-      .single();
+        created_at: new Date(),
+      });
 
-    if (error) {
-      return NextResponse.json(
-        { error: "Gagal mengirim pesan" },
-        { status: 500 }
-      );
-    }
+    // Get user name
+    const userDoc = await db.collection("users").doc(userId).get();
+    const userName = userDoc.data()?.name || null;
 
     // Update status aspirasi ke dibalas jika belum
-    const { data: aspirasi } = await supabase
-      .from("aspirasi")
-      .select("status, email_siswa, status_email, kode_tiket")
-      .eq("id", params.id)
-      .single();
+    const aspirasiDoc = await db.collection("aspirasi").doc(params.id).get();
+    const aspirasi = aspirasiDoc.data();
 
-    if (aspirasi && (aspirasi.status === "menunggu" || aspirasi.status === "diproses")) {
-      await supabase
-        .from("aspirasi")
-        .update({ status: "dibalas", updated_at: new Date().toISOString() })
-        .eq("id", params.id);
+    if (
+      aspirasi &&
+      (aspirasi.status === "menunggu" || aspirasi.status === "diproses")
+    ) {
+      await db
+        .collection("aspirasi")
+        .doc(params.id)
+        .update({ status: "dibalas", updated_at: new Date() });
     }
 
     // Kirim email notifikasi ke siswa jika email ada
@@ -80,43 +78,33 @@ export async function POST(
         html
       );
 
-      await supabase.from("notifikasi").insert({
+      await db.collection("notifikasi").add({
         aspirasi_id: params.id,
         tipe: "balasan",
         tujuan: aspirasi.email_siswa,
         status_kirim: berhasil ? "sukses" : "gagal",
+        created_at: new Date(),
       });
     }
 
     // Insert aktivitas
-    await supabase.from("aktivitas").insert({
+    await db.collection("aktivitas").add({
       user_id: userId,
       aksi: "Mengirim balasan",
       aspirasi_id: params.id,
       keterangan: isi.trim().substring(0, 200),
+      created_at: new Date(),
     });
 
-    const pesanData = pesan as {
-      id: string;
-      aspirasi_id: string;
-      isi: string;
-      pengirim: string;
-      user_id: string | null;
-      created_at: string;
-      users: { name: string } | null;
-    };
-
-    const result = {
-      id: pesanData.id,
-      aspirasi_id: pesanData.aspirasi_id,
-      isi: pesanData.isi,
-      pengirim: pesanData.pengirim,
-      user_id: pesanData.user_id,
-      created_at: pesanData.created_at,
-      user_name: pesanData.users?.name || null,
-    };
-
-    return NextResponse.json(result);
+    return NextResponse.json({
+      id: pesanRef.id,
+      aspirasi_id: params.id,
+      isi: isi.trim(),
+      pengirim: "humas",
+      user_id: userId,
+      created_at: new Date().toISOString(),
+      user_name: userName,
+    });
   } catch {
     return NextResponse.json(
       { error: "Terjadi kesalahan server" },

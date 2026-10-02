@@ -7,8 +7,17 @@ import DashboardNav from "@/components/layout/DashboardNav";
 import StatusRail from "@/components/ui/StatusRail";
 import MessageThread from "@/components/ui/MessageThread";
 import ReplyComposer from "@/components/ui/ReplyComposer";
-import { formatWaktu } from "@/lib/utils";
-import { createBrowserClient } from "@/lib/supabase";
+import { formatWaktu, firestoreTimestampToISO } from "@/lib/utils";
+import { getClientDb } from "@/lib/firebase-client";
+import {
+  collection,
+  doc,
+  query,
+  where,
+  orderBy,
+  onSnapshot,
+  getDoc,
+} from "firebase/firestore";
 import { IconArrowForward } from "@tabler/icons-react";
 
 interface Pesan {
@@ -65,38 +74,86 @@ export default function AspirasiDetail() {
         setPesan(json.pesan || []);
         setSelectedStatus(json.aspirasi?.status || "menunggu");
       }
-    } catch {} finally { setLoading(false); }
+    } catch (err) {
+      console.error("fetch detail error:", err);
+    } finally {
+      setLoading(false);
+    }
   };
 
   useEffect(() => {
     if (!aspirasi?.id) return;
-    const supabase = createBrowserClient();
-    const pesanChannel = supabase.channel(`dashboard-pesan-${aspirasi.id}`).on(
-      "postgres_changes",
-      { event: "INSERT", schema: "public", table: "pesan", filter: `aspirasi_id=eq.${aspirasi.id}` },
-      async (payload: { new: { id: string; aspirasi_id: string; isi: string; pengirim: string; user_id: string | null; created_at: string } }) => {
-        const np = payload.new;
-        let un: string | null = null;
+    const db = getClientDb();
+    const aspirasiId = aspirasi.id;
+
+    // Pesan baru (subcollection pesan)
+    const pesanQuery = query(
+      collection(db, "aspirasi", aspirasiId, "pesan"),
+      where("aspirasi_id", "==", aspirasiId),
+      orderBy("created_at", "asc"),
+    );
+    const unsubPesan = onSnapshot(pesanQuery, (snapshot) => {
+      snapshot.docChanges().forEach((change) => {
+        if (change.type !== "added") return;
+        const d = change.doc.data();
+        const np: Pesan = {
+          id: change.doc.id,
+          aspirasi_id: d.aspirasi_id,
+          isi: d.isi,
+          pengirim: d.pengirim,
+          user_id: d.user_id || null,
+          created_at: firestoreTimestampToISO(d.created_at),
+          user_name: null,
+        };
+        // Lookup nama user humas dari collection users
         if (np.pengirim === "humas" && np.user_id) {
-          const r = await supabase.from("users").select("name").eq("id", np.user_id).limit(1);
-          const d = r.data as unknown as { name: string }[] | null;
-          un = d?.[0]?.name || null;
+          getDoc(doc(db, "users", np.user_id))
+            .then((userSnap) => {
+              const name = userSnap.data()?.name || null;
+              setPesan((prev) =>
+                prev.some((p) => p.id === np.id)
+                  ? prev.map((p) =>
+                      p.id === np.id ? { ...p, user_name: name } : p
+                    )
+                  : [...prev, { ...np, user_name: name }]
+              );
+            })
+            .catch(() => {
+              setPesan((prev) =>
+                prev.some((p) => p.id === np.id) ? prev : [...prev, np]
+              );
+            });
+        } else {
+          setPesan((prev) =>
+            prev.some((p) => p.id === np.id) ? prev : [...prev, np]
+          );
         }
-        setPesan((prev) =>
-          prev.some((p) => p.id === np.id) ? prev : [...prev, { id: np.id, aspirasi_id: np.aspirasi_id, isi: np.isi, pengirim: np.pengirim as "siswa" | "humas", user_id: np.user_id, created_at: np.created_at, user_name: un }]
-        );
+      });
+    });
+
+    // Status aspirasi berubah (doc aspirasi)
+    const unsubAspirasi = onSnapshot(
+      doc(db, "aspirasi", aspirasiId),
+      (snap) => {
+        if (snap.exists()) {
+          const d = snap.data();
+          setAspirasi((prev) =>
+            prev
+              ? {
+                  ...prev,
+                  status: d.status as "menunggu" | "diproses" | "dibalas" | "diteruskan",
+                  diteruskan_ke: d.diteruskan_ke ?? null,
+                }
+              : prev
+          );
+        }
       }
-    ).subscribe();
-    const aspirasiChannel = supabase.channel(`dashboard-aspirasi-${aspirasi.id}`).on(
-      "postgres_changes",
-      { event: "UPDATE", schema: "public", table: "aspirasi", filter: `id=eq.${aspirasi.id}` },
-      (payload: { new: { status: string; diteruskan_ke: string | null } }) => {
-        setAspirasi((prev) =>
-          prev ? { ...prev, status: payload.new.status as "menunggu" | "diproses" | "dibalas" | "diteruskan", diteruskan_ke: payload.new.diteruskan_ke } : prev
-        );
-      }
-    ).subscribe();
-    return () => { supabase.removeChannel(pesanChannel); supabase.removeChannel(aspirasiChannel); };
+    );
+
+    return () => {
+      unsubPesan();
+      unsubAspirasi();
+    };
   }, [aspirasi?.id]);
 
   useEffect(() => {
@@ -107,7 +164,9 @@ export default function AspirasiDetail() {
           const d = await sessionRes.json();
           if (d.user) setUserName(d.user.name || "");
         }
-      } catch {}
+      } catch (err) {
+        console.error("session check error:", err);
+      }
       fetchDetail();
     };
     init();
@@ -127,34 +186,59 @@ export default function AspirasiDetail() {
         setPesan((prev) => [...prev, pb]);
         setBalasan("");
         fetchDetail();
+      } else {
+        const data = await res.json().catch(() => ({}));
+        alert(data.error || "Gagal mengirim balasan");
       }
-    } catch {}
+    } catch (err) {
+      console.error("kirim balasan error:", err);
+      alert("Tidak ada koneksi. Coba lagi nanti.");
+    }
   };
 
   const handleStatusChange = async () => {
     if (!selectedStatus || !aspirasi) return;
     try {
-      await fetch(`/api/dashboard/aspirasi/${id}`, {
+      const res = await fetch(`/api/dashboard/aspirasi/${id}`, {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ status: selectedStatus }),
       });
+      if (!res.ok) {
+        const data = await res.json().catch(() => ({}));
+        alert(data.error || "Gagal mengubah status");
+        return;
+      }
       fetchDetail();
-    } catch {}
+    } catch (err) {
+      console.error("status change error:", err);
+      alert("Tidak ada koneksi. Coba lagi nanti.");
+    }
   };
 
   const handleForward = async () => {
     if (!forwardTo.trim()) return;
     try {
-      await fetch(`/api/dashboard/aspirasi/${id}`, {
+      const res = await fetch(`/api/dashboard/aspirasi/${id}`, {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ diteruskan_ke: forwardTo.trim(), status: "diteruskan" }),
+        body: JSON.stringify({
+          diteruskan_ke: forwardTo.trim(),
+          status: "diteruskan",
+        }),
       });
+      if (!res.ok) {
+        const data = await res.json().catch(() => ({}));
+        alert(data.error || "Gagal meneruskan aspirasi");
+        return;
+      }
       setShowForward(false);
       setForwardTo("");
       fetchDetail();
-    } catch {}
+    } catch (err) {
+      console.error("forward error:", err);
+      alert("Tidak ada koneksi. Coba lagi nanti.");
+    }
   };
 
   // Map status for display

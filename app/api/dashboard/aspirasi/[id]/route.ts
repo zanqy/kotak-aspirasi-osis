@@ -1,6 +1,19 @@
 import { NextRequest, NextResponse } from "next/server";
-import { createServiceClient } from "@/lib/supabase";
+import { getAdminDb } from "@/lib/firebase";
 import { verifyAuthDashboard } from "@/lib/auth-api";
+import { firestoreTimestampToISO } from "@/lib/utils";
+
+interface AspirasiDetail {
+  id: string;
+  kode_tiket: string;
+  isi: string;
+  kategori: string | null;
+  status: string;
+  diteruskan_ke: string | null;
+  ditangani_oleh: string | null;
+  created_at: string;
+  updated_at: string;
+}
 
 export async function GET(
   _request: NextRequest,
@@ -11,56 +24,69 @@ export async function GET(
   if (auth.error) return auth.error;
 
   try {
-    const supabase = createServiceClient();
+    const db = getAdminDb();
+    const aspirasiDoc = await db.collection("aspirasi").doc(params.id).get();
 
-    const { data: aspirasi, error } = await supabase
-      .from("aspirasi")
-      .select("*")
-      .eq("id", params.id)
-      .single();
-
-    if (error || !aspirasi) {
+    if (!aspirasiDoc.exists) {
       return NextResponse.json(
         { error: "Aspirasi tidak ditemukan" },
         { status: 404 }
       );
     }
 
-    // Get pesan with user name
-    const { data: pesan } = await supabase
-      .from("pesan")
-      .select("*, users(name)")
-      .eq("aspirasi_id", aspirasi.id)
-      .order("created_at", { ascending: true });
+    const raw = aspirasiDoc.data()!;
+    const aspirasi: AspirasiDetail = {
+      id: aspirasiDoc.id,
+      kode_tiket: raw.kode_tiket,
+      isi: raw.isi,
+      kategori: raw.kategori ?? null,
+      status: raw.status,
+      diteruskan_ke: raw.diteruskan_ke ?? null,
+      ditangani_oleh: raw.ditangani_oleh ?? null,
+      created_at: firestoreTimestampToISO(raw.created_at),
+      updated_at: firestoreTimestampToISO(raw.updated_at),
+    };
 
-    const pesanWithName = (pesan || []).map(
-      (p: { id: string; aspirasi_id: string; isi: string; pengirim: string; user_id: string | null; created_at: string; users: { name: string } | null }) => ({
-      id: p.id,
-      aspirasi_id: p.aspirasi_id,
-      isi: p.isi,
-      pengirim: p.pengirim,
-      user_id: p.user_id,
-      created_at: p.created_at,
-      user_name: p.users?.name || null,
-    }));
+    // Get pesan + user name
+    const pesanSnap = await db
+      .collection("aspirasi")
+      .doc(params.id)
+      .collection("pesan")
+      .orderBy("created_at", "asc")
+      .get();
 
-    // Get user name for ditangani_oleh
+    const pesanWithName = await Promise.all(
+      pesanSnap.docs.map(async (p) => {
+        const pd = p.data();
+        let user_name: string | null = null;
+        if (pd.user_id) {
+          const userDoc = await db.collection("users").doc(pd.user_id).get();
+          user_name = userDoc.data()?.name || null;
+        }
+        return {
+          id: p.id,
+          aspirasi_id: pd.aspirasi_id,
+          isi: pd.isi,
+          pengirim: pd.pengirim,
+          user_id: pd.user_id || null,
+          created_at: firestoreTimestampToISO(pd.created_at),
+          user_name,
+        };
+      })
+    );
+
+    // Get user name untuk ditangani_oleh
     let penanganNama = null;
     if (aspirasi.ditangani_oleh) {
-      const { data: userData } = await supabase
-        .from("users")
-        .select("name")
-        .eq("id", aspirasi.ditangani_oleh)
-        .single();
-      penanganNama = userData?.name || null;
+      const userDoc = await db
+        .collection("users")
+        .doc(aspirasi.ditangani_oleh)
+        .get();
+      penanganNama = userDoc.data()?.name || null;
     }
 
-    // Jangan kirim email_siswa
-    const aspirasiData = { ...aspirasi };
-    delete aspirasiData.email_siswa;
-
     return NextResponse.json({
-      aspirasi: { ...aspirasiData, penangan_nama: penanganNama },
+      aspirasi: { ...aspirasi, penangan_nama: penanganNama },
       pesan: pesanWithName,
     });
   } catch {
@@ -80,31 +106,26 @@ export async function PATCH(
   if (auth.error) return auth.error;
 
   try {
-    const supabase = createServiceClient();
+    const db = getAdminDb();
     const body = await request.json();
     const { status, kategori, diteruskan_ke, ditangani_oleh } = body;
 
-    const updateData: Record<string, unknown> = { updated_at: new Date().toISOString() };
+    const updateData: Record<string, unknown> = { updated_at: new Date() };
     if (status) updateData.status = status;
     if (kategori !== undefined) updateData.kategori = kategori;
     if (diteruskan_ke !== undefined) updateData.diteruskan_ke = diteruskan_ke;
     if (ditangani_oleh !== undefined) updateData.ditangani_oleh = ditangani_oleh;
 
-    const { data: aspirasi, error } = await supabase
-      .from("aspirasi")
-      .update(updateData)
-      .eq("id", params.id)
-      .select()
-      .single();
+    await db.collection("aspirasi").doc(params.id).update(updateData);
 
-    if (error) {
-      return NextResponse.json(
-        { error: "Gagal update aspirasi" },
-        { status: 500 }
-      );
-    }
-
-    return NextResponse.json(aspirasi);
+    const updated = await db.collection("aspirasi").doc(params.id).get();
+    const ud = updated.data()!;
+    return NextResponse.json({
+      id: updated.id,
+      ...ud,
+      created_at: firestoreTimestampToISO(ud.created_at),
+      updated_at: firestoreTimestampToISO(ud.updated_at),
+    });
   } catch {
     return NextResponse.json(
       { error: "Terjadi kesalahan server" },

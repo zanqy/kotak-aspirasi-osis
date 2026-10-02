@@ -3,6 +3,8 @@
 import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
 import { IconArrowLeft, IconLogout } from "@tabler/icons-react";
+import { getClientAuth } from "@/lib/firebase-client";
+import { signOut } from "firebase/auth";
 
 interface DashboardNavProps {
   title: string;
@@ -18,6 +20,10 @@ export default function DashboardNav({ title, subtitle, showBack = false, userNa
   const initial = userName ? userName.charAt(0).toUpperCase() : "?";
 
   const handleLogout = async () => {
+    // Sign out client SDK (Firebase Auth) + clear session cookie server-side
+    try {
+      await signOut(getClientAuth());
+    } catch {}
     try {
       await fetch("/api/auth/logout", { method: "POST" });
     } catch {}

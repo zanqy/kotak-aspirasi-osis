@@ -16,8 +16,16 @@ import MessageThread, {
   type SystemNote,
 } from "@/components/ui/MessageThread";
 import ReplyComposer from "@/components/ui/ReplyComposer";
-import { formatWaktu } from "@/lib/utils";
-import { createBrowserClient } from "@/lib/supabase";
+import { formatWaktu, firestoreTimestampToISO } from "@/lib/utils";
+import { getClientDb } from "@/lib/firebase-client";
+import {
+  collection,
+  doc,
+  query,
+  where,
+  orderBy,
+  onSnapshot,
+} from "firebase/firestore";
 
 interface Pesan {
   id: string;
@@ -140,7 +148,8 @@ function CekAspirasiContent() {
           "Kode tiket tidak ditemukan. Pastikan kode yang kamu masukkan benar.",
         );
       }
-    } catch {
+    } catch (err) {
+      console.error("fetch error:", err);
       setError("Gagal terhubung ke server. Coba lagi nanti.");
     } finally {
       setLoading(false);
@@ -154,53 +163,54 @@ function CekAspirasiContent() {
     }
   }, [queryKode, fetchData]);
 
-  // Realtime subscription
+  // Realtime subscription via Firestore onSnapshot
   useEffect(() => {
     if (!aspirationIdRef.current) return;
-    const supabase = createBrowserClient();
+    const db = getClientDb();
     const aspirasiId = aspirationIdRef.current;
 
-    const pesanChannel = supabase
-      .channel(`cek-pesan-${aspirasiId}`)
-      .on(
-        "postgres_changes",
-        {
-          event: "INSERT",
-          schema: "public",
-          table: "pesan",
-          filter: `aspirasi_id=eq.${aspirasiId}`,
-        },
-        (payload) => {
-          const np = payload.new as Pesan;
+    // Pesan baru (subcollection pesan)
+    const pesanQuery = query(
+      collection(db, "aspirasi", aspirasiId, "pesan"),
+      where("aspirasi_id", "==", aspirasiId),
+      orderBy("created_at", "asc"),
+    );
+    const unsubPesan = onSnapshot(pesanQuery, (snapshot) => {
+      snapshot.docChanges().forEach((change) => {
+        if (change.type === "added") {
+          const d = change.doc.data();
+          const np: Pesan = {
+            id: change.doc.id,
+            isi: d.isi,
+            pengirim: d.pengirim,
+            created_at: firestoreTimestampToISO(d.created_at),
+          };
           setPesan((prev) =>
             prev.some((p) => p.id === np.id) ? prev : [...prev, np],
           );
-        },
-      )
-      .subscribe();
+        }
+      });
+    });
 
-    const aspirasiChannel = supabase
-      .channel(`cek-aspirasi-${aspirasiId}`)
-      .on(
-        "postgres_changes",
-        {
-          event: "UPDATE",
-          schema: "public",
-          table: "aspirasi",
-          filter: `id=eq.${aspirasiId}`,
-        },
-        (payload) => {
-          const u = payload.new as AspirasiData;
-          setData((prev) => (prev ? { ...prev, status: u.status } : prev));
-        },
-      )
-      .subscribe();
+    // Status aspirasi berubah (doc aspirasi)
+    const unsubAspirasi = onSnapshot(
+      doc(db, "aspirasi", aspirasiId),
+      (snap) => {
+        if (snap.exists()) {
+          const d = snap.data();
+          setData((prev) =>
+            prev ? { ...prev, status: d.status } : prev,
+          );
+        }
+      },
+    );
 
     return () => {
-      supabase.removeChannel(pesanChannel);
-      supabase.removeChannel(aspirasiChannel);
+      unsubPesan();
+      unsubAspirasi();
     };
-  }, [data?.id]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [aspirationIdRef.current]);
 
   const handleCek = () => {
     if (!kodeInput.trim()) return;
@@ -219,9 +229,12 @@ function CekAspirasiContent() {
       if (res.ok) {
         const pb = await res.json();
         setPesan((prev) => [...prev, pb]);
+      } else {
+        setError("Gagal mengirim balasan. Coba lagi nanti.");
       }
-    } catch {
-      // silently fail
+    } catch (err) {
+      console.error("kirim balasan error:", err);
+      setError("Tidak ada koneksi. Coba lagi nanti.");
     } finally {
       setSending(false);
     }

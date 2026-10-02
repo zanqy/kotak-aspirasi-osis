@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
-import { createServiceClient } from "@/lib/supabase";
+import { getAdminDb } from "@/lib/firebase";
 import { verifyAuthDashboard } from "@/lib/auth-api";
+import { firestoreTimestampToISO } from "@/lib/utils";
 
 export async function GET(request: Request) {
   // Verify authentication - only admin can access
@@ -8,19 +9,22 @@ export async function GET(request: Request) {
   if (auth.error) return auth.error;
 
   try {
-    const supabase = createServiceClient();
+    const db = getAdminDb();
 
-    const { data: users, error } = await supabase
-      .from("users")
-      .select("*")
-      .order("created_at", { ascending: false });
+    const snap = await db
+      .collection("users")
+      .orderBy("created_at", "desc")
+      .get();
 
-    if (error) {
-      return NextResponse.json(
-        { error: "Gagal mengambil data anggota" },
-        { status: 500 }
-      );
-    }
+    const users = snap.docs.map((d) => {
+      const data = d.data();
+      return {
+        id: d.id,
+        ...data,
+        created_at: firestoreTimestampToISO(data.created_at),
+        updated_at: firestoreTimestampToISO(data.updated_at),
+      };
+    });
 
     return NextResponse.json(users || []);
   } catch {

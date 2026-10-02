@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
-import { createServiceClient } from "@/lib/supabase";
+import { getAdminDb } from "@/lib/firebase";
 import { verifyAuthDashboard } from "@/lib/auth-api";
+import { firestoreTimestampToISO } from "@/lib/utils";
 
 export async function PATCH(
   request: NextRequest,
@@ -11,7 +12,7 @@ export async function PATCH(
   if (auth.error) return auth.error;
 
   try {
-    const supabase = createServiceClient();
+    const db = getAdminDb();
     const body = await request.json();
     const { status } = body;
 
@@ -22,21 +23,19 @@ export async function PATCH(
       );
     }
 
-    const { data: user, error } = await supabase
-      .from("users")
-      .update({ status, updated_at: new Date().toISOString() })
-      .eq("id", params.id)
-      .select()
-      .single();
+    await db.collection("users").doc(params.id).update({
+      status,
+      updated_at: new Date(),
+    });
 
-    if (error) {
-      return NextResponse.json(
-        { error: "Gagal update anggota" },
-        { status: 500 }
-      );
-    }
-
-    return NextResponse.json(user);
+    const updated = await db.collection("users").doc(params.id).get();
+    const ud = updated.data()!;
+    return NextResponse.json({
+      id: updated.id,
+      ...ud,
+      created_at: firestoreTimestampToISO(ud.created_at),
+      updated_at: firestoreTimestampToISO(ud.updated_at),
+    });
   } catch {
     return NextResponse.json(
       { error: "Terjadi kesalahan server" },
@@ -54,19 +53,9 @@ export async function DELETE(
   if (auth.error) return auth.error;
 
   try {
-    const supabase = createServiceClient();
+    const db = getAdminDb();
 
-    const { error } = await supabase
-      .from("users")
-      .delete()
-      .eq("id", params.id);
-
-    if (error) {
-      return NextResponse.json(
-        { error: "Gagal menghapus anggota" },
-        { status: 500 }
-      );
-    }
+    await db.collection("users").doc(params.id).delete();
 
     return NextResponse.json({ success: true });
   } catch {

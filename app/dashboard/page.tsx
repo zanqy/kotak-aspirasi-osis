@@ -47,11 +47,21 @@ export default function DashboardOverview() {
     const fetchData = async () => {
       try {
         const sessionRes = await fetch("/api/auth/session");
-        if (!sessionRes.ok) { router.push("/dashboard/login"); return; }
+        if (!sessionRes.ok) {
+          router.push("/dashboard/login");
+          return;
+        }
         const sessionData = await sessionRes.json();
-        if (!sessionData.user) { router.push("/dashboard/login"); return; }
+        if (!sessionData.user) {
+          router.push(
+            `/dashboard/login${sessionData.status ? `?status=${sessionData.status}` : ""}`
+          );
+          return;
+        }
         setUserName(sessionData.user.name || "Pengguna");
-        setUserRole(sessionData.user.role === "admin" ? "Divisi Admin" : "Divisi OSIS");
+        setUserRole(
+          sessionData.user.role === "admin" ? "Divisi Admin" : "Divisi OSIS"
+        );
         const res = await fetch("/api/dashboard/aspirasi");
         if (res.ok) {
           const json = await res.json();
@@ -59,35 +69,50 @@ export default function DashboardOverview() {
           setStats({
             total: all.length,
             menunggu: all.filter((a) => a.status === "menunggu").length,
-            diproses: all.filter((a) => a.status === "diproses" || a.status === "diteruskan").length,
+            diproses: all.filter(
+              (a) => a.status === "diproses" || a.status === "diteruskan"
+            ).length,
             dibalas: all.filter((a) => a.status === "dibalas").length,
           });
           setTerbaru(all.slice(0, 10));
         }
-      } catch {} finally { setLoading(false); }
+      } catch (err) {
+        console.error("dashboard overview fetch error:", err);
+        router.push("/dashboard/login");
+      } finally {
+        setLoading(false);
+      }
     };
     fetchData();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [router]);
 
-  // Filter berdasarkan tab & search
+  // Filter berdasarkan tab & search. Statistik utama (total/menunggu/diproses/
+  // dibalas) dihitung dari `stats`, bukan dari `terbaru`, supaya total
+  // konsisten walaupun pagination user hanya menampilkan 10 terbaru.
   const filtered = terbaru.filter((a) => {
     // Tab filter
-    if (activeTab === "semua") {
-      // tidak ada filter
-    } else if (activeTab === "belum") {
+    if (activeTab === "belum") {
       if (a.status !== "menunggu") return false;
     } else if (activeTab === "diproses") {
       if (a.status !== "diproses" && a.status !== "diteruskan") return false;
     } else if (activeTab === "selesai") {
       if (a.status !== "dibalas") return false;
-    } else {
-      // filter kategori
+    } else if (
+      activeTab !== "semua" &&
+      ["akademik", "fasilitas", "kegiatan", "lainnya"].includes(activeTab)
+    ) {
       if (a.kategori !== activeTab) return false;
     }
     // Search
     if (search.trim()) {
       const q = search.toLowerCase();
-      if (!a.kode_tiket.toLowerCase().includes(q) && !a.isi.toLowerCase().includes(q)) return false;
+      if (
+        !a.kode_tiket.toLowerCase().includes(q) &&
+        !a.isi.toLowerCase().includes(q)
+      ) {
+        return false;
+      }
     }
     return true;
   });
@@ -152,7 +177,7 @@ export default function DashboardOverview() {
               Selamat bertugas, {userName.split(" ")[0]} 👋
             </h1>
             <p className="text-[12.5px] text-ink-soft mt-1 max-w-[440px] leading-relaxed">
-              Ini meja arsip suratmu hari ini — buka amplopnya satu-satu, tentukan tindak lanjut­nya.
+              Ini meja arsip suratmu hari ini — buka amplopnya satu-satu, tentukan tindak lanjutnya.
             </p>
           </div>
 
@@ -275,7 +300,7 @@ export default function DashboardOverview() {
                   filtered.map((item, i) => (
                     <div key={item.id}>
                       <AspirasiItem
-                        id={parseInt(item.id) || i}
+                        id={item.id}
                         code={item.kode_tiket}
                         category={kategoriLabels[item.kategori || "lainnya"] || "Lainnya"}
                         excerpt={item.isi}

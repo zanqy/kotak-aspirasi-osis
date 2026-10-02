@@ -1,6 +1,18 @@
 import { NextRequest, NextResponse } from "next/server";
-import { createServiceClient } from "@/lib/supabase";
+import { getAdminDb } from "@/lib/firebase";
 import { verifyAuthDashboard } from "@/lib/auth-api";
+import { firestoreTimestampToISO } from "@/lib/utils";
+import type { Query } from "firebase-admin/firestore";
+
+interface AspirasiRow {
+  id: string;
+  kode_tiket: string;
+  isi: string;
+  kategori: string | null;
+  status: string;
+  created_at: string;
+  updated_at: string;
+}
 
 export async function GET(request: NextRequest) {
   // Verify authentication
@@ -8,36 +20,44 @@ export async function GET(request: NextRequest) {
   if (auth.error) return auth.error;
 
   try {
-    const supabase = createServiceClient();
+    const db = getAdminDb();
     const { searchParams } = new URL(request.url);
     const status = searchParams.get("status");
     const search = searchParams.get("search");
 
-    let query = supabase
-      .from("aspirasi")
-      .select("*", { count: "exact" })
-      .order("created_at", { ascending: false });
+    let query: Query = db
+      .collection("aspirasi")
+      .orderBy("created_at", "desc");
 
     if (status) {
-      query = query.eq("status", status);
+      query = query.where("status", "==", status);
     }
 
+    const snap = await query.get();
+    let data: AspirasiRow[] = snap.docs.map((d) => {
+      const raw = d.data();
+      return {
+        id: d.id,
+        kode_tiket: raw.kode_tiket,
+        isi: raw.isi,
+        kategori: raw.kategori ?? null,
+        status: raw.status,
+        created_at: firestoreTimestampToISO(raw.created_at),
+        updated_at: firestoreTimestampToISO(raw.updated_at),
+      };
+    });
+
+    // Firestore tidak punya substring search (ilike) — filter in-memory.
     if (search) {
-      query = query.or(
-        `kode_tiket.ilike.%${search}%,isi.ilike.%${search}%`
+      const q = search.toLowerCase();
+      data = data.filter(
+        (a) =>
+          a.kode_tiket.toLowerCase().includes(q) ||
+          a.isi.toLowerCase().includes(q)
       );
     }
 
-    const { data, error, count } = await query;
-
-    if (error) {
-      return NextResponse.json(
-        { error: "Gagal mengambil data" },
-        { status: 500 }
-      );
-    }
-
-    return NextResponse.json({ data: data || [], total: count || 0 });
+    return NextResponse.json({ data: data || [], total: data.length });
   } catch {
     return NextResponse.json(
       { error: "Terjadi kesalahan server" },

@@ -1,0 +1,57 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Helper: user yang sudah di-approve admin
+    function isApproved() {
+      return request.auth != null &&
+        get(/databases/$(database)/documents/users/$(request.auth.uid)).data.status == 'approved';
+    }
+    // Helper: user dengan role admin
+    function isAdmin() {
+      return request.auth != null &&
+        get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'admin';
+    }
+
+    // ============ users ============
+    // Read: semua user authenticated (dipakai untuk lookup nama di realtime chat).
+    // Write: hanya admin (approve/reject/hapus anggota).
+    match /users/{uid} {
+      allow read: if request.auth != null;
+      allow write: if isAdmin();
+    }
+
+    // ============ aspirasi ============
+    // Create: publik (siswa kirim aspirasi anonim).
+    // Read: publik (cek status by kode tiket + realtime).
+    // Update: hanya user approved (dashboard humas).
+    match /aspirasi/{id} {
+      allow create: if true;
+      allow read: if true;
+      allow update: if isApproved();
+      allow delete: if false;
+    }
+
+    // ============ pesan (subcollection aspirasi) ============
+    // Create: publik (siswa balas) + auth (humas balas).
+    // Read: publik (realtime chat di /cek-aspirasi).
+    match /aspirasi/{id}/pesan/{pid} {
+      allow create: if true;
+      allow read: if true;
+      allow update, delete: if false;
+    }
+
+    // ============ notifikasi ============
+    // Hanya user authenticated (log dikelola server via Admin SDK).
+    match /notifikasi/{id} {
+      allow read, create: if request.auth != null;
+      allow update, delete: if false;
+    }
+
+    // ============ aktivitas ============
+    // Hanya user authenticated (log dikelola server via Admin SDK).
+    match /aktivitas/{id} {
+      allow read, create: if request.auth != null;
+      allow update, delete: if false;
+    }
+  }
+}

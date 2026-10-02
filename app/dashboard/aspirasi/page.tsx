@@ -59,6 +59,12 @@ function AspirasiListInner() {
         if (sessionRes.ok) {
           const d = await sessionRes.json();
           if (d.user) setUserName(d.user.name || "");
+          else {
+            router.push(
+              `/dashboard/login${d.status ? `?status=${d.status}` : ""}`
+            );
+            return;
+          }
         } else {
           router.push("/dashboard/login");
           return;
@@ -84,10 +90,10 @@ function AspirasiListInner() {
   const filtered = aspirasi.filter((a) => {
     if (!search.trim()) return true;
     const q = search.toLowerCase();
-    return a.kode_tiket.toLowerCase().includes(q) || a.isi.toLowerCase().includes(q);
-  }).filter((a) => {
-    if (!filterStatus) return true;
-    return a.kategori === filterStatus;
+    return (
+      a.kode_tiket.toLowerCase().includes(q) ||
+      a.isi.toLowerCase().includes(q)
+    );
   });
 
   const mapStatus = (status: Aspirasi["status"]): "baru" | "diproses" | "diteruskan" | "selesai" => {
@@ -172,7 +178,7 @@ function AspirasiListInner() {
                   transition={{ duration: 0.5, ease: e, delay: 0.1 * i }}
                 >
                   <AspirasiItem
-                    id={parseInt(item.id) || i}
+                    id={item.id}
                     code={item.kode_tiket}
                     category={item.kategori || "Lainnya"}
                     excerpt={item.isi}

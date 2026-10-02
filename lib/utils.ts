@@ -1,12 +1,30 @@
-export function generateKodeTiket(total: number): string {
-  return `ASP-${(total + 1).toString().padStart(4, "0")}`;
+/**
+ * Konversi Firestore Timestamp (server & client SDK) ke ISO string.
+ * Dipakai supaya response API & payload realtime konsisten dengan
+ * format `created_at` / `updated_at` yang lama (ISO 8601).
+ */
+export function firestoreTimestampToISO(value: unknown): string {
+  if (
+    value &&
+    typeof value === "object" &&
+    "toDate" in value &&
+    typeof (value as { toDate: unknown }).toDate === "function"
+  ) {
+    return (value as { toDate: () => Date }).toDate().toISOString();
+  }
+  return String(value);
 }
 
 /**
- * Generate kode tiket unik tanpa bergantung pada query count ke database.
- * Menggunakan kombinasi timestamp + angka acak sehingga tetap unik meskipun
- * query count gagal (misal karena RLS atau masalah koneksi).
+ * Generate kode tiket unik berbasis timestamp + random suffix.
+ *
+ * Resiko tabrakan: timestamp 36^4 = 1.679.616 slot per detik,
+ * random 36^2 = 1.296 slot → ~2.1M kombinasi/detik. Untuk traffic
+ * sekolah cukup aman, tapi tetap ada peluang duplicate. Pakai
+ * `generateUniqueKodeTiket` di API route supaya retry otomatis.
  */
+const MAX_RETRY = 5;
+
 export function generateKodeTiketUnik(): string {
   const ts = Date.now().toString(36).toUpperCase().slice(-4);
   const rand = Math.floor(Math.random() * 1296) // 36^2
@@ -14,6 +32,26 @@ export function generateKodeTiketUnik(): string {
     .toUpperCase()
     .padStart(2, "0");
   return `ASP-${ts}${rand}`;
+}
+
+/**
+ * Generate kode tiket + retry kalau ternyata duplicate di DB.
+ * `existsCheck` = async (kode) => boolean. True kalau kode sudah dipakai.
+ */
+export async function generateUniqueKodeTiket(
+  existsCheck: (kode: string) => Promise<boolean>
+): Promise<string> {
+  for (let attempt = 0; attempt < MAX_RETRY; attempt++) {
+    const kode = generateKodeTiketUnik();
+    const exists = await existsCheck(kode);
+    if (!exists) return kode;
+  }
+  // Fallback: append attempt counter supaya tetap unik walau probabilitas
+  // collision 5x berturut-turut sangat kecil (≈ 1/(2.1M)^5).
+  return `ASP-${Date.now().toString(36).toUpperCase()}-${Math.random()
+    .toString(36)
+    .toUpperCase()
+    .slice(2, 6)}`;
 }
 
 export function formatWaktu(date: string | Date): string {

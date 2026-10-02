@@ -7,6 +7,8 @@ import BottomTabBar from "@/components/layout/BottomTabBar";
 import Badge from "@/components/ui/Badge";
 import { getInisial } from "@/lib/utils";
 import { IconCheck, IconX, IconTrash } from "@tabler/icons-react";
+import { getClientAuth } from "@/lib/firebase-client";
+import { signOut } from "firebase/auth";
 
 interface User {
   id: string;
@@ -30,7 +32,12 @@ export default function AnggotaPage() {
       const sessionRes = await fetch("/api/auth/session");
       if (!sessionRes.ok) { router.push("/dashboard/login"); return; }
       const sessionData = await sessionRes.json();
-      if (!sessionData.user) { router.push("/dashboard/login"); return; }
+      if (!sessionData.user) {
+        router.push(
+          `/dashboard/login${sessionData.status ? `?status=${sessionData.status}` : ""}`
+        );
+        return;
+      }
       setCurrentUserId(sessionData.user.id);
       setUserName(sessionData.user.name || "");
       if (sessionData.user.role !== "admin") { router.push("/dashboard"); return; }
@@ -61,10 +68,18 @@ export default function AnggotaPage() {
 
   const handleDelete = async (userId: string) => {
     if (!confirm("Apakah kamu yakin ingin menghapus anggota ini?")) return;
+    setUsers((prev) => prev.filter((u) => u.id !== userId));
     try {
-      await fetch(`/api/dashboard/anggota/${userId}`, { method: "DELETE" });
+      const res = await fetch(`/api/dashboard/anggota/${userId}`, {
+        method: "DELETE",
+      });
+      if (!res.ok) {
+        fetchAnggota();
+      }
+    } catch (err) {
+      console.error("delete error:", err);
       fetchAnggota();
-    } catch {}
+    }
   };
 
   const pendingUsers = users.filter((u) => u.status === "pending");
@@ -107,6 +122,7 @@ export default function AnggotaPage() {
           )}
           <button
             onClick={async () => {
+              try { await signOut(getClientAuth()); } catch {}
               try { await fetch("/api/auth/logout", { method: "POST" }); } catch {}
               window.location.href = "/dashboard/login";
             }}

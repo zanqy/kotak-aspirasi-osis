@@ -1,8 +1,9 @@
 # 📋 Kotak Aspirasi OSIS — Dokumentasi Lengkap
 
-> **Versi:** 0.1.0
-> **Stack:** Next.js 14 + Supabase + Resend + Framer Motion
+> **Versi:** 0.2.0
+> **Stack:** Next.js 14 + Firebase (Auth + Firestore) + Resend + Framer Motion
 > **Tujuan:** Sistem pengelolaan aspirasi siswa untuk OSIS (Humas)
+> **Migrasi:** Aplikasi sudah dimigrasi dari Supabase → Firebase. Lihat [`MIGRASI-FIREBASE.md`](MIGRASI-FIREBASE.md)
 
 ---
 
@@ -78,8 +79,8 @@
 | [Next.js](https://nextjs.org/) | 14.2.35 | Framework React (App Router) |
 | [React](https://react.dev/) | ^18 | Library UI |
 | [TypeScript](https://www.typescriptlang.org/) | ^5 | Type safety |
-| [Supabase](https://supabase.com/) | ^2.109.0 | Database, Auth, Realtime |
-| [Supabase SSR](https://supabase.com/docs/guides/auth/server-side) | ^0.12.0 | Server-side auth helpers & cookies |
+| [Firebase](https://firebase.google.com/) | ^12 | Auth (email/Google), Firestore (DB + Realtime) |
+| [Firebase Admin](https://firebase.google.com/docs/admin/setup) | ^14 | Server-side SDK (session cookie, Firestore admin) |
 | [Resend](https://resend.com/) | ^6.17.1 | Email service |
 | [Tailwind CSS](https://tailwindcss.com/) | ^3.4.1 | Styling |
 | [Framer Motion](https://www.framer.com/motion/) | ^12.42.2 | Animasi |
@@ -258,7 +259,13 @@
 
 ## 4. Struktur Database
 
-Database menggunakan **PostgreSQL** via Supabase dengan **Row Level Security (RLS)**.
+> **Catatan migrasi:** Database sudah dimigrasi dari PostgreSQL (Supabase) ke **Firestore**.
+> Bagian 4.1–4.9 di bawah adalah referensi schema lama (PostgreSQL). Mapping ke Firestore:
+> `users` → `users/{uid}` · `aspirasi` → `aspirasi/{id}` · `pesan` → `aspirasi/{id}/pesan/{pid}`
+> `notifikasi` → `notifikasi/{id}` · `aktivitas` → `aktivitas/{id}`.
+> Security rules: [`firestore.rules`](../firestore.rules) · Indexes: [`firestore.indexes.json`](../firestore.indexes.json)
+
+Database lama menggunakan **PostgreSQL** via Supabase dengan **Row Level Security (RLS)**.
 
 ### 4.1 Tabel `users`
 
@@ -776,17 +783,19 @@ Request ke /dashboard/*
 
 ## 11. Environment Variables
 
-**File:** [`.env.local`](.env.local)
+**File:** [`.env.local`](.env.local) · Template: [`.env.local.example`](../.env.local.example)
 
 | Variable | Deskripsi | Contoh |
 |----------|-----------|--------|
-| `NEXT_PUBLIC_SUPABASE_URL` | URL project Supabase | `https://xxx.supabase.co` |
-| `NEXT_PUBLIC_SUPABASE_ANON_KEY` | Anon/public key Supabase | `eyJhbGci...` |
-| `SUPABASE_SERVICE_ROLE_KEY` | Service role key Supabase (server-only) | `eyJhbGci...` |
+| `NEXT_PUBLIC_FIREBASE_API_KEY` | Web API key Firebase (client-safe) | `AIzaSy...` |
+| `NEXT_PUBLIC_FIREBASE_PROJECT_ID` | Project ID Firebase (client-safe) | `kotak-aspirasi-osis` |
+| `FIREBASE_PROJECT_ID` | Project ID Firebase (server) | `kotak-aspirasi-osis` |
+| `FIREBASE_CLIENT_EMAIL` | Service account email (server-only) | `firebase-adminsdk-xxx@project.iam.gserviceaccount.com` |
+| `FIREBASE_PRIVATE_KEY` | Service account private key (server-only) | `-----BEGIN PRIVATE KEY-----...` |
 | `RESEND_API_KEY` | API Key Resend untuk kirim email | `re_xxx` |
 | `RESEND_FROM_EMAIL` | Alamat email pengirim | `onboarding@resend.dev` |
-| `ADMIN_EMAIL` | Email admin default | `admin@example.com` |
-| `ADMIN_PASSWORD` | Password admin default | `password` |
+| `ADMIN_EMAIL` | Email admin default (referensi) | `admin@example.com` |
+| `ADMIN_PASSWORD` | Password admin default (referensi) | `password` |
 | `NEXT_PUBLIC_APP_URL` | URL aplikasi (untuk link di email) | `http://localhost:3000` |
 
 ---
@@ -796,7 +805,7 @@ Request ke /dashboard/*
 ### Prasyarat
 - Node.js 18+
 - npm / yarn / pnpm
-- Akun Supabase (free tier)
+- Akun Firebase (free tier / Blaze untuk App Hosting)
 - Akun Resend (free tier)
 
 ### Langkah Instalasi
@@ -812,10 +821,11 @@ Request ke /dashboard/*
    npm install
    ```
 
-3. **Setup Supabase**
-   - Buat project baru di [supabase.com](https://supabase.com)
-   - Jalankan migration SQL dari [`supabase/migration.sql`](supabase/migration.sql) di SQL Editor Supabase
-   - Catat URL dan anon key
+3. **Setup Firebase** — ikuti [`MIGRASI-FIREBASE.md`](MIGRASI-FIREBASE.md):
+   - Buat project Firebase, enable Authentication (Email/Password + Google)
+   - Buat Firestore database (mode production)
+   - Deploy rules + indexes: `firebase deploy --only firestore`
+   - Generate service account private key
 
 4. **Setup Resend**
    - Daftar di [resend.com](https://resend.com)
@@ -827,25 +837,16 @@ Request ke /dashboard/*
    ```
    Isi semua variabel sesuai petunjuk di [Bagian 11](#11-environment-variables)
 
-6. **Setup Autentikasi Supabase**
-   - Di dashboard Supabase → Authentication → Providers
-   - **Email/Password:** Enable (default)
-   - **Google:** Enable, masukkan Client ID dan Client Secret dari Google Cloud Console
-   - Redirect URL: `http://localhost:3000/auth/callback`
+6. **Buat User Admin**
+   - Buat user di Firebase Auth (Authentication → Users → Add user)
+   - Buat doc `users/{uid}` di Firestore dengan `role: "admin"`, `status: "approved"`
 
-7. **Create Admin User (opsional)**
-   ```sql
-   -- Di SQL Editor Supabase
-   INSERT INTO users (email, name, role, status)
-   VALUES ('admin@example.com', 'Admin', 'admin', 'approved');
-   ```
-
-8. **Jalankan development server**
+7. **Jalankan development server**
    ```bash
    npm run dev
    ```
 
-9. Buka [http://localhost:3000](http://localhost:3000)
+8. Buka [http://localhost:3000](http://localhost:3000)
 
 ---
 

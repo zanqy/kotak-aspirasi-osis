@@ -4,12 +4,12 @@ import { motion, Variants } from "framer-motion";
 import { IconMail, IconMailOpened } from "@tabler/icons-react";
 
 interface AspirasiItemProps {
-  id: number;
-  code: string;            // kode tiket, e.g. "OSIS-7F3K9QZ2A"
+  id: string;              // UUID aspirasi (string, bukan number)
+  code: string;            // kode tiket, e.g. "ASP-XXXXX"
   category: string;        // label kategori
   excerpt: string;         // potongan isi surat (max 2 baris)
-  status: 'baru' | 'diproses' | 'diteruskan' | 'selesai';
-  date: string;            // "2 jam lalu", "1 hari lalu"
+  status: "baru" | "diproses" | "diteruskan" | "selesai";
+  date: string;            // ISO date string atau format human-friendly
   isUnread: boolean;
   isSelected: boolean;
   onClick: () => void;
@@ -39,7 +39,6 @@ const itemVariants: Variants = {
 };
 
 export default function AspirasiItem({
-  id: _id,
   code,
   category,
   excerpt,
@@ -62,7 +61,6 @@ export default function AspirasiItem({
         "transition-[border-color,box-shadow] duration-[250ms] ease",
         // Hover
         "hover:translate-x-[3px] hover:border-ink-faint",
-        // Selected
         isSelected && "!border-seal-deep !bg-card shadow-[0_0_0_2px_rgba(224,165,38,0.16)]",
       ]
         .filter(Boolean)

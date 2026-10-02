@@ -1,5 +1,5 @@
-import { createClient } from "@supabase/supabase-js";
 import { NextResponse } from "next/server";
+import { getAdminAuth, getAdminDb } from "@/lib/firebase";
 
 interface AuthResult {
   user: {
@@ -9,18 +9,22 @@ interface AuthResult {
   error: NextResponse | null;
 }
 
+/**
+ * Verifikasi autentikasi dari request.
+ * Sumber session: Authorization header (Bearer) atau cookie `fb-session`.
+ * Mengembalikan user ID & email atau error response.
+ */
 export async function verifyAuth(request: Request): Promise<AuthResult> {
-  // Try to get token from Authorization header first, then cookies
+  // Coba ambil session cookie dari Authorization header dulu, lalu cookie biasa
   const authHeader = request.headers.get("authorization");
-  let accessToken: string | null = null;
+  let sessionCookie: string | null = null;
 
   if (authHeader?.startsWith("Bearer ")) {
-    accessToken = authHeader.replace("Bearer ", "");
+    sessionCookie = authHeader.replace("Bearer ", "");
   }
 
-  // If no auth header, try to parse from cookie header manually
-  // (since NextRequest cookies API isn't available for plain Request)
-  if (!accessToken) {
+  // Kalau tidak ada auth header, parse dari cookie header manual
+  if (!sessionCookie) {
     const cookieHeader = request.headers.get("cookie");
     if (cookieHeader) {
       const cookies = cookieHeader.split(";").reduce(
@@ -31,28 +35,35 @@ export async function verifyAuth(request: Request): Promise<AuthResult> {
         },
         {} as Record<string, string>
       );
-      accessToken = cookies["sb-access-token"] || null;
+      sessionCookie = cookies["fb-session"] || null;
     }
   }
 
-  if (!accessToken) {
-    return { error: NextResponse.json({ error: "Unauthorized" }, { status: 401 }), user: null };
+  if (!sessionCookie) {
+    return {
+      error: NextResponse.json({ error: "Unauthorized" }, { status: 401 }),
+      user: null,
+    };
   }
 
-  const supabase = createClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-  );
-
-  const { data: { user }, error } = await supabase.auth.getUser(accessToken);
-
-  if (error || !user) {
-    return { error: NextResponse.json({ error: "Unauthorized" }, { status: 401 }), user: null };
+  try {
+    const decoded = await getAdminAuth().verifySessionCookie(
+      sessionCookie,
+      true
+    );
+    return { error: null, user: { id: decoded.uid, email: decoded.email } };
+  } catch {
+    return {
+      error: NextResponse.json({ error: "Unauthorized" }, { status: 401 }),
+      user: null,
+    };
   }
-
-  return { error: null, user: { id: user.id, email: user.email } };
 }
 
+/**
+ * Verifikasi auth + cek status & role user di collection `users`.
+ * Optional filter role (`'admin'` / `'member'`).
+ */
 export async function verifyAuthDashboard(
   request: Request,
   allowedRoles?: ("admin" | "member")[]
@@ -60,27 +71,31 @@ export async function verifyAuthDashboard(
   const result = await verifyAuth(request);
   if (result.error) return result;
 
-  const serviceClient = createClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.SUPABASE_SERVICE_ROLE_KEY!
-  );
-
-  const { data: userData } = await serviceClient
-    .from("users")
-    .select("role, status")
-    .eq("id", result.user!.id)
-    .single();
+  const userDoc = await getAdminDb()
+    .collection("users")
+    .doc(result.user!.id)
+    .get();
+  const userData = userDoc.data();
 
   if (!userData) {
-    return { error: NextResponse.json({ error: "User not found" }, { status: 401 }), user: null };
+    return {
+      error: NextResponse.json({ error: "User not found" }, { status: 401 }),
+      user: null,
+    };
   }
 
   if (userData.status === "pending" || userData.status === "rejected") {
-    return { error: NextResponse.json({ error: "Akses ditolak" }, { status: 403 }), user: null };
+    return {
+      error: NextResponse.json({ error: "Akses ditolak" }, { status: 403 }),
+      user: null,
+    };
   }
 
   if (allowedRoles && !allowedRoles.includes(userData.role)) {
-    return { error: NextResponse.json({ error: "Forbidden" }, { status: 403 }), user: null };
+    return {
+      error: NextResponse.json({ error: "Forbidden" }, { status: 403 }),
+      user: null,
+    };
   }
 
   return { ...result, role: userData.role, status: userData.status };

@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
-import { createServiceClient } from "@/lib/supabase";
+import { getAdminDb } from "@/lib/firebase";
+import { firestoreTimestampToISO } from "@/lib/utils";
 
 export async function POST(
   request: NextRequest,
@@ -16,41 +17,43 @@ export async function POST(
       );
     }
 
-    const supabase = createServiceClient();
+    const db = getAdminDb();
     const kode = params.kode.toUpperCase();
 
-    const { data: aspirasi, error: aspirasiError } = await supabase
-      .from("aspirasi")
-      .select("id")
-      .eq("kode_tiket", kode)
-      .single();
+    const snap = await db
+      .collection("aspirasi")
+      .where("kode_tiket", "==", kode)
+      .limit(1)
+      .get();
 
-    if (aspirasiError || !aspirasi) {
+    if (snap.empty) {
       return NextResponse.json(
         { error: "Kode tiket tidak ditemukan" },
         { status: 404 }
       );
     }
 
-    const { data: pesan, error } = await supabase
-      .from("pesan")
-      .insert({
-        aspirasi_id: aspirasi.id,
+    const aspirasiId = snap.docs[0].id;
+
+    const pesanRef = await db
+      .collection("aspirasi")
+      .doc(aspirasiId)
+      .collection("pesan")
+      .add({
+        aspirasi_id: aspirasiId,
         isi: isi.trim(),
         pengirim: "siswa",
         user_id: null,
-      })
-      .select()
-      .single();
+        created_at: new Date(),
+      });
 
-    if (error) {
-      return NextResponse.json(
-        { error: "Gagal mengirim pesan" },
-        { status: 500 }
-      );
-    }
+    const pesanData = (await pesanRef.get()).data()!;
 
-    return NextResponse.json(pesan);
+    return NextResponse.json({
+      id: pesanRef.id,
+      ...pesanData,
+      created_at: firestoreTimestampToISO(pesanData.created_at),
+    });
   } catch {
     return NextResponse.json(
       { error: "Terjadi kesalahan server" },
