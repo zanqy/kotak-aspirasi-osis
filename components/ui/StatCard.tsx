@@ -8,7 +8,6 @@ interface StatCardProps {
   value: number;
   badgeText: string;
   icon: string;
-  isActive?: boolean;
   onClick?: () => void;
 }
 
@@ -17,7 +16,6 @@ export default function StatCard({
   value,
   badgeText,
   icon,
-  isActive = false,
   onClick,
 }: StatCardProps) {
   const displayValue = useCountUp(value, 800, true);
@@ -31,9 +29,7 @@ export default function StatCard({
         "shadow-paper",
         "paper-stitch",
         "paper-fold",
-        isActive
-          ? "border-seal-deep shadow-[0_0_0_2px_rgba(224,165,38,0.25),var(--tw-shadow)]"
-          : "border-line",
+        "border-line",
       ]
         .filter(Boolean)
         .join(" ")}

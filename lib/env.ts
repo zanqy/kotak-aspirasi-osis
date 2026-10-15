@@ -37,10 +37,6 @@ export const env = {
   RESEND_FROM_EMAIL: required("RESEND_FROM_EMAIL"),
 
   // Computed
-  get isSCOLE() {
-    return process.env.NODE_ENV === "production";
-  },
-
   /**
    * Whitelist origin yang boleh hit API publik /api/aspirasi.
    * Dipisah koma di env kalau butuh lebih dari satu (mis. staging + prod).

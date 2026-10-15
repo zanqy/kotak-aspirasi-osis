@@ -276,8 +276,10 @@ export default function AspirasiDetail() {
   }
 
   // Build thread data for MessageThread
-  const threadMessages = pesan.map((p) => ({
-    id: parseInt(p.id, 10) || 0,
+  // Nota: id di pesan Firestore adalah string random — MessageThread ordina per
+  // id numerico, jadi kita pakai index sequence (unik per thread).
+  const threadMessages = pesan.map((p, i) => ({
+    id: i + 1,
     role: p.pengirim,
     senderLabel: p.pengirim === "humas" ? (p.user_name || "Kamu (Humas)") : "Siswa (anonim)",
     time: formatWaktu(p.created_at),

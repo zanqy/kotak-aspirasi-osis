@@ -1586,7 +1586,7 @@
         <div class="toast-icon"><i class="ti ti-check" aria-hidden="true"></i></div>
         <div>
             <b>Surat Berhasil Mendarat</b>
-            <span id="toastCode">OSIS-XXXXXXXXX</span>
+            <span id="toastCode">ASP-XXXX</span>
         </div>
     </div>
 
@@ -1618,7 +1618,7 @@
                 <!-- Search -->
                 <label class="registry-label" for="statusInput">Masukkan Kode Tiket Surat</label>
                 <div class="search-row">
-                    <input type="text" id="statusInput" placeholder="OSIS-XXXXXXXXX" autocomplete="off">
+                    <input type="text" id="statusInput" placeholder="ASP-XXXX" autocomplete="off">
                     <button type="button" class="btn-lacak" id="btnLacak">
                         <i class="ti ti-search"></i> Lacak
                     </button>
@@ -1643,6 +1643,19 @@
     </div>
 
     <script>
+        /* ============================================================
+           SHIM matchMedia — window.matchMedia bukan API stabil di semua
+           browser. Helper ini guard supaya script tidak berhenti di tengah
+           jalan kalau method tidak dimplementasi (fallback false).
+           ============================================================ */
+        function mqMatches(query) {
+            try {
+                return !!(window.matchMedia && window.matchMedia(query).matches);
+            } catch (e) {
+                return false;
+            }
+        }
+
         /* ============================================================
            LOADER
            ============================================================ */
@@ -1685,7 +1698,7 @@
            CUSTOM CURSOR
            ============================================================ */
         (function() {
-            if (window.matchMedia('(hover: none), (pointer: coarse)').matches) return;
+            if (mqMatches('(hover: none), (pointer: coarse)')) return;
             var dot = document.getElementById('cursorDot');
             var ring = document.getElementById('cursorRing');
             var rx = 0,
@@ -1723,7 +1736,7 @@
            reduced motion, dan jumlah partikel diskalakan ke lebar layar
            supaya perangkat kelas bawah tidak terbebani.
            ============================================================ */
-        var prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        var prefersReducedMotion = mqMatches('(prefers-reduced-motion: reduce)');
         (function() {
             if (prefersReducedMotion) return;
             var layer = document.getElementById('stageMotes');
@@ -2097,9 +2110,9 @@
                 showFieldError(ef, errEmail);
                 emailInput.focus(); return; }
             clearFieldError(fieldEmailEl, errEmail);
-            flapContainer.classList.add('closed');
-            envelopeSeal.classList.add('pressed');
-            var code = 'OSIS-' + Math.random().toString(36).substr(2, 9).toUpperCase();
+            var kategori = document.getElementById('kategori').value;
+            var dniErrorDefault = errAspirasi.querySelector('span').textContent;
+
             var btn = document.getElementById('btnKirim');
             var btnText = document.getElementById('btnKirimText');
             var icon = btn.querySelector('i');
@@ -2107,26 +2120,53 @@
             icon.className = 'ti ti-loader-2';
             btnText.textContent = 'Menyegel…';
             btn.disabled = true;
-            setTimeout(function() {
-                btn.classList.add('success');
-                btnText.textContent = 'Tersegel';
-                icon.className = 'ti ti-check';
-                showToast(code);
+
+            function resetFormState() {
+                btn.classList.remove('success');
+                btnText.textContent = 'Segel & Kirim';
+                icon.className = 'ti ti-send';
+                btn.style.width = '';
+                btn.disabled = false;
+                errAspirasi.querySelector('span').textContent = dniErrorDefault;
+                document.getElementById('aspirasiForm').reset();
+                charCount.classList.remove('show');
+                charCount.textContent = '0 / 1200';
+                clearFieldError(fieldAspirasiEl, errAspirasi);
+                clearFieldError(fieldEmailEl, errEmail);
+                flapContainer.classList.remove('closed');
+                envelopeSeal.classList.remove('pressed');
+            }
+
+            fetch('/api/aspirasi', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    isi: text,
+                    kategori: kategori || null,
+                    email_siswa: email || null
+                })
+            }).then(function(res) {
+                if (!res.ok) throw new Error('server');
+                return res.json();
+            }).then(function(data) {
+                var code = data.kode_tiket || '';
+                flapContainer.classList.add('closed');
+                envelopeSeal.classList.add('pressed');
                 setTimeout(function() {
-                    btn.classList.remove('success');
-                    btnText.textContent = 'Segel & Kirim';
-                    icon.className = 'ti ti-send';
-                    btn.style.width = '';
-                    btn.disabled = false;
-                    document.getElementById('aspirasiForm').reset();
-                    charCount.classList.remove('show');
-                    charCount.textContent = '0 / 1200';
-                    clearFieldError(fieldAspirasiEl, errAspirasi);
-                    clearFieldError(fieldEmailEl, errEmail);
-                    flapContainer.classList.remove('closed');
-                    envelopeSeal.classList.remove('pressed');
-                }, 3000);
-            }, 650);
+                    btn.classList.add('success');
+                    btnText.textContent = 'Tersegel';
+                    icon.className = 'ti ti-check';
+                    showToast(code);
+                    setTimeout(resetFormState, 3000);
+                }, 650);
+            }).catch(function() {
+                btnText.textContent = 'Segel & Kirim';
+                icon.className = 'ti ti-send';
+                btn.style.width = '';
+                btn.disabled = false;
+                errAspirasi.querySelector('span').textContent = 'Gagal terhubung ke server. Coba lagi nanti.';
+                showFieldError(field, errAspirasi);
+            });
         }
 
         /* ============================================================
@@ -2216,19 +2256,41 @@
             btnLacak.innerHTML = '<i class="ti ti-loader-2"></i> Mencari';
             btnLacak.disabled = true;
 
-            setTimeout(function() {
-                var profileIdx = Math.floor(Math.random() * statusProfiles.length);
-                var profile = statusProfiles[profileIdx];
-                var currentStage = profile.stage;
-                resultCodeDisplay.textContent = code.toUpperCase();
-                statusStrip.innerHTML = buildStatusStrip(currentStage);
-                resultMessage.innerHTML = profile.message;
-                registryResult.classList.add('show');
-                modalHint.textContent = 'Kode tiket ditemukan.';
-                modalHint.classList.remove('error');
-                btnLacak.innerHTML = '<i class="ti ti-search"></i> Lacak';
-                btnLacak.disabled = false;
-            }, 900 + Math.random() * 500);
+            var normalize = code.toUpperCase();
+            fetch('/api/aspirasi/' + encodeURIComponent(normalize))
+                .then(function(res) {
+                    if (res.status === 404) throw new Error('notfound');
+                    if (!res.ok) throw new Error('server');
+                    return res.json();
+                })
+                .then(function(json) {
+                    var aspirasi = json.aspirasi;
+                    var statusMap = {
+                        menunggu: 0,
+                        diproses: 1,
+                        diteruskan: 1,
+                        dibalas: 2
+                    };
+                    var currentStage = statusMap[aspirasi.status] || 0;
+                    resultCodeDisplay.textContent = aspirasi.kode_tiket;
+                    statusStrip.innerHTML = buildStatusStrip(currentStage);
+                    resultMessage.innerHTML = statusProfiles[currentStage].message;
+                    registryResult.classList.add('show');
+                    modalHint.textContent = 'Kode tiket ditemukan.';
+                    modalHint.classList.remove('error');
+                })
+                .catch(function(err) {
+                    var msg = err.message === 'notfound'
+                        ? 'Kode tiket tidak ditemukan. Periksa kembali kode suratmu.'
+                        : 'Gagal terhubung ke server. Coba lagi nanti.';
+                    modalHint.textContent = msg;
+                    modalHint.classList.add('error');
+                    shakeField(statusInput.closest('.modal-box'));
+                })
+                .finally(function() {
+                    btnLacak.innerHTML = '<i class="ti ti-search"></i> Lacak';
+                    btnLacak.disabled = false;
+                });
         }
 
         /* ============================================================

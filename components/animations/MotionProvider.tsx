@@ -1,6 +1,6 @@
 "use client";
 
-import { createContext, useContext, ReactNode } from "react";
+import { createContext, ReactNode } from "react";
 import { useFirstVisit } from "@/hooks/useFirstVisit";
 import { usePrefersReducedMotion } from "@/hooks/usePrefersReducedMotion";
 
@@ -18,10 +18,6 @@ const MotionContext = createContext<MotionContextValue>({
   reducedMotion: false,
   mode: "full",
 });
-
-export function useMotionContext() {
-  return useContext(MotionContext);
-}
 
 interface MotionProviderProps {
   children: ReactNode;

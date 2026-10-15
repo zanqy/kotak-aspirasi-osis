@@ -12,10 +12,14 @@ export function usePrefersReducedMotion(): boolean {
   useEffect(() => {
     if (typeof window === "undefined") return;
 
+    // `window.matchMedia` bukan API stabil di semua browser — guard
+    // supaya hook ini tidak throw dan crash MotionProvider.
+    if (typeof window.matchMedia !== "function") return;
+
     const mediaQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
     setPrefersReduced(mediaQuery.matches);
 
-    const handler = (e: MediaQueryListEvent) => setPrefersReduced(e.matches);
+    const handler = () => setPrefersReduced(mediaQuery.matches);
     mediaQuery.addEventListener("change", handler);
     return () => mediaQuery.removeEventListener("change", handler);
   }, []);

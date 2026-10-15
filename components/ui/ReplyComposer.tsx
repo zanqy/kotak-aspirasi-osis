@@ -9,7 +9,7 @@ interface ReplyComposerProps {
   disabled?: boolean; // untuk sisi siswa, terkunci kalau status ≠ 'dibalas'
   lockedMessage?: string; // "Menunggu balasan dari OSIS — kamu bisa membalas begitu humas merespons suratmu."
   placeholder?: string;
-  onSubmit: (text: string) => void;
+  onSubmit: (text: string) => Promise<void> | void;
 }
 
 export default function ReplyComposer({
@@ -20,6 +20,7 @@ export default function ReplyComposer({
   onSubmit,
 }: ReplyComposerProps) {
   const [text, setText] = useState("");
+  const [sending, setSending] = useState(false);
 
   const defaultPlaceholder =
     role === "humas"
@@ -31,11 +32,18 @@ export default function ReplyComposer({
       ? "Terkirim & tercatat di log aktivitas"
       : "Balasanmu tetap anonim untuk humas";
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     const trimmed = text.trim();
-    if (!trimmed) return;
-    onSubmit(trimmed);
-    setText("");
+    if (!trimmed || sending) return;
+    setSending(true);
+    try {
+      await onSubmit(trimmed);
+      // Hanya bersih textarea setelah submit berhasil — jadi tidak ada
+      // data loss kalau jaringan gagal di tengah jalan.
+      setText("");
+    } finally {
+      setSending(false);
+    }
   };
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
@@ -102,12 +110,17 @@ export default function ReplyComposer({
             fontSize: "12.5px",
           }}
           onClick={handleSubmit}
+          disabled={sending}
           whileHover={{ backgroundColor: "#3a332a", y: -1 }}
           whileTap={{ scale: 0.98 }}
           transition={{ duration: 0.25, ease: [0.34, 1.56, 0.64, 1] }}
         >
           <IconSend size={15} stroke={1.5} />
-          {role === "humas" ? "Kirim balasan" : "Kirim"}
+          {sending
+            ? "Kirim..."
+            : role === "humas"
+              ? "Kirim balasan"
+              : "Kirim"}
         </motion.button>
       </div>
     </motion.div>

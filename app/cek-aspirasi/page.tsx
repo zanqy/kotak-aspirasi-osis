@@ -1,8 +1,6 @@
 "use client";
 
-export const dynamic = "force-dynamic";
-
-import { Suspense, useState, useEffect, useRef, useCallback } from "react";
+import { Suspense, useState, useEffect, useCallback } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import {
@@ -126,8 +124,7 @@ function CekAspirasiContent() {
   const [error, setError] = useState("");
   const [data, setData] = useState<AspirasiData | null>(null);
   const [pesan, setPesan] = useState<Pesan[]>([]);
-  const [, setSending] = useState(false);
-  const aspirationIdRef = useRef<string | null>(null);
+  const [aspirasiId, setAspirasiId] = useState<string | null>(null);
   const queryKode = searchParams.get("kode");
 
   const fetchData = useCallback(async (kode: string) => {
@@ -135,14 +132,14 @@ function CekAspirasiContent() {
     setError("");
     setData(null);
     setPesan([]);
-    aspirationIdRef.current = null;
+    setAspirasiId(null);
     try {
       const res = await fetch(`/api/aspirasi/${encodeURIComponent(kode)}`);
       if (res.ok) {
         const json = await res.json();
         setData(json.aspirasi);
         setPesan(json.pesan || []);
-        aspirationIdRef.current = json.aspirasi.id;
+        setAspirasiId(json.aspirasi.id);
       } else {
         setError(
           "Kode tiket tidak ditemukan. Pastikan kode yang kamu masukkan benar.",
@@ -165,9 +162,8 @@ function CekAspirasiContent() {
 
   // Realtime subscription via Firestore onSnapshot
   useEffect(() => {
-    if (!aspirationIdRef.current) return;
+    if (!aspirasiId) return;
     const db = getClientDb();
-    const aspirasiId = aspirationIdRef.current;
 
     // Pesan baru (subcollection pesan)
     const pesanQuery = query(
@@ -210,7 +206,7 @@ function CekAspirasiContent() {
       unsubAspirasi();
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [aspirationIdRef.current]);
+  }, [aspirasiId]);
 
   const handleCek = () => {
     if (!kodeInput.trim()) return;
@@ -219,7 +215,6 @@ function CekAspirasiContent() {
 
   const handleKirimBalasan = async (text: string) => {
     if (!data) return;
-    setSending(true);
     try {
       const res = await fetch(`/api/aspirasi/${data.kode_tiket}/pesan`, {
         method: "POST",
@@ -235,8 +230,6 @@ function CekAspirasiContent() {
     } catch (err) {
       console.error("kirim balasan error:", err);
       setError("Tidak ada koneksi. Coba lagi nanti.");
-    } finally {
-      setSending(false);
     }
   };
 
