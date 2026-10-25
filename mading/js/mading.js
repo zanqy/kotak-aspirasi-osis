@@ -1,5 +1,5 @@
 const LOGIN_KEY = "mading_digital_user";
-const NOTES_KEY = "mading_digital_notes";
+const NOTES_KEY = "mading_digital_notes_v4";
 
 /* ---- ukuran papan & sebaran ---- */
 const CANVAS_W = 2400;
@@ -237,9 +237,9 @@ function getSeedNotes() {
       text: "Selamat datang di papan bersama.\nTempel apresiasi, doa, atau kata semangat buat warga sekolah.",
       color: "#F7E9A0",
       kind: "paper",
-      posX: 150,
-      posY: 130,
-      rot: -2.6,
+      posX: 110,
+      posY: 80,
+      rot: -2.4,
       status: "approved",
       reports: [],
       reportCount: 0,
@@ -253,9 +253,9 @@ function getSeedNotes() {
       text: "Papan ini milik kita semua.\nJaga kata-katanya, jaga perasaannya.",
       color: "#FBF7EC",
       kind: "card",
-      posX: 560,
-      posY: 250,
-      rot: 1.8,
+      posX: 450,
+      posY: 130,
+      rot: 1.6,
       status: "approved",
       reports: [],
       reportCount: 0,
@@ -269,9 +269,9 @@ function getSeedNotes() {
       text: "Semangat UAS semua!! jangan lupa tidur yang cukup ya",
       color: "#E9EFD9",
       kind: "sticky",
-      posX: 960,
-      posY: 160,
-      rot: 3.4,
+      posX: 790,
+      posY: 70,
+      rot: 2.8,
       status: "approved",
       reports: [],
       reportCount: 0,
@@ -285,9 +285,9 @@ function getSeedNotes() {
       text: "makasih buat tim paduan suara, kemarin keren banget",
       color: "#F6E3E8",
       kind: "sticky",
-      posX: 1320,
-      posY: 400,
-      rot: -3.1,
+      posX: 1080,
+      posY: 250,
+      rot: -2.6,
       status: "approved",
       reports: [],
       reportCount: 0,
@@ -301,9 +301,9 @@ function getSeedNotes() {
       text: "ada yang mau ikut futsal sore? lapangan sekolah jam 4",
       color: "#E3EAF2",
       kind: "card",
-      posX: 300,
-      posY: 620,
-      rot: -1.4,
+      posX: 230,
+      posY: 420,
+      rot: -1.2,
       status: "approved",
       reports: [],
       reportCount: 0,
@@ -449,6 +449,7 @@ function renderBoard() {
       stamp.className = "note-stamp";
       stamp.textContent = "DARI OSIS";
       el.appendChild(stamp);
+      el.classList.add("note--stamped");
     }
 
     const header = document.createElement("div");
@@ -690,4 +691,25 @@ function enterPlacementMode(noteData) {
   document.addEventListener("keydown", onKey);
 }
 
+/* pusatkan pandangan ke area note saat pertama buka (desktop) */
+function centerBoard() {
+  if (isMobile()) return;
+  const notes = [...canvas.querySelectorAll(".note")];
+  if (!notes.length) return;
+  let minX = Infinity, minY = Infinity, maxX = -Infinity, maxY = -Infinity;
+  notes.forEach((n) => {
+    const l = parseFloat(n.style.left) || 0;
+    const t = parseFloat(n.style.top) || 0;
+    minX = Math.min(minX, l);
+    minY = Math.min(minY, t);
+    maxX = Math.max(maxX, l + n.offsetWidth);
+    maxY = Math.max(maxY, t + n.offsetHeight);
+  });
+  const cx = (minX + maxX) / 2;
+  const cy = (minY + maxY) / 2;
+  wrap.scrollLeft = Math.max(0, cx - wrap.clientWidth / 2);
+  wrap.scrollTop = Math.max(0, cy - wrap.clientHeight / 2);
+}
+
 renderBoard();
+requestAnimationFrame(centerBoard);
