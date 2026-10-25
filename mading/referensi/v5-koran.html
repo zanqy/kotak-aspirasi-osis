@@ -123,7 +123,7 @@ body{background:radial-gradient(circle at 50% -10%, #F5EFDF, var(--paper) 70%);c
 
 /* pull quote */
 .pull{margin:14px 0;text-align:center;padding:14px 6px 12px;border-top:2px solid var(--ink);border-bottom:2px solid var(--ink)}
-.pull q{font:600 1.26rem/1.35 var(--fd);font-style:italic;quotes:"—" "}
+.pull q{font:600 1.26rem/1.35 var(--fd);font-style:italic;quotes:"\2014" "\2014"}
 .pull span{display:block;margin-top:8px;font:500 8px var(--fm);letter-spacing:.22em;text-transform:uppercase;color:var(--ink-40)}
 
 /* footer koran */
@@ -133,6 +133,93 @@ body{background:radial-gradient(circle at 50% -10%, #F5EFDF, var(--paper) 70%);c
 .micro{display:grid;justify-items:center;gap:8px;text-align:center;margin-top:24px;font:400 8.5px var(--fm);letter-spacing:.24em;color:var(--ink-40);text-transform:uppercase}
 .micro .seal{display:inline-grid;padding:10px 24px;border:3px double var(--red);border-radius:10px;color:var(--red);font:800 .98rem var(--fd);letter-spacing:.16em;transform:rotate(-3.2deg)}
 .micro .seal small{font:500 7.5px var(--fm);letter-spacing:.26em;margin-top:4px}
+
+/* ============ KOTAK KIRIMAN ============ */
+.dropbox-wrap{max-width:1000px;margin:26px auto 0;display:grid;grid-template-columns:auto 1fr;
+  border:1px solid rgba(34,29,21,.32);background:var(--news);overflow:hidden;
+  box-shadow:0 22px 38px -30px rgba(24,20,16,.6);
+  background-image:url("data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='g2'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23g2)' opacity='0.45'/%3E%3C/svg%3E");
+  background-blend-mode:multiply,normal}
+.dropbox{position:relative;padding:20px 26px 18px;border-right:1px solid var(--hair);
+  background:linear-gradient(168deg,#EDE4CF,#DCD1B6);cursor:pointer;
+  transition:background .28s ease;min-width:290px;display:grid;grid-template-columns:132px 1fr;gap:18px;align-items:center}
+.dropbox:hover{background:linear-gradient(168deg,#F3ECDA,#E4D9BE)}
+
+/* kotak surat: isi pakai SVG supaya volumenya konsisten */
+.mailbox{width:132px;height:132px;flex:none;display:block;filter:drop-shadow(0 10px 14px rgba(24,20,16,.32))}
+.mailbox .lid{transition:transform .38s cubic-bezier(.2,.8,.3,1);transform-origin:20% 78%}
+.dropbox:hover .mailbox .lid{transform:rotate(-14deg)}
+.mailbox .flag{transition:transform .3s ease;transform-origin:50% 50%}
+.dropbox:hover .mailbox .flag{transform:translate(3px,-3px)}
+.db-kicker{font:500 8px var(--fm);letter-spacing:.28em;text-transform:uppercase;color:var(--red);margin-bottom:5px}
+.dropbox h3{font:600 1.26rem/1.15 var(--fd);letter-spacing:-.01em}
+.dropbox p{font:italic 400 .87rem/1.55 var(--fs);color:var(--ink-60);margin-top:5px}
+.db-count{display:inline-block;margin-top:11px;padding:5px 12px;border:1px solid var(--ui-line);border-radius:999px;
+  font:500 8px var(--fm);letter-spacing:.2em;text-transform:uppercase;color:var(--ink-60);background:rgba(255,255,255,.45)}
+.db-body{padding:22px 26px;display:flex;flex-direction:column;justify-content:center}
+
+/* ============ KIRIMAN PEMBACA (di dalam koran) ============ */
+.kiriman{border-top:2px solid var(--ink);margin-top:18px;padding-top:12px}
+.kiriman-head{display:flex;align-items:baseline;gap:12px;margin-bottom:4px;flex-wrap:wrap}
+.kiriman-head .h2{margin:0;font-size:1.24rem}
+.kiriman-head .h2 em{font-style:italic;color:var(--red)}
+.kiriman-sub{font:italic 400 .84rem/1.5 var(--fs);color:var(--ink-60);margin:4px 0 12px;
+  padding-bottom:8px;border-bottom:1px solid var(--hair)}
+.kiriman-count{margin-left:auto;font:500 8px var(--fm);letter-spacing:.2em;text-transform:uppercase;color:var(--ink-40);white-space:nowrap}
+.kiriman-list{display:grid;grid-template-columns:repeat(auto-fill,minmax(215px,1fr));gap:12px}
+.kiriman-list:empty{display:none}
+.km{border:1px solid rgba(34,29,21,.3);background:rgba(255,255,255,.6);padding:12px 14px 11px;position:relative}
+.km.quote{border:none;border-top:3px solid var(--ink);border-bottom:1px solid var(--hair);background:transparent;padding-top:10px}
+.km.class{border-style:dashed;background:rgba(255,255,255,.35)}
+.km.clip{background:var(--paper-2);transform:rotate(var(--rot,-.8deg));box-shadow:0 5px 10px -7px rgba(24,20,16,.45);font-family:'Caveat',cursive;font-size:1.12rem;line-height:1.4}
+.km .who{display:block;font:500 7.5px var(--fm);letter-spacing:.2em;text-transform:uppercase;color:var(--ink-60);margin-bottom:6px;
+  padding-bottom:4px;border-bottom:1px solid var(--hair)}
+.km.quote .who{border-bottom-color:rgba(34,29,21,.25)}
+.km.quote .txt{font:600 1.14rem/1.34 var(--fd);font-style:italic;color:var(--ink)}
+.km.class .txt{font:400 .86rem/1.55 var(--fs);color:var(--ink-soft)}
+.km.clip .txt{color:#2b241c}
+.km .txt{white-space:pre-wrap;word-break:break-word}
+.kiriman-empty{font:italic 400 .88rem/1.6 var(--fs);color:var(--ink-40);border:1px dashed rgba(34,29,21,.3);padding:14px 16px;text-align:center;margin-top:4px}
+.link-btn{background:none;border:0;border-bottom:1px solid var(--red);color:var(--red);font:italic 500 .9rem var(--fs);cursor:pointer;padding:0 0 1px}
+
+/* ============ MODAL SURAT UNTUK REDAKSI ============ */
+.sheet{position:fixed;inset:0;z-index:200;display:none;place-items:center;padding:20px;
+  background:radial-gradient(circle, rgba(242,236,222,.94), rgba(237,228,207,.97))}
+.sheet.open{display:grid}
+.sheet-card{width:min(520px,100%);background:var(--lembar);border:1px solid rgba(34,29,21,.32);border-radius:12px;
+  padding:clamp(24px,5vw,36px);position:relative;box-shadow:0 40px 70px -40px rgba(24,20,16,.6);overflow:hidden;
+  animation:rise .4s cubic-bezier(.2,.8,.3,1) both}
+@keyframes rise{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:none}}
+.sheet-card::before{content:"";position:absolute;left:50%;top:-10px;transform:translateX(-50%) rotate(-1.5deg);width:96px;height:22px;
+  background:linear-gradient(180deg, rgba(255,255,255,.5), rgba(255,255,255,.04)), rgba(206,178,126,.55);
+  border-left:1px dashed rgba(34,29,21,.2);border-right:1px dashed rgba(34,29,21,.2);box-shadow:0 2px 4px rgba(24,20,16,.16)}
+.sheet-kicker{font:500 9px var(--fm);letter-spacing:.3em;text-transform:uppercase;color:var(--red);margin-bottom:6px}
+.sheet-card h2{font:600 clamp(1.5rem,4vw,2.1rem)/1.1 var(--fd);letter-spacing:-.015em}
+.sheet-sub{font:italic 400 .95rem/1.6 var(--fs);color:var(--ink-60);margin:8px 0 20px}
+.sheet-field{margin-bottom:14px}
+.sheet-field label{display:block;font:500 9px var(--fm);letter-spacing:.24em;text-transform:uppercase;color:var(--ink-60);margin-bottom:5px}
+.sheet-field input,.sheet-field textarea,.sheet-field select{width:100%;font:400 .98rem/1.6 var(--fs);color:var(--ink);
+  background:transparent;border:0;border-bottom:1px solid var(--ink-40);padding:7px 2px;border-radius:0}
+.sheet-field textarea{border:1px solid var(--line);border-radius:8px;padding:9px 13px;line-height:28px;resize:vertical;min-height:104px;
+  background-image:repeating-linear-gradient(180deg, transparent 0 27px, var(--hair) 27px 28px);background-position:0 8px}
+.sheet-field select{border:1px solid var(--line);border-radius:8px;padding:9px 12px;background:var(--lembar)}
+.sheet-field input:focus,.sheet-field textarea:focus,.sheet-field select:focus{outline:none;border-color:var(--red)}
+.sheet-row{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.sheet-note{font:italic 400 .8rem/1.6 var(--fs);color:var(--ink-40);background:rgba(192,59,33,.06);
+  border-left:2px solid rgba(192,59,33,.5);border-radius:0 6px 6px 0;padding:9px 12px;margin:16px 0 18px}
+.sheet-actions{display:flex;gap:10px;justify-content:flex-end;flex-wrap:wrap}
+.btn-k{background:var(--ink);color:var(--paper);border:0;border-radius:8px;padding:12px 22px;font:600 .98rem var(--fd);cursor:pointer;transition:transform .16s,box-shadow .16s}
+.btn-k:hover{transform:translate(-2px,-2px);box-shadow:4px 4px 0 var(--red)}
+.btn-k.ghost{background:transparent;color:var(--ink);border:1px solid var(--ui-line);font:500 .95rem var(--fs)}
+.btn-k.ghost:hover{transform:none;box-shadow:none;border-color:var(--ink)}
+.sheet-close{position:absolute;top:14px;right:14px;width:30px;height:30px;border-radius:50%;background:transparent;border:1px solid rgba(34,29,21,.2);
+  color:var(--ink-40);cursor:pointer;font-size:16px;line-height:1}
+.sheet-close:hover{color:var(--red);border-color:var(--red)}
+/* toast */
+.toast{position:fixed;left:50%;bottom:28px;transform:translate(-50%,20px);z-index:300;opacity:0;pointer-events:none;
+  background:var(--ink);color:var(--paper);padding:12px 22px;border-radius:999px;font:500 .9rem var(--fs);
+  box-shadow:0 20px 40px -20px rgba(24,20,16,.7);transition:opacity .3s ease,transform .3s cubic-bezier(.2,.8,.3,1)}
+.toast.show{opacity:1;transform:translate(-50%,0)}
 </style>
 </head>
 <body>
@@ -225,6 +312,19 @@ body{background:radial-gradient(circle at 50% -10%, #F5EFDF, var(--paper) 70%);c
       <section class="col" style="border-left:0;padding-left:0">
         <p class="h2">Rubrik <em>Tetap</em></p>
         <p class="body">Setiap hari ada bagian yang tak pernah berubah: kursi goyang, dompet hilang, lomba lari, Mars sekolah. Kiriman diterima sampai pukul 16.00, disaring Sabtu pagi — yang layak naik, yang tidak sampai ke cetak.</p>
+
+        <!-- ===== KIRIMAN PEMBACA ===== -->
+        <div class="kiriman">
+          <div class="kiriman-head">
+            <span class="h2">Kiriman <em>Pembaca</em></span>
+            <span class="kiriman-count" id="kirimanCount">0 kiriman</span>
+          </div>
+          <p class="kiriman-sub">Surat dan pesan dari teman-teman sekolah — kirim lewat kotak surat di bawah halaman.</p>
+          <div class="kiriman-list" id="kirimanList"></div>
+          <div class="kiriman-empty" id="kirimanEmpty">
+            Belum ada kiriman hari ini — <button class="link-btn" data-open-sheet>jadilah yang pertama mengirim</button>
+          </div>
+        </div>
       </section>
       <section class="col" style="border-left:1px solid var(--hair)">
         <p class="h2">Ketikan <span class="mark-u">Terakhir</span></p>
@@ -243,6 +343,204 @@ body{background:radial-gradient(circle at 50% -10%, #F5EFDF, var(--paper) 70%);c
       <span>Semua pesan di atas milik para siswa — direkap harian oleh redaksi</span>
     </p>
   </div>
+
+  <!-- ===== KOTAK KIRIMAN ===== -->
+  <div class="dropbox-wrap">
+    <div class="dropbox" id="dropbox" role="button" tabindex="0" aria-label="Masukkan kiriman ke kotak surat">
+      <svg class="mailbox" viewBox="0 0 132 132" aria-hidden="true">
+        <!-- tiang -->
+        <rect x="58" y="88" width="16" height="38" rx="2" fill="#8B6E45"/>
+        <rect x="58" y="88" width="5" height="38" fill="#A78654" opacity=".55"/>
+        <!-- alas -->
+        <rect x="46" y="124" width="40" height="6" rx="2" fill="#6E5735"/>
+        <!-- badan: sisi kanan (volume) -->
+        <path d="M96 30 L118 40 L118 88 L96 96 Z" fill="#9A7B4E"/>
+        <path d="M96 30 L118 40 L118 46 L96 38 Z" fill="#B1925F"/>
+        <!-- badan: depan -->
+        <rect x="16" y="26" width="80" height="70" rx="4" fill="#C2A070"/>
+        <rect x="16" y="26" width="80" height="70" rx="4" fill="none" stroke="rgba(34,29,21,.34)" stroke-width="1.4"/>
+        <!-- tutup (buka saat hover) -->
+        <g class="lid">
+          <path d="M16 26 L96 26 L96 44 L16 44 Z" fill="#D2B583"/>
+          <path d="M16 26 L96 26 L96 44 L16 44 Z" fill="none" stroke="rgba(34,29,21,.3)" stroke-width="1.2"/>
+          <path d="M20 30 L92 30" stroke="rgba(255,255,255,.42)" stroke-width="2.2" fill="none"/>
+        </g>
+        <!-- slot surat (celah gelap) -->
+        <rect x="30" y="50" width="52" height="9" rx="4.5" fill="#2A2118"/>
+        <rect x="31" y="51" width="50" height="3" rx="1.5" fill="#120D08"/>
+        <!-- lipatan bawah slot -->
+        <path d="M28 59 L84 59" stroke="rgba(255,255,255,.35)" stroke-width="1.6" fill="none"/>
+        <!-- surat yang masuk ke slot (turun, bukan melayang) -->
+        <path d="M36 50 L76 50 L74 34 L38 34 Z" fill="#FBF7EC" opacity=".95"/>
+        <path d="M40 38 L72 38" stroke="rgba(34,29,21,.3)" stroke-width="1.4" fill="none"/>
+        <path d="M36 50 L76 50" stroke="rgba(34,29,21,.18)" stroke-width="1" fill="none"/>
+        <!-- tutup bawah -->
+        <rect x="16" y="88" width="80" height="8" rx="2" fill="#A98757"/>
+        <!-- stempel OSIS (tempel datar, bukan tombol) -->
+        <g opacity=".55">
+          <rect x="62" y="66" width="26" height="14" rx="2" fill="none" stroke="#C03B21" stroke-width="1.8"/>
+          <text x="75" y="76.5" font-family="IBM Plex Mono, monospace" font-size="8.5" font-weight="700" fill="#C03B21" text-anchor="middle" letter-spacing="1">OSIS</text>
+        </g>
+        <!-- bendera kotak surat (persegi, ada engsel) -->
+        <g class="flag">
+          <rect x="100" y="12" width="4" height="28" rx="2" fill="#6E5735"/>
+          <circle cx="102" cy="14" r="3" fill="#8B6E45"/>
+          <rect x="104" y="15" width="16" height="12" rx="1.5" fill="#C03B21"/>
+          <rect x="104" y="15" width="16" height="12" rx="1.5" fill="none" stroke="rgba(24,20,16,.3)" stroke-width="1"/>
+        </g>
+        <!-- contact shadow -->
+        <ellipse cx="66" cy="131" rx="40" ry="4" fill="rgba(24,20,16,.26)"/>
+      </svg>
+      <div>
+        <p class="db-kicker">Kotak Surat</p>
+        <h3>Mau Kirim Sesuatu?</h3>
+        <p>Tulis pesan, cari barang, atau sekadar menyapa. Redaksi baca semuanya tiap pagi.</p>
+        <span class="db-count" id="dbCount">0 dikirim</span>
+      </div>
+    </div>
+    <div class="db-body">
+      <p class="h2" style="margin-top:0">Ketik <span class="mark-u">Kirim</span></p>
+      <p class="body" style="margin-bottom:14px">
+        Tidak perlu alasan panjang. Tulis aja — nanti redaksi yang merapikan.
+        Mau dikirim sebagai <b>Kiriman</b>, <b>Kutipan</b>, atau <b>Iklan Baris</b>?
+      </p>
+      <div style="display:flex;gap:10px;flex-wrap:wrap">
+        <button class="btn-k" data-open-sheet>Buka Surat</button>
+        <button class="btn-k ghost" data-open-sheet data-type="quote">Kirim Kutipan</button>
+        <button class="btn-k ghost" data-open-sheet data-type="class">Kirim Iklan Baris</button>
+      </div>
+    </div>
+  </div>
 </div>
+
+<!-- ===== MODAL SURAT ===== -->
+<div class="sheet" id="sheet">
+  <div class="sheet-card">
+    <button class="sheet-close" id="sheetClose" aria-label="Tutup">×</button>
+    <p class="sheet-kicker">Surat Untuk Redaksi</p>
+    <h2>Isi Kirimanmu</h2>
+    <p class="sheet-sub">Setelah dikirim, surat ini naik ke kolom Kiriman Pembaca di koran hari ini.</p>
+    <form id="sheetForm">
+      <div class="sheet-row">
+        <div class="sheet-field">
+          <label>Nama</label>
+          <input id="fNama" placeholder="Nama kamu" required>
+        </div>
+        <div class="sheet-field">
+          <label>Kelas</label>
+          <input id="fKelas" placeholder="XI IPA 1" required>
+        </div>
+      </div>
+      <div class="sheet-field">
+        <label>Rubrik</label>
+        <select id="fTipe">
+          <option value="kiriman">Kiriman — pesan biasa</option>
+          <option value="quote">Kutipan — kalimat yang kamu suka</option>
+          <option value="class">Iklan Baris — cari / tawarkan sesuatu</option>
+        </select>
+      </div>
+      <div class="sheet-field">
+        <label>Isi Surat</label>
+        <textarea id="fIsi" placeholder="Tulis di sini..." required></textarea>
+      </div>
+      <p class="sheet-note">
+        Semua kiriman dicek redaksi. Laporan 3 kali atau lebih akan otomatis disembunyikan sampai ditinjau Hamas/OSIS.
+      </p>
+      <div class="sheet-actions">
+        <button type="button" class="btn-k ghost" id="sheetCancel">Batal</button>
+        <button type="submit" class="btn-k">Kirim ke Redaksi</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<div class="toast" id="toast">Surat terkirim</div>
+
+<script>
+(function(){
+  var KEY = "koran_kiriman_v1";
+  var NAMES = { kiriman:"Kiriman", quote:"Kutipan", class:"Iklan Baris" };
+
+  function load(){ try{ return JSON.parse(localStorage.getItem(KEY))||[]; }catch(e){ return []; } }
+  function save(v){ localStorage.setItem(KEY, JSON.stringify(v)); }
+
+  function esc(s){ return String(s).replace(/[&<>]/g, function(c){
+    return {'&':'&amp;','<':'&lt;','>':'&gt;'}[c]; }); }
+
+  function render(){
+    var list = document.getElementById("kirimanList");
+    var empty = document.getElementById("kirimanEmpty");
+    var count = document.getElementById("kirimanCount");
+    var dbc = document.getElementById("dbCount");
+    var items = load();
+    list.innerHTML = "";
+    count.textContent = items.length + " kiriman hari ini";
+    dbc.textContent = items.length + " dikirim";
+
+    if(items.length === 0){ empty.style.display = ""; return; }
+    empty.style.display = "none";
+
+    items.slice().reverse().forEach(function(it, i){
+      var el = document.createElement("article");
+      var cls = it.tipe === "quote" ? "quote" : it.tipe === "class" ? "class" : "clip";
+      el.className = "km " + cls;
+      if(it.tipe === "clip"){
+        el.style.setProperty("--rot", ((i%3)-1) * 1.4 + "deg");
+      }
+      var who = document.createElement("span");
+      who.className = "who";
+      who.textContent = (NAMES[it.tipe]||"Kiriman") + " · " + it.nama + " · " + it.kelas;
+      var txt = document.createElement("div");
+      txt.className = "txt";
+      txt.textContent = it.isi;
+      el.appendChild(who);
+      el.appendChild(txt);
+      list.appendChild(el);
+    });
+  }
+
+  var sheet = document.getElementById("sheet");
+  var toast = document.getElementById("toast");
+
+  function openSheet(type){
+    if(type) document.getElementById("fTipe").value = type;
+    sheet.classList.add("open");
+    setTimeout(function(){ document.getElementById("fIsi").focus(); }, 80);
+  }
+  function closeSheet(){ sheet.classList.remove("open"); }
+
+  document.querySelectorAll("[data-open-sheet]").forEach(function(b){
+    b.addEventListener("click", function(){ openSheet(b.getAttribute("data-type")); });
+  });
+  document.getElementById("dropbox").addEventListener("click", function(){ openSheet(); });
+  document.getElementById("dropbox").addEventListener("keydown", function(e){
+    if(e.key === "Enter" || e.key === " "){ e.preventDefault(); openSheet(); }
+  });
+  document.getElementById("sheetClose").addEventListener("click", closeSheet);
+  document.getElementById("sheetCancel").addEventListener("click", closeSheet);
+  sheet.addEventListener("click", function(e){ if(e.target === sheet) closeSheet(); });
+
+  document.getElementById("sheetForm").addEventListener("submit", function(e){
+    e.preventDefault();
+    var items = load();
+    items.push({
+      nama: document.getElementById("fNama").value.trim(),
+      kelas: document.getElementById("fKelas").value.trim(),
+      tipe: document.getElementById("fTipe").value,
+      isi: document.getElementById("fIsi").value.trim(),
+      at: Date.now()
+    });
+    save(items);
+    e.target.reset();
+    closeSheet();
+    render();
+    toast.textContent = "Surat terkirim ke redaksi";
+    toast.classList.add("show");
+    setTimeout(function(){ toast.classList.remove("show"); }, 2600);
+  });
+
+  render();
+})();
+</script>
 </body>
 </html>

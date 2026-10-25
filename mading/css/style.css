@@ -469,6 +469,55 @@ a{
   z-index:90;
 }
 
+.note.is-dragging{
+  cursor:grabbing;
+  z-index:999;
+  transform:rotate(0deg) scale(1.05);
+  box-shadow:0 24px 40px -18px rgba(24,20,16,.7), 0 4px 8px -4px rgba(24,20,16,.4);
+  transition:none;
+}
+
+.note-ghost{
+  pointer-events:none;
+  opacity:.72;
+  border:2px dashed rgba(192,59,33,.55);
+  box-shadow:0 12px 24px -14px rgba(24,20,16,.5);
+  cursor:crosshair;
+  transform:rotate(0deg);
+}
+
+.note-ghost .note-meta,
+.note-ghost .note-foot{opacity:.7}
+
+/* ---- banner mode penempatan ---- */
+.placement-banner{
+  position:sticky;
+  top:0;
+  z-index:30;
+  margin-bottom:16px;
+  padding:10px 18px;
+  border-radius:999px;
+  border:1px solid rgba(192,59,33,.45);
+  background:rgba(251,247,236,.92);
+  backdrop-filter:blur(6px);
+  color:var(--ink);
+  font:500 .98rem var(--fs);
+  text-align:center;
+  box-shadow:0 6px 14px -10px rgba(24,20,16,.35);
+}
+
+.placement-banner b{color:var(--red);font-weight:600}
+
+/* ---- hint drag ---- */
+.canvas-hint{position:sticky;top:12px;display:inline-flex;align-items:center;gap:10px;margin-bottom:28px;
+  padding:9px 18px;border-radius:999px;border:1px solid var(--ui-line);
+  background:rgba(251,247,236,.8);backdrop-filter:blur(6px);
+  font:400 .98rem var(--fs);color:var(--ink-60);font-style:italic;z-index:5}
+
+/* cursor saat hover note */
+.note{cursor:grab}
+.note:active{cursor:grabbing}
+
 /* serat kertas halus untuk semua tempelan */
 .note::before{
   content:'';

@@ -20,6 +20,7 @@ const HAND_FONTS = [
 const STICKY_COLORS = ["#F7E9A0", "#F3E7C4", "#E9EFD9", "#F6E3E8", "#E3EAF2", "#F7EAD8"];
 
 const canvas = document.getElementById("mading-canvas");
+const wrap = document.querySelector(".mading-canvas-wrap");
 const addBtn = document.getElementById("add-note-btn");
 const loginBtn = document.getElementById("login-btn");
 const userChip = document.getElementById("user-chip");
@@ -106,12 +107,10 @@ noteForm.addEventListener("submit", (e) => {
   const text = noteText.value.trim();
   if (!text) return;
 
-  const notes = loadNotes();
   const id = "n" + Date.now().toString(36) + Math.random().toString(36).slice(2, 5);
-  const spot = scatterSpot(id, notes.length);
   const kind = KINDS[Math.abs(hash(id)) % KINDS.length];
 
-  notes.push({
+  const noteData = {
     id,
     authorNis: currentUser.nis,
     authorName: currentUser.nama,
@@ -119,16 +118,13 @@ noteForm.addEventListener("submit", (e) => {
     text,
     color: selectedColor,
     kind,
-    posX: spot.x,
-    posY: spot.y,
-    rot: spot.rot,
     status: "approved",
     reports: [],
     reportCount: 0,
     createdAt: Date.now()
-  });
+  };
 
-  saveNotes(notes);
+  saveNotes(loadNotes());
   closeNoteModal();
   noteForm.reset();
   charCount.textContent = "0";
@@ -136,7 +132,8 @@ noteForm.addEventListener("submit", (e) => {
     sw.classList.toggle("active", idx === 0);
   });
   selectedColor = "#F7E9A0";
-  renderBoard();
+
+  enterPlacementMode(noteData);
 });
 
 function closeNoteModal() {
@@ -474,6 +471,55 @@ function renderBoard() {
 
     el.appendChild(footer);
     canvas.appendChild(el);
+
+    // ---- DRAG TO MOVE ----
+    let dragging = false;
+    let dragStartX = 0, dragStartY = 0;
+    let dragStartLeft = 0, dragStartTop = 0;
+    let pointerId = null;
+
+    el.addEventListener("pointerdown", (e) => {
+      if (e.target.closest(".report-btn")) return;
+      if (e.button !== 0 && e.pointerType === "mouse") return;
+      dragging = true;
+      pointerId = e.pointerId;
+      dragStartX = e.clientX;
+      dragStartY = e.clientY;
+      dragStartLeft = parseFloat(el.style.left) || 0;
+      dragStartTop = parseFloat(el.style.top) || 0;
+      el.classList.add("is-dragging");
+      try { el.setPointerCapture(e.pointerId); } catch (err) {}
+      e.preventDefault();
+    });
+
+    el.addEventListener("pointermove", (e) => {
+      if (!dragging) return;
+      const dx = e.clientX - dragStartX;
+      const dy = e.clientY - dragStartY;
+      let newLeft = dragStartLeft + dx;
+      let newTop = dragStartTop + dy;
+      newLeft = Math.max(0, Math.min(newLeft, CANVAS_W - el.offsetWidth));
+      newTop = Math.max(0, Math.min(newTop, CANVAS_H - el.offsetHeight));
+      el.style.left = newLeft + "px";
+      el.style.top = newTop + "px";
+    });
+
+    function endDrag(e) {
+      if (!dragging) return;
+      dragging = false;
+      el.classList.remove("is-dragging");
+      try { el.releasePointerCapture(pointerId); } catch (err) {}
+      const notes = loadNotes();
+      const idx = notes.findIndex((n) => n.id === note.id);
+      if (idx !== -1) {
+        notes[idx].posX = Math.round(parseFloat(el.style.left));
+        notes[idx].posY = Math.round(parseFloat(el.style.top));
+        saveNotes(notes);
+      }
+    }
+
+    el.addEventListener("pointerup", endDrag);
+    el.addEventListener("pointercancel", endDrag);
   });
 
   if (notes.length === 0) {
@@ -519,6 +565,112 @@ function reportNote(noteId) {
   saveNotes(notes);
   alert("Laporan kamu udah terkirim. Akan ditindaklanjuti oleh Humas/OSIS.");
   renderBoard();
+}
+
+/* ---- PLACEMENT MODE: pilih tempat sendiri ---- */
+let placementActive = false;
+let placementGhost = null;
+let placementData = null;
+
+function enterPlacementMode(noteData) {
+  placementActive = true;
+  placementData = noteData;
+  placementGhost = document.createElement("article");
+  placementGhost.className = `note note--${noteData.kind || "sticky"} note-ghost`;
+  placementGhost.style.left = "100px";
+  placementGhost.style.top = "100px";
+  placementGhost.style.setProperty("--rot", "0deg");
+  placementGhost.style.zIndex = "999";
+  placementGhost.style.pointerEvents = "none";
+
+  if (noteData.kind === "sticky") {
+    placementGhost.style.background = `linear-gradient(180deg, rgba(255,255,255,.55) 0%, rgba(255,255,255,0) 30%), ${noteData.color || "#F7E9A0"}`;
+    placementGhost.style.backgroundColor = noteData.color || "#F7E9A0";
+    placementGhost.style.backgroundBlendMode = "normal, multiply";
+  } else {
+    placementGhost.style.backgroundColor = noteData.color || "#F3E7C4";
+  }
+  placementGhost.style.width = "240px";
+
+  const meta = document.createElement("div");
+  meta.className = "note-meta";
+  meta.textContent = `${noteData.authorKelas || "-"} · ${noteData.authorName || "Anonim"}`;
+  placementGhost.appendChild(meta);
+
+  const body = document.createElement("div");
+  body.className = "note-text";
+  body.textContent = noteData.text;
+  placementGhost.appendChild(body);
+
+  canvas.appendChild(placementGhost);
+
+  const banner = document.createElement("div");
+  banner.className = "placement-banner";
+  banner.id = "placement-banner";
+  banner.innerHTML = '<span>🖱️ Klik di papan untuk menempelkan note kamu. <b>ESC</b> untuk batal.</span>';
+  wrap.insertBefore(banner, wrap.firstChild);
+
+  wrap.style.cursor = "crosshair";
+
+  function onMove(e) {
+    const rect = canvas.getBoundingClientRect();
+    const x = e.clientX - rect.left + wrap.scrollLeft;
+    const y = e.clientY - rect.top + wrap.scrollTop;
+    placementGhost.style.left = Math.max(0, Math.min(x - 120, CANVAS_W - 240)) + "px";
+    placementGhost.style.top = Math.max(0, Math.min(y - 60, CANVAS_H - 200)) + "px";
+  }
+
+  function onDown(e) {
+    if (e.target.closest(".placement-banner")) return;
+    const rect = canvas.getBoundingClientRect();
+    const x = e.clientX - rect.left + wrap.scrollLeft;
+    const y = e.clientY - rect.top + wrap.scrollTop;
+    const posX = Math.max(0, Math.min(Math.round(x - 120), CANVAS_W - 240));
+    const posY = Math.max(0, Math.min(Math.round(y - 60), CANVAS_H - 200));
+
+    const spot = scatterSpot(noteData.id, loadNotes().length);
+    noteData.posX = posX;
+    noteData.posY = posY;
+    noteData.rot = spot.rot;
+
+    const notes = loadNotes();
+    notes.push(noteData);
+    saveNotes(notes);
+
+    cleanupPlacement();
+    renderBoard();
+  }
+
+  function onKey(e) {
+    if (e.key === "Escape") {
+      const spot = scatterSpot(noteData.id, loadNotes().length);
+      noteData.posX = spot.x;
+      noteData.posY = spot.y;
+      noteData.rot = spot.rot;
+      const notes = loadNotes();
+      notes.push(noteData);
+      saveNotes(notes);
+      cleanupPlacement();
+      renderBoard();
+    }
+  }
+
+  function cleanupPlacement() {
+    placementActive = false;
+    if (placementGhost) placementGhost.remove();
+    placementGhost = null;
+    placementData = null;
+    const b = document.getElementById("placement-banner");
+    if (b) b.remove();
+    wrap.style.cursor = "";
+    document.removeEventListener("pointermove", onMove);
+    document.removeEventListener("pointerdown", onDown);
+    document.removeEventListener("keydown", onKey);
+  }
+
+  document.addEventListener("pointermove", onMove);
+  document.addEventListener("pointerdown", onDown);
+  document.addEventListener("keydown", onKey);
 }
 
 renderBoard();
