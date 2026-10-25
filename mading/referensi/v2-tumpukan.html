@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Referensi 2 — Tumpukan Flyer</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;600;700&family=Fraunces:ital,opsz,wght@0,9..144,300..900;1,9..144,300..900&family=IBM+Plex+Mono:wght@400;500&family=Kalam:wght@400;700&family=Spectral:ital,wght@0,400;0,500;1,400;1,500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --paper:#F2ECDE; --paper-2:#EDE4CF; --lembar:#FBF7EC;
+  --ink:#221D15; --ink-60:rgba(34,29,21,.6); --ink-40:rgba(34,29,21,.4);
+  --red:#C03B21; --line:rgba(34,29,21,.16); --ui-line:rgba(34,29,21,.22);
+  --fd:'Fraunces',serif; --fs:'Spectral',serif; --fm:'IBM Plex Mono',monospace;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{background:var(--paper)}
+body{background:var(--paper);color:var(--ink);font-family:var(--fs);min-height:100dvh;overflow-x:hidden}
+.topbar{display:flex;justify-content:space-between;align-items:baseline;gap:10px;padding:12px 26px;border-bottom:1px solid var(--line);font:500 8.5px var(--fm);letter-spacing:.3em;color:var(--ink-60);text-transform:uppercase;flex-wrap:wrap}
+.topbar b{color:var(--ink)}
+.stage{max-width:1000px;margin:0 auto;padding:10px 18px 90px}
+.head{padding:clamp(22px,4vw,40px) 6px 6px;text-align:center}
+.kicker{font:500 9.5px var(--fm);letter-spacing:.32em;text-transform:uppercase;color:var(--red)}
+.head h1{font:600 clamp(2rem,7vw,3.4rem)/1 Fraunces,serif;letter-spacing:-.02em;margin:10px 0 6px}
+.head h1 em{font-style:italic;color:var(--red)}
+.sub{font:italic 400 .95rem/1.6 var(--fs);color:var(--ink-60)}
+/* meja: permukaan kayu gelap */
+.desk{position:relative;margin-top:26px;border-radius:8px;min-height:620px;
+  background:
+    radial-gradient(circle at 18% 22%, rgba(192,59,33,.08), transparent 40%),
+    radial-gradient(circle at 78% 76%, rgba(34,29,21,.12), transparent 44%),
+    repeating-linear-gradient(90deg, rgba(94,70,40,.07) 0 2px, transparent 2px 9px),
+    linear-gradient(160deg,#7A5A34 0%,#6E4E2B 55%,#583F20 100%);
+  box-shadow:inset 0 0 90px rgba(24,20,16,.45), inset 0 2px 0 rgba(255,255,255,.14), 0 30px 50px -34px rgba(24,20,16,.7);
+  overflow:hidden}
+.nota{position:absolute;width:var(--w,250px);padding:22px 22px 18px;border-radius:2px;
+  transform:rotate(var(--rot,-2deg)) translateY(var(--y,0));transition:transform .35s cubic-bezier(.2,.8,.3,1),box-shadow .35s ease;
+  box-shadow:0 4px 6px -4px rgba(24,20,16,.5), 0 18px 30px -20px rgba(24,20,16,.75);color:#2b241c;
+  cursor:pointer;display:grid;gap:10px}
+.nota:hover{transform:rotate(0deg) translateY(calc(var(--y,0) - 10px)) scale(1.03);z-index:60}
+.nota .meta{font:500 8.5px var(--fm);letter-spacing:.18em;text-transform:uppercase;color:rgba(43,36,28,.55)}
+.nota .txt{font:400 .98rem/1.6 var(--fs);white-space:pre-wrap;word-break:break-word}
+.nota .hand{font-family:'Caveat',cursive;font-size:1.22rem;line-height:1.35}
+.nota .hand2{font-family:'Kalam',cursive;font-size:1.06rem;line-height:1.6}
+/* macam nota */
+.flyer-kuning{background:linear-gradient(180deg, rgba(255,255,255,.5), rgba(255,255,255,0) 40%), #F5DA55}
+.flyer-kuning::after{content:"";position:absolute;inset:0;pointer-events:none;background:repeating-linear-gradient(0deg, transparent 0 22px, rgba(34,29,21,.05) 22px 23px)}
+.lakban-putih{background:#F3EDDD;border:1px dashed rgba(34,29,21,.24)}
+.kertas-ros{background:#F6E3E8}
+.stempel{position:absolute;right:-8px;bottom:18px;padding:4px 9px 3px;border:2px solid var(--red);border-radius:4px;color:var(--red);font:700 9px var(--fm);letter-spacing:.18em;transform:rotate(-10deg);opacity:.72}
+/* noda kopi / misteri */
+.noda{position:absolute;border-radius:50%;box-shadow:inset 0 0 0 3px rgba(60,40,20,.18);pointer-events:none}
+.noda.a{width:110px;height:110px;right:12%;top:18%;background:radial-gradient(circle, rgba(90,60,30,.16) 0 62%, transparent 66%)}
+.noda.b{width:70px;height:70px;left:6%;bottom:14%;background:radial-gradient(circle, rgba(90,60,30,.2) 0 60%, transparent 64%)}
+.causa{position:absolute;inset:0;pointer-events:none;color:rgba(255,250,235,.2)}
+.note-foot{display:flex;justify-content:space-between;gap:8px;font:400 8.5px var(--fm);letter-spacing:.14em;text-transform:uppercase;color:rgba(43,36,28,.4);margin-top:2px}
+.tapelet{position:absolute;left:50%;top:-10px;width:64px;height:18px;transform:translateX(-50%) rotate(-2deg);
+  background:linear-gradient(180deg, rgba(255,255,255,.55), rgba(255,255,255,.05)), rgba(210,190,140,.55);border-radius:1px;box-shadow:0 1px 2px rgba(24,20,16,.2)}
+</style>
+</head>
+<body>
+<div class="topbar"><span>MPK · OSIS — <b>REFERENSI 02 / TUMPUKAN</b></span><span>MMXXV · Untuk Sekolah Kita</span></div>
+
+<div class="stage">
+  <div class="head">
+    <p class="kicker">PAPAN BERSAMA</p>
+    <h1>Tumpukan <em>Flyer.</em></h1>
+    <p class="sub">Pesan lepas di atas meja tua — ambil yang dikirim, baca yang tergulir</p>
+  </div>
+
+  <div class="desk">
+    <span class="noda a" aria-hidden="true"></span>
+    <span class="noda b" aria-hidden="true"></span>
+
+    <article class="nota flyer-kuning" style="left:4%;top:12%;--rot:-7deg;--w:238px;--y:0;z-index:2">
+      <span class="tapelet" aria-hidden="true"></span>
+      <span class="meta">OSIS · HUMAS</span>
+      <p class="txt hand2">Jangan lupa: rapat OSIS besok pukul 3 di aula. Bawa nota harian ya.</p>
+      <div class="note-foot"><span>23 OKT</span><span>⚑ LAPOR</span></div>
+      <span class="stempel">WAJIB</span>
+    </article>
+
+    <article class="nota lakban-putih" style="left:28%;top:22%;--rot:3deg;--w:256px;--y:14px;z-index:4">
+      <span class="tapelet" style="transform:translateX(-50%) rotate(3deg)" aria-hidden="true"></span>
+      <span class="meta">XI IPA 2 · BIMA</span>
+      <p class="txt hand">Semangat UAS semuaa!! jangan lupa tidur yang cukup ya, soalnya aku abelum tidur 😅</p>
+      <div class="note-foot"><span>22 OKT</span><span>⚑ LAPOR</span></div>
+    </article>
+
+    <article class="nota kertas-ros" style="left:60%;top:8%;--rot:-3deg;--w:218px;--y:26px;z-index:5">
+      <span class="tapelet" style="transform:translateX(-50%) rotate(-4deg)" aria-hidden="true"></span>
+      <span class="meta">XI IPS 1 · CITRA</span>
+      <p class="txt hand2">makasih paduan suara kemarin, keren banget sampai merinding</p>
+      <div class="note-foot"><span>21 OKT</span><span>⚑ LAPOR</span></div>
+    </article>
+
+    <article class="nota flyer-kuning" style="left:12%;top:56%;--rot:4deg;--w:246px;--y:8px;z-index:6">
+      <span class="tapelet" style="transform:translateX(-50%) rotate(2deg)" aria-hidden="true"></span>
+      <span class="meta">XI IPS 2 · DIMAS</span>
+      <p class="txt">Futsal sore jam 4, lapangan sekolah. Siapapun boleh ikut, bawa sepatu lapangan ya.</p>
+      <div class="note-foot"><span>21 OKT</span><span>⚑ LAPOR</span></div>
+    </article>
+
+    <article class="nota lakban-putih" style="left:44%;top:60%;--rot:-2deg;--w:270px;--y:20px;z-index:7">
+      <span class="tapelet" style="transform:translateX(-50%) rotate(-1deg)" aria-hidden="true"></span>
+      <span class="meta">X MIPA 1 · EKA</span>
+      <p class="txt hand">Yang menemukan payung bunga depan lab, boleh balik ke gudang? aku tunggu sampai sore, soalnya hujan tadi.</p>
+      <div class="note-foot"><span>20 OKT</span><span>⚑ LAPOR</span></div>
+    </article>
+
+    <article class="nota flyer-kuning" style="left:74%;top:48%;--rot:6deg;--w:222px;--y:34px;z-index:8">
+      <span class="tapelet" style="transform:translateX(-50%) rotate(4deg)" aria-hidden="true"></span>
+      <span class="meta">XI IPA 1 · AULIA</span>
+      <p class="txt hand2">Turun boleh, nangis boleh.<br>Nyerah jangan dulu 💪</p>
+      <div class="note-foot"><span>20 OKT</span><span>⚑ LAPOR</span></div>
+    </article>
+  </div>
+</div>
+</body>
+</html>

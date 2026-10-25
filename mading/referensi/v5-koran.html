@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Referensi 5 — Koran Sekolah</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;600;700&family=Fraunces:ital,opsz,wght@0,9..144,300..900;1,9..144,300..900&family=IBM+Plex+Mono:wght@400;500&family=Kalam:wght@400;700&family=Spectral:ital,wght@0,400;0,500;1,400;1,500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --paper:#F2ECDE; --paper-2:#EDE4CF; --news:#F5EFE0;
+  --ink:#221D15; --ink-60:rgba(34,29,21,.6); --ink-40:rgba(34,29,21,.4);
+  --red:#C03B21; --line:rgba(34,29,21,.2); --ui-line:rgba(34,29,21,.22);
+  --fd:'Fraunces',serif; --fs:'Spectral',serif; --fm:'IBM Plex Mono',monospace;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{background:var(--paper)}
+body{background:var(--paper);color:var(--ink);font-family:var(--fs);min-height:100dvh;overflow-x:hidden}
+.topbar{display:flex;justify-content:space-between;align-items:baseline;gap:10px;padding:12px 26px;border-bottom:1px solid var(--line);font:500 8.5px var(--fm);letter-spacing:.3em;color:var(--ink-60);text-transform:uppercase;flex-wrap:wrap}
+.topbar b{color:var(--ink)}
+.stage{max-width:960px;margin:0 auto;padding:8px 18px 90px}
+.head{text-align:center;padding:clamp(20px,4vw,36px) 6px 4px}
+.kicker{font:500 9.5px var(--fm);letter-spacing:.32em;text-transform:uppercase;color:var(--red)}
+.head h1{font:600 clamp(2rem,7vw,3.4rem)/1 Fraunces,serif;letter-spacing:-.02em;margin:10px 0 6px}
+.head h1 em{font-style:italic;color:var(--red)}
+.sub{font:italic 400 .95rem/1.6 var(--fs);color:var(--ink-60)}
+/* lembar koran besar */
+.press{position:relative;background:var(--news);border:1px solid rgba(34,29,21,.3);border-radius:2px;
+  padding:clamp(22px,4vw,44px) clamp(18px,4vw,40px) 26px;margin-top:28px;
+  box-shadow:0 30px 50px -34px rgba(24,20,16,.5);
+  background-image:
+    url("data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='220' height='220' filter='url(%23g)' opacity='0.5'/%3E%3C/svg%3E");
+  background-blend-mode:multiply,normal}
+/* masthead */
+.mast{display:flex;align-items:baseline;justify-content:space-between;gap:14px;border-bottom:3px double var(--ink);padding-bottom:10px;flex-wrap:wrap}
+.mast h2{font:800 clamp(1.8rem,5vw,2.6rem)/1 var(--fd);letter-spacing:-.01em}
+.mast h2 span{color:var(--red)}
+.mast .ed{font:500 8.5px var(--fm);letter-spacing:.22em;text-transform:uppercase;color:var(--ink-60);text-align:right;line-height:1.8}
+/* grid kolom */
+.cols{display:grid;grid-template-columns:1.4fr 1fr 1fr;gap:0;margin-top:18px;border-top:1px solid var(--line)}
+.col{padding:0 14px 8px}
+.col+.col{border-left:1px solid var(--line)}
+.col.first{padding-left:0}
+.col.last{padding-right:0}
+.headline{font:600 clamp(1.2rem,3.4vw,1.7rem)/1.12 var(--fd);letter-spacing:-.01em;margin:12px 0 10px}
+.headline.hit{display:inline-block;position:relative;cursor:pointer}
+.headline.hit::after{content:"";position:absolute;inset:-6px -10px;border:2.4px solid var(--red);border-radius:999px;transform:rotate(-2deg);pointer-events:none}
+.byline{font:500 8px var(--fm);letter-spacing:.2em;text-transform:uppercase;color:var(--ink-40);margin-bottom:8px}
+.body{font:400 .92rem/1.65 var(--fs);color:#2b241c}
+.body.drop::first-letter{font:600 3.4rem/0.86 var(--fd);float:left;padding:4px 8px 0 0;color:var(--red)}
+.divider{margin:14px 0;border:0;border-top:1px dashed rgba(34,29,21,.3)}
+/* kliping kecil ditempel di koran */
+.clip{position:relative;margin:8px 0 14px;padding:12px 14px 10px;background:var(--paper-2);border:1px solid rgba(34,29,21,.25);transform:rotate(var(--_rot,-1deg));font-family:'Caveat',cursive;font-size:1.08rem;line-height:1.4;color:#2b241c;box-shadow:0 4px 8px -6px rgba(24,20,16,.4)}
+.clip .who{display:block;font:500 7.5px var(--fm);letter-spacing:.2em;text-transform:uppercase;color:var(--ink-40);margin-bottom:4px}
+.clip::before{content:"";position:absolute;left:50%;top:-9px;width:56px;height:16px;transform:translateX(-50%) rotate(-2deg);background:rgba(192,59,33,.18);border-left:1px dashed rgba(34,29,21,.2);border-right:1px dashed rgba(34,29,21,.2)}
+.tape-r{position:absolute;right:-6px;top:-6px;padding:3px 8px 2px;border:2px solid var(--red);border-radius:4px;color:var(--red);font:700 8px var(--fm);letter-spacing:.14em;transform:rotate(7deg);background:var(--news)}
+/* kolom bawah bervariasi */
+.cols.bottom{border-top:1px solid var(--line);grid-template-columns:1fr 1.2fr 1fr}
+.quotebox{border:1px solid rgba(34,29,21,.3);padding:12px 14px;background:rgba(255,255,255,.4);font:italic 500 1rem/1.5 var(--fs)}
+.quotebox b{font:600 .82rem var(--fm);letter-spacing:.16em;text-transform:uppercase;display:block;color:var(--ink-60);margin-bottom:6px}
+.micro{display:flex;justify-content:space-between;gap:10px;font:400 8.5px var(--fm);letter-spacing:.2em;color:var(--ink-40);text-transform:uppercase;margin-top:30px;flex-wrap:wrap}
+</style>
+</head>
+<body>
+<div class="topbar"><span>MPK · OSIS — <b>REFERENSI 05 / KORAN SEKOLAH</b></span><span>MMXXV · Untuk Sekolah Kita</span></div>
+
+<div class="stage">
+  <div class="head">
+    <p class="kicker">PAPAN BERSAMA</p>
+    <h1>Koran <em>Sekolah.</em></h1>
+    <p class="sub">Umum wajib cetak — suara siswa jadi rubrik harian</p>
+  </div>
+
+  <div class="press">
+    <div class="mast">
+      <h2>MADING <span>SISWA</span></h2>
+      <div class="ed">EDISI 25.X.<br>PERORANGAN · KELAS V</div>
+    </div>
+
+    <div class="cols">
+      <section class="col first">
+        <p class="headline">Mading Baru OSIS Dibuka — Semua Boleh Menulis</p>
+        <p class="byline">Oleh Humas OSIS · 2 menit baca</p>
+        <p class="body drop">Papan yang selama ini dingin akhirnya dibuka. Pintu mading terlambat setengah semester, tapi redaksi setia sampai desember penutupan. Tulisan apa saja yang layak dibaca orang — kalau "SARA" mencoba masuk, redaksi akan menyapukan kembali.</p>
+        <hr class="divider">
+        <p class="headline hit">Ujian Dimulai Senin — Semangat, Jangan Lupa Tidur</p>
+        <p class="byline">XI IPA 2 · BIMA</p>
+        <p class="body">Semangat UAS semua!! Jangan lupa tidur cukup, soalnya aku belum tidur 😅</p>
+      </section>
+
+      <section class="col">
+        <p class="headline">Tempel Bunga Payung</p>
+        <p class="byline">X MIPA 1 · EKA</p>
+        <p class="body">Yang menemukan payung bunga di depan lab, boleh kembali ke gudang ya. Aku tunggu sampai sore, soalnya hujan tadi.</p>
+        <hr class="divider">
+        <div class="clip" style="--rot:2deg">
+          <span class="tape-r">CLIP</span>
+          <span class="who">XI IPS 1 · CITRA</span>
+          makasih paduan suara kemarin, keren banget sampai merinding ~
+        </div>
+      </section>
+
+      <section class="col last">
+        <p class="headline hit">Siar Futsal & Iklan Jalan</p>
+        <p class="byline">XI IPS 2 · DIMAS</p>
+        <p class="body">Futsal sore jam 4 di lapangan sekolah. Ambat, bawa sepatu.</p>
+        <hr class="divider">
+        <p class="headline">Footer Motivasi</p>
+        <p class="byline">XI IPA 1 · AULIA</p>
+        <p class="body">Turun boleh. Nangis boleh. Nyerah jangan.</p>
+      </section>
+    </div>
+
+    <div class="cols bottom">
+      <section class="col first">
+        <div class="quotebox">
+          <b>Pengumuman</b>
+          Rapat OSIS besok pukul 3 di aula. Bawa nota harian ya.
+        </div>
+      </section>
+      <section class="col">
+        <p class="headline">Rubrik Tetap</p>
+        <p class="body">Kursi goyang, dompet hilang, lomba lari, Mars sekolah — kiriman diterima setiap hari sampai pk. 16.00. Laporan literasi dihimpun oleh redaksi setiap Sabtu pagi.</p>
+      </section>
+      <section class="col last">
+        <p class="headline">Kiriman</p>
+        <p class="body">Tulis di sela papan. Redaksi menyaring lapor >= 3 perlu harus aman.</p>
+      </section>
+    </div>
+
+    <div class="micro"><span>CETAKAN HARIAN MADING SISWA</span><span>Semua pesan di atas milik para siswa</span></div>
+  </div>
+</div>
+</body>
+</html>

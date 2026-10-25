@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Referensi 3 — Buku Terbuka</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;600;700&family=Fraunces:ital,opsz,wght@0,9..144,300..900;1,9..144,300..900&family=IBM+Plex+Mono:wght@400;500&family=Kalam:wght@400;700&family=Spectral:ital,wght@0,400;0,500;1,400;1,500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --paper:#F2ECDE; --paper-2:#EDE4CF; --lembar:#FBF7EC;
+  --ink:#221D15; --ink-60:rgba(34,29,21,.6); --ink-40:rgba(34,29,21,.4);
+  --red:#C03B21; --line:rgba(34,29,21,.16); --ui-line:rgba(34,29,21,.22);
+  --ruled:rgba(34,29,21,.14);
+  --fd:'Fraunces',serif; --fs:'Spectral',serif; --fm:'IBM Plex Mono',monospace;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{background:var(--paper)}
+body{background:var(--paper);color:var(--ink);font-family:var(--fs);min-height:100dvh;overflow-x:hidden}
+.topbar{display:flex;justify-content:space-between;align-items:baseline;gap:10px;padding:12px 26px;border-bottom:1px solid var(--line);font:500 8.5px var(--fm);letter-spacing:.3em;color:var(--ink-60);text-transform:uppercase;flex-wrap:wrap}
+.topbar b{color:var(--ink)}
+.stage{max-width:1120px;margin:0 auto;padding:8px 18px 80px;text-align:center}
+.head{padding:clamp(20px,4vw,36px) 6px 4px}
+.kicker{font:500 9.5px var(--fm);letter-spacing:.32em;text-transform:uppercase;color:var(--red)}
+.head h1{font:600 clamp(2rem,7vw,3.4rem)/1 Fraunces,serif;letter-spacing:-.02em;margin:10px 0 6px}
+.head h1 em{font-style:italic;color:var(--red)}
+.sub{font:italic 400 .95rem/1.6 var(--fs);color:var(--ink-60)}
+/* buku besar terbuka */
+.book{position:relative;margin:30px auto 0;display:grid;grid-template-columns:1fr 1fr;max-width:1000px;border-radius:6px 10px 10px 6px;overflow:hidden;
+  box-shadow:0 60px 90px -50px rgba(24,20,16,.55)}
+.page{position:relative;padding:clamp(18px,3vw,34px) clamp(18px,3vw,34px) 46px;background:var(--lembar);min-height:640px;text-align:left}
+.page.left{border-right:1px solid rgba(34,29,21,.22);
+  background-image:repeating-linear-gradient(180deg, transparent 0 30px, var(--ruled) 30px 31px)}
+.page.right{border-left:1px solid rgba(34,29,21,.22);
+  background-image:repeating-linear-gradient(0deg, transparent 0 22px, rgba(34,29,21,.03) 22px 23px),
+    repeating-linear-gradient(180deg, transparent 0 30px, var(--ruled) 30px 31px)}
+/* garis tengah terbuka */
+.book::after{content:"";position:absolute;left:50%;top:0;bottom:0;width:1px;background:linear-gradient(180deg,transparent, rgba(34,29,21,.34), transparent);pointer-events:none}
+/* tulisan tangan di halaman */
+.entry{position:relative;z-index:2;margin-bottom:14px;font-family:'Caveat',cursive;font-size:1.15rem;line-height:1.35;color:#2b241c;max-width:96%}
+.entry .who{display:block;font:500 8px var(--fm);letter-spacing:.18em;text-transform:uppercase;color:var(--ink-40);margin-bottom:2px}
+.entry.mark{transform:rotate(-.8deg)}
+.entry.dim{opacity:.55}
+.margin-doodle{position:absolute;font-family:'Kalam',cursive;color:rgba(192,59,33,.45);font-size:.92rem;pointer-events:none}
+.margin-doodle.a{right:8px;top:52px;transform:rotate(8deg)}
+.margin-doodle.b{left:10px;bottom:96px;transform:rotate(-6deg)}
+.stamp-corner{position:absolute;right:14px;top:14px;padding:3px 8px 2px;border:2px solid var(--red);border-radius:4px;color:var(--red);font:700 8.5px var(--fm);letter-spacing:.14em;transform:rotate(6deg);opacity:.7}
+.pagenu{position:absolute;bottom:14px;font:400 9px var(--fm);letter-spacing:.2em;color:var(--ink-40)}
+/* pita pembatas merah */
+.ribbon{position:absolute;right:-8px;top:88px;width:22px;height:290px;background:var(--red);box-shadow:inset -2px 0 0 rgba(24,20,16,.25);z-index:5;pointer-events:none}
+.ribbon::after{content:"";position:absolute;bottom:-14px;left:0;border:solid transparent;border-top-color:var(--red);border-bottom-width:0;border-left-width:11px;border-right-width:11px}
+/* stempel basah di bawah */
+.pv{position:absolute;left:50%;bottom:-24px;transform:translateX(-50%) rotate(-8deg);padding:8px 26px;border:2px solid var(--red);border-radius:8px;color:var(--red);font:800 1.1rem var(--fd);letter-spacing:.14em;background:var(--paper);z-index:9}
+.pv small{display:block;font:500 8px var(--fm);letter-spacing:.24em;margin-top:3px;text-align:center}
+.micro{font:400 8.5px var(--fm);letter-spacing:.2em;color:var(--ink-40);text-transform:uppercase;margin-top:48px}
+</style>
+</head>
+<body>
+<div class="topbar"><span>MPK · OSIS — <b>REFERENSI 03 / BUKU TERBUKA</b></span><span>MMXXV · Untuk Sekolah Kita</span></div>
+
+<div class="stage">
+  <div class="head">
+    <p class="kicker">PAPAN BERSAMA</p>
+    <h1>Buku <em>Terbuka.</em></h1>
+    <p class="sub">Halaman ini ditulis siapa saja — entri langsung di garis biru, margin bebas</p>
+  </div>
+
+  <div class="book">
+    <section class="page left">
+      <span class="stamp-corner">AGENDA OSIS</span>
+      <span class="margin-doodle a" aria-hidden="true">⁀</span>
+      <span class="margin-doodle b" aria-hidden="true">✳</span>
+
+      <div class="entry mark">
+        <span class="who">OSIS · HUMAS</span>
+        Selamat datang di buku bersama.<br>Tulis apapun yang layak dibaca
+      </div>
+      <div class="entry">
+        <span class="who">XI IPA 2 · BIMA</span>
+        Semangat UAS semua!!<br>Jangan lupa tidur yang cukup ya
+      </div>
+      <div class="entry dim">
+        <span class="who">11 OKT · GURU RIANI</span>
+        (terhapus menunggu moderasi)
+      </div>
+      <div class="entry">
+        <span class="who">XI IPS 1 · CITRA</span>
+        makasih paduan suara kemarin, keren banget 🎵
+      </div>
+      <span class="pagenu">14</span>
+    </section>
+
+    <section class="page right">
+      <span class="ribbon" aria-hidden="true"></span>
+      <div class="entry">
+        <span class="who">XI IPS 2 · DIMAS</span>
+        Futsal sore jam 4, lapangan sekolah.<br>Bawa sepatunya juga ya
+      </div>
+      <div class="entry mark">
+        <span class="who">X MIPA 1 · EKA</span>
+        Yang bawa payung kepergian<br>boleh kembali ke gudang
+      </div>
+      <div class="entry">
+        <span class="who">XI IPA 1 · AULIA</span>
+        Turun boleh, nangis boleh, nyerah jangan!
+      </div>
+      <span class="pagenu">15</span>
+    </section>
+
+    <div class="pv" aria-hidden="true">DIBUKA<small>SETIAP HARI</small></div>
+  </div>
+
+  <p class="micro">Tulis terus-terusan — halaman baru dibuat bila penuh</p>
+</div>
+</body>
+</html>

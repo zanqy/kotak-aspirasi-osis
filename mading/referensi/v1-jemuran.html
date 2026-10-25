@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Referensi 1 — Jemuran</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;600;700&family=Fraunces:ital,opsz,wght@0,9..144,300..900;1,9..144,300..900&family=IBM+Plex+Mono:wght@400;500&family=Kalam:wght@400;700&family=Spectral:ital,wght@0,400;0,500;1,400;1,500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --paper:#F2ECDE; --paper-2:#EDE4CF; --lembar:#FBF7EC;
+  --ink:#221D15; --ink-60:rgba(34,29,21,.6); --ink-40:rgba(34,29,21,.4);
+  --red:#C03B21; --line:rgba(34,29,21,.16); --ui-line:rgba(34,29,21,.22);
+  --fd:'Fraunces',serif; --fs:'Spectral',serif; --fm:'IBM Plex Mono',monospace;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{background:var(--paper)}
+body{background:linear-gradient(180deg,var(--paper) 0%,var(--paper-2) 100%);color:var(--ink);font-family:var(--fs);min-height:100dvh;overflow-x:hidden}
+.topbar{display:flex;justify-content:space-between;align-items:baseline;gap:10px;padding:12px 26px;border-bottom:1px solid var(--line);font:500 8.5px var(--fm);letter-spacing:.3em;color:var(--ink-60);text-transform:uppercase;flex-wrap:wrap}
+.topbar b{color:var(--ink)}
+.stage{position:relative;max-width:1100px;margin:0 auto;padding:26px 18px 80px}
+
+/* judul */
+.head{padding:clamp(20px,4vw,40px) 6px 6px;text-align:center}
+.kicker{font:500 9.5px var(--fm);letter-spacing:.32em;text-transform:uppercase;color:var(--red)}
+.head h1{font:600 clamp(2rem,7vw,3.4rem)/1 Fraunces,serif;letter-spacing:-.02em;margin:10px 0 6px}
+.head h1 em{font-style:italic;color:var(--red)}
+.sub{font:italic 400 .95rem/1.6 var(--fs);color:var(--ink-60)}
+
+/* langit-langit papan: rel & tali */
+.rail{display:flex;align-items:center;gap:10px;justify-content:center;margin:34px 0 0}
+.rail i{height:1px;background:var(--ui-line);flex:1;max-width:220px}
+.rail span{font:500 8.5px var(--fm);letter-spacing:.3em;color:var(--ink-60)}
+.line-wrap{position:relative;padding-top:54px}
+.rope{display:block;width:100%;height:auto}
+/* kertas digantung */
+.dangle{position:absolute;transform-origin:50% 0;display:grid;justify-items:stretch;gap:0;transition:transform .4s cubic-bezier(.2,.8,.3,1)}
+.dangle:hover{transform:rotate(0deg) translateY(2px)}
+.peg{width:16px;height:26px;border-radius:3px;background:linear-gradient(180deg,#D8A96C,#C08C4C);box-shadow:0 2px 3px rgba(24,20,16,.35), inset 0 -2px 0 rgba(24,20,16,.2);position:relative;z-index:2}
+.peg::before,.peg::after{content:"";position:absolute;top:3px;bottom:3px;width:2px;background:rgba(34,29,21,.35);border-radius:2px}
+.peg::before{left:5px}.peg::after{right:5px}
+.hang-note{margin-top:-4px;padding:18px 18px 20px;background:var(--lembar);border:1px solid rgba(34,29,21,.28);box-shadow:0 16px 26px -18px rgba(24,20,16,.55);display:grid;gap:8px;width:var(--w,230px)}
+.hang-note .meta{font:500 8.5px var(--fm);letter-spacing:.16em;text-transform:uppercase;color:var(--ink-60)}
+.hang-note .txt{font:italic 500 1.02rem/1.55 var(--fd);color:var(--ink);white-space:pre-wrap;word-break:break-word}
+.hang-note .hand{font-family:'Caveat',cursive;font-size:1.18rem;line-height:1.4}
+.hang-note.yellow{background:#F7E9A0}
+.hang-note.green{background:#E9EFD9}
+.hang-note.blue{background:#E3EAF2}
+.hang-note.rose{background:#F6E3E8}
+/* posisi & ayunan berbeda per anak */
+.d1{left:6%;transform:rotate(-2.5deg);--w:224px}
+.d2{left:27%;transform:rotate(1.8deg);--w:258px}
+.d3{left:55%;transform:rotate(-1.2deg);--w:210px}
+.d4{left:73%;transform:rotate(2.6deg);--w:236px}
+.baris2{margin-top:64px}
+.baris2 .d1{left:14%;transform:rotate(2.2deg);--w:214px}
+.baris2 .d2{left:38%;transform:rotate(-2.8deg);--w:246px}
+.baris2 .d3{left:64%;transform:rotate(.8deg);--w:220px}
+/* label kecil */
+.micro{display:flex;justify-content:space-between;font:400 8.5px var(--fm);letter-spacing:.2em;color:var(--ink-40);text-transform:uppercase;padding:0 6px}
+</style>
+</head>
+<body>
+<div class="topbar"><span>MPK · OSIS — <b>REFERENSI 01 / JEMURAN</b></span><span>MMXXV · Untuk Sekolah Kita</span></div>
+
+<div class="stage">
+  <div class="head">
+    <p class="kicker">PAPAN BERSAMA</p>
+    <h1>Jemuran <em>Kata.</em></h1>
+    <p class="sub">Setiap pesan digantung dengan jepit — siapa saja boleh menambah</p>
+  </div>
+
+  <div class="rail"><i></i><span>TALI SATU</span><i></i></div>
+  <div class="line-wrap">
+    <svg class="rope" viewBox="0 0 1000 40" preserveAspectRatio="none" aria-hidden="true">
+      <path d="M0 6 Q 250 34 500 20 T 1000 10" fill="none" stroke="rgba(34,29,21,.55)" stroke-width="2.4"/>
+      <path d="M0 6 Q 250 34 500 20 T 1000 10" fill="none" stroke="rgba(255,255,255,.35)" stroke-width="1" transform="translate(0,1)"/>
+    </svg>
+
+    <div class="dangle d1">
+      <span class="peg"></span>
+      <article class="hang-note yellow">
+        <span class="meta">OSIS · HUMAS</span>
+        <p class="txt hand">Selamat datang di jemuran kata. Tempel & simpan yang positif!</p>
+      </article>
+    </div>
+
+    <div class="dangle d2">
+      <span class="peg"></span>
+      <article class="hang-note">
+        <span class="meta">XI IPA 2 · BIMA</span>
+        <p class="txt">Semangat UAS semua. Jangan lupa tidur yang cukup ya, soalnya aku aja belum tidur.</p>
+      </article>
+    </div>
+
+    <div class="dangle d3">
+      <span class="peg"></span>
+      <article class="hang-note green">
+        <span class="meta">XI IPS 1 · CITRA</span>
+        <p class="txt hand">makasih paduan suara kemarin, keren bangeeet</p>
+      </article>
+    </div>
+
+    <div class="dangle d4">
+      <span class="peg"></span>
+      <article class="hang-note blue">
+        <span class="meta">X MIPA 1 · EKA</span>
+        <p class="txt">Yang punya payung di depan lab, tolong balik ke gudang ya. Aku tunggu sampai sore.</p>
+      </article>
+    </div>
+  </div>
+
+  <div class="rail"><i></i><span>TALI DUA</span><i></i></div>
+  <div class="line-wrap baris2">
+    <svg class="rope" viewBox="0 0 1000 40" preserveAspectRatio="none" aria-hidden="true">
+      <path d="M0 12 Q 300 2 600 28 T 1000 8" fill="none" stroke="rgba(34,29,21,.55)" stroke-width="2.4"/>
+    </svg>
+
+    <div class="dangle d1">
+      <span class="peg"></span>
+      <article class="hang-note rose">
+        <span class="meta">XI IPA 1 · AULIA</span>
+        <p class="txt hand">turun dan tangis boleh,<br>nyerah jangan dulu 💪</p>
+      </article>
+    </div>
+
+    <div class="dangle d2">
+      <span class="peg"></span>
+      <article class="hang-note">
+        <span class="meta">XI IPS 2 · DIMAS</span>
+        <p class="txt">Futsal sore jam 4 lapangan sekolah. Ambatan bola kalau ada, bawa juga.</p>
+      </article>
+    </div>
+
+    <div class="dangle d3">
+      <span class="peg"></span>
+      <article class="hang-note yellow">
+        <span class="meta">OSIS · HUMAS</span>
+        <p class="txt hand">Tetap ramah ya kata-katanya, biar semua nyaman dibaca</p>
+      </article>
+    </div>
+  </div>
+
+  <div class="micro" style="margin-top:70px"><span>Jepit dipinjam dari SA</span><span>Ayunan diperbolehkan</span></div>
+</div>
+</body>
+</html>

@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Referensi 4 — Transparansi OHP</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;600;700&family=Fraunces:ital,opsz,wght@0,9..144,300..900;1,9..144,300..900&family=IBM+Plex+Mono:wght@400;500&family=Kalam:wght@400;700&family=Spectral:ital,wght@0,400;0,500;1,400;1,500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --paper:#F2ECDE; --paper-2:#EDE4CF; --lembar:#FBF7EC;
+  --ink:#221D15; --ink-60:rgba(34,29,21,.6); --ink-40:rgba(34,29,21,.4);
+  --red:#C03B21; --line:rgba(34,29,21,.16); --ui-line:rgba(34,29,21,.22);
+  --ohp:rgba(70,110,160,.6);
+  --fd:'Fraunces',serif; --fs:'Spectral',serif; --fm:'IBM Plex Mono',monospace;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{background:var(--paper)}
+body{background:linear-gradient(180deg,var(--paper),var(--paper-2));color:var(--ink);font-family:var(--fs);min-height:100dvh;overflow-x:hidden}
+.topbar{display:flex;justify-content:space-between;align-items:baseline;gap:10px;padding:12px 26px;border-bottom:1px solid var(--line);font:500 8.5px var(--fm);letter-spacing:.3em;color:var(--ink-60);text-transform:uppercase;flex-wrap:wrap}
+.topbar b{color:var(--ink)}
+.stage{max-width:1000px;margin:0 auto;padding:8px 18px 80px}
+.head{text-align:center;padding:clamp(20px,4vw,36px) 6px 4px}
+.kicker{font:500 9.5px var(--fm);letter-spacing:.32em;text-transform:uppercase;color:var(--red)}
+.head h1{font:600 clamp(2rem,7vw,3.4rem)/1 Fraunces,serif;letter-spacing:-.02em;margin:10px 0 6px}
+.head h1 em{font-style:italic;color:var(--red)}
+.sub{font:italic 400 .95rem/1.6 var(--fs);color:var(--ink-60)}
+/* papan putih logam */
+.board{position:relative;margin:26px auto 0;max-width:940px;min-height:660px;border-radius:4px;overflow:hidden;
+  background:
+    radial-gradient(circle at 24% 20%, rgba(255,255,255,.75), transparent 55%),
+    radial-gradient(circle at 74% 66%, rgba(200,215,230,.5), transparent 60%),
+    linear-gradient(168deg,#E7E9E4 0%,#DDE1DC 55%,#CBD2CF 100%);
+  border:10px solid #B9B1A2;
+  border-image:repeating-linear-gradient(90deg,#B9B1A2 0 8px,#A99F8E 8px 16px,#C2B9A8 16px 24px) 10;
+  outline:1px solid rgba(34,29,21,.35);outline-offset:2px;
+  box-shadow:inset 0 0 70px rgba(120,130,140,.25), 0 26px 44px -34px rgba(24,20,16,.6)}
+.board::after{content:"";position:absolute;left:8%;right:8%;bottom:10px;height:8px;border-radius:6px;background:linear-gradient(90deg,transparent, rgba(34,29,21,.14), transparent);pointer-events:none}
+/* lembar transparansi */
+.ohp{position:absolute;width:var(--w,268px);padding:20px 22px 16px;color:#1E3A5C;
+  background:linear-gradient(140deg, rgba(148,180,214,.34), rgba(96,138,192,.2));backdrop-filter:blur(3px);
+  border:1px solid rgba(70,110,160,.5);border-radius:2px;
+  transform:rotate(var(--rot,0deg));
+  box-shadow:inset 0 0 26px rgba(255,255,255,.35), 0 12px 22px -16px rgba(20,40,70,.55);
+  transition:transform .35s ease, box-shadow .35s ease}
+.ohp:hover{transform:rotate(0deg) translateY(-8px);box-shadow:inset 0 0 26px rgba(255,255,255,.5), 0 24px 34px -20px rgba(20,40,70,.6)}
+.ohp .meta{font:500 8px var(--fm);letter-spacing:.18em;text-transform:uppercase;color:#2C517E;opacity:.9}
+.ohp .txt{margin-top:8px;font:600 1.06rem/1.5 var(--fd);color:#173F66}
+.ohp .hand{font:600 1.24rem/1.3 'Caveat',cursive;color:#173F66}
+.ohp .foot{display:flex;justify-content:space-between;font:400 8px var(--fm);letter-spacing:.14em;text-transform:uppercase;color:#2C517E;opacity:.75;margin-top:8px}
+/* magnet merah di dua sudut atas */
+.mag{position:absolute;top:-8px;border-radius:50%;width:15px;height:15px;
+  background:radial-gradient(circle at 32% 28%, #EA8A73, #B93A24 60%, #70210F 100%);
+  box-shadow:0 3px 5px rgba(24,20,16,.4), inset 0 1px 0 rgba(255,255,255,.5)}
+.mag.l{left:16px}.mag.r{right:16px}
+/* refleksi & coretan marker */
+.glow{position:absolute;inset:0;pointer-events:none;background:linear-gradient(115deg, rgba(255,255,255,.28) 0 8%, transparent 9% 100%)}
+.scrawl{position:absolute;font:700 1.3rem 'Kalam',cursive;color:rgba(192,59,33,.4);pointer-events:none}
+.scrawl.a{right:6%;top:18%;transform:rotate(-7deg)}
+.scrawl.b{left:4%;bottom:16%;transform:rotate(5deg)}
+.stamp-pill{position:absolute;right:-6px;top:-6px;padding:3px 9px 2px;border:2px solid var(--red);border-radius:999px;color:var(--red);font:700 8px var(--fm);letter-spacing:.16em;transform:rotate(8deg);background:var(--lembar)}
+.micro{font:400 8.5px var(--fm);letter-spacing:.2em;color:var(--ink-40);text-transform:uppercase;text-align:center;margin-top:44px}
+</style>
+</head>
+<body>
+<div class="topbar"><span>MPK · OSIS — <b>REFERENSI 04 / TRANSPARANSI</b></span><span>MMXXV · Untuk Sekolah Kita</span></div>
+
+<div class="stage">
+  <div class="head">
+    <p class="kicker">PAPAN BERSAMA</p>
+    <h1>Transparansi <em>OHP.</em></h1>
+    <p class="sub">Papan putih kelas + magnet — pesan ditulis di film transparan</p>
+  </div>
+
+  <div class="board">
+    <span class="glow" aria-hidden="true"></span>
+
+    <article class="ohp" style="left:5%;top:8%;--rot:-2.4deg;--w:290px">
+      <span class="mag l" aria-hidden="true"></span><span class="mag r" aria-hidden="true"></span>
+      <span class="meta">OSIS · HUMAS</span>
+      <p class="txt">SELAMAT DATANG DI PAPAN BERSAMA — TULIS YANG POSITIF</p>
+      <div class="foot"><span>MURTINYA</span><span>⚑ LAPOR</span></div>
+    </article>
+
+    <article class="ohp" style="left:38%;top:6%;--rot:1.4deg;--w:262px">
+      <span class="mag l" aria-hidden="true"></span><span class="mag r" aria-hidden="true"></span>
+      <span class="stamp-pill">STAR</span>
+      <span class="meta">XI IPA 2 · BIMA</span>
+      <p class="hand">Semangat UAS semua!!<br>Jangan lupa tidur yang cukup ya</p>
+      <div class="foot"><span>23 OKT</span><span>⚑ LAPOR</span></div>
+    </article>
+
+    <article class="ohp" style="right:5%;top:12%;--rot:-1deg;--w:240px">
+      <span class="mag l" aria-hidden="true"></span><span class="mag r" aria-hidden="true"></span>
+      <span class="meta">XI IPS 1 · CITRA</span>
+      <p class="txt" style="font-size:.96rem">Paduan suara kemarin keren banget. Itu tahan lama sampai sore.</p>
+      <div class="foot"><span>22 OKT</span><span>⚑ LAPOR</span></div>
+    </article>
+
+    <article class="ohp" style="left:12%;top:48%;--rot:2deg;--w:256px">
+      <span class="mag l" aria-hidden="true"></span><span class="mag r" aria-hidden="true"></span>
+      <span class="meta">XI IPS 2 · DIMAS</span>
+      <p class="txt">FUTSAL SORE JAM 4<br>Lapangan sekolah, siapa saja boleh</p>
+      <div class="foot"><span>22 OKT</span><span>⚑ LAPOR</span></div>
+    </article>
+
+    <article class="ohp" style="left:42%;top:54%;--rot:-1.6deg;--w:278px">
+      <span class="mag l" aria-hidden="true"></span><span class="mag r" aria-hidden="true"></span>
+      <span class="meta">X MIPA 1 · EKA</span>
+      <p class="hand">Yang bawa payung kepergian<br>boleh kembali ke gudang ya</p>
+      <div class="foot"><span>21 OKT</span><span>⚑ LAPOR</span></div>
+    </article>
+
+    <article class="ohp" style="right:7%;top:56%;--rot:2.4deg;--w:222px">
+      <span class="mag l" aria-hidden="true"></span><span class="mag r" aria-hidden="true"></span>
+      <span class="meta">XI IPA 1 · AULIA</span>
+      <p class="txt">TURUN BOLEH, NYERAH JANGAN</p>
+      <div class="foot"><span>21 OKT</span><span>⚑ LAPOR</span></div>
+    </article>
+
+    <span class="scrawl a" aria-hidden="true">besok libur??</span>
+    <span class="scrawl b" aria-hidden="true">jgn lupa absen →</span>
+  </div>
+
+  <p class="micro">Satu magnet satu pesan — kelebihan? minjem dulu, bilang ke OSIS</p>
+</div>
+</body>
+</html>

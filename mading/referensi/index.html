@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Referensi Mading — 5 Arah Desain</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..900;1,9..144,300..900&family=IBM+Plex+Mono:wght@400;500&family=Spectral:ital,wght@0,400;0,500;1,400;1,500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --paper:#F2ECDE; --paper-2:#EDE4CF; --lembar:#FBF7EC;
+  --ink:#221D15; --ink-60:rgba(34,29,21,.6); --ink-40:rgba(34,29,21,.4);
+  --red:#C03B21; --line:rgba(34,29,21,.16); --ui-line:rgba(34,29,21,.22);
+  --fd:'Fraunces',serif; --fs:'Spectral',serif; --fm:'IBM Plex Mono',monospace;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{background:var(--paper)}
+body{background:var(--paper);color:var(--ink);font-family:var(--fs);min-height:100dvh}
+.stage{max-width:880px;margin:0 auto;padding:26px 22px 90px}
+.head{padding:20px 0 28px;text-align:center}
+.kicker{font:500 9.5px var(--fm);letter-spacing:.32em;text-transform:uppercase;color:var(--red)}
+.head h1{font:600 clamp(2rem,7vw,3.2rem)/1 Fraunces,serif;letter-spacing:-.02em;margin:10px 0 6px}
+.head h1 em{font-style:italic;color:var(--red)}
+.sub{font:italic 400 .95rem/1.6 var(--fs);color:var(--ink-60)}
+.cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:18px}
+.card{display:block;background:var(--lembar);border:1px solid rgba(34,29,21,.28);border-radius:12px;padding:22px 22px 18px;text-decoration:none;color:var(--ink);box-shadow:0 18px 34px -26px rgba(24,20,16,.4);transition:transform .28s ease, box-shadow .28s ease;transform:rotate(var(--rot,0deg))}
+.card:hover{transform:rotate(0) translateY(-5px);box-shadow:0 26px 44px -24px rgba(24,20,16,.5)}
+.card .no{font:500 8.5px var(--fm);letter-spacing:.26em;color:var(--red);text-transform:uppercase}
+.card h2{font:600 1.35rem/1.15 var(--fd);margin:8px 0 6px}
+.card p{font:italic 400 .9rem/1.55 var(--fs);color:var(--ink-60)}
+.card .go{display:inline-block;margin-top:10px;font:500 9px var(--fm);letter-spacing:.2em;color:var(--ink);border-bottom:1px solid var(--ui-line);padding-bottom:2px}
+.card:nth-child(1){--rot:-1.2deg}
+.card:nth-child(2){--rot:.8deg}
+.card:nth-child(3){--rot:-.6deg}
+.card:nth-child(4){--rot:1deg}
+.card:nth-child(5){--rot:-.9deg}
+.footer{margin-top:44px;text-align:center;font:400 8.5px var(--fm);letter-spacing:.24em;color:var(--ink-40);text-transform:uppercase}
+</style>
+</head>
+<body>
+  <div class="stage">
+    <div class="head">
+      <p class="kicker">MPK · OSIS</p>
+      <h1>Lima <em>Arah Mading.</em></h1>
+      <p class="sub">Satu vibe, lima mesin visual. Pilih satu, tulis catatan kritiknya di papan</p>
+    </div>
+    <div class="cards">
+      <a class="card" href="v1-jemuran.html">
+        <span class="no">Referensi 01</span>
+        <h2>Jemuran Kata</h2>
+        <p>Pesan digantung dengan jepit di tali dua baris, bisa berayun.</p>
+        <span class="go">Buka referensi →</span>
+      </a>
+      <a class="card" href="v2-tumpukan.html">
+        <span class="no">Referensi 02</span>
+        <h2>Tumpukan Flyer</h2>
+        <p>Kertas lepas di atas meja kayu tua, noda kopi, hover mengangkat.</p>
+        <span class="go">Buka referensi →</span>
+      </a>
+      <a class="card" href="v3-buku-terbuka.html">
+        <span class="no">Referensi 03</span>
+        <h2>Buku Terbuka</h2>
+        <p>Buku besar dua halaman, tulisan tangan di garis, pita merah.</p>
+        <span class="go">Buka referensi →</span>
+      </a>
+      <a class="card" href="v4-transparansi.html">
+        <span class="no">Referensi 04</span>
+        <h2>Transparansi OHP</h2>
+        <p>Papan putih logam + film transparan dan magnet merah.</p>
+        <span class="go">Buka referensi →</span>
+      </a>
+      <a class="card" href="v5-koran.html">
+        <span class="no">Referensi 05</span>
+        <h2>Koran Sekolah</h2>
+        <p>Halaman koran harian: kolom, drop cap, headline dilingkari merah.</p>
+        <span class="go">Buka referensi →</span>
+      </a>
+    </div>
+    <p class="footer">Lima arah — tinggal pilih satu, sisanya jadi catatan</p>
+  </div>
+</body>
+</html>
