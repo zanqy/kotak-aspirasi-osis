@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login - Mading Digital OSIS</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&displaytag://fonts.googleapis.com/css2?family=Patrick+Hand&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body class="auth-body">
+  <div class="auth-card">
+    <div class="auth-header">
+      <div class="auth-badge">MADING DIGITAL</div>
+      <h1>Masuk ke Papan Mading</h1>
+      <p>Gunakan NIS kamu untuk bisa menempelkan pesan di papan bareng</p>
+    </div>
+    <form id="login-form" class="auth-form">
+      <label class="field">
+        <span>NIS (Nomor Induk Siswa)</span>
+        <input id="nis-input" inputmode="numeric" pattern="[0-9]*" placeholder="Contoh: 12345" autocomplete="off" required>
+      </label>
+      <button class="btn btn-primary btn-full" type="submit">Masuk</button>
+    </form>
+    <div class="auth-footer">
+      <a class="link" href="index.html">Kembali ke Papan Mading</a>
+      <a class="link" href="moderasi.html">Panel Moderasi (Humas/OSIS)</a>
+    </div>
+    <p id="login-error" class="error-text" hidden></p>
+  </div>
+
+  <script src="js/auth.js"></script>
+</body>
+</html>
