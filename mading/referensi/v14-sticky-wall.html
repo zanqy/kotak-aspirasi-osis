@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Referensi 14 — Papan Sticky Wall</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;600;700&family=Fraunces:ital,opsz,wght@0,9..144,300..900;1,9..144,300..900&family=IBM+Plex+Mono:wght@400;500&family=Kalam:wght@400;700&family=Spectral:ital,wght@0,400;0,500;1,400;1,500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --wall:#F0E8D8; --wall-2:#E0D8C8; --wall-3:#D0C8B8;
+  --ink:#221D15; --ink-60:rgba(34,29,21,.6); --ink-40:rgba(34,29,21,.4);
+  --red:#C03B21; --line:rgba(34,29,21,.16); --ui-line:rgba(34,29,21,.22);
+  --s1:#FFF4A3; --s2:#FFB8C8; --s3:#B8E0FF; --s4:#C8F0C8; --s5:#FFD8B8; --s6:#E8D8FF;
+  --fd:'Fraunces',serif; --fs:'Spectral',serif; --fm:'IBM Plex Mono',monospace;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{background:var(--wall)}
+body{background:linear-gradient(180deg,var(--wall),var(--wall-2));color:var(--ink);font-family:var(--fs);min-height:100dvh;overflow-x:hidden}
+.topbar{display:flex;justify-content:space-between;align-items:baseline;gap:10px;padding:12px 26px;border-bottom:1px solid var(--line);font:500 8.5px var(--fm);letter-spacing:.3em;color:var(--ink-60);text-transform:uppercase;flex-wrap:wrap}
+.topbar b{color:var(--ink)}
+.stage{max-width:960px;margin:0 auto;padding:10px 18px 90px}
+.head{text-align:center;padding:clamp(20px,4vw,36px) 6px 4px}
+.kicker{font:500 9.5px var(--fm);letter-spacing:.32em;text-transform:uppercase;color:var(--red)}
+.head h1{font:600 clamp(2rem,7vw,3.4rem)/1 var(--fd);letter-spacing:-.02em;margin:10px 0 6px}
+.head h1 em{font-style:italic;color:var(--red)}
+.sub{font:italic 400 .95rem/1.6 var(--fs);color:var(--ink-60)}
+
+/* dinding sticky */
+.sticky-wall{position:relative;margin:24px auto 0;max-width:900px;min-height:700px;border-radius:4px;
+  background:
+    radial-gradient(circle at 20% 30%, rgba(255,255,255,.3), transparent 45%),
+    radial-gradient(circle at 80% 70%, rgba(139,110,69,.05), transparent 40%),
+    linear-gradient(160deg,#F0E8D8 0%,#E0D8C8 50%,#D0C8B8 100%);
+  border:1px solid rgba(34,29,21,.15);box-shadow:0 20px 40px -30px rgba(24,20,16,.3);overflow:hidden;padding:16px}
+
+/* post-it */
+.postit{position:absolute;padding:14px 16px 12px;border-radius:2px;
+  box-shadow:0 3px 6px -4px rgba(24,20,16,.25), 0 1px 0 rgba(255,255,255,.5) inset;
+  transform:rotate(var(--rot,0deg));cursor:pointer;transition:transform .3s ease, box-shadow .3s ease;
+  min-width:130px;max-width:200px;font-family:'Caveat',cursive;font-size:1.05rem;line-height:1.35;color:#2b241c}
+.postit:hover{transform:rotate(0deg) scale(1.05);z-index:10;box-shadow:0 6px 12px -6px rgba(24,20,16,.3)}
+.postit .meta{display:block;font:500 7px var(--fm);letter-spacing:.16em;text-transform:uppercase;color:rgba(43,36,28,.5);margin-bottom:4px;font-family:var(--fm)}
+.postit .txt{white-space:pre-wrap;word-break:break-word}
+.postit .tape{position:absolute;top:-6px;left:50%;transform:translateX(-50%) rotate(-2deg);
+  width:48px;height:14px;background:rgba(206,178,126,.5);border-left:1px dashed rgba(34,29,21,.15);border-right:1px dashed rgba(34,29,21,.15);
+  box-shadow:0 1px 2px rgba(24,20,16,.12)}
+.postit.yellow{background:linear-gradient(180deg,rgba(255,255,255,.4),transparent 40%),var(--s1)}
+.postit.pink{background:linear-gradient(180deg,rgba(255,255,255,.4),transparent 40%),var(--s2)}
+.postit.blue{background:linear-gradient(180deg,rgba(255,255,255,.4),transparent 40%),var(--s3)}
+.postit.green{background:linear-gradient(180deg,rgba(255,255,255,.4),transparent 40%),var(--s4)}
+.postit.orange{background:linear-gradient(180deg,rgba(255,255,255,.4),transparent 40%),var(--s5)}
+.postit.purple{background:linear-gradient(180deg,rgba(255,255,255,.4),transparent 40%),var(--s6)}
+
+/* stiker kecil */
+.wall-sticker{position:absolute;padding:6px 12px;border-radius:4px;font:600 .78rem var(--fd);
+  background:rgba(255,255,255,.5);border:1px solid rgba(34,29,21,.12);
+  box-shadow:0 2px 4px -2px rgba(24,20,16,.2);transform:rotate(var(--rot,0deg));
+  cursor:pointer;transition:transform .3s ease}
+.wall-sticker:hover{transform:rotate(0deg) scale(1.06)}
+
+.micro{font:400 8.5px var(--fm);letter-spacing:.24em;color:var(--ink-40);text-transform:uppercase;text-align:center;margin-top:30px}
+</style>
+</head>
+<body>
+<div class="topbar"><span>MPK · OSIS — <b>REFERENSI 14 / PAPAN STICKY WALL</b></span><span>MMXXVI · Untuk Sekolah Kita</span></div>
+
+<div class="stage">
+  <div class="head">
+    <p class="kicker">PAPAN BERSAMA</p>
+    <h1>Papan Sticky <em>Wall.</em></h1>
+    <p class="sub">Dinding penuh post-it warna-warni — padat, hidup, dan penuh semangat</p>
+  </div>
+
+  <div class="sticky-wall">
+    <!-- baris 1 -->
+    <div class="postit yellow" style="left:4%;top:4%;--rot:-3deg">
+      <span class="tape"></span>
+      <span class="meta">OSIS · HUMAS</span>
+      <p class="txt">Selamat datang di papan sticky! Tempel apresiasi & semangat.</p>
+    </div>
+
+    <div class="postit pink" style="left:22%;top:2%;--rot:2deg">
+      <span class="tape"></span>
+      <span class="meta">XI IPA 2 · BIMA</span>
+      <p class="txt">Semangat UAS semua!! Jangan lupa tidur yang cukup ya 😅</p>
+    </div>
+
+    <div class="postit blue" style="left:42%;top:5%;--rot:-2deg">
+      <span class="tape"></span>
+      <span class="meta">XI IPS 1 · CITRA</span>
+      <p class="txt">makasih paduan suara kemarin, keren banget sampai merinding 🎵</p>
+    </div>
+
+    <div class="postit green" style="left:62%;top:3%;--rot:3deg">
+      <span class="tape"></span>
+      <span class="meta">XI IPS 2 · DIMAS</span>
+      <p class="txt">Futsal sore jam 4, lapangan sekolah. Bawa sepatu ya.</p>
+    </div>
+
+    <div class="postit orange" style="left:80%;top:6%;--rot:-1deg">
+      <span class="tape"></span>
+      <span class="meta">X MIPA 1 · EKA</span>
+      <p class="txt">Yang bawa payung bunga kepergian, boleh balik ke gudang ya</p>
+    </div>
+
+    <!-- baris 2 -->
+    <div class="postit purple" style="left:8%;top:28%;--rot:2deg">
+      <span class="tape"></span>
+      <span class="meta">XI IPA 1 · AULIA</span>
+      <p class="txt">Turun boleh, nangis boleh, nyerah jangan! 💪</p>
+    </div>
+
+    <div class="postit yellow" style="left:28%;top:26%;--rot:-3deg">
+      <span class="tape"></span>
+      <span class="meta">OSIS · HUMAS</span>
+      <p class="txt">Rapat OSIS besok pukul 3 di aula. Bawa nota harian ya.</p>
+    </div>
+
+    <div class="postit pink" style="left:50%;top:30%;--rot:1deg">
+      <span class="tape"></span>
+      <span class="meta">XI IPA 2 · BIMA</span>
+      <p class="txt">Ujian dimulai senin, semangat semua!</p>
+    </div>
+
+    <div class="postit blue" style="left:70%;top:28%;--rot:-2deg">
+      <span class="tape"></span>
+      <span class="meta">XI IPS 1 · CITRA</span>
+      <p class="txt">Paduan suara kemarin keren, sampai merinding 🎵</p>
+    </div>
+
+    <!-- baris 3 -->
+    <div class="postit green" style="left:5%;top:52%;--rot:-1deg">
+      <span class="tape"></span>
+      <span class="meta">XI IPS 2 · DIMAS</span>
+      <p class="txt">Ada yang mau ikut futsal sore? lapangan sekolah jam 4</p>
+    </div>
+
+    <div class="postit orange" style="left:24%;top:54%;--rot:3deg">
+      <span class="tape"></span>
+      <span class="meta">X MIPA 1 · EKA</span>
+      <p class="txt">Yang bawa payung bunga, balik ke gudang ya</p>
+    </div>
+
+    <div class="postit purple" style="left:44%;top:52%;--rot:-2deg">
+      <span class="tape"></span>
+      <span class="meta">XI IPA 1 · AULIA</span>
+      <p class="txt">Turun boleh, nangis boleh, nyerah jangan!</p>
+    </div>
+
+    <div class="postit yellow" style="left:64%;top:56%;--rot:1deg">
+      <span class="tape"></span>
+      <span class="meta">OSIS · HUMAS</span>
+      <p class="txt">Tetap ramah ya kata-katanya, biar semua nyaman</p>
+    </div>
+
+    <div class="postit pink" style="left:82%;top:50%;--rot:-3deg">
+      <span class="tape"></span>
+      <span class="meta">XI IPA 2 · BIMA</span>
+      <p class="txt">Jangan lupa tidur yang cukup ya</p>
+    </div>
+
+    <!-- stiker kecil -->
+    <div class="wall-sticker" style="left:12%;top:84%;--rot:-4deg">rapat OSIS besok!</div>
+    <div class="wall-sticker" style="left:40%;top:82%;--rot:3deg">jangan lupa absen</div>
+    <div class="wall-sticker" style="left:70%;top:84%;--rot:-2deg">UAS dimulai senin</div>
+  </div>
+
+  <p class="micro">Padat, hidup, dan penuh warna — papan sticky wall</p>
+</div>
+</body>
+</html>

@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Referensi 08 — Papan Magnet Kulkas</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;600;700&family=Fraunces:ital,opsz,wght@0,9..144,300..900;1,9..144,300..900&family=IBM+Plex+Mono:wght@400;500&family=Kalam:wght@400;700&family=Spectral:ital,wght@0,400;0,500;1,400;1,500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --fridge:#E8E6E2; --fridge-2:#D8D6D2; --fridge-line:rgba(34,29,21,.08);
+  --ink:#221D15; --ink-60:rgba(34,29,21,.6); --ink-40:rgba(34,29,21,.4);
+  --red:#C03B21; --line:rgba(34,29,21,.16); --ui-line:rgba(34,29,21,.22);
+  --m1:#F5DA55; --m2:#E8A0B8; --m3:#A8C8E8; --m4:#B8D8B8; --m5:#F0B898;
+  --fd:'Fraunces',serif; --fs:'Spectral',serif; --fm:'IBM Plex Mono',monospace;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{background:var(--fridge)}
+body{background:linear-gradient(180deg,var(--fridge),var(--fridge-2));color:var(--ink);font-family:var(--fs);min-height:100dvh;overflow-x:hidden}
+.topbar{display:flex;justify-content:space-between;align-items:baseline;gap:10px;padding:12px 26px;border-bottom:1px solid var(--line);font:500 8.5px var(--fm);letter-spacing:.3em;color:var(--ink-60);text-transform:uppercase;flex-wrap:wrap}
+.topbar b{color:var(--ink)}
+.stage{max-width:960px;margin:0 auto;padding:10px 18px 90px}
+.head{text-align:center;padding:clamp(20px,4vw,36px) 6px 4px}
+.kicker{font:500 9.5px var(--fm);letter-spacing:.32em;text-transform:uppercase;color:var(--red)}
+.head h1{font:600 clamp(2rem,7vw,3.4rem)/1 var(--fd);letter-spacing:-.02em;margin:10px 0 6px}
+.head h1 em{font-style:italic;color:var(--red)}
+.sub{font:italic 400 .95rem/1.6 var(--fs);color:var(--ink-60)}
+
+/* kulkas */
+.fridge{position:relative;margin:24px auto 0;max-width:900px;min-height:680px;border-radius:12px;
+  background:
+    repeating-linear-gradient(0deg, transparent 0 39px, var(--fridge-line) 39px 40px),
+    repeating-linear-gradient(90deg, transparent 0 39px, var(--fridge-line) 39px 40px),
+    linear-gradient(160deg,#EAE8E4 0%,#DDDAD6 50%,#CCC9C5 100%);
+  border:8px solid #B8B5B1;box-shadow:inset 0 0 40px rgba(0,0,0,.06), 0 30px 50px -34px rgba(24,20,16,.4);
+  overflow:hidden;padding:20px}
+.fridge::before{content:"";position:absolute;top:0;bottom:0;left:50%;width:1px;background:rgba(34,29,21,.06);pointer-events:none}
+.fridge::after{content:"";position:absolute;bottom:12px;right:18px;width:28px;height:4px;border-radius:2px;
+  background:rgba(34,29,21,.15);box-shadow:0 1px 0 rgba(255,255,255,.5)}
+
+/* magnet note */
+.magnet{position:absolute;padding:16px 18px 14px;border-radius:4px;cursor:pointer;
+  transform:rotate(var(--rot,0deg));transition:transform .3s ease, box-shadow .3s ease;
+  box-shadow:0 4px 8px -4px rgba(24,20,16,.25), 0 1px 0 rgba(255,255,255,.6) inset;
+  display:grid;gap:6px;min-width:180px;max-width:260px}
+.magnet:hover{transform:rotate(0deg) translateY(-4px) scale(1.02);z-index:10;box-shadow:0 8px 16px -6px rgba(24,20,16,.3)}
+.magnet .meta{font:500 8px var(--fm);letter-spacing:.18em;text-transform:uppercase;color:rgba(43,36,28,.55)}
+.magnet .txt{font:500 .95rem/1.5 var(--fs);color:#2b241c;white-space:pre-wrap;word-break:break-word}
+.magnet .hand{font-family:'Caveat',cursive;font-size:1.15rem;line-height:1.35}
+.magnet .mag-dot{position:absolute;top:-7px;left:50%;transform:translateX(-50%);
+  width:14px;height:14px;border-radius:50%;box-shadow:0 2px 3px rgba(24,20,16,.3), inset 0 1px 0 rgba(255,255,255,.5)}
+.magnet .mag-dot.red{background:radial-gradient(circle at 35% 30%,#EA7E64,#C03B21 62%,#7A2515 100%)}
+.magnet .mag-dot.blue{background:radial-gradient(circle at 35% 30%,#A8C8E8,#5A8AB8 62%,#3A5A88 100%)}
+.magnet .mag-dot.green{background:radial-gradient(circle at 35% 30%,#B8D8B8,#6A9A6A 62%,#4A7A4A 100%)}
+.magnet .mag-dot.yellow{background:radial-gradient(circle at 35% 30%,#F5E27A,#D4C05A 62%,#A4903A 100%)}
+.magnet .mag-dot.pink{background:radial-gradient(circle at 35% 30%,#F0B8C8,#D088A8 62%,#A05878 100%)}
+
+/* magnet huruf (dekorasi) */
+.alpha{position:absolute;font:700 1.4rem var(--fd);color:rgba(34,29,21,.15);pointer-events:none;transform:rotate(var(--rot,0deg))}
+
+/* stiker kecil */
+.sticker{position:absolute;padding:8px 14px;border-radius:12px;font:600 .85rem var(--fd);
+  background:linear-gradient(180deg,rgba(255,255,255,.7),rgba(255,255,255,.3));border:1px solid rgba(34,29,21,.15);
+  box-shadow:0 3px 6px -4px rgba(24,20,16,.25);transform:rotate(var(--rot,0deg));cursor:pointer;
+  transition:transform .3s ease}
+.sticker:hover{transform:rotate(0deg) scale(1.06)}
+
+.micro{font:400 8.5px var(--fm);letter-spacing:.24em;color:var(--ink-40);text-transform:uppercase;text-align:center;margin-top:30px}
+</style>
+</head>
+<body>
+<div class="topbar"><span>MPK · OSIS — <b>REFERENSI 08 / PAPAN MAGNET KULKAS</b></span><span>MMXXVI · Untuk Sekolah Kita</span></div>
+
+<div class="stage">
+  <div class="head">
+    <p class="kicker">PAPAN BERSAMA</p>
+    <h1>Papan Magnet <em>Kulkas.</em></h1>
+    <p class="sub">Catatan ditempel pakai magnet — pindah-pindah sesuka hati</p>
+  </div>
+
+  <div class="fridge">
+    <!-- huruf magnet dekorasi -->
+    <span class="alpha" style="left:4%;top:6%;--rot:-8deg">M</span>
+    <span class="alpha" style="left:88%;top:8%;--rot:12deg">A</span>
+    <span class="alpha" style="left:6%;bottom:8%;--rot:6deg">D</span>
+    <span class="alpha" style="right:5%;bottom:10%;--rot:-10deg">I</span>
+
+    <!-- catatan magnet -->
+    <div class="magnet" style="left:6%;top:12%;--rot:-3deg;background:var(--m1)">
+      <span class="mag-dot red"></span>
+      <span class="meta">OSIS · HUMAS</span>
+      <p class="txt hand">Selamat datang di papan magnet. Tempel & geser sesuka hati!</p>
+    </div>
+
+    <div class="magnet" style="left:38%;top:8%;--rot:2deg;background:var(--m3)">
+      <span class="mag-dot blue"></span>
+      <span class="meta">XI IPA 2 · BIMA</span>
+      <p class="txt">Semangat UAS semua!! Jangan lupa tidur yang cukup ya 😅</p>
+    </div>
+
+    <div class="magnet" style="left:68%;top:14%;--rot:-2deg;background:var(--m4)">
+      <span class="mag-dot green"></span>
+      <span class="meta">XI IPS 1 · CITRA</span>
+      <p class="txt hand">makasih paduan suara kemarin, keren banget sampai merinding</p>
+    </div>
+
+    <div class="magnet" style="left:10%;top:52%;--rot:1.5deg;background:var(--m2)">
+      <span class="mag-dot pink"></span>
+      <span class="meta">XI IPS 2 · DIMAS</span>
+      <p class="txt">Futsal sore jam 4, lapangan sekolah. Bawa sepatu ya.</p>
+    </div>
+
+    <div class="magnet" style="left:42%;top:48%;--rot:-2deg;background:var(--m5)">
+      <span class="mag-dot yellow"></span>
+      <span class="meta">X MIPA 1 · EKA</span>
+      <p class="txt hand">Yang bawa payung bunga kepergian, boleh balik ke gudang ya</p>
+    </div>
+
+    <div class="magnet" style="left:72%;top:50%;--rot:2.5deg;background:var(--m1)">
+      <span class="mag-dot red"></span>
+      <span class="meta">XI IPA 1 · AULIA</span>
+      <p class="txt hand">Turun boleh, nangis boleh, nyerah jangan! 💪</p>
+    </div>
+
+    <!-- stiker kecil -->
+    <div class="sticker" style="left:22%;top:38%;--rot:-5deg;background:#F5E27A">rapat OSIS besok!</div>
+    <div class="sticker" style="left:55%;top:36%;--rot:3deg;background:#F0B8C8">jangan lupa absen</div>
+    <div class="sticker" style="left:80%;top:38%;--rot:-2deg;background:#A8C8E8">UAS dimulai senin</div>
+  </div>
+
+  <p class="micro">Magnet bisa dipindah-pindah — cukup geser ke tempat baru</p>
+</div>
+</body>
+</html>

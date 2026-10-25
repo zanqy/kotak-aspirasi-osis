@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Referensi 06 — Papan Tulis Kapur</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;600;700&family=Fraunces:ital,opsz,wght@0,9..144,300..900;1,9..144,300..900&family=IBM+Plex+Mono:wght@400;500&family=Kalam:wght@400;700&family=Spectral:ital,wght@0,400;0,500;1,400;1,500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --slate:#2C3338; --slate-2:#3A4248; --slate-3:#1F2529;
+  --chalk:#F5F0E6; --chalk-soft:rgba(245,240,230,.75); --chalk-faint:rgba(245,240,230,.35);
+  --red:#C03B21; --yellow:#F5E27A; --blue:#A8C8E8; --pink:#F0B8C8;
+  --wood:#6B4F2E; --wood-2:#5A4226;
+  --fd:'Fraunces',serif; --fs:'Spectral',serif; --fm:'IBM Plex Mono',monospace;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{background:var(--slate-3)}
+body{background:linear-gradient(180deg,var(--slate-3),var(--slate));color:var(--chalk);font-family:var(--fs);min-height:100dvh;overflow-x:hidden}
+.topbar{display:flex;justify-content:space-between;align-items:baseline;gap:10px;padding:12px 26px;border-bottom:1px solid rgba(245,240,230,.12);font:500 8.5px var(--fm);letter-spacing:.3em;color:var(--chalk-faint);text-transform:uppercase;flex-wrap:wrap}
+.topbar b{color:var(--chalk)}
+.stage{max-width:1000px;margin:0 auto;padding:10px 18px 90px}
+.head{text-align:center;padding:clamp(20px,4vw,36px) 6px 4px}
+.kicker{font:500 9.5px var(--fm);letter-spacing:.32em;text-transform:uppercase;color:var(--red)}
+.head h1{font:600 clamp(2rem,7vw,3.4rem)/1 var(--fd);letter-spacing:-.02em;margin:10px 0 6px;color:var(--chalk)}
+.head h1 em{font-style:italic;color:var(--red)}
+.sub{font:italic 400 .95rem/1.6 var(--fs);color:var(--chalk-soft)}
+
+/* frame kayu */
+.board-wrap{position:relative;margin-top:24px;border-radius:4px;overflow:hidden;
+  box-shadow:0 30px 60px -34px rgba(0,0,0,.6), inset 0 0 0 1px rgba(245,240,230,.08);
+  background:linear-gradient(160deg,var(--wood),var(--wood-2));padding:14px}
+.board{position:relative;border-radius:2px;min-height:640px;overflow:hidden;
+  background:
+    radial-gradient(circle at 24% 18%, rgba(255,255,255,.06), transparent 40%),
+    radial-gradient(circle at 78% 74%, rgba(0,0,0,.18), transparent 44%),
+    repeating-linear-gradient(90deg, rgba(245,240,230,.025) 0 1px, transparent 1px 6px),
+    repeating-linear-gradient(0deg, rgba(245,240,230,.02) 0 1px, transparent 1px 7px),
+    linear-gradient(160deg, #2C3338 0%, #353D43 45%, #2A3136 100%);
+  box-shadow:inset 0 0 80px rgba(0,0,0,.35), inset 0 2px 0 rgba(245,240,230,.06)}
+
+/* coretan kapur langsung di papan */
+.chalk-line{position:absolute;pointer-events:none}
+.chalk-line.scribble{left:6%;top:12%;width:200px;height:60px;opacity:.18}
+.chalk-line.dust{left:0;right:0;bottom:0;height:40px;
+  background:linear-gradient(180deg, transparent, rgba(245,240,230,.08));pointer-events:none}
+.chalk-line.hline{left:8%;right:8%;top:30%;height:1px;background:rgba(245,240,230,.12)}
+
+/* tulisan kapur */
+.entry{position:absolute;max-width:280px;transform:rotate(var(--rot,0deg));
+  font-family:'Caveat',cursive;font-size:1.35rem;line-height:1.35;color:var(--chalk);
+  text-shadow:0 0 1px rgba(245,240,230,.4), 0 0 6px rgba(245,240,230,.12)}
+.entry .meta{display:block;font:500 8px var(--fm);letter-spacing:.22em;text-transform:uppercase;color:var(--chalk-faint);margin-bottom:4px;font-family:var(--fm)}
+.entry .hand{font-family:'Kalam',cursive}
+.entry.yellow .meta{color:var(--yellow)}
+.entry.blue .meta{color:var(--blue)}
+.entry.pink .meta{color:var(--pink)}
+.entry.red .meta{color:var(--red)}
+
+/* stempel kapur */
+.chalk-stamp{position:absolute;padding:6px 14px;border:2.5px solid var(--red);border-radius:6px;
+  color:var(--red);font:700 1rem var(--fd);letter-spacing:.14em;transform:rotate(-6deg);opacity:.8;
+  text-shadow:0 0 4px rgba(192,59,33,.3)}
+.chalk-stamp small{display:block;font:500 7px var(--fm);letter-spacing:.2em;margin-top:3px;text-align:center}
+
+/* penghapus & kapur di bawah papan */
+.tray{display:flex;align-items:center;gap:16px;justify-content:center;margin-top:18px;flex-wrap:wrap}
+.tray-item{display:flex;align-items:center;gap:8px;padding:8px 16px;border-radius:6px;
+  background:rgba(245,240,230,.08);border:1px solid rgba(245,240,230,.15);
+  font:500 8.5px var(--fm);letter-spacing:.2em;text-transform:uppercase;color:var(--chalk-soft)}
+.tray-item .eraser{width:32px;height:14px;border-radius:3px;background:linear-gradient(180deg,#D8A0A0,#B87878);box-shadow:inset 0 -2px 0 rgba(24,20,16,.3)}
+.tray-item .chalk{width:28px;height:8px;border-radius:4px;background:var(--chalk);box-shadow:0 1px 3px rgba(0,0,0,.3)}
+
+/* noda kapur */
+.dust-spot{position:absolute;border-radius:50%;background:rgba(245,240,230,.06);pointer-events:none;filter:blur(2px)}
+
+.micro{font:400 8.5px var(--fm);letter-spacing:.24em;color:var(--chalk-faint);text-transform:uppercase;text-align:center;margin-top:30px}
+</style>
+</head>
+<body>
+<div class="topbar"><span>MPK · OSIS — <b>REFERENSI 06 / PAPAN TULIS KAPUR</b></span><span>MMXXVI · Untuk Sekolah Kita</span></div>
+
+<div class="stage">
+  <div class="head">
+    <p class="kicker">PAPAN BERSAMA</p>
+    <h1>Papan Tulis <em>Kapur.</em></h1>
+    <p class="sub">Tidak ada kertas tempel — semua langsung ditulis di papan dengan kapur</p>
+  </div>
+
+  <div class="board-wrap">
+    <div class="board">
+      <span class="chalk-line scribble" aria-hidden="true">
+        <svg viewBox="0 0 200 60" fill="none" stroke="rgba(245,240,230,.5)" stroke-width="1.5" stroke-linecap="round">
+          <path d="M4 30 C 12 10, 28 50, 40 28 C 52 8, 68 48, 80 26 C 92 6, 108 46, 120 24 C 132 4, 148 44, 160 22 C 172 2, 188 42, 196 20"/>
+        </svg>
+      </span>
+      <span class="chalk-line hline" aria-hidden="true"></span>
+      <span class="dust-spot" style="width:80px;height:80px;left:12%;top:20%" aria-hidden="true"></span>
+      <span class="dust-spot" style="width:50px;height:50px;right:18%;bottom:24%" aria-hidden="true"></span>
+
+      <div class="entry" style="left:8%;top:8%;--rot:-1.5deg">
+        <span class="meta">OSIS · HUMAS</span>
+        Selamat datang di papan tulis.<br>Tulis apapun yang layak dibaca
+      </div>
+
+      <div class="entry yellow" style="left:42%;top:6%;--rot:2deg">
+        <span class="meta">XI IPA 2 · BIMA</span>
+        Semangat UAS semua!!<br>Jangan lupa tidur yang cukup ya
+      </div>
+
+      <div class="entry blue" style="left:72%;top:10%;--rot:-2deg">
+        <span class="meta">XI IPS 1 · CITRA</span>
+        makasih paduan suara kemarin,<br>keren banget sampai merinding 🎵
+      </div>
+
+      <div class="entry" style="left:12%;top:40%;--rot:1deg">
+        <span class="meta">XI IPS 2 · DIMAS</span>
+        Futsal sore jam 4, lapangan sekolah.<br>Bawa sepatu lapangan ya
+      </div>
+
+      <div class="entry pink" style="left:48%;top:44%;--rot:-2.5deg">
+        <span class="meta">X MIPA 1 · EKA</span>
+        Yang bawa payung bunga kepergian,<br>boleh balik ke gudang ya
+      </div>
+
+      <div class="entry" style="left:74%;top:42%;--rot:1.5deg">
+        <span class="meta">XI IPA 1 · AULIA</span>
+        Turun boleh, nangis boleh,<br>nyerah jangan!
+      </div>
+
+      <div class="chalk-stamp" style="left:38%;top:72%">
+        RUBRIK<br><small>25 OKTOBER 2026</small>
+      </div>
+    </div>
+  </div>
+
+  <div class="tray">
+    <span class="tray-item"><span class="eraser"></span> Penghapus</span>
+    <span class="tray-item"><span class="chalk"></span> Kapur Putih</span>
+    <span class="tray-item"><span class="chalk" style="background:var(--red)"></span> Kapur Merah</span>
+    <span class="tray-item"><span class="chalk" style="background:var(--yellow)"></span> Kapur Kuning</span>
+  </div>
+
+  <p class="micro">Tulis langsung di papan — penghapus tersedia, coretan lama bisa dihapus</p>
+</div>
+</body>
+</html>

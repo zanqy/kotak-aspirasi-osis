@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Referensi 12 — Kertas Terlipat</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;600;700&family=Fraunces:ital,opsz,wght@0,9..144,300..900;1,9..144,300..900&family=IBM+Plex+Mono:wght@400;500&family=Kalam:wght@400;700&family=Spectral:ital,wght@0,400;0,500;1,400;1,500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --paper:#F2ECDE; --paper-2:#EDE4CF; --lembar:#FBF7EC;
+  --ink:#221D15; --ink-60:rgba(34,29,21,.6); --ink-40:rgba(34,29,21,.4);
+  --red:#C03B21; --line:rgba(34,29,21,.16); --ui-line:rgba(34,29,21,.22);
+  --fd:'Fraunces',serif; --fs:'Spectral',serif; --fm:'IBM Plex Mono',monospace;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{background:var(--paper)}
+body{background:linear-gradient(180deg,var(--paper),var(--paper-2));color:var(--ink);font-family:var(--fs);min-height:100dvh;overflow-x:hidden}
+.topbar{display:flex;justify-content:space-between;align-items:baseline;gap:10px;padding:12px 26px;border-bottom:1px solid var(--line);font:500 8.5px var(--fm);letter-spacing:.3em;color:var(--ink-60);text-transform:uppercase;flex-wrap:wrap}
+.topbar b{color:var(--ink)}
+.stage{max-width:960px;margin:0 auto;padding:10px 18px 90px}
+.head{text-align:center;padding:clamp(20px,4vw,36px) 6px 4px}
+.kicker{font:500 9.5px var(--fm);letter-spacing:.32em;text-transform:uppercase;color:var(--red)}
+.head h1{font:600 clamp(2rem,7vw,3.4rem)/1 var(--fd);letter-spacing:-.02em;margin:10px 0 6px}
+.head h1 em{font-style:italic;color:var(--red)}
+.sub{font:italic 400 .95rem/1.6 var(--fs);color:var(--ink-60)}
+
+/* papan lipat */
+.fold-board{position:relative;margin:24px auto 0;max-width:900px;min-height:660px;border-radius:6px;
+  background:
+    radial-gradient(circle at 24% 18%, rgba(255,255,255,.4), transparent 45%),
+    radial-gradient(circle at 78% 74%, rgba(139,110,69,.08), transparent 40%),
+    linear-gradient(160deg,#E8DCC8 0%,#D8CCB4 50%,#C8BCA4 100%);
+  border:1px solid rgba(34,29,21,.25);box-shadow:0 20px 40px -30px rgba(24,20,16,.4);overflow:hidden;padding:24px}
+
+/* kertas terlipat */
+.fold-note{position:absolute;cursor:pointer;transition:transform .4s cubic-bezier(.2,.8,.3,1);
+  transform:rotate(var(--rot,0deg))}
+.fold-note:hover{transform:rotate(0deg) scale(1.06);z-index:10}
+
+/* bentuk lipatan */
+.fold-note.square{width:120px;height:120px}
+.fold-note.triangle{width:140px;height:120px;clip-path:polygon(50% 0%, 0% 100%, 100% 100%)}
+.fold-note.rect{width:160px;height:110px}
+.fold-note.diamond{width:120px;height:120px;transform:rotate(45deg)}
+
+.fold-note .front{position:absolute;inset:0;padding:14px 16px;
+  background:linear-gradient(135deg, rgba(255,255,255,.6), rgba(255,255,255,.1)), var(--lembar);
+  border:1px solid rgba(34,29,21,.25);box-shadow:0 4px 10px -6px rgba(24,20,16,.35);
+  display:grid;align-content:center;gap:6px}
+.fold-note .front .meta{font:500 7.5px var(--fm);letter-spacing:.18em;text-transform:uppercase;color:var(--ink-60)}
+.fold-note .front .txt{font:500 .9rem/1.4 var(--fs);color:var(--ink);white-space:pre-wrap;word-break:break-word}
+.fold-note .front .hand{font-family:'Caveat',cursive;font-size:1.08rem;line-height:1.35}
+
+/* lipatan sudut */
+.fold-note .corner{position:absolute;bottom:0;right:0;width:24px;height:24px;
+  background:linear-gradient(135deg, transparent 50%, rgba(34,29,21,.12) 50% 100%);
+  clip-path:polygon(100% 0, 0 100%, 100% 100%);pointer-events:none}
+
+/* stiker kecil */
+.fold-sticker{position:absolute;padding:6px 12px;border-radius:4px;font:600 .8rem var(--fd);
+  background:rgba(255,255,255,.5);border:1px solid rgba(34,29,21,.15);
+  box-shadow:0 2px 4px -2px rgba(24,20,16,.2);transform:rotate(var(--rot,0deg));cursor:pointer;transition:transform .3s ease}
+.fold-sticker:hover{transform:rotate(0deg) scale(1.06)}
+
+.micro{font:400 8.5px var(--fm);letter-spacing:.24em;color:var(--ink-40);text-transform:uppercase;text-align:center;margin-top:30px}
+</style>
+</head>
+<body>
+<div class="topbar"><span>MPK · OSIS — <b>REFERENSI 12 / KERTAS TERLIPAT</b></span><span>MMXXVI · Untuk Sekolah Kita</span></div>
+
+<div class="stage">
+  <div class="head">
+    <p class="kicker">PAPAN BERSAMA</p>
+    <h1>Kertas <em>Terlipat.</em></h1>
+    <p class="sub">Pesan ditulis di kertas lalu dilipat — buka untuk membaca</p>
+  </div>
+
+  <div class="fold-board">
+    <!-- kertas persegi -->
+    <div class="fold-note square" style="left:6%;top:8%;--rot:-4deg">
+      <div class="front">
+        <span class="meta">OSIS · HUMAS</span>
+        <p class="txt hand">Selamat datang di papan kertas lipat. Buka & baca.</p>
+      </div>
+      <span class="corner"></span>
+    </div>
+
+    <!-- kertas segitiga -->
+    <div class="fold-note triangle" style="left:30%;top:6%;--rot:2deg">
+      <div class="front">
+        <span class="meta">XI IPA 2 · BIMA</span>
+        <p class="txt">Semangat UAS semua!! Jangan lupa tidur yang cukup ya 😅</p>
+      </div>
+    </div>
+
+    <!-- kertas persegi panjang -->
+    <div class="fold-note rect" style="left:58%;top:8%;--rot:-2deg">
+      <div class="front">
+        <span class="meta">XI IPS 1 · CITRA</span>
+        <p class="txt hand">makasih paduan suara kemarin, keren banget sampai merinding</p>
+      </div>
+      <span class="corner"></span>
+    </div>
+
+    <!-- kertas diamond -->
+    <div class="fold-note diamond" style="left:82%;top:12%;--rot:5deg">
+      <div class="front">
+        <span class="meta">XI IPS 2 · DIMAS</span>
+        <p class="txt">Futsal sore jam 4, lapangan sekolah. Bawa sepatu.</p>
+      </div>
+    </div>
+
+    <!-- kertas persegi -->
+    <div class="fold-note square" style="left:12%;top:42%;--rot:3deg">
+      <div class="front">
+        <span class="meta">X MIPA 1 · EKA</span>
+        <p class="txt hand">Yang bawa payung bunga kepergian, boleh balik ke gudang ya</p>
+      </div>
+      <span class="corner"></span>
+    </div>
+
+    <!-- kertas persegi panjang -->
+    <div class="fold-note rect" style="left:40%;top:40%;--rot:-1deg">
+      <div class="front">
+        <span class="meta">XI IPA 1 · AULIA</span>
+        <p class="txt hand">Turun boleh, nangis boleh, nyerah jangan! 💪</p>
+      </div>
+      <span class="corner"></span>
+    </div>
+
+    <!-- kertas segitiga -->
+    <div class="fold-note triangle" style="left:72%;top:44%;--rot:2deg">
+      <div class="front">
+        <span class="meta">OSIS · HUMAS</span>
+        <p class="txt hand">Tetap ramah ya kata-katanya, biar semua nyaman</p>
+      </div>
+    </div>
+
+    <!-- stiker kecil -->
+    <div class="fold-sticker" style="left:20%;top:80%;--rot:-4deg">rapat OSIS besok!</div>
+    <div class="fold-sticker" style="left:52%;top:78%;--rot:3deg">jangan lupa absen</div>
+    <div class="fold-sticker" style="left:82%;top:80%;--rot:-2deg">UAS dimulai senin</div>
+  </div>
+
+  <p class="micro">Lipat & buka — setiap kertas menyimpan pesan yang berbeda</p>
+</div>
+</body>
+</html>

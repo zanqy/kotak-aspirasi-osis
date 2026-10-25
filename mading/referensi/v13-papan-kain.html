@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Referensi 13 — Papan Kain</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;600;700&family=Fraunces:ital,opsz,wght@0,9..144,300..900;1,9..144,300..900&family=IBM+Plex+Mono:wght@400;500&family=Kalam:wght@400;700&family=Spectral:ital,wght@0,400;0,500;1,400;1,500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --fabric:#D8CDB5; --fabric-2:#C8BDA5; --fabric-3:#B8AD95;
+  --ink:#221D15; --ink-60:rgba(34,29,21,.6); --ink-40:rgba(34,29,21,.4);
+  --red:#C03B21; --line:rgba(34,29,21,.16); --ui-line:rgba(34,29,21,.22);
+  --paper:#F2ECDE; --lembar:#FBF7EC;
+  --fd:'Fraunces',serif; --fs:'Spectral',serif; --fm:'IBM Plex Mono',monospace;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{background:var(--fabric)}
+body{background:linear-gradient(180deg,var(--fabric),var(--fabric-2));color:var(--ink);font-family:var(--fs);min-height:100dvh;overflow-x:hidden}
+.topbar{display:flex;justify-content:space-between;align-items:baseline;gap:10px;padding:12px 26px;border-bottom:1px solid var(--line);font:500 8.5px var(--fm);letter-spacing:.3em;color:var(--ink-60);text-transform:uppercase;flex-wrap:wrap}
+.topbar b{color:var(--ink)}
+.stage{max-width:960px;margin:0 auto;padding:10px 18px 90px}
+.head{text-align:center;padding:clamp(20px,4vw,36px) 6px 4px}
+.kicker{font:500 9.5px var(--fm);letter-spacing:.32em;text-transform:uppercase;color:var(--red)}
+.head h1{font:600 clamp(2rem,7vw,3.4rem)/1 var(--fd);letter-spacing:-.02em;margin:10px 0 6px}
+.head h1 em{font-style:italic;color:var(--red)}
+.sub{font:italic 400 .95rem/1.6 var(--fs);color:var(--ink-60)}
+
+/* bingkai kain */
+.fabric-frame{position:relative;margin:24px auto 0;max-width:900px;min-height:660px;border-radius:6px;
+  background:
+    repeating-linear-gradient(0deg, rgba(34,29,21,.03) 0 1px, transparent 1px 4px),
+    repeating-linear-gradient(90deg, rgba(34,29,21,.02) 0 1px, transparent 1px 5px),
+    linear-gradient(160deg,var(--fabric) 0%,var(--fabric-2) 50%,var(--fabric-3) 100%);
+  border:8px solid #8B7355;box-shadow:inset 0 0 40px rgba(139,115,85,.15), 0 20px 40px -30px rgba(24,20,16,.4);
+  overflow:hidden;padding:24px;position:relative}
+
+/* tekstur kain */
+.fabric-frame::before{content:"";position:absolute;inset:0;pointer-events:none;opacity:.06;
+  background-image:url("data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='f'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.6' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='120' height='120' filter='url(%23f)' opacity='0.5'/%3E%3C/svg%3E");
+  background-blend-mode:multiply}
+
+/* paku payung */
+.tack{position:absolute;width:12px;height:12px;border-radius:50%;
+  background:radial-gradient(circle at 35% 30%,#E8775F,#C03B21 62%,#7A2515 100%);
+  box-shadow:0 2px 4px rgba(24,20,16,.35), inset 0 1px 0 rgba(255,255,255,.3)}
+
+/* kertas dipaku di kain */
+.fabric-note{position:absolute;padding:14px 16px 12px;background:var(--lembar);
+  border:1px solid rgba(34,29,21,.2);box-shadow:0 4px 8px -6px rgba(24,20,16,.3);
+  transform:rotate(var(--rot,0deg));cursor:pointer;transition:transform .3s ease, box-shadow .3s ease;
+  max-width:220px;min-width:150px}
+.fabric-note:hover{transform:rotate(0deg) scale(1.04);z-index:10;box-shadow:0 8px 16px -8px rgba(24,20,16,.35)}
+.fabric-note .meta{font:500 8px var(--fm);letter-spacing:.18em;text-transform:uppercase;color:var(--ink-60);margin-bottom:6px}
+.fabric-note .txt{font:400 .9rem/1.5 var(--fs);color:var(--ink);white-space:pre-wrap;word-break:break-word}
+.fabric-note .hand{font-family:'Caveat',cursive;font-size:1.12rem;line-height:1.4}
+.fabric-note .tack-pos{position:absolute;top:-6px;left:50%;transform:translateX(-50%)}
+
+/* stiker kain */
+.fabric-sticker{position:absolute;padding:8px 14px;border-radius:4px;font:600 .82rem var(--fd);
+  background:rgba(255,255,255,.4);border:1px solid rgba(34,29,21,.15);
+  box-shadow:0 2px 4px -2px rgba(24,20,16,.2);transform:rotate(var(--rot,0deg));
+  cursor:pointer;transition:transform .3s ease}
+.fabric-sticker:hover{transform:rotate(0deg) scale(1.06)}
+
+.micro{font:400 8.5px var(--fm);letter-spacing:.24em;color:var(--ink-40);text-transform:uppercase;text-align:center;margin-top:30px}
+</style>
+</head>
+<body>
+<div class="topbar"><span>MPK · OSIS — <b>REFERENSI 13 / PAPAN KAIN</b></span><span>MMXXVI · Untuk Sekolah Kita</span></div>
+
+<div class="stage">
+  <div class="head">
+    <p class="kicker">PAPAN BERSAMA</p>
+    <h1>Papan Kain <em>Kanvas.</em></h1>
+    <p class="sub">Kain kanvas direntang di bingkai — catatan dipaku dengan payung</p>
+  </div>
+
+  <div class="fabric-frame">
+    <!-- kertas dipaku -->
+    <div class="fabric-note" style="left:6%;top:8%;--rot:-3deg">
+      <span class="tack-pos"><span class="tack"></span></span>
+      <span class="meta">OSIS · HUMAS</span>
+      <p class="txt hand">Selamat datang di papan kain. Tempel & paku pesanmu di sini.</p>
+    </div>
+
+    <div class="fabric-note" style="left:34%;top:6%;--rot:2deg">
+      <span class="tack-pos"><span class="tack"></span></span>
+      <span class="meta">XI IPA 2 · BIMA</span>
+      <p class="txt">Semangat UAS semua!! Jangan lupa tidur yang cukup ya 😅</p>
+    </div>
+
+    <div class="fabric-note" style="left:64%;top:10%;--rot:-2deg">
+      <span class="tack-pos"><span class="tack"></span></span>
+      <span class="meta">XI IPS 1 · CITRA</span>
+      <p class="txt hand">makasih paduan suara kemarin, keren banget sampai merinding</p>
+    </div>
+
+    <div class="fabric-note" style="left:10%;top:46%;--rot:1.5deg">
+      <span class="tack-pos"><span class="tack"></span></span>
+      <span class="meta">XI IPS 2 · DIMAS</span>
+      <p class="txt">Futsal sore jam 4, lapangan sekolah. Bawa sepatu ya.</p>
+    </div>
+
+    <div class="fabric-note" style="left:42%;top:42%;--rot:-2.5deg">
+      <span class="tack-pos"><span class="tack"></span></span>
+      <span class="meta">X MIPA 1 · EKA</span>
+      <p class="txt hand">Yang bawa payung bunga kepergian, boleh balik ke gudang ya</p>
+    </div>
+
+    <div class="fabric-note" style="left:70%;top:46%;--rot:2deg">
+      <span class="tack-pos"><span class="tack"></span></span>
+      <span class="meta">XI IPA 1 · AULIA</span>
+      <p class="txt hand">Turun boleh, nangis boleh, nyerah jangan! 💪</p>
+    </div>
+
+    <!-- stiker kain -->
+    <div class="fabric-sticker" style="left:20%;top:82%;--rot:-4deg">rapat OSIS besok!</div>
+    <div class="fabric-sticker" style="left:52%;top:80%;--rot:3deg">jangan lupa absen</div>
+    <div class="fabric-sticker" style="left:80%;top:82%;--rot:-2deg">UAS dimulai senin</div>
+  </div>
+
+  <p class="micro">Kain kanvas — lembut, hangat, dan tahan lama</p>
+</div>
+</body>
+</html>

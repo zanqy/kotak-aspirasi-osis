@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Referensi 10 — Papan Kaca</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;600;700&family=Fraunces:ital,opsz,wght@0,9..144,300..900;1,9..144,300..900&family=IBM+Plex+Mono:wght@400;500&family=Kalam:wght@400;700&family=Spectral:ital,wght@0,400;0,500;1,400;1,500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --glass:#F0F2F5; --glass-2:#E4E7EB; --glass-edge:rgba(34,29,21,.12);
+  --ink:#221D15; --ink-60:rgba(34,29,21,.6); --ink-40:rgba(34,29,21,.4);
+  --red:#C03B21; --blue:#2B5B8A; --green:#3A7A5A; --black:#1A1A1A;
+  --line:rgba(34,29,21,.16); --ui-line:rgba(34,29,21,.22);
+  --fd:'Fraunces',serif; --fs:'Spectral',serif; --fm:'IBM Plex Mono',monospace;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{background:var(--glass)}
+body{background:linear-gradient(180deg,var(--glass),var(--glass-2));color:var(--ink);font-family:var(--fs);min-height:100dvh;overflow-x:hidden}
+.topbar{display:flex;justify-content:space-between;align-items:baseline;gap:10px;padding:12px 26px;border-bottom:1px solid var(--line);font:500 8.5px var(--fm);letter-spacing:.3em;color:var(--ink-60);text-transform:uppercase;flex-wrap:wrap}
+.topbar b{color:var(--ink)}
+.stage{max-width:960px;margin:0 auto;padding:10px 18px 90px}
+.head{text-align:center;padding:clamp(20px,4vw,36px) 6px 4px}
+.kicker{font:500 9.5px var(--fm);letter-spacing:.32em;text-transform:uppercase;color:var(--red)}
+.head h1{font:600 clamp(2rem,7vw,3.4rem)/1 var(--fd);letter-spacing:-.02em;margin:10px 0 6px}
+.head h1 em{font-style:italic;color:var(--red)}
+.sub{font:italic 400 .95rem/1.6 var(--fs);color:var(--ink-60)}
+
+/* papan kaca */
+.glass-board{position:relative;margin:24px auto 0;max-width:900px;min-height:660px;border-radius:6px;
+  background:
+    radial-gradient(circle at 30% 20%, rgba(255,255,255,.7), transparent 50%),
+    radial-gradient(circle at 70% 80%, rgba(200,210,220,.4), transparent 50%),
+    linear-gradient(160deg,#F2F4F7 0%,#E8EBF0 50%,#DCE0E6 100%);
+  border:10px solid #B0A898;
+  border-image:repeating-linear-gradient(90deg,#B0A898 0 8px,#A09888 8px 16px,#B8B0A0 16px 24px) 10;
+  box-shadow:inset 0 0 60px rgba(120,130,140,.15), 0 26px 44px -34px rgba(24,20,16,.4);
+  overflow:hidden;padding:24px}
+
+/* tulisan marker */
+.marker-text{position:absolute;font-family:'Caveat',cursive;font-size:1.3rem;line-height:1.3;
+  transform:rotate(var(--rot,0deg));padding:4px 8px;cursor:pointer;transition:transform .3s ease, opacity .3s ease}
+.marker-text:hover{transform:rotate(0deg) scale(1.05)}
+.marker-text.red{color:var(--red)}
+.marker-text.blue{color:var(--blue)}
+.marker-text.green{color:var(--green)}
+.marker-text.black{color:var(--black)}
+.marker-text .meta{display:block;font:500 8px var(--fm);letter-spacing:.18em;text-transform:uppercase;
+  color:rgba(34,29,21,.4);margin-bottom:2px;font-family:var(--fm)}
+
+/* smudge (noda spidol) */
+.smudge{position:absolute;border-radius:50%;background:rgba(34,29,21,.04);filter:blur(3px);pointer-events:none}
+
+/* garis bantu */
+.guide-line{position:absolute;left:8%;right:8%;height:1px;background:rgba(34,29,21,.06);pointer-events:none}
+
+/* stiker magnet kecil */
+.mag-sticker{position:absolute;padding:8px 12px;border-radius:8px;font:600 .82rem var(--fd);
+  background:rgba(255,255,255,.6);border:1px solid rgba(34,29,21,.12);
+  box-shadow:0 2px 4px -2px rgba(24,20,16,.2);transform:rotate(var(--rot,0deg));cursor:pointer;transition:transform .3s ease}
+.mag-sticker:hover{transform:rotate(0deg) scale(1.06)}
+
+/* spidol di bawah */
+.marker-tray{display:flex;align-items:center;gap:12px;justify-content:center;margin-top:18px;flex-wrap:wrap}
+.marker-item{display:flex;align-items:center;gap:8px;padding:8px 14px;border-radius:6px;
+  background:rgba(255,255,255,.5);border:1px solid rgba(34,29,21,.12);
+  font:500 8.5px var(--fm);letter-spacing:.2em;text-transform:uppercase;color:var(--ink-60)}
+.marker-item .pen{width:36px;height:8px;border-radius:4px;box-shadow:0 1px 3px rgba(0,0,0,.2)}
+.marker-item .pen.red{background:linear-gradient(90deg,#C03B21,#A02B11)}
+.marker-item .pen.blue{background:linear-gradient(90deg,#2B5B8A,#1B4B7A)}
+.marker-item .pen.green{background:linear-gradient(90deg,#3A7A5A,#2A6A4A)}
+.marker-item .pen.black{background:linear-gradient(90deg,#1A1A1A,#0A0A0A)}
+
+/* tisu penghapus */
+.eraser-box{display:flex;align-items:center;gap:8px;padding:8px 14px;border-radius:6px;
+  background:rgba(255,255,255,.5);border:1px solid rgba(34,29,21,.12);
+  font:500 8.5px var(--fm);letter-spacing:.2em;text-transform:uppercase;color:var(--ink-60)}
+.eraser-box .cloth{width:24px;height:16px;border-radius:3px;background:linear-gradient(180deg,#F0E8D8,#D8D0C0);box-shadow:0 1px 3px rgba(0,0,0,.15)}
+
+.micro{font:400 8.5px var(--fm);letter-spacing:.24em;color:var(--ink-40);text-transform:uppercase;text-align:center;margin-top:30px}
+</style>
+</head>
+<body>
+<div class="topbar"><span>MPK · OSIS — <b>REFERENSI 10 / PAPAN KACA</b></span><span>MMXXVI · Untuk Sekolah Kita</span></div>
+
+<div class="stage">
+  <div class="head">
+    <p class="kicker">PAPAN BERSAMA</p>
+    <h1>Papan Kaca <em>Spidol.</em></h1>
+    <p class="sub">Tulis langsung di kaca dengan spidol warna — hapus pakai tisu</p>
+  </div>
+
+  <div class="glass-board">
+    <span class="guide-line" style="top:18%" aria-hidden="true"></span>
+    <span class="guide-line" style="top:36%" aria-hidden="true"></span>
+    <span class="guide-line" style="top:54%" aria-hidden="true"></span>
+    <span class="guide-line" style="top:72%" aria-hidden="true"></span>
+    <span class="smudge" style="width:60px;height:40px;left:20%;top:25%" aria-hidden="true"></span>
+    <span class="smudge" style="width:40px;height:30px;right:15%;top:60%" aria-hidden="true"></span>
+
+    <!-- tulisan spidol -->
+    <div class="marker-text red" style="left:8%;top:8%;--rot:-2deg">
+      <span class="meta">OSIS · HUMAS</span>
+      Selamat datang di papan kaca.<br>Tulis langsung dengan spidol!
+    </div>
+
+    <div class="marker-text blue" style="left:46%;top:6%;--rot:1.5deg">
+      <span class="meta">XI IPA 2 · BIMA</span>
+      Semangat UAS semua!!<br>Jangan lupa tidur yang cukup ya 😅
+    </div>
+
+    <div class="marker-text green" style="left:74%;top:10%;--rot:-1deg">
+      <span class="meta">XI IPS 1 · CITRA</span>
+      makasih paduan suara kemarin,<br>keren banget sampai merinding 🎵
+    </div>
+
+    <div class="marker-text black" style="left:10%;top:38%;--rot:1deg">
+      <span class="meta">XI IPS 2 · DIMAS</span>
+      Futsal sore jam 4, lapangan sekolah.<br>Bawa sepatu lapangan ya
+    </div>
+
+    <div class="marker-text red" style="left:44%;top:40%;--rot:-2deg">
+      <span class="meta">X MIPA 1 · EKA</span>
+      Yang bawa payung bunga kepergian,<br>boleh balik ke gudang ya
+    </div>
+
+    <div class="marker-text blue" style="left:72%;top:42%;--rot:2deg">
+      <span class="meta">XI IPA 1 · AULIA</span>
+      Turun boleh, nangis boleh,<br>nyerah jangan! 💪
+    </div>
+
+    <!-- stiker magnet kecil -->
+    <div class="mag-sticker" style="left:15%;top:72%;--rot:-3deg">rapat OSIS besok!</div>
+    <div class="mag-sticker" style="left:45%;top:70%;--rot:2deg">jangan lupa absen</div>
+    <div class="mag-sticker" style="left:75%;top:74%;--rot:-1deg">UAS dimulai senin</div>
+  </div>
+
+  <div class="marker-tray">
+    <span class="marker-item"><span class="pen red"></span> Spidol Merah</span>
+    <span class="marker-item"><span class="pen blue"></span> Spidol Biru</span>
+    <span class="marker-item"><span class="pen green"></span> Spidol Hijau</span>
+    <span class="marker-item"><span class="pen black"></span> Spidol Hitam</span>
+    <span class="eraser-box"><span class="cloth"></span> Tisu Penghapus</span>
+  </div>
+
+  <p class="micro">Tulis langsung di kaca — hapus dengan tisu, tulis ulang sesuka hati</p>
+</div>
+</body>
+</html>
