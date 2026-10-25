@@ -373,17 +373,20 @@ function renderBoard() {
 
     /* variasi tulisan tangan: font, ukuran, kemiringan, warna tinta */
     el.style.setProperty("--fs", (0.92 + pseudo(seed, 13) * 0.2).toFixed(3));
-    el.style.setProperty("--tr", ((pseudo(seed, 14) - 0.5) * 2.4).toFixed(2) + "deg");
+    el.style.setProperty("--tr", ((pseudo(seed, 14) - 0.5) * 2.2).toFixed(2) + "deg");
+    el.style.setProperty("--sticky", note.color || "#F7E9A0");
     el.style.setProperty(
       "--rad",
-      `${1 + Math.round(pseudo(seed, 16) * 4)}px ${2 + Math.round(pseudo(seed, 17) * 5)}px ${1 + Math.round(pseudo(seed, 18) * 4)}px ${2 + Math.round(pseudo(seed, 19) * 5)}px`
+      "2px"
     );
-    if (kind !== "card") {
+    if (kind === "sticky") {
+      el.style.fontFamily = HAND_FONTS[Math.abs(seed >> 3) % HAND_FONTS.length];
+    } else if (kind !== "card") {
       el.style.fontFamily = HAND_FONTS[Math.abs(seed >> 3) % HAND_FONTS.length];
     }
-    el.style.setProperty("--shA", (0.24 + pseudo(seed, 20) * 0.18).toFixed(3));
-    el.style.setProperty("--shB", (0.32 + pseudo(seed, 21) * 0.2).toFixed(3));
-    el.style.setProperty("--shC", (0.5 + pseudo(seed, 22) * 0.2).toFixed(3));
+    el.style.setProperty("--shA", (0.16 + pseudo(seed, 20) * 0.12).toFixed(3));
+    el.style.setProperty("--shB", (0.28 + pseudo(seed, 21) * 0.14).toFixed(3));
+    el.style.setProperty("--shC", (0.46 + pseudo(seed, 22) * 0.16).toFixed(3));
     const ink = 34 + Math.round(pseudo(seed, 15) * 18);
     el.style.color = `rgb(${ink + 9}, ${ink}, ${Math.round(ink * 0.8)})`;
 
@@ -391,19 +394,19 @@ function renderBoard() {
     if (kind === "card") {
       el.style.width = "274px";
     } else if (kind === "sticky") {
-      el.style.width = 232 + Math.round(pseudo(seed, 11) * 38) + "px";
+      el.style.width = 232 + Math.round(pseudo(seed, 11) * 26) + "px";
     } else {
-      el.style.width = 240 + Math.round(pseudo(seed, 12) * 32) + "px";
+      el.style.width = 240 + Math.round(pseudo(seed, 12) * 24) + "px";
     }
 
     if (kind === "sticky") {
       el.style.background = [
         "linear-gradient(180deg, rgba(255,255,255,.55) 0%, rgba(255,255,255,0) 30%)",
-        "linear-gradient(0deg, rgba(120,92,52,.11) 0%, rgba(120,92,52,0) 14%)",
-        "linear-gradient(102deg, transparent 45%, rgba(255,255,255,.34) 46.4%, transparent 48%)",
-        "linear-gradient(97deg, transparent 72%, rgba(120,92,52,.06) 73%, transparent 74.4%)",
-        note.color || "#F7E9A0"
+        "linear-gradient(0deg, rgba(120,92,52,.08) 0%, rgba(120,92,52,0) 14%)",
+        `url("data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)' opacity='0.09'/%3E%3C/svg%3E")`
       ].join(", ");
+      el.style.backgroundColor = note.color || "#F7E9A0";
+      el.style.backgroundBlendMode = "normal, multiply, multiply";
     } else if (kind === "card") {
       el.style.backgroundColor = note.color && note.color !== "#FBF7EC" ? note.color : "";
     } else {
@@ -419,9 +422,12 @@ function renderBoard() {
     const fix = document.createElement("span");
     if (kind === "card") {
       fix.className = "note-pin";
-    } else {
+    } else if (kind === "paper") {
       fix.className = "note-tape";
-      fix.style.transform = `translateX(-50%) rotate(${(pseudo(seed, 7) - 0.5) * 8}deg)`;
+      fix.style.transform = `translateX(-50%) rotate(${(pseudo(seed, 7) - 0.5) * 6}deg)`;
+    } else {
+      fix.className = "note-tape note-tape--postit";
+      fix.style.transform = `translateX(-50%) rotate(${(pseudo(seed, 7) - 0.5) * 4}deg)`;
     }
     el.appendChild(fix);
 
