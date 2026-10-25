@@ -6,12 +6,17 @@ const CANVAS_W = 2400;
 const CANVAS_H = 1600;
 const COLS = 7;
 const ROWS = 5;
-const CELL_W = 310;
-const CELL_H = 292;
+const CELL_W = 298;
+const CELL_H = 284;
 const ORIGIN_X = 78;
 const ORIGIN_Y = 96;
 
 const KINDS = ["sticky", "card", "paper"];
+const HAND_FONTS = [
+  "'Caveat','Patrick Hand',cursive",
+  "'Kalam','Caveat',cursive",
+  "'Patrick Hand',cursive"
+];
 const STICKY_COLORS = ["#F7E9A0", "#F3E7C4", "#E9EFD9", "#F6E3E8", "#E3EAF2", "#F7EAD8"];
 
 const canvas = document.getElementById("mading-canvas");
@@ -365,14 +370,48 @@ function renderBoard() {
     el.style.zIndex = String(10 + (i % 7));
     el.dataset.id = note.id;
 
-    if (kind === "sticky") {
-      el.style.background = `linear-gradient(180deg, rgba(255,255,255,.45), rgba(255,255,255,0) 62%), ${note.color || "#F7E9A0"}`;
-    } else if (kind === "card") {
-      el.style.background = note.color && note.color !== "#FBF7EC"
-        ? `repeating-linear-gradient(180deg, transparent 0 27px, rgba(34,29,21,.13) 27px 28px), ${note.color}`
-        : undefined;
+    /* variasi tulisan tangan: font, ukuran, kemiringan, warna tinta */
+    el.style.setProperty("--fs", (0.92 + pseudo(seed, 13) * 0.2).toFixed(3));
+    el.style.setProperty("--tr", ((pseudo(seed, 14) - 0.5) * 2.4).toFixed(2) + "deg");
+    el.style.setProperty(
+      "--rad",
+      `${1 + Math.round(pseudo(seed, 16) * 4)}px ${2 + Math.round(pseudo(seed, 17) * 5)}px ${1 + Math.round(pseudo(seed, 18) * 4)}px ${2 + Math.round(pseudo(seed, 19) * 5)}px`
+    );
+    if (kind !== "card") {
+      el.style.fontFamily = HAND_FONTS[Math.abs(seed >> 3) % HAND_FONTS.length];
+    }
+    el.style.setProperty("--shA", (0.24 + pseudo(seed, 20) * 0.18).toFixed(3));
+    el.style.setProperty("--shB", (0.32 + pseudo(seed, 21) * 0.2).toFixed(3));
+    el.style.setProperty("--shC", (0.5 + pseudo(seed, 22) * 0.2).toFixed(3));
+    const ink = 34 + Math.round(pseudo(seed, 15) * 18);
+    el.style.color = `rgb(${ink + 9}, ${ink}, ${Math.round(ink * 0.8)})`;
+
+    /* variasi lebar biar nggak seragam */
+    if (kind === "card") {
+      el.style.width = "274px";
+    } else if (kind === "sticky") {
+      el.style.width = 232 + Math.round(pseudo(seed, 11) * 38) + "px";
     } else {
-      el.style.background = `linear-gradient(168deg, rgba(255,255,255,.3), rgba(34,29,21,.05)), ${note.color || "#F3E7C4"}`;
+      el.style.width = 240 + Math.round(pseudo(seed, 12) * 32) + "px";
+    }
+
+    if (kind === "sticky") {
+      el.style.background = [
+        "linear-gradient(180deg, rgba(255,255,255,.55) 0%, rgba(255,255,255,0) 30%)",
+        "linear-gradient(0deg, rgba(120,92,52,.11) 0%, rgba(120,92,52,0) 14%)",
+        "linear-gradient(102deg, transparent 45%, rgba(255,255,255,.34) 46.4%, transparent 48%)",
+        "linear-gradient(97deg, transparent 72%, rgba(120,92,52,.06) 73%, transparent 74.4%)",
+        note.color || "#F7E9A0"
+      ].join(", ");
+    } else if (kind === "card") {
+      el.style.backgroundColor = note.color && note.color !== "#FBF7EC" ? note.color : "";
+    } else {
+      el.style.background = [
+        "linear-gradient(168deg, rgba(255,255,255,.34), rgba(34,29,21,.06))",
+        "linear-gradient(93deg, transparent 40%, rgba(255,255,255,.28) 41.5%, transparent 43%)",
+        "linear-gradient(88deg, transparent 66%, rgba(120,92,52,.07) 67%, transparent 68.5%)",
+        note.color || "#F3E7C4"
+      ].join(", ");
     }
 
     /* selotip atau paku */
