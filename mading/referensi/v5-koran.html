@@ -6,130 +6,242 @@
 <title>Referensi 5 — Koran Sekolah</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;600;700&family=Fraunces:ital,opsz,wght@0,9..144,300..900;1,9..144,300..900&family=IBM+Plex+Mono:wght@400;500&family=Kalam:wght@400;700&family=Spectral:ital,wght@0,400;0,500;1,400;1,500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;600;700&family=Fraunces:ital,opsz,wght@0,9..144,300..900;1,9..144,300..900&family=IBM+Plex+Mono:wght@400;500&family=Kalam:wght@400;700&family=Spectral:ital,wght@0,400;0,500;1,400;1,500;1,600&display=swap" rel="stylesheet">
 <style>
 :root{
-  --paper:#F2ECDE; --paper-2:#EDE4CF; --news:#F5EFE0;
-  --ink:#221D15; --ink-60:rgba(34,29,21,.6); --ink-40:rgba(34,29,21,.4);
-  --red:#C03B21; --line:rgba(34,29,21,.2); --ui-line:rgba(34,29,21,.22);
+  --paper:#F2ECDE; --news:#F7F1E1; --paper-2:#EDE4CF;
+  --ink:#221D15; --ink-soft:#33291F; --ink-60:rgba(34,29,21,.6); --ink-40:rgba(34,29,21,.4);
+  --red:#C03B21; --line:rgba(34,29,21,.24); --hair:rgba(34,29,21,.15);
   --fd:'Fraunces',serif; --fs:'Spectral',serif; --fm:'IBM Plex Mono',monospace;
 }
 *{margin:0;padding:0;box-sizing:border-box}
 html{background:var(--paper)}
-body{background:var(--paper);color:var(--ink);font-family:var(--fs);min-height:100dvh;overflow-x:hidden}
-.topbar{display:flex;justify-content:space-between;align-items:baseline;gap:10px;padding:12px 26px;border-bottom:1px solid var(--line);font:500 8.5px var(--fm);letter-spacing:.3em;color:var(--ink-60);text-transform:uppercase;flex-wrap:wrap}
+body{background:radial-gradient(circle at 50% -10%, #F5EFDF, var(--paper) 70%);color:var(--ink);font-family:var(--fs);min-height:100dvh;overflow-x:clip}
+.grain{position:fixed;inset:0;pointer-events:none;z-index:120;opacity:.05;
+  background-image:url("data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='260' height='260'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='260' height='260' filter='url(%23n)' opacity='0.55'/%3E%3C/svg%3E")}
+.topbar{display:flex;justify-content:space-between;align-items:baseline;gap:10px;padding:12px 26px;border-bottom:1px solid var(--hair);font:500 8.5px var(--fm);letter-spacing:.3em;color:var(--ink-60);text-transform:uppercase;flex-wrap:wrap}
 .topbar b{color:var(--ink)}
-.stage{max-width:960px;margin:0 auto;padding:8px 18px 90px}
-.head{text-align:center;padding:clamp(20px,4vw,36px) 6px 4px}
+.stage{max-width:1000px;margin:0 auto;padding:10px 18px 90px}
+.head{text-align:center;padding:clamp(20px,4vw,34px) 6px 2px}
 .kicker{font:500 9.5px var(--fm);letter-spacing:.32em;text-transform:uppercase;color:var(--red)}
-.head h1{font:600 clamp(2rem,7vw,3.4rem)/1 Fraunces,serif;letter-spacing:-.02em;margin:10px 0 6px}
+.head h1{font:600 clamp(2rem,7vw,3.2rem)/1 var(--fd);letter-spacing:-.02em;margin:10px 0 6px}
 .head h1 em{font-style:italic;color:var(--red)}
 .sub{font:italic 400 .95rem/1.6 var(--fs);color:var(--ink-60)}
-/* lembar koran besar */
-.press{position:relative;background:var(--news);border:1px solid rgba(34,29,21,.3);border-radius:2px;
-  padding:clamp(22px,4vw,44px) clamp(18px,4vw,40px) 26px;margin-top:28px;
-  box-shadow:0 30px 50px -34px rgba(24,20,16,.5);
+
+/* ============ KORAN ============ */
+.press{position:relative;margin-top:24px;background:var(--news);border:1px solid rgba(34,29,21,.32);
+  padding:clamp(20px,4vw,40px) clamp(16px,3.4vw,38px) 28px;
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.6),
+    0 34px 54px -38px rgba(24,20,16,.65),
+    0 8px 16px -12px rgba(24,20,16,.3);
   background-image:
-    url("data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='220' height='220' filter='url(%23g)' opacity='0.5'/%3E%3C/svg%3E");
+    url("data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.95' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='240' height='240' filter='url(%23g)' opacity='0.5'/%3E%3C/svg%3E");
   background-blend-mode:multiply,normal}
+.press::before{content:"";position:absolute;inset:-1px;pointer-events:none;border-radius:2px;
+  background:
+   linear-gradient(180deg, transparent 0 96%, rgba(34,29,21,.06) 97%, rgba(34,29,21,.18) 98.5%, transparent 99%),
+   linear-gradient(90deg, rgba(34,29,21,.07) 0 1%, transparent 1.4% 98.6%, rgba(34,29,21,.07) 99% 100%)}
+.press::after{content:"";position:absolute;right:0;bottom:0;width:60px;height:60px;pointer-events:none;
+  background:linear-gradient(315deg, rgba(34,29,21,.2) 0 18%, rgba(247,241,225,.98) 19% 100%);
+  clip-path:polygon(100% 0, 0 100%, 100% 100%)}
+
 /* masthead */
-.mast{display:flex;align-items:baseline;justify-content:space-between;gap:14px;border-bottom:3px double var(--ink);padding-bottom:10px;flex-wrap:wrap}
-.mast h2{font:800 clamp(1.8rem,5vw,2.6rem)/1 var(--fd);letter-spacing:-.01em}
-.mast h2 span{color:var(--red)}
-.mast .ed{font:500 8.5px var(--fm);letter-spacing:.22em;text-transform:uppercase;color:var(--ink-60);text-align:right;line-height:1.8}
-/* grid kolom */
-.cols{display:grid;grid-template-columns:1.4fr 1fr 1fr;gap:0;margin-top:18px;border-top:1px solid var(--line)}
-.col{padding:0 14px 8px}
-.col+.col{border-left:1px solid var(--line)}
+.mast{display:grid;grid-template-columns:1fr auto;align-items:end;gap:14px;border-bottom:1px solid var(--ink);padding-bottom:14px;position:relative}
+.mast::after{content:"";position:absolute;left:0;right:0;bottom:-5px;height:2px;background:var(--ink)}
+.mast .brand .orn{font:500 8.5px var(--fm);letter-spacing:.3em;color:var(--ink-60);text-transform:uppercase;margin-bottom:4px}
+.mast h2{font:800 clamp(2.2rem,6.5vw,3.4rem)/.92 var(--fd);letter-spacing:-.03em}
+.mast h2 span{color:var(--red);font-style:italic;font-weight:500}
+.mast .ed{text-align:right;font:500 8px var(--fm);letter-spacing:.18em;text-transform:uppercase;color:var(--ink-60);line-height:2}
+.mast .ed strong{color:var(--ink);font-weight:500}
+
+/* dateline strip */
+.dateline{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:8px 2px;border-bottom:1px solid var(--line);
+  font:500 8px var(--fm);letter-spacing:.22em;text-transform:uppercase;color:var(--ink-60);flex-wrap:wrap}
+.dateline b{color:var(--ink)}
+
+/* grid berita */
+.cols{display:grid;grid-template-columns:1.35fr .95fr .95fr;gap:0}
+@media(max-width:760px){.cols{grid-template-columns:1fr}.col{border-left:0!important;border-top:1px solid var(--hair);padding-top:12px}}
+.col{padding:14px 18px 8px}
+.col+.col{border-left:1px solid var(--hair)}
 .col.first{padding-left:0}
 .col.last{padding-right:0}
-.headline{font:600 clamp(1.2rem,3.4vw,1.7rem)/1.12 var(--fd);letter-spacing:-.01em;margin:12px 0 10px}
-.headline.hit{display:inline-block;position:relative;cursor:pointer}
-.headline.hit::after{content:"";position:absolute;inset:-6px -10px;border:2.4px solid var(--red);border-radius:999px;transform:rotate(-2deg);pointer-events:none}
-.byline{font:500 8px var(--fm);letter-spacing:.2em;text-transform:uppercase;color:var(--ink-40);margin-bottom:8px}
-.body{font:400 .92rem/1.65 var(--fs);color:#2b241c}
-.body.drop::first-letter{font:600 3.4rem/0.86 var(--fd);float:left;padding:4px 8px 0 0;color:var(--red)}
-.divider{margin:14px 0;border:0;border-top:1px dashed rgba(34,29,21,.3)}
-/* kliping kecil ditempel di koran */
-.clip{position:relative;margin:8px 0 14px;padding:12px 14px 10px;background:var(--paper-2);border:1px solid rgba(34,29,21,.25);transform:rotate(var(--_rot,-1deg));font-family:'Caveat',cursive;font-size:1.08rem;line-height:1.4;color:#2b241c;box-shadow:0 4px 8px -6px rgba(24,20,16,.4)}
-.clip .who{display:block;font:500 7.5px var(--fm);letter-spacing:.2em;text-transform:uppercase;color:var(--ink-40);margin-bottom:4px}
-.clip::before{content:"";position:absolute;left:50%;top:-9px;width:56px;height:16px;transform:translateX(-50%) rotate(-2deg);background:rgba(192,59,33,.18);border-left:1px dashed rgba(34,29,21,.2);border-right:1px dashed rgba(34,29,21,.2)}
-.tape-r{position:absolute;right:-6px;top:-6px;padding:3px 8px 2px;border:2px solid var(--red);border-radius:4px;color:var(--red);font:700 8px var(--fm);letter-spacing:.14em;transform:rotate(7deg);background:var(--news)}
-/* kolom bawah bervariasi */
-.cols.bottom{border-top:1px solid var(--line);grid-template-columns:1fr 1.2fr 1fr}
-.quotebox{border:1px solid rgba(34,29,21,.3);padding:12px 14px;background:rgba(255,255,255,.4);font:italic 500 1rem/1.5 var(--fs)}
-.quotebox b{font:600 .82rem var(--fm);letter-spacing:.16em;text-transform:uppercase;display:block;color:var(--ink-60);margin-bottom:6px}
-.micro{display:flex;justify-content:space-between;gap:10px;font:400 8.5px var(--fm);letter-spacing:.2em;color:var(--ink-40);text-transform:uppercase;margin-top:30px;flex-wrap:wrap}
+
+/* berita utama */
+.big{margin-top:14px}
+.eyebrow{font:500 8px var(--fm);letter-spacing:.26em;text-transform:uppercase;color:var(--red);margin-bottom:8px;display:flex;align-items:center;gap:8px}
+.eyebrow::before{content:"";width:14px;height:1px;background:var(--red)}
+.big h3{font:600 clamp(1.8rem,4.6vw,2.6rem)/1.06 var(--fd);letter-spacing:-.018em;margin-bottom:10px}
+.dek{font:italic 500 1rem/1.55 var(--fs);color:var(--ink-60);margin-bottom:10px}
+.byline{display:flex;align-items:center;gap:10px;font:500 8px var(--fm);letter-spacing:.2em;text-transform:uppercase;color:var(--ink-40);border-top:1px solid var(--hair);border-bottom:1px solid var(--hair);padding:6px 0;margin:12px 0}
+.body{font:400 .95rem/1.7 var(--fs);color:var(--ink-soft)}
+.body.drop::first-letter{font:900 3.5rem/.82 var(--fd);float:left;padding:5px 10px 0 0;color:var(--red)}
+.body p+p{margin-top:.6em;text-indent:1.2em}
+
+/* headline sekunder */
+.h2{font:600 1.32rem/1.18 var(--fd);letter-spacing:-.01em;margin:10px 0 8px}
+.h2 em{font-style:italic;color:var(--red)}
+.subhead{font:italic 400 .9rem/1.55 var(--fs);color:var(--ink-60);margin-bottom:8px}
+.mark-c{position:relative;display:inline-block}
+.mark-c::after{content:"";position:absolute;inset:-10px -18px;pointer-events:none;opacity:.92;
+  background:url("data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 84' preserveAspectRatio='none'%3E%3Cpath d='M14 42 C 18 12, 184 6, 188 38 C 192 66, 26 78, 13 50 C 5 34, 60 16, 150 14' fill='none' stroke='%23C03B21' stroke-width='2.7' stroke-linecap='round' stroke-dasharray='1 0'/%3E%3C/svg%3E") center/100% 100% no-repeat}
+.exhibit{display:flex;align-items:center;gap:10px;font:500 8px var(--fm);letter-spacing:.26em;color:var(--ink-40);margin:16px 0 2px}
+.exhibit::before,.exhibit::after{content:"";flex:1;height:1px;background:var(--hair)}
+.mark-u{position:relative;display:inline-block}
+.mark-u::after{content:"";position:absolute;left:0;right:0;bottom:-3px;height:2.6px;background:var(--red);transform:rotate(-.4deg)}
+
+/* foto setengahcm */
+.img-tone{height:140px;margin-bottom:10px;position:relative;overflow:hidden;border:1px solid rgba(34,29,21,.28);
+  background:
+    radial-gradient(circle at 30% 30%, rgba(192,59,33,.22), transparent 50%),
+    radial-gradient(circle at 70% 70%, rgba(120,92,52,.26), transparent 55%),
+    linear-gradient(160deg,#D8CDB5,#C9BD9F);
+  display:grid;place-items:center}
+.img-tone::after{content:"";position:absolute;inset:0;
+  background:radial-gradient(circle, rgba(34,29,21,.14) 1px, transparent 1.6px);background-size:4px 4px;opacity:.5}
+.img-tone span{position:relative;z-index:2;font:500 8px var(--fm);letter-spacing:.28em;color:rgba(34,29,21,.6);text-transform:uppercase;background:rgba(247,241,225,.85);padding:4px 10px}
+
+/* kliping tempel */
+.clip{position:relative;margin:6px 0 16px;padding:14px 16px 12px;background:var(--paper-2);border:1px solid rgba(34,29,21,.22);border-radius:1px;
+  transform:rotate(var(--rot,-1deg));
+  font:500 1.14rem/1.4 'Caveat',cursive;color:#2b241c;
+  box-shadow:0 5px 10px -7px rgba(24,20,16,.45)}
+.clip::before{content:"";position:absolute;left:50%;top:-10px;width:74px;height:18px;transform:translateX(-50%) rotate(var(--trot,-2deg));
+  background:linear-gradient(180deg, rgba(255,255,255,.5), rgba(255,255,255,.04)), rgba(206,178,126,.5);
+  border-left:1px dashed rgba(34,29,21,.18);border-right:1px dashed rgba(34,29,21,.18);box-shadow:0 2px 3px rgba(24,20,16,.15)}
+.clip .who{display:block;font:500 7.5px var(--fm);letter-spacing:.2em;text-transform:uppercase;color:rgba(43,36,28,.5);margin-bottom:3px}
+.clip.tilt{--rot:2.4deg;--trot:3deg}
+.stamp{position:absolute;right:-7px;top:-9px;padding:4px 9px 3px;border:2px solid var(--red);border-radius:4px;color:var(--red);font:700 7.5px var(--fm);letter-spacing:.16em;transform:rotate(8deg);background:var(--news)}
+
+/* iklan baris */
+.class{border:1px solid rgba(34,29,21,.3);background:rgba(255,255,255,.5);padding:12px 14px 14px;margin-top:8px}
+.class h4{font:500 8px var(--fm);letter-spacing:.24em;text-transform:uppercase;color:var(--ink-60);border-bottom:1px solid var(--hair);padding-bottom:6px;margin-bottom:8px}
+.class ul{list-style:none;display:grid;gap:8px}
+.class li{font:400 .85rem/1.5 var(--fs);color:var(--ink-soft);display:grid;grid-template-columns:auto 1fr;gap:8px;align-items:baseline}
+.class li b{font:700 10px var(--fm);letter-spacing:.08em;color:var(--red)}
+
+/* pull quote */
+.pull{margin:14px 0;text-align:center;padding:14px 6px 12px;border-top:2px solid var(--ink);border-bottom:2px solid var(--ink)}
+.pull q{font:600 1.26rem/1.35 var(--fd);font-style:italic;quotes:"—" "}
+.pull span{display:block;margin-top:8px;font:500 8px var(--fm);letter-spacing:.22em;text-transform:uppercase;color:var(--ink-40)}
+
+/* footer koran */
+.folio{display:flex;justify-content:space-between;align-items:baseline;gap:12px;margin-top:20px;border-top:1px solid var(--line);border-bottom:1px solid var(--line);
+  padding:8px 2px;font:400 8px var(--fm);letter-spacing:.2em;text-transform:uppercase;color:var(--ink-60);flex-wrap:wrap}
+.folio b{color:var(--ink)}
+.micro{display:grid;justify-items:center;gap:8px;text-align:center;margin-top:24px;font:400 8.5px var(--fm);letter-spacing:.24em;color:var(--ink-40);text-transform:uppercase}
+.micro .seal{display:inline-grid;padding:10px 24px;border:3px double var(--red);border-radius:10px;color:var(--red);font:800 .98rem var(--fd);letter-spacing:.16em;transform:rotate(-3.2deg)}
+.micro .seal small{font:500 7.5px var(--fm);letter-spacing:.26em;margin-top:4px}
 </style>
 </head>
 <body>
-<div class="topbar"><span>MPK · OSIS — <b>REFERENSI 05 / KORAN SEKOLAH</b></span><span>MMXXV · Untuk Sekolah Kita</span></div>
+<div class="grain" aria-hidden="true"></div>
+<div class="topbar"><span>MPK · OSIS — <b>REFERENSI 05 / KORAN SEKOLAH</b></span><span>MMXXVI · Untuk Sekolah Kita</span></div>
 
 <div class="stage">
   <div class="head">
     <p class="kicker">PAPAN BERSAMA</p>
     <h1>Koran <em>Sekolah.</em></h1>
-    <p class="sub">Umum wajib cetak — suara siswa jadi rubrik harian</p>
+    <p class="sub">Cetakan harian warga sekolah — rubrik mading jadi lembaran utama, kliping siswa jadi ornamen</p>
   </div>
 
   <div class="press">
+    <!-- masthead -->
     <div class="mast">
-      <h2>MADING <span>SISWA</span></h2>
-      <div class="ed">EDISI 25.X.<br>PERORANGAN · KELAS V</div>
+      <div class="brand">
+        <p class="orn">Diterbitkan MPK · OSIS — Wajib Dibaca, Tidak Wajib Percaya</p>
+        <h2>MADING <span>Siswa.</span></h2>
+      </div>
+      <div class="ed">
+        EDISI NO. <strong>231</strong> — 25 OKTOBER 2026<br>
+        HARGA: <strong>1 SENYUM</strong> · LIMA HALAMAN
+      </div>
     </div>
 
+    <!-- dateline strip -->
+    <div class="dateline">
+      <span><b>CUACA:</b> Cerah Berawan, Seperti Hati Sebagian Siswa</span>
+      <span><b>KURS:</b> 1 Rindu = 2 Curhat</span>
+      <span><b>MATAHARI TERBIT:</b> 05:12 WIB</span>
+    </div>
+
+    <!-- kolom berita -->
     <div class="cols">
+      <!-- BERITA UTAMA -->
       <section class="col first">
-        <p class="headline">Mading Baru OSIS Dibuka — Semua Boleh Menulis</p>
-        <p class="byline">Oleh Humas OSIS · 2 menit baca</p>
-        <p class="body drop">Papan yang selama ini dingin akhirnya dibuka. Pintu mading terlambat setengah semester, tapi redaksi setia sampai desember penutupan. Tulisan apa saja yang layak dibaca orang — kalau "SARA" mencoba masuk, redaksi akan menyapukan kembali.</p>
-        <hr class="divider">
-        <p class="headline hit">Ujian Dimulai Senin — Semangat, Jangan Lupa Tidur</p>
-        <p class="byline">XI IPA 2 · BIMA</p>
-        <p class="body">Semangat UAS semua!! Jangan lupa tidur cukup, soalnya aku belum tidur 😅</p>
+        <article class="big">
+          <p class="eyebrow">Berita Utama</p>
+          <h3>Mading Digital Dibuka — Warga Sekolah Dipersilakan Menulis Apa Saja</h3>
+          <p class="dek">Setelah lama disepi, papan bersama akhirnya hadir. Menulis bukan lagi hak akses, melainkan kebiasaan baru.</p>
+          <p class="byline"><span>Oleh</span> <b>Humas OSIS</b> <span>· 2 menit baca</span></p>
+          <div class="img-tone" aria-hidden="true"><span>Foto: papan sebelum diisi</span></div>
+          <p class="body drop">Papan yang selama ini dingin akhirnya dibuka lebih lebar. Mading menunggu sejak awal, tapi hanya sedikit yang berani menempel. Kini, dengan satu alamat dan satu tangan dalam jangkauan, semua orang berhak menulis — dengan syarat tulisan tetap layak dibaca orang.</p>
+          <p>Selain itu, redaksi mengingatkan bahwa papan bukan tempat dendam, bukan ujaran, bukan pasaran barang. Papan ini surat kabar bersama: apresiasi, ucapan selamat, dan pesan yang menyejukkan semata.</p>
+        </article>
       </section>
 
+      <!-- KOLOM TENGAH -->
       <section class="col">
-        <p class="headline">Tempel Bunga Payung</p>
-        <p class="byline">X MIPA 1 · EKA</p>
-        <p class="body">Yang menemukan payung bunga di depan lab, boleh kembali ke gudang ya. Aku tunggu sampai sore, soalnya hujan tadi.</p>
-        <hr class="divider">
-        <div class="clip" style="--rot:2deg">
-          <span class="tape-r">CLIP</span>
-          <span class="who">XI IPS 1 · CITRA</span>
-          makasih paduan suara kemarin, keren banget sampai merinding ~
+        <p class="h2"><span class="mark-c">Ujian Dimulai Senin</span></p>
+        <p class="subhead">Bima menulis panjang soal tidur — panjangnya satu kalimat saja</p>
+        <div class="exhibit">EKSHIBIT 01</div>
+        <div class="clip tilt">
+          <span class="stamp">EK.01</span>
+          <span class="who">XI IPA 2 · BIMA</span>
+          Semangat UAS semua!! jangan lupa tidur yang cukup ya, soalnya aku belum tidur gara-gara nonton bola 😅
         </div>
+        <div style="border:0;border-top:1px dashed rgba(34,29,21,.28);margin:16px 0"></div>
+        <p class="h2">Paduan Suara <em>Meredindingkan</em></p>
+        <p class="byline"><b>XI IPS 1 · CITRA</b></p>
+        <p class="body">Sore tadi panggung penuh. Yang dinyanyikan mungkin cuma tiga lagu, tapi komentar di papan ampe lewat: "makasih, keren banget sampai merinding."</p>
       </section>
 
+      <!-- KOLOM KANAN -->
       <section class="col last">
-        <p class="headline hit">Siar Futsal & Iklan Jalan</p>
-        <p class="byline">XI IPS 2 · DIMAS</p>
-        <p class="body">Futsal sore jam 4 di lapangan sekolah. Ambat, bawa sepatu.</p>
-        <hr class="divider">
-        <p class="headline">Footer Motivasi</p>
-        <p class="byline">XI IPA 1 · AULIA</p>
-        <p class="body">Turun boleh. Nangis boleh. Nyerah jangan.</p>
+        <p class="h2">Motivasi <em>Paling Dicari</em></p>
+        <div class="pull">
+          <q>Turun boleh, nangis boleh, nyerah jangan.</q>
+          <span>— Aulia, XI IPA 1</span>
+        </div>
+        <div class="clip">
+          <span class="who">X MIPA 1 · EKA</span>
+          Yang menemukan payung bunga di depan lab, boleh balik ke gudang ya. Aku tunggu sampai sore 💦
+        </div>
+
+        <div class="class">
+          <h4>Iklan Baris</h4>
+          <ul>
+            <li><b>FU.</b> Futsal sore jam 4, lapangan sekolah — siapa saja boleh, bawa sepatu. (Dimas, XI IPS 2)</li>
+            <li><b>HA.</b> Kunci 214 hilang. Ada yang nemu? Balik ke dosen, insya aman.</li>
+            <li><b>MO.</b> Mobil kena tangkai labu. Silakan hubungi yang bersangkutan, terima kasih tumpaknya.</li>
+          </ul>
+        </div>
       </section>
     </div>
 
-    <div class="cols bottom">
-      <section class="col first">
-        <div class="quotebox">
-          <b>Pengumuman</b>
-          Rapat OSIS besok pukul 3 di aula. Bawa nota harian ya.
-        </div>
+    <!-- kolom bawah -->
+    <div class="cols" style="grid-template-columns:1fr 1.4fr;border-top:1px solid var(--line);margin-top:6px">
+      <section class="col" style="border-left:0;padding-left:0">
+        <p class="h2">Rubrik <em>Tetap</em></p>
+        <p class="body">Setiap hari ada bagian yang tak pernah berubah: kursi goyang, dompet hilang, lomba lari, Mars sekolah. Kiriman diterima sampai pukul 16.00, disaring Sabtu pagi — yang layak naik, yang tidak sampai ke cetak.</p>
       </section>
-      <section class="col">
-        <p class="headline">Rubrik Tetap</p>
-        <p class="body">Kursi goyang, dompet hilang, lomba lari, Mars sekolah — kiriman diterima setiap hari sampai pk. 16.00. Laporan literasi dihimpun oleh redaksi setiap Sabtu pagi.</p>
-      </section>
-      <section class="col last">
-        <p class="headline">Kiriman</p>
-        <p class="body">Tulis di sela papan. Redaksi menyaring lapor >= 3 perlu harus aman.</p>
+      <section class="col" style="border-left:1px solid var(--hair)">
+        <p class="h2">Ketikan <span class="mark-u">Terakhir</span></p>
+        <p class="subhead">Catatan redaksi sebelum lempar mesin cetak</p>
+        <p class="body">Sapu dulu sebelum menulis. Tulis lembut. Baca dua kali. Kirim siapa yang layak membaca — biar mading ini, seperti sekolah kita, tetap nyaman jatuh di tangan siapa saja.</p>
+        <p class="folio">
+          <span><b>MADING SISWA</b> · HAL. 1/2</span>
+          <span>Rujukan Desain · Untuk Sekolah Kita</span>
+          <span><b>LANJUTAN:</b> HAL. 2 →</span>
+        </p>
       </section>
     </div>
 
-    <div class="micro"><span>CETAKAN HARIAN MADING SISWA</span><span>Semua pesan di atas milik para siswa</span></div>
+    <p class="micro">
+      <span class="seal">TERCETAK<small>HARI INI, SEKARANG JUGA</small></span>
+      <span>Semua pesan di atas milik para siswa — direkap harian oleh redaksi</span>
+    </p>
   </div>
 </div>
 </body>
