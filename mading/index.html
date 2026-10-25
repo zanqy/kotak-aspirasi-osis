@@ -6,17 +6,18 @@
   <title>Papan Mading Digital | OSIS</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Patrick+Hand&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..900;1,9..144,300..900&family=IBM+Plex+Mono:wght@400;500&family=Patrick+Hand&family=Spectral:ital,wght@0,400;0,500;1,400;1,500&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
   <link rel="stylesheet" href="css/style.css">
 </head>
 <body class="mading-body">
+  <div class="grain"></div>
   <header class="mading-header">
     <div class="header-left">
       <div class="logo-dot"></div>
       <div>
-        <h1>Mading Digital OSIS</h1>
-        <p>Papan bersama, tempel pesan positif untuk sekolah</p>
+        <h1>Mading Digital — OSIS</h1>
+        <p>Ruang bersama buat apresiasi, semangat & ide positif</p>
       </div>
     </div>
     <div class="header-right">
@@ -34,7 +35,7 @@
 
   <main class="mading-canvas-wrap">
     <div class="canvas-hint">
-      <i class="ti ti-arrows-move"></i> Geser/scroll untuk menjelajah papan. Klik "Tempel di Mading" buat nambahin sticky note kamu.
+      <i class="ti ti-arrows-move"></i> Jelajahi papan bersama. Tempel pesan positif buat warga sekolah.
     </div>
     <div id="mading-canvas" class="mading-canvas" aria-label="Papan mading digital"></div>
   </main>
@@ -45,25 +46,25 @@
       <div class="modal-header">
         <div>
           <h2>Tempel Pesan di Mading</h2>
-          <p>Tulisan kamu bakal muncul sebagai sticky note di papan bersama</p>
+          <p>Tulisan kamu bakal jadi sticky note di papan bersama</p>
         </div>
         <button class="icon-btn" id="close-modal"><i class="ti ti-x"></i></button>
       </div>
       <form id="note-form" class="modal-body">
         <label class="field">
           <span>Pesan</span>
-          <textarea id="note-text" placeholder="Tulis ucapan, apresiasi, info positif, atau ajakan baik..." maxlength="280" required></textarea>
+          <textarea id="note-text" placeholder="Tulis ucapan, apresiasi, doa, atau semangat..." maxlength="280" required></textarea>
           <small class="char-count"><span id="char-count">0</span>/280</small>
         </label>
         <div class="field">
           <span>Warna Sticky Note</span>
           <div class="color-picker" id="color-picker">
             <button type="button" class="color-swatch active" data-color="#fff3b0" style="background:#fff3b0"></button>
-            <button type="button" class="color-swatch" data-color="#d8f3dc" style="background:#d8f3dc"></button>
-            <button type="button" class="color-swatch" data-color="#cde7ff" style="background:#cde7ff"></button>
-            <button type="button" class="color-swatch" data-color="#f8d6e7" style="background:#f8d6e7"></button>
-            <button type="button" class="color-swatch" data-color="#ffe5d0" style="background:#ffe5d0"></button>
-            <button type="button" class="color-swatch" data-color="#f1f5f9" style="background:#f1f5f9"></button>
+            <button type="button" class="color-swatch" data-color="#f7f3e3" style="background:#f7f3e3"></button>
+            <button type="button" class="color-swatch" data-color="#f0ebe0" style="background:#f0ebe0"></button>
+            <button type="button" class="color-swatch" data-color="#e8f5e9" style="background:#e8f5e9"></button>
+            <button type="button" class="color-swatch" data-color="#f3e5f5" style="background:#f3e5f5"></button>
+            <button type="button" class="color-swatch" data-color="#fff3e0" style="background:#fff3e0"></button>
           </div>
         </div>
         <div class="modal-actions">
@@ -79,17 +80,17 @@
     <div class="modal modal-sm">
       <div class="modal-header">
         <div>
-          <h2>Aturan Mading Digital</h2>
-          <p>Biar ruang ini tetap aman dan nyaman buat semua</p>
+          <h2>Aturan Mading</h2>
+          <p>Biar ruang ini tetap ramah buat semua</p>
         </div>
         <button class="icon-btn" id="close-rules"><i class="ti ti-x"></i></button>
       </div>
       <div class="modal-body rules-list">
-        <div class="rule-item"><span>✅</span><p>Utamakan apresiasi, ucapan positif, dan info bermanfaat</p></div>
-        <div class="rule-item"><span>🚫</span><p>Dilarang ujaran kebencian, SARA, bullying, atau konten tidak pantas</p></div>
-        <div class="rule-item"><span>🕵️</span><p>Login pakai NIS biar kita bisa jaga kebersihan papan bersama</p></div>
-        <div class="rule-item"><span>⚠️</span><p>Ada tombol "Lapor" di tiap postingan. Laporan akan ditindaklanjuti Humas/OSIS</p></div>
-        <div class="rule-item"><span>💚</span><p>Jadikan mading ini tempat yang ramah buat seluruh warga sekolah</p></div>
+        <div class="rule-item"><span>✓</span><p>Apresiasi, ucapan positif, semangat, dan hal bermanfaat</p></div>
+        <div class="rule-item"><span>✗</span><p>Dilarang SARA, bullying, ujaran kebencian, atau konten tidak pantas</p></div>
+        <div class="rule-item"><span>◎</span><p>Login pakai NIS biar tetap bisa menjaga kebersihan bersama</p></div>
+        <div class="rule-item"><span>⚑</span><p>Gunakan tombol "Lapor" kalo ada postingan yang melanggar aturan</p></div>
+        <div class="rule-item"><span>♥</span><p>Bangun suasana sekolah yang hangat lewat kata-kata</p></div>
       </div>
       <div class="modal-actions">
         <button type="button" class="btn btn-primary" id="ok-rules">Oke, Mengerti</button>

@@ -6,21 +6,22 @@
   <title>Panel Moderasi - Mading Digital OSIS</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..900;1,9..144,300..900&family=IBM+Plex+Mono:wght@400;500&family=Patrick+Hand&family=Spectral:ital,wght@0,400;0,500;1,400;1,500&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
   <link rel="stylesheet" href="css/style.css">
 </head>
 <body class="moderasi-body">
+  <div class="grain"></div>
   <header class="mading-header">
     <div class="header-left">
       <div class="logo-dot logo-dot-danger"></div>
       <div>
-        <h1>Panel Moderasi Mading</h1>
-        <p>Khusus Humas/OSIS - Jaga kebersihan papan bersama</p>
+        <h1>Panel Moderasi</h1>
+        <p>Khusus Humas/OSIS — jaga kebersihan mading bersama</p>
       </div>
     </div>
     <div class="header-right">
-      <a class="btn btn-ghost" href="index.html"><i class="ti ti-layout-board"></i> Lihat Papan Mading</a>
+      <a class="btn btn-ghost" href="index.html"><i class="ti ti-layout-board"></i> Lihat Papan</a>
       <a class="btn btn-ghost" href="login.html"><i class="ti ti-login"></i> Login</a>
     </div>
   </header>
@@ -35,7 +36,7 @@
     <section class="moderasi-list" id="moderasi-list"></section>
     <div class="empty-state" id="empty-state" hidden>
       <i class="ti ti-check"></i>
-      <h3>Semua aman untuk saat ini</h3>
+      <h3>Semua aman saat ini</h3>
       <p>Tidak ada postingan yang perlu ditinjau di tab ini</p>
     </div>
   </main>
@@ -45,7 +46,7 @@
       <div class="mod-item-header">
         <div class="mod-meta">
           <span class="mod-badge" data-role="status"></span>
-          <span class="mod-text">oleh <strong data-role="author"></strong> • <span data-role="time"></span></span>
+          <span class="mod-text">Oleh <strong data-role="author"></strong> • <span data-role="time"></span></span>
         </div>
         <div class="mod-reports">
           <i class="ti ti-flag"></i> <span data-role="report-count">0</span> laporan
@@ -53,7 +54,7 @@
       </div>
       <div class="mod-preview" data-role="preview"></div>
       <div class="mod-reasons" data-role="reasons-wrap" hidden>
-        <p class="mod-reasons-title">Alasan Laporan:</p>
+        <p class="mod-reasons-title">Alasan Laporan</p>
         <ul class="mod-reasons-list" data-role="reasons"></ul>
       </div>
       <div class="mod-actions">
