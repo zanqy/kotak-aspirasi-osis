@@ -169,9 +169,9 @@ function scatterSpot(id, index) {
   const col = slot % COLS;
   const row = Math.floor(slot / COLS);
 
-  const jx = (pseudo(seed, 1) - 0.5) * 18;
-  const jy = (pseudo(seed, 2) - 0.5) * 22;
-  const rot = (pseudo(seed, 3) - 0.5) * 4.2;
+  const jx = (pseudo(seed, 1) - 0.5) * 14;
+  const jy = (pseudo(seed, 2) - 0.5) * 16;
+  const rot = (pseudo(seed, 3) - 0.5) * 3.2;
 
   return {
     x: Math.round(ORIGIN_X + col * CELL_W + jx),
@@ -394,7 +394,7 @@ function renderBoard() {
     if (kind === "card") {
       el.style.width = "274px";
     } else if (kind === "sticky") {
-      el.style.width = 232 + Math.round(pseudo(seed, 11) * 26) + "px";
+      el.style.width = 196 + Math.round(pseudo(seed, 11) * 46) + "px";
     } else {
       el.style.width = 240 + Math.round(pseudo(seed, 12) * 24) + "px";
     }
