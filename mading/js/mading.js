@@ -41,6 +41,10 @@ const okRules = document.getElementById("ok-rules");
 
 let selectedColor = "#F7E9A0";
 
+function isMobile() {
+  return window.matchMedia("(max-width: 768px)").matches;
+}
+
 const storedUser = localStorage.getItem(LOGIN_KEY);
 let currentUser = null;
 
@@ -133,7 +137,18 @@ noteForm.addEventListener("submit", (e) => {
   });
   selectedColor = "#F7E9A0";
 
-  enterPlacementMode(noteData);
+  if (isMobile()) {
+    const spot = scatterSpot(noteData.id, loadNotes().length);
+    noteData.posX = spot.x;
+    noteData.posY = spot.y;
+    noteData.rot = spot.rot;
+    const notes = loadNotes();
+    notes.unshift(noteData);
+    saveNotes(notes);
+    renderBoard();
+  } else {
+    enterPlacementMode(noteData);
+  }
 });
 
 function closeNoteModal() {
@@ -472,54 +487,56 @@ function renderBoard() {
     el.appendChild(footer);
     canvas.appendChild(el);
 
-    // ---- DRAG TO MOVE ----
-    let dragging = false;
-    let dragStartX = 0, dragStartY = 0;
-    let dragStartLeft = 0, dragStartTop = 0;
-    let pointerId = null;
+    // ---- DRAG TO MOVE (hanya desktop) ----
+    if (!isMobile()) {
+      let dragging = false;
+      let dragStartX = 0, dragStartY = 0;
+      let dragStartLeft = 0, dragStartTop = 0;
+      let pointerId = null;
 
-    el.addEventListener("pointerdown", (e) => {
-      if (e.target.closest(".report-btn")) return;
-      if (e.button !== 0 && e.pointerType === "mouse") return;
-      dragging = true;
-      pointerId = e.pointerId;
-      dragStartX = e.clientX;
-      dragStartY = e.clientY;
-      dragStartLeft = parseFloat(el.style.left) || 0;
-      dragStartTop = parseFloat(el.style.top) || 0;
-      el.classList.add("is-dragging");
-      try { el.setPointerCapture(e.pointerId); } catch (err) {}
-      e.preventDefault();
-    });
+      el.addEventListener("pointerdown", (e) => {
+        if (e.target.closest(".report-btn")) return;
+        if (e.button !== 0 && e.pointerType === "mouse") return;
+        dragging = true;
+        pointerId = e.pointerId;
+        dragStartX = e.clientX;
+        dragStartY = e.clientY;
+        dragStartLeft = parseFloat(el.style.left) || 0;
+        dragStartTop = parseFloat(el.style.top) || 0;
+        el.classList.add("is-dragging");
+        try { el.setPointerCapture(e.pointerId); } catch (err) {}
+        e.preventDefault();
+      });
 
-    el.addEventListener("pointermove", (e) => {
-      if (!dragging) return;
-      const dx = e.clientX - dragStartX;
-      const dy = e.clientY - dragStartY;
-      let newLeft = dragStartLeft + dx;
-      let newTop = dragStartTop + dy;
-      newLeft = Math.max(0, Math.min(newLeft, CANVAS_W - el.offsetWidth));
-      newTop = Math.max(0, Math.min(newTop, CANVAS_H - el.offsetHeight));
-      el.style.left = newLeft + "px";
-      el.style.top = newTop + "px";
-    });
+      el.addEventListener("pointermove", (e) => {
+        if (!dragging) return;
+        const dx = e.clientX - dragStartX;
+        const dy = e.clientY - dragStartY;
+        let newLeft = dragStartLeft + dx;
+        let newTop = dragStartTop + dy;
+        newLeft = Math.max(0, Math.min(newLeft, CANVAS_W - el.offsetWidth));
+        newTop = Math.max(0, Math.min(newTop, CANVAS_H - el.offsetHeight));
+        el.style.left = newLeft + "px";
+        el.style.top = newTop + "px";
+      });
 
-    function endDrag(e) {
-      if (!dragging) return;
-      dragging = false;
-      el.classList.remove("is-dragging");
-      try { el.releasePointerCapture(pointerId); } catch (err) {}
-      const notes = loadNotes();
-      const idx = notes.findIndex((n) => n.id === note.id);
-      if (idx !== -1) {
-        notes[idx].posX = Math.round(parseFloat(el.style.left));
-        notes[idx].posY = Math.round(parseFloat(el.style.top));
-        saveNotes(notes);
+      function endDrag(e) {
+        if (!dragging) return;
+        dragging = false;
+        el.classList.remove("is-dragging");
+        try { el.releasePointerCapture(pointerId); } catch (err) {}
+        const notes = loadNotes();
+        const idx = notes.findIndex((n) => n.id === note.id);
+        if (idx !== -1) {
+          notes[idx].posX = Math.round(parseFloat(el.style.left));
+          notes[idx].posY = Math.round(parseFloat(el.style.top));
+          saveNotes(notes);
+        }
       }
-    }
 
-    el.addEventListener("pointerup", endDrag);
-    el.addEventListener("pointercancel", endDrag);
+      el.addEventListener("pointerup", endDrag);
+      el.addEventListener("pointercancel", endDrag);
+    }
   });
 
   if (notes.length === 0) {
