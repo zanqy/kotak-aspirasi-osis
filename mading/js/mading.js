@@ -169,9 +169,9 @@ function scatterSpot(id, index) {
   const col = slot % COLS;
   const row = Math.floor(slot / COLS);
 
-  const jx = (pseudo(seed, 1) - 0.5) * 34;
-  const jy = (pseudo(seed, 2) - 0.5) * 40;
-  const rot = (pseudo(seed, 3) - 0.5) * 8.4;
+  const jx = (pseudo(seed, 1) - 0.5) * 18;
+  const jy = (pseudo(seed, 2) - 0.5) * 22;
+  const rot = (pseudo(seed, 3) - 0.5) * 4.2;
 
   return {
     x: Math.round(ORIGIN_X + col * CELL_W + jx),
@@ -364,10 +364,11 @@ function renderBoard() {
     const kind = note.kind || "sticky";
     const el = document.createElement("article");
     el.className = `note note--${kind}`;
+    el.style.transform = `rotate(var(--rot,0deg))`;
     el.style.left = (note.posX || 100) + "px";
     el.style.top = (note.posY || 100) + "px";
     el.style.setProperty("--rot", (typeof note.rot === "number" ? note.rot : 0) + "deg");
-    el.style.zIndex = String(10 + (i % 7));
+    el.style.zIndex = String(10 + (i % 6));
     el.dataset.id = note.id;
 
     /* variasi tulisan tangan: font, ukuran, kemiringan, warna tinta */
