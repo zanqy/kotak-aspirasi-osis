@@ -306,9 +306,10 @@ body{background:radial-gradient(circle at 50% -10%,#F6F0E1,var(--paper) 65%);col
     else view.y = Math.min(0, Math.max(sh - bh, view.y));
   }
 
-  /* skala terkecil yang masih membuat papan menutup penuh bingkai */
+  /* skala penuh: papan selalu lebih besar dari bingkai di KEDUA arah,
+     supaya bisa digeser ke atas-bawah maupun kiri-kanan */
   function coverScale(){
-    return Math.max(stage.clientWidth / BOARD_W, stage.clientHeight / BOARD_H);
+    return Math.max(stage.clientWidth / BOARD_W, stage.clientHeight / BOARD_H) * 1.3;
   }
 
   function fit(){
