@@ -12,12 +12,14 @@
   --paper:#F2ECDE; --news:#F7F1E1; --paper-2:#EDE4CF;
   --ink:#221D15; --ink-soft:#33291F; --ink-60:rgba(34,29,21,.62); --ink-40:rgba(34,29,21,.42);
   --red:#C03B21; --line:rgba(34,29,21,.24); --hair:rgba(34,29,21,.14);
-  --fd:'Fraunces',serif; --fs:'Spectral',serif; --fm:'IBM Plex Mono',monospace;
+  --fd:'Fraunces',serif; --fs:'Spectral',serif; --fm:'IBM Plex Mono',monospace; --fh:'Caveat',cursive;
 }
-*{margin:0;padding:0;box-sizing:border-box}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 html{background:var(--paper);-webkit-text-size-adjust:100%}
-body{background:radial-gradient(circle at 50% -10%,#F6F0E1,var(--paper) 65%);color:var(--ink);font-family:var(--fs);min-height:100dvh;overflow-x:clip;line-height:1.6}
-.grain{position:fixed;inset:0;pointer-events:none;z-index:90;opacity:.045;background-image:url("data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='260' height='260'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='260' height='260' filter='url(%23n)' opacity='0.55'/%3E%3C/svg%3E")}
+body{background:radial-gradient(circle at 50% -10%,#F6F0E1,var(--paper) 65%);color:var(--ink);
+  font-family:var(--fs);min-height:100dvh;overflow-x:clip;line-height:1.6}
+.grain{position:fixed;inset:0;pointer-events:none;z-index:90;opacity:.045;
+  background-image:url("data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='260' height='260'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='260' height='260' filter='url(%23n)' opacity='0.55'/%3E%3C/svg%3E")}
 
 /* ---------- topnav ---------- */
 .topnav{position:sticky;top:0;z-index:60;display:flex;align-items:center;gap:12px;
@@ -33,12 +35,13 @@ body{background:radial-gradient(circle at 50% -10%,#F6F0E1,var(--paper) 65%);col
 .navlink a.on{color:var(--paper);background:var(--ink)}
 
 /* ---------- shell ---------- */
-.shell{max-width:1040px;margin:0 auto;padding:0 clamp(12px,3.4vw,24px) 110px}
+.shell{max-width:1040px;margin:0 auto;padding:0 clamp(12px,3.4vw,24px) 46px}
 
 /* ---------- masthead ---------- */
 .mast{margin-top:clamp(14px,3vw,26px);border-bottom:1px solid var(--ink);padding-bottom:10px;position:relative}
 .mast::after{content:"";position:absolute;left:0;right:0;bottom:-4px;height:2px;background:var(--ink)}
-.mast .orn{font:500 9.5px var(--fm);letter-spacing:.18em;text-transform:uppercase;color:var(--ink-60);margin-bottom:6px;text-wrap:balance}
+.mast .orn{font:500 9.5px var(--fm);letter-spacing:.18em;text-transform:uppercase;color:var(--ink-60);
+  margin-bottom:6px;text-wrap:balance}
 .mast h1{font:800 clamp(2.4rem,11vw,4.2rem)/.9 var(--fd);letter-spacing:-.035em}
 .mast h1 i{font-style:italic;font-weight:500;color:var(--red)}
 .mast .ed{margin-top:8px;display:flex;flex-wrap:wrap;gap:6px 16px;
@@ -52,192 +55,121 @@ body{background:radial-gradient(circle at 50% -10%,#F6F0E1,var(--paper) 65%);col
 
 /* ---------- paper ---------- */
 .paper{position:relative;margin-top:18px;background:var(--news);border:1px solid rgba(34,29,21,.28);
-  padding:clamp(16px,3.6vw,34px);
+  padding:clamp(12px,2.6vw,22px);
   box-shadow:inset 0 1px 0 rgba(255,255,255,.65),0 30px 50px -40px rgba(24,20,16,.6);
   background-image:url("data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.95' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='240' height='240' filter='url(%23g)' opacity='0.45'/%3E%3C/svg%3E");
   background-blend-mode:multiply,normal}
-.paper::after{content:"";position:absolute;right:0;bottom:0;width:44px;height:44px;pointer-events:none;
-  background:linear-gradient(315deg,rgba(34,29,21,.16) 0 20%,rgba(247,241,225,.98) 21% 100%);
+.paper::after{content:"";position:absolute;right:0;bottom:0;width:40px;height:40px;pointer-events:none;z-index:3;
+  background:linear-gradient(315deg,rgba(34,29,21,.14) 0 20%,rgba(247,241,225,.98) 21% 100%);
   clip-path:polygon(100% 0,0 100%,100% 100%)}
 
-/* ---------- grid ---------- */
-.cols{display:grid;grid-template-columns:minmax(0,1fr);gap:0}
-@media(min-width:860px){
-  .cols{grid-template-columns:minmax(0,1.5fr) minmax(0,1fr)}
-  .cols.three{grid-template-columns:minmax(0,1.25fr) minmax(0,1fr) minmax(0,1.15fr)}
-}
-.col{padding:16px 0}
-@media(min-width:860px){
-  .col{padding:18px 20px}
-  .col:first-child{padding-left:0}
-  .col:last-child{padding-right:0}
-  .col+.col{border-left:1px solid var(--hair)}
-}
-.col+.col{border-top:1px solid var(--hair)}
-@media(min-width:860px){.col+.col{border-top:0}}
+/* ---------- papan kanvas ---------- */
+.boardWrap{position:relative;border:1px solid rgba(34,29,21,.26);overflow:hidden;
+  height:clamp(400px,58vh,560px);background:#E9DFC9;
+  background-image:
+    repeating-linear-gradient(0deg,rgba(120,92,52,.05) 0 1px,transparent 1px 3px),
+    repeating-linear-gradient(90deg,rgba(120,92,52,.05) 0 1px,transparent 1px 3px)}
+@media(min-width:860px){.boardWrap{height:clamp(500px,62vh,680px)}}
 
-/* ---------- typography blocks ---------- */
-.eyebrow{font:500 10px var(--fm);letter-spacing:.22em;text-transform:uppercase;color:var(--red);
-  display:flex;align-items:center;gap:8px;margin-bottom:8px}
-.eyebrow::before{content:"";width:14px;height:1px;background:var(--red)}
-h2.lead{font:600 clamp(1.6rem,6.4vw,2.5rem)/1.1 var(--fd);letter-spacing:-.02em;margin-bottom:10px}
-.dek{font:italic 400 clamp(.94rem,2.6vw,1.02rem)/1.6 var(--fs);color:var(--ink-60);margin-bottom:12px}
-.byline{font:500 10px var(--fm);letter-spacing:.14em;text-transform:uppercase;color:rgba(34,29,21,.52);
-  border-top:1px solid var(--hair);border-bottom:1px solid var(--hair);padding:7px 0;margin:12px 0}
-.byline b{color:var(--ink-soft);font-weight:500}
-p.body{font:400 clamp(.96rem,2.7vw,1rem)/1.75 var(--fs);color:var(--ink-soft);margin-bottom:.85em;text-wrap:pretty}
-p.body.drop::first-letter{font:900 3rem/.8 var(--fd);float:left;padding:6px 10px 0 0;color:var(--red)}
-.h2{font:600 1.24rem/1.2 var(--fd);letter-spacing:-.01em;margin:0 0 8px}
-.h2 em{font-style:italic;color:var(--red)}
-.sub{font:italic 400 .9rem/1.55 var(--fs);color:var(--ink-60);margin-bottom:10px}
+.stage{position:absolute;inset:0;overflow:hidden;touch-action:none;cursor:grab}
+.stage.grabbing{cursor:grabbing}
+.canvas{position:absolute;top:0;left:0;width:1800px;height:1300px;transform-origin:0 0;will-change:transform;
+  background-image:
+    repeating-linear-gradient(0deg,rgba(120,92,52,.05) 0 1px,transparent 1px 3px),
+    repeating-linear-gradient(90deg,rgba(120,92,52,.05) 0 1px,transparent 1px 3px);
+  box-shadow:inset 0 0 140px rgba(120,92,52,.18)}
 
-/* underline / circle marks */
-.mark-u{position:relative;display:inline-block}
-.mark-u::after{content:"";position:absolute;left:0;right:0;bottom:-3px;height:2.4px;background:var(--red);transform:rotate(-.4deg)}
-.mark-c{position:relative;display:inline-block;z-index:0}
-.mark-c::after{content:"";position:absolute;inset:-8px -12px;pointer-events:none;opacity:.9;z-index:-1;
-  background:url("data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 84' preserveAspectRatio='none'%3E%3Cpath d='M14 42 C 18 12, 184 6, 188 38 C 192 66, 26 78, 13 50 C 5 34, 60 16, 150 14' fill='none' stroke='%23C03B21' stroke-width='2.2' stroke-linecap='round'/%3E%3C/svg%3E") center/100% 100% no-repeat}
+/* ---------- tempelan ---------- */
+.item{position:absolute;touch-action:none;cursor:grab;user-select:none;
+  filter:drop-shadow(0 6px 8px rgba(24,20,16,.22));transition:filter .18s}
+.item.dragging{cursor:grabbing;filter:drop-shadow(0 18px 22px rgba(24,20,16,.32));z-index:20}
+.item .body{position:relative;z-index:1;overflow:hidden;backface-visibility:hidden}
+.item .body::after{content:"";position:absolute;inset:0;pointer-events:none;opacity:.07;mix-blend-mode:multiply;
+  background-image:url("data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='p'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23p)'/%3E%3C/svg%3E")}
 
-/* photo placeholder */
-.figure{margin:12px 0;border:1px solid rgba(34,29,21,.26);height:120px;display:grid;place-items:center;
-  background:radial-gradient(circle at 28% 28%,rgba(192,59,33,.2),transparent 52%),radial-gradient(circle at 72% 70%,rgba(120,92,52,.24),transparent 56%),linear-gradient(160deg,#D9CEB6,#CABE9F);position:relative}
-.figure::after{content:"";position:absolute;inset:0;background:radial-gradient(circle,rgba(34,29,21,.13) 1px,transparent 1.5px);background-size:4px 4px;opacity:.5}
-.figure span{position:relative;z-index:1;font:500 9.5px var(--fm);letter-spacing:.16em;text-transform:uppercase;
-  color:rgba(34,29,21,.65);background:rgba(247,241,225,.9);padding:4px 9px}
+.item.note .body{width:196px;min-height:196px;padding:20px 18px 26px;
+  display:flex;align-items:center;justify-content:center;text-align:center;
+  background:linear-gradient(170deg,rgba(255,255,255,.5),rgba(255,255,255,0) 40%),var(--c,#F7E39B);
+  box-shadow:inset 0 -14px 20px -16px rgba(120,92,52,.55),inset 0 0 0 1px rgba(255,255,255,.28)}
+.item.note .body::before{content:"";position:absolute;right:0;bottom:0;width:26px;height:26px;pointer-events:none;
+  background:linear-gradient(315deg,rgba(120,92,52,.24) 0 46%,rgba(255,255,255,.5) 47% 100%);
+  clip-path:polygon(100% 0,0 100%,100% 100%)}
+.item.note .txt{font:600 1.42rem/1.24 var(--fh);color:#2b241c;word-break:break-word;max-height:150px;overflow:hidden}
 
-/* ---------- kiriman clips ---------- */
-.section-head{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap;margin-bottom:4px;
-  border-top:2px solid var(--ink);padding-top:12px}
-.section-head .h2{margin:0}
-.count{margin-left:auto;font:500 10px var(--fm);letter-spacing:.14em;text-transform:uppercase;color:rgba(34,29,21,.52);white-space:nowrap}
-.section-sub{font:italic 400 .88rem/1.55 var(--fs);color:var(--ink-60);margin:4px 0 12px;
-  padding-bottom:8px;border-bottom:1px solid var(--hair)}
-.clips{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:12px}
+.item.clip .body{width:266px;padding:16px 18px 20px;background:#FBF6E8;
+  border:1px solid rgba(34,29,21,.2);box-shadow:inset 0 0 26px rgba(120,92,52,.12)}
+.item.clip .txt{font:400 .93rem/1.6 var(--fs);color:#2b241c;max-height:190px;overflow:hidden}
+.item.clip .who{margin-top:8px;font:500 8.5px var(--fm);letter-spacing:.14em;text-transform:uppercase;color:rgba(43,36,28,.5)}
 
-.clip{position:relative;min-width:0;padding:14px 16px 12px;background:var(--paper-2);border:1px solid rgba(34,29,21,.2);
-  cursor:pointer;text-align:left;width:100%;font:inherit;color:inherit;
-  transform:rotate(var(--rot,-.6deg));transition:transform .25s ease,box-shadow .25s ease;
-  box-shadow:0 4px 9px -7px rgba(24,20,16,.5);display:block}
-.clip::before{content:"";position:absolute;left:50%;top:-8px;width:60px;height:15px;transform:translateX(-50%) rotate(var(--trot,-2deg));
-  background:linear-gradient(180deg,rgba(255,255,255,.55),rgba(255,255,255,.05)),rgba(206,178,126,.55);
-  border-left:1px dashed rgba(34,29,21,.16);border-right:1px dashed rgba(34,29,21,.16)}
-.clip:hover{transform:rotate(0deg) translateY(-2px);box-shadow:0 10px 18px -10px rgba(24,20,16,.5)}
-.clip .who{display:block;font:500 10px var(--fm);letter-spacing:.1em;text-transform:uppercase;
-  color:rgba(43,36,28,.72);margin-bottom:5px}
-.clip .prev{display:block;font-family:'Caveat',cursive;font-size:1.16rem;line-height:1.35;color:#2b241c;
-  overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.clip .cta{display:inline-block;margin-top:7px;font:500 10px var(--fm);letter-spacing:.12em;text-transform:uppercase;color:var(--red)}
-.clip.kutipan{background:#F5EFDF}
-.clip.kutipan .prev{font-family:var(--fd);font-style:italic;font-weight:600;font-size:1.02rem;line-height:1.4;white-space:normal;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical}
-.clip.iklan{background:rgba(255,255,255,.55);border-style:dashed}
-.clip.iklan .prev{font-family:var(--fs);font-size:.9rem;line-height:1.5;white-space:normal;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical}
+.item.pola .body{width:212px;padding:12px 12px 0;background:#FCF9F0;border:1px solid rgba(34,29,21,.16)}
+.item.pola .ph{width:100%;height:170px;background:#CDC0A6 center/cover no-repeat;display:grid;place-items:center;
+  font:500 8.5px var(--fm);letter-spacing:.14em;text-transform:uppercase;color:rgba(43,36,28,.55)}
+.item.pola .cap{font:500 1.16rem/1.2 var(--fh);color:#2b241c;padding:9px 4px 13px;text-align:center;word-break:break-word}
 
-.empty{font:italic 400 .9rem/1.6 var(--fs);color:var(--ink-40);border:1px dashed rgba(34,29,21,.28);
-  padding:16px;text-align:center;margin-top:4px}
-.linkbtn{background:none;border:0;border-bottom:1px solid var(--red);color:var(--red);font:italic 500 .9rem var(--fs);cursor:pointer;padding:0 0 1px}
+.tape{position:absolute;z-index:3;left:50%;top:-9px;width:66px;height:17px;transform:translateX(-50%) rotate(var(--tr,-3deg));
+  background:linear-gradient(180deg,rgba(255,255,255,.6),rgba(255,255,255,.02)),rgba(206,178,126,.5);
+  border-left:1px dashed rgba(34,29,21,.14);border-right:1px dashed rgba(34,29,21,.14);pointer-events:none}
+.pin{position:absolute;z-index:3;left:50%;top:-7px;width:11px;height:11px;margin-left:-5.5px;border-radius:50%;
+  background:radial-gradient(circle at 32% 30%,#E4634A,#8E2814);box-shadow:0 2px 4px rgba(24,20,16,.4);pointer-events:none}
 
-/* ---------- iklan baris list ---------- */
-.ads{list-style:none;display:grid;gap:9px;margin-top:6px}
-.ads li{font:400 .88rem/1.55 var(--fs);color:var(--ink-soft);display:grid;grid-template-columns:auto 1fr;gap:8px;align-items:baseline}
-.ads li b{font:700 10px var(--fm);letter-spacing:.06em;color:var(--red)}
+/* ---------- hint & tools di dalam papan ---------- */
+.boardHint{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);z-index:5;text-align:center;
+  pointer-events:none;padding:0 18px;width:100%}
+.boardHint .bhLabel{font:500 10px var(--fm);letter-spacing:.3em;text-transform:uppercase;color:var(--red);margin-bottom:10px}
+.boardHint p.bhText{font:italic 400 clamp(.94rem,2.7vw,1.04rem)/1.6 var(--fs);color:rgba(34,29,21,.55);max-width:30ch;margin:0 auto}
+.boardHint.hide{display:none}
 
-/* ---------- pull quote ---------- */
-.pull{margin:14px 0;text-align:center;padding:14px 8px 12px;border-top:2px solid var(--ink);border-bottom:2px solid var(--ink)}
-.pull q{font:600 clamp(1.06rem,3.6vw,1.26rem)/1.38 var(--fd);font-style:italic;quotes:"\2014" "\2014"}
-.pull span{display:block;margin-top:8px;font:500 9.5px var(--fm);letter-spacing:.16em;text-transform:uppercase;color:rgba(34,29,21,.52)}
+.tools{position:absolute;right:9px;bottom:9px;z-index:6;display:flex;flex-direction:column;gap:6px}
+.tool{width:36px;height:36px;border-radius:50%;border:1px solid rgba(34,29,21,.2);
+  background:rgba(247,241,225,.94);color:var(--ink);font:500 .95rem/1 var(--fm);cursor:pointer;
+  display:grid;place-items:center;box-shadow:0 6px 14px -8px rgba(24,20,16,.6)}
+.tool:active{transform:scale(.94)}
+.tool.small{width:32px;height:32px;font-size:.7rem}
 
 /* ---------- folio ---------- */
-.folio{display:flex;flex-wrap:wrap;gap:6px 16px;justify-content:space-between;margin-top:16px;
+.folio{display:flex;flex-wrap:wrap;gap:6px 16px;justify-content:space-between;margin-top:12px;
   border-top:1px solid var(--line);padding-top:9px;font:400 9.5px var(--fm);letter-spacing:.12em;
   text-transform:uppercase;color:rgba(34,29,21,.55)}
 .folio b{color:var(--ink)}
 
-
-/* ---------- slot kosong ---------- */
-.slot{border:1px dashed rgba(34,29,21,.32);border-radius:2px;padding:14px;margin-bottom:10px;
-  background:rgba(255,255,255,.28);position:relative}
-.slot--big{min-height:150px;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:24px 18px}
-.slot-mark{display:block;font:400 1.5rem/1 var(--fs);color:rgba(192,59,33,.7);margin-bottom:6px}
-.slot-title{font:600 1rem/1.3 var(--fd);color:rgba(34,29,21,.78);margin-bottom:3px}
-.slot-sub{font:italic 400 .86rem/1.5 var(--fs);color:rgba(34,29,21,.5)}
-
-.board-empty{margin-top:4px}
-.empty-frame{border:1px dashed rgba(34,29,21,.3);background:rgba(255,255,255,.3);
-  padding:26px 18px;text-align:center;position:relative}
-.empty-frame::before,.empty-frame::after{content:"";position:absolute;width:16px;height:16px;border:1px solid rgba(192,59,33,.55)}
-.empty-frame::before{top:6px;left:6px;border-right:0;border-bottom:0}
-.empty-frame::after{bottom:6px;right:6px;border-left:0;border-top:0}
-.empty-mark{display:block;font:300 1.9rem/1 var(--fs);color:rgba(192,59,33,.65);margin-bottom:8px}
-.empty-title{font:600 1.12rem/1.25 var(--fd);margin-bottom:5px}
-.empty-sub{font:italic 400 .88rem/1.55 var(--fs);color:rgba(34,29,21,.58);margin-bottom:14px}
-.empty-frame .btn{padding:10px 18px;font-size:.9rem}
-
-
-/* ---------- papan kosong (tanpa kotak placeholder) ---------- */
-.emptyBoard{min-height:min(46vh,360px);display:flex;flex-direction:column;align-items:center;justify-content:center;
-  padding:clamp(48px,12vw,90px) 18px;text-align:center;border-bottom:1px solid var(--hair)}
-.ebLabel{font:500 10px var(--fm);letter-spacing:.3em;text-transform:uppercase;color:var(--red);margin-bottom:12px}
-.ebNote{font:italic 400 clamp(.96rem,2.8vw,1.06rem)/1.65 var(--fs);color:rgba(34,29,21,.55);margin:0 auto 20px;max-width:34ch}
-.emptyBoard .btn{padding:12px 24px}
-
-/* ---------- compose FAB + sheet ---------- */
-.fab{position:fixed;right:clamp(14px,4vw,26px);bottom:calc(18px + env(safe-area-inset-bottom));z-index:70;
-  display:inline-flex;align-items:center;gap:8px;background:var(--ink);color:var(--paper);border:0;
-  border-radius:99px;padding:13px 20px;font:600 .95rem var(--fd);cursor:pointer;
-  box-shadow:0 16px 30px -16px rgba(24,20,16,.7);transition:transform .18s,box-shadow .18s}
-.fab:hover{transform:translate(-2px,-2px);box-shadow:6px 6px 0 var(--red)}
-.fab[hidden]{display:none}
-
-.sheet{position:fixed;inset:0;z-index:100;display:none;align-items:center;justify-content:center;
-  padding:16px;background:rgba(24,20,16,.55);backdrop-filter:blur(3px)}
+/* ---------- sheet pemilih ---------- */
+.sheet{position:fixed;inset:0;z-index:100;display:none;align-items:flex-end;justify-content:center;
+  background:rgba(24,20,16,.45);backdrop-filter:blur(2px)}
 .sheet.open{display:flex}
-.card{width:min(540px,100%);max-height:88vh;overflow-y:auto;background:var(--lembar,#FBF7EC);
-  border:1px solid rgba(34,29,21,.32);border-radius:10px;padding:clamp(20px,5vw,32px);position:relative;
-  box-shadow:0 40px 70px -40px rgba(24,20,16,.7);animation:rise .32s cubic-bezier(.2,.8,.3,1) both}
-@keyframes rise{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
-.card .close{position:absolute;top:10px;right:10px;width:32px;height:32px;border-radius:50%;
-  border:1px solid rgba(34,29,21,.18);background:transparent;color:var(--ink-40);font-size:17px;cursor:pointer;line-height:1}
-.card .close:hover{color:var(--red);border-color:var(--red)}
-.card .kicker{font:500 10px var(--fm);letter-spacing:.24em;text-transform:uppercase;color:var(--red);margin-bottom:6px}
-.card h3{font:600 clamp(1.35rem,4.4vw,1.9rem)/1.14 var(--fd);letter-spacing:-.015em;margin-bottom:6px}
-.card .meta{font:500 10px var(--fm);letter-spacing:.12em;text-transform:uppercase;color:rgba(34,29,21,.52);
-  padding-bottom:10px;margin-bottom:12px;border-bottom:1px solid var(--hair)}
-.card .read{font:400 1rem/1.8 var(--fs);color:var(--ink-soft);white-space:pre-wrap;word-break:break-word}
-.card .read::first-letter{font:900 2.6rem/.8 var(--fd);float:left;padding:5px 8px 0 0;color:var(--red)}
-
-.field{margin-bottom:12px}
-.field label{display:block;font:500 9px var(--fm);letter-spacing:.2em;text-transform:uppercase;color:var(--ink-60);margin-bottom:5px}
-.field input,.field textarea,.field select{width:100%;font:400 1rem/1.6 var(--fs);color:var(--ink);
-  background:transparent;border:1px solid var(--line);border-radius:8px;padding:10px 12px}
-.field textarea{min-height:110px;resize:vertical;
-  background-image:repeating-linear-gradient(180deg,transparent 0 27px,var(--hair) 27px 28px);background-position:0 6px}
-.field input:focus,.field textarea:focus,.field select:focus{outline:none;border-color:var(--red)}
-.row2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-.note-info{font:italic 400 .82rem/1.6 var(--fs);color:var(--ink-40);
-  background:rgba(192,59,33,.06);border-left:2px solid rgba(192,59,33,.5);border-radius:0 6px 6px 0;
-  padding:9px 12px;margin:12px 0 14px}
-.actions{display:flex;gap:9px;justify-content:flex-end;flex-wrap:wrap}
-.btn{background:var(--ink);color:var(--paper);border:0;border-radius:8px;padding:12px 20px;
-  font:600 .95rem var(--fd);cursor:pointer;transition:transform .16s,box-shadow .16s}
-.btn:hover{transform:translate(-2px,-2px);box-shadow:4px 4px 0 var(--red)}
-.btn.ghost{background:transparent;color:var(--ink);border:1px solid rgba(34,29,21,.22);font:500 .94rem var(--fs)}
-.btn.ghost:hover{transform:none;box-shadow:none;border-color:var(--ink)}
-
-.toast{position:fixed;left:50%;bottom:24px;transform:translate(-50%,16px);z-index:120;opacity:0;pointer-events:none;
-  background:var(--ink);color:var(--paper);padding:11px 20px;border-radius:99px;font:500 .9rem var(--fs);
-  box-shadow:0 18px 36px -20px rgba(24,20,16,.7);transition:opacity .28s,transform .28s}
+.panel{width:min(520px,100%);background:var(--paper);border-radius:18px 18px 0 0;
+  border-top:2px solid var(--ink);padding:16px clamp(16px,5vw,26px) calc(18px + env(safe-area-inset-bottom));
+  animation:up .28s cubic-bezier(.2,.8,.3,1) both;max-height:92vh;overflow-y:auto}
+@keyframes up{from{transform:translateY(28px);opacity:.6}to{transform:none;opacity:1}}
+.panel h3{font:600 1.06rem var(--fd);margin-bottom:2px}
+.panel .sub{font:italic 400 .84rem/1.5 var(--fs);color:rgba(34,29,21,.55);margin-bottom:13px}
+.kinds{display:grid;grid-template-columns:repeat(3,1fr);gap:9px;margin-bottom:13px}
+.kind{border:1px solid rgba(34,29,21,.22);background:rgba(255,255,255,.42);border-radius:10px;
+  padding:12px 6px;cursor:pointer;display:grid;justify-items:center;gap:5px;transition:background .16s,border-color .16s}
+.kind[aria-pressed="true"]{background:var(--ink);border-color:var(--ink);color:var(--paper)}
+.kind span{font:500 9.5px var(--fm);letter-spacing:.1em;text-transform:uppercase}
+.kind i{font-size:1.15rem;font-style:normal;line-height:1}
+.field{margin-bottom:10px}
+.field textarea,.field input[type=text]{width:100%;font:400 1rem/1.55 var(--fs);color:var(--ink);
+  background:rgba(255,255,255,.55);border:1px solid rgba(34,29,21,.22);border-radius:9px;padding:10px 12px}
+.field textarea{min-height:78px;resize:none}
+.field textarea:focus,.field input:focus{outline:none;border-color:var(--red)}
+.row{display:flex;gap:9px}
+.btn{background:var(--ink);color:var(--paper);border:0;border-radius:9px;padding:12px 20px;
+  font:600 .94rem var(--fd);cursor:pointer}
+.btn.ghost{background:transparent;color:var(--ink);border:1px solid rgba(34,29,21,.24);font:500 .92rem var(--fs)}
+.btn.grow{flex:1}
+.preview{display:none;margin-bottom:10px}
+.preview.on{display:block}
+.preview img{width:100%;max-height:150px;object-fit:cover;border-radius:9px;border:1px solid rgba(34,29,21,.2)}
+.toast{position:fixed;left:50%;bottom:26px;transform:translate(-50%,14px);z-index:120;
+  background:rgba(34,29,21,.93);color:var(--paper);padding:10px 18px;border-radius:99px;
+  font:500 .86rem var(--fs);opacity:0;pointer-events:none;transition:opacity .26s,transform .26s}
 .toast.show{opacity:1;transform:translate(-50%,0)}
 
-@media(max-width:640px){
-  .fab{padding:11px 17px;font-size:.88rem;box-shadow:0 10px 22px -12px rgba(24,20,16,.75)}
-  .scrim{position:fixed;left:0;right:0;bottom:0;height:92px;pointer-events:none;z-index:65;
-    background:linear-gradient(to top,var(--paper) 34%,rgba(242,236,222,0))}
-}
 @media(max-width:480px){
   .mast h1{font-size:2.5rem}
   .mast .orn{font-size:8.5px}
   .dataline{font-size:9px}
-  .card .read{font-size:.98rem;line-height:1.75}
 }
 </style>
 </head>
@@ -249,7 +181,7 @@ p.body.drop::first-letter{font:900 3rem/.8 var(--fd);float:left;padding:6px 10px
   <div class="navlink">
     <a href="index.html" class="on">Mading</a>
     <a href="#" data-soon="Profil">Profil</a>
-    <a href="#" data-compose>Kirim</a>
+    <a href="#" data-soon="Kirim">Kirim</a>
   </div>
 </nav>
 
@@ -271,216 +203,358 @@ p.body.drop::first-letter{font:900 3rem/.8 var(--fd);float:left;padding:6px 10px
   </div>
 
   <article class="paper">
-    <div class="emptyBoard" id="emptyBoard">
-      <p class="ebLabel">Papan</p>
-      <p class="ebNote">Belum ada satu pun yang menempel hari ini.</p>
-      <button class="btn" data-compose>Tulis Surat Pertama</button>
-    </div>
+    <div class="boardWrap">
+      <div class="stage" id="stage">
+        <div class="canvas" id="canvas"></div>
+      </div>
 
-    <div class="folio" id="emptyFolio">
-      <span><b>AKSARA</b> · HAL. 1/2</span>
-      <span>0 kiriman</span>
-      <span>MENUNGGU KIRIMAN PERTAMA</span>
-    </div>
+      <div class="boardHint" id="boardHint">
+        <p class="bhLabel">Papan</p>
+        <p class="bhText">Ketuk di mana saja untuk menempel note, kliping, atau foto.</p>
+      </div>
 
-    <div id="fullBoard" hidden>
-    <div class="cols three">
-      <section class="col">
-        <p class="eyebrow">Berita Utama</p>
-        <h2 class="lead">Papan Ini Akhirnya Dibuka — Semua Boleh Menulis</h2>
-        <p class="dek">Bukan surat resmi, bukan pengumuman. Ini papan tempat kata-kata siswa berhenti sejenak.</p>
-        <p class="byline"><b>Oleh Humas OSIS</b> · 2 menit baca</p>
-        <div class="figure" aria-hidden="true"><span>Foto: papan sebelum diisi</span></div>
-        <p class="body drop">Papan yang selama ini dingin akhirnya dibuka lebih lebar. AKSARA menampung surat, ucapan, dan pesan yang biasanya cuma lewat di koridor. Semua orang berhak menulis — asal tulisannya tetap layak dibaca orang lain.</p>
-        <p class="body">Redaksi mengingatkan: papan ini bukan tempat dendam, bukan ujaran kebencian, bukan pasar barang. Kalau ada yang melanggar, kiriman bisa dilaporkan dan ditinjau Humas.</p>
-      </section>
-
-      <section class="col">
-        <p class="h2"><span class="mark-c">Ujian Dimulai Senin</span></p>
-        <p class="sub">Bima menulis panjang soal tidur — panjangnya satu kalimat saja</p>
-        <div class="pull">
-          <q>Turun boleh, nangis boleh, nyerah jangan.</q>
-          <span>— Aulia, XI IPA 1</span>
-        </div>
-        <p class="h2" style="margin-top:14px">Iklan Baris</p>
-        <ul class="ads">
-          <li><b>FU.</b> Futsal sore jam 4, lapangan sekolah — bawa sepatu.</li>
-          <li><b>HA.</b> Kunci 214 hilang. Ada yang nemu?</li>
-          <li><b>PU.</b> Payung bunga tertinggal di lab, ambil di gudang.</li>
-        </ul>
-      </section>
-
-      <section class="col">
-        <p class="h2">Kiriman <em>Pembaca</em></p>
-        <p class="sub">Ketuk kliping untuk membaca pesan lengkapnya.</p>
-        <div class="clips" id="clips"></div>
-        <div class="empty" id="clipsEmpty" hidden>
-          Belum ada kiriman — <button class="linkbtn" data-compose>jadilah yang pertama</button>
-        </div>
-      </section>
+      <div class="tools">
+        <button class="tool" id="zIn" aria-label="Perbesar">＋</button>
+        <button class="tool" id="zOut" aria-label="Perkecil">−</button>
+        <button class="tool small" id="zFit" aria-label="Paskan">fit</button>
+      </div>
     </div>
 
     <div class="folio">
-      <span><b>AKSARA</b> · HAL. 1/2</span>
-      <span id="counter">0 kiriman</span>
-      <span>LANJUTAN: HAL. 2 →</span>
+      <span><b>AKSARA</b> · HAL. 1/1</span>
+      <span id="counter">0 tempelan</span>
+      <span>EDISI 231</span>
     </div>
-  </div>
   </article>
 </main>
 
-<button class="fab" data-compose>Tulis Surat</button>
-<div class="scrim" aria-hidden="true"></div>
+<div class="sheet" id="sheet">
+  <div class="panel">
+    <h3>Tempel di papan</h3>
+    <p class="sub">Pilih benda, lalu tempel di titik yang kamu ketuk.</p>
 
-<!-- baca kiriman -->
-<div class="sheet" id="readSheet">
-  <div class="card">
-    <button class="close" id="readClose" aria-label="Tutup">×</button>
-    <p class="kicker" id="rKicker">Kiriman Pembaca</p>
-    <h3 id="rTitle">Judul</h3>
-    <p class="meta" id="rMeta">Kelas · Tanggal</p>
-    <p class="read" id="rBody">Isi pesan.</p>
+    <div class="kinds">
+      <button class="kind" data-kind="note" aria-pressed="true"><i>▭</i><span>Note</span></button>
+      <button class="kind" data-kind="polaroid" aria-pressed="false"><i>▣</i><span>Foto</span></button>
+      <button class="kind" data-kind="clip" aria-pressed="false"><i>▤</i><span>Kliping</span></button>
+    </div>
+
+    <div class="preview" id="preview"><img id="previewImg" alt="Pratinjau foto"></div>
+
+    <div class="field" id="fotoField" hidden>
+      <input type="file" id="foto" accept="image/*">
+    </div>
+
+    <div class="field" id="txtField">
+      <textarea id="txt" maxlength="240" placeholder="Tulis sesuatu..."></textarea>
+    </div>
+
+    <div class="field" id="nameField" hidden>
+      <input type="text" id="nama" placeholder="Nama kamu (boleh kosong)" maxlength="40">
+    </div>
+
+    <div class="row">
+      <button class="btn ghost" id="cancel">Batal</button>
+      <button class="btn grow" id="place">Tempel di sini</button>
+    </div>
   </div>
 </div>
 
-<!-- tulis surat -->
-<div class="sheet" id="writeSheet">
-  <div class="card">
-    <button class="close" id="writeClose" aria-label="Tutup">×</button>
-    <p class="kicker">Surat Untuk Papan</p>
-    <h3>Tulis Kirimanmu</h3>
-    <p class="meta" style="border:0;padding:0;margin:8px 0 0">Muncul di kolom Kiriman Pembaca setelah dikirim.</p>
-    <form id="writeForm" style="margin-top:14px">
-      <div class="row2">
-        <div class="field"><label>Nama</label><input id="fNama" placeholder="Nama kamu" required></div>
-        <div class="field"><label>Kelas</label><input id="fKelas" placeholder="XI IPA 1" required></div>
-      </div>
-      <div class="field">
-        <label>Jenis</label>
-        <select id="fTipe">
-          <option value="kiriman">Kiriman — pesan biasa</option>
-          <option value="kutipan">Kutipan — kalimat yang kamu suka</option>
-          <option value="iklan">Iklan Baris — cari / tawarkan</option>
-        </select>
-      </div>
-      <div class="field"><label>Isi</label><textarea id="fIsi" placeholder="Tulis di sini..." required></textarea></div>
-      <p class="note-info">Semua kiriman ditinjau redaksi. Laporan 3 kali atau lebih otomatis disembunyikan.</p>
-      <div class="actions">
-        <button type="button" class="btn ghost" id="writeCancel">Batal</button>
-        <button type="submit" class="btn">Kirim ke Papan</button>
-      </div>
-    </form>
-  </div>
-</div>
-
-<div class="toast" id="toast">Terkirim</div>
+<div class="toast" id="toast"></div>
 
 <script>
 (function(){
-  var KEY = "aksara_kiriman_v1";
-  var LABEL = { kiriman:"Kiriman", kutipan:"Kutipan", iklan:"Iklan Baris" };
+  var KEY = "aksara_papan_v1";
+  var BOARD_W = 1800, BOARD_H = 1300;
+  var NOTE_COLORS = ["#F7E39B","#F6D8DD","#DCE7CB","#D7E4EF","#F1E0C4"];
 
-  function load(){ try{ return JSON.parse(localStorage.getItem(KEY)) || []; }catch(e){ return []; } }
-  function save(v){ try{ localStorage.setItem(KEY, JSON.stringify(v)); }catch(e){} }
-  function esc(s){ return String(s).replace(/[&<>"]/g, function(c){
-    return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]; }); }
-  function tgl(ts){ return new Date(ts).toLocaleDateString("id-ID",{day:"2-digit",month:"short"}); }
-
-  var seed = [];
-
-  function items(){ return load(); }
-
-  var list = document.getElementById("clips");
-  var emptyBoard = document.getElementById("emptyBoard");
-  var fullBoard = document.getElementById("fullBoard");
+  var stage = document.getElementById("stage");
+  var canvas = document.getElementById("canvas");
+  var sheet = document.getElementById("sheet");
+  var toast = document.getElementById("toast");
+  var hint = document.getElementById("boardHint");
   var counter = document.getElementById("counter");
 
-  function render(){
-    var data = items();
-    list.innerHTML = "";
-    counter.textContent = data.length + " kiriman";
-    var emptyFolio = document.getElementById("emptyFolio");
-    var isEmpty = data.length === 0;
-    if(emptyBoard) emptyBoard.hidden = !isEmpty;
-    if(emptyFolio) emptyFolio.hidden = !isEmpty;
-    if(fullBoard) fullBoard.hidden = isEmpty;
-    var fab = document.querySelector(".fab");
-    if(fab) fab.hidden = isEmpty;
-    if(isEmpty) return;
+  var view = { x: 0, y: 0, s: 0.55 };
+  var items = [];
+  var pendingPoint = null, pendingKind = "note", pendingImage = null;
 
-    data.slice().reverse().forEach(function(it, i){
-      var b = document.createElement("button");
-      b.type = "button";
-      b.className = "clip " + (it.tipe === "kutipan" ? "kutipan" : it.tipe === "iklan" ? "iklan" : "kiriman");
-      b.style.setProperty("--rot", ((i % 3) - 1) * 1.1 + "deg");
-      b.style.setProperty("--trot", ((i % 3) - 1) * 1.6 + "deg");
-      b.innerHTML =
-        '<span class="who">' + LABEL[it.tipe] + " · " + esc(it.nama) + " · " + esc(it.kelas) + '</span>' +
-        '<span class="prev">' + esc(it.isi) + '</span>' +
-        '<span class="cta">Baca →</span>';
-      b.addEventListener("click", function(){ openRead(it); });
-      list.appendChild(b);
+  function load(){
+    try { var d = JSON.parse(localStorage.getItem(KEY)); return Array.isArray(d) ? d : []; }
+    catch(e){ return []; }
+  }
+  function save(){
+    try { localStorage.setItem(KEY, JSON.stringify(items)); }
+    catch(e){ say("Penyimpanan penuh — pakai foto yang lebih kecil"); }
+  }
+  function say(msg){
+    toast.textContent = msg; toast.classList.add("show");
+    clearTimeout(say._t); say._t = setTimeout(function(){ toast.classList.remove("show"); }, 2200);
+  }
+
+  function applyView(){
+    canvas.style.transform = "translate(" + view.x + "px," + view.y + "px) scale(" + view.s + ")";
+  }
+
+  function fit(){
+    var sw = stage.clientWidth, sh = stage.clientHeight;
+    if(!items.length){
+      view.s = Math.max(0.34, Math.min(0.8, sw / 1080));
+      view.x = (sw - BOARD_W * view.s) / 2;
+      view.y = (sh - BOARD_H * view.s) / 2;
+    } else {
+      var minX = Infinity, minY = Infinity, maxX = -Infinity, maxY = -Infinity;
+      items.forEach(function(it){
+        minX = Math.min(minX, it.x); minY = Math.min(minY, it.y);
+        maxX = Math.max(maxX, it.x + 240); maxY = Math.max(maxY, it.y + 240);
+      });
+      var pad = 90;
+      var w = maxX - minX + pad * 2, h = maxY - minY + pad * 2;
+      view.s = Math.min(1.05, Math.max(0.3, Math.min(sw / w, sh / h)));
+      view.x = sw / 2 - (minX - pad + w / 2) * view.s;
+      view.y = sh / 2 - (minY - pad + h / 2) * view.s;
+    }
+    applyView();
+  }
+
+  function makeItem(data){
+    var el = document.createElement("div");
+    el.className = "item " + (data.kind === "polaroid" ? "pola" : data.kind === "clip" ? "clip" : "note");
+    el.dataset.id = data.id;
+    el.style.left = data.x + "px";
+    el.style.top = data.y + "px";
+    el.style.transform = "rotate(" + (data.rot || 0) + "deg)";
+    if(data.kind === "note") el.style.setProperty("--c", data.color || NOTE_COLORS[0]);
+
+    var body = document.createElement("div");
+    body.className = "body";
+
+    if(data.kind === "polaroid"){
+      body.innerHTML = '<div class="ph"></div><div class="cap"></div>';
+      var ph = body.querySelector(".ph");
+      if(data.image){ ph.style.backgroundImage = "url(" + data.image + ")"; ph.textContent = ""; }
+      else { ph.textContent = "belum ada foto"; }
+      body.querySelector(".cap").textContent = data.text || "";
+      el.appendChild(body);
+      el.insertAdjacentHTML("afterbegin", '<div class="tape"></div>');
+    } else if(data.kind === "clip"){
+      body.innerHTML = '<div class="txt"></div><div class="who"></div>';
+      body.querySelector(".txt").textContent = data.text || "";
+      body.querySelector(".who").textContent = data.name || "tanpa nama";
+      el.appendChild(body);
+      el.insertAdjacentHTML("afterbegin", '<div class="tape"></div>');
+    } else {
+      body.innerHTML = '<div class="txt"></div>';
+      body.querySelector(".txt").textContent = data.text || "";
+      el.appendChild(body);
+      el.insertAdjacentHTML("afterbegin", '<div class="pin"></div>');
+    }
+
+    attachDrag(el, data);
+    return el;
+  }
+
+  function renderAll(){
+    canvas.innerHTML = "";
+    items.forEach(function(it){ canvas.appendChild(makeItem(it)); });
+    counter.textContent = items.length + " tempelan";
+    hint.classList.toggle("hide", items.length > 0);
+  }
+
+  function attachDrag(el, data){
+    var start = null;
+    el.addEventListener("pointerdown", function(e){
+      if(e.button !== undefined && e.button !== 0) return;
+      e.stopPropagation();
+      try { el.setPointerCapture(e.pointerId); } catch(_) {}
+      el.classList.add("dragging");
+      start = { px: e.clientX, py: e.clientY, x: data.x, y: data.y };
     });
+    el.addEventListener("pointermove", function(e){
+      if(!start) return;
+      e.stopPropagation();
+      data.x = start.x + (e.clientX - start.px) / view.s;
+      data.y = start.y + (e.clientY - start.py) / view.s;
+      el.style.left = data.x + "px";
+      el.style.top = data.y + "px";
+    });
+    function end(){ if(!start) return; el.classList.remove("dragging"); start = null; save(); }
+    el.addEventListener("pointerup", end);
+    el.addEventListener("pointercancel", end);
   }
 
-  var readSheet = document.getElementById("readSheet");
-  function openRead(it){
-    document.getElementById("rKicker").textContent = LABEL[it.tipe] || "Kiriman";
-    document.getElementById("rTitle").textContent = it.nama + " — " + it.kelas;
-    document.getElementById("rMeta").textContent = it.kelas + " · " + tgl(it.at);
-    document.getElementById("rBody").textContent = it.isi;
-    readSheet.classList.add("open");
-  }
-  document.getElementById("readClose").addEventListener("click", function(){ readSheet.classList.remove("open"); });
+  var pan = null, pinch = null, moved = false;
 
-  var writeSheet = document.getElementById("writeSheet");
-  function openWrite(){ writeSheet.classList.add("open"); setTimeout(function(){ document.getElementById("fIsi").focus(); }, 90); }
-  function closeWrite(){ writeSheet.classList.remove("open"); }
-
-  document.querySelectorAll("[data-compose]").forEach(function(el){
-    el.addEventListener("click", function(e){ e.preventDefault(); openWrite(); });
+  stage.addEventListener("pointerdown", function(e){
+    if(e.target.closest(".item")) return;
+    moved = false;
+    if(e.pointerType === "touch" && e.isPrimary === false) return;
+    pan = { px: e.clientX, py: e.clientY, x: view.x, y: view.y };
+    stage.classList.add("grabbing");
+    try { stage.setPointerCapture(e.pointerId); } catch(_) {}
   });
+
+  stage.addEventListener("pointermove", function(e){
+    if(pinch || !pan) return;
+    var dx = e.clientX - pan.px, dy = e.clientY - pan.py;
+    if(Math.abs(dx) + Math.abs(dy) > 6) moved = true;
+    view.x = pan.x + dx; view.y = pan.y + dy;
+    applyView();
+  });
+
+  stage.addEventListener("pointerup", function(e){
+    stage.classList.remove("grabbing");
+    var wasPan = pan, didMove = moved;
+    pan = null;
+    if(!wasPan || didMove) return;
+    if(e.target.closest(".item")) return;
+    openSheet(boardPoint(e.clientX, e.clientY));
+  });
+  stage.addEventListener("pointercancel", function(){ pan = null; stage.classList.remove("grabbing"); });
+
+  stage.addEventListener("wheel", function(e){
+    e.preventDefault();
+    zoomAt(e.clientX, e.clientY, e.deltaY < 0 ? 1.12 : 1 / 1.12);
+  }, { passive: false });
+
+  function zoomAt(cx, cy, factor){
+    var ns = Math.min(2.2, Math.max(0.22, view.s * factor));
+    var r = stage.getBoundingClientRect();
+    var bx = (cx - r.left - view.x) / view.s;
+    var by = (cy - r.top - view.y) / view.s;
+    view.s = ns;
+    view.x = (cx - r.left) - bx * ns;
+    view.y = (cy - r.top) - by * ns;
+    applyView();
+  }
+
+  var pts = {};
+  stage.addEventListener("pointerdown", function(e){
+    if(e.pointerType !== "touch") return;
+    pts[e.pointerId] = { x: e.clientX, y: e.clientY };
+    var ids = Object.keys(pts);
+    if(ids.length === 2){
+      var a = pts[ids[0]], b = pts[ids[1]];
+      pinch = { dist: Math.hypot(a.x - b.x, a.y - b.y), s: view.s, cx: (a.x + b.x) / 2, cy: (a.y + b.y) / 2 };
+      pan = null;
+    }
+  }, true);
+
+  stage.addEventListener("pointermove", function(e){
+    if(e.pointerType !== "touch" || !pinch) return;
+    if(pts[e.pointerId]) pts[e.pointerId] = { x: e.clientX, y: e.clientY };
+    var ids = Object.keys(pts);
+    if(ids.length < 2) return;
+    var a = pts[ids[0]], b = pts[ids[1]];
+    var d = Math.hypot(a.x - b.x, a.y - b.y);
+    zoomAt(pinch.cx, pinch.cy, (pinch.s * (d / pinch.dist)) / view.s);
+  }, true);
+
+  stage.addEventListener("pointerup", function(e){ delete pts[e.pointerId]; if(Object.keys(pts).length < 2) pinch = null; }, true);
+  stage.addEventListener("pointercancel", function(e){ delete pts[e.pointerId]; pinch = null; }, true);
+
+  document.getElementById("zIn").onclick = function(){ zoomAt(stage.clientWidth/2, stage.clientHeight/2, 1.2); };
+  document.getElementById("zOut").onclick = function(){ zoomAt(stage.clientWidth/2, stage.clientHeight/2, 1/1.2); };
+  document.getElementById("zFit").onclick = fit;
+
+  function boardPoint(cx, cy){
+    var r = stage.getBoundingClientRect();
+    return { x: (cx - r.left - view.x) / view.s, y: (cy - r.top - view.y) / view.s };
+  }
+
+  var kinds = [].slice.call(document.querySelectorAll(".kind"));
+  kinds.forEach(function(k){
+    k.addEventListener("click", function(){
+      pendingKind = k.dataset.kind;
+      kinds.forEach(function(o){ o.setAttribute("aria-pressed", o === k ? "true" : "false"); });
+      syncFields();
+    });
+  });
+
+  function syncFields(){
+    var isPola = pendingKind === "polaroid";
+    document.getElementById("fotoField").hidden = !isPola;
+    document.getElementById("preview").classList.toggle("on", isPola && !!pendingImage);
+    document.getElementById("nameField").hidden = pendingKind === "note";
+    document.getElementById("txt").placeholder = isPola ? "Caption foto (boleh kosong)" :
+      pendingKind === "clip" ? "Tulis klipingmu..." : "Tulis sesuatu...";
+  }
+
+  document.getElementById("foto").addEventListener("change", function(e){
+    var f = e.target.files && e.target.files[0];
+    if(!f) return;
+    var reader = new FileReader();
+    reader.onload = function(ev){
+      var img = new Image();
+      img.onload = function(){
+        var max = 560, w = img.width, h = img.height;
+        if(w > h && w > max){ h = h * max / w; w = max; }
+        else if(h >= w && h > max){ w = w * max / h; h = max; }
+        var c = document.createElement("canvas");
+        c.width = w; c.height = h;
+        c.getContext("2d").drawImage(img, 0, 0, w, h);
+        pendingImage = c.toDataURL("image/jpeg", 0.72);
+        document.getElementById("previewImg").src = pendingImage;
+        document.getElementById("preview").classList.add("on");
+        say("Foto siap ditempel");
+      };
+      img.src = ev.target.result;
+    };
+    reader.readAsDataURL(f);
+  });
+
+  function openSheet(pt){
+    pendingPoint = pt; pendingImage = null;
+    document.getElementById("preview").classList.remove("on");
+    document.getElementById("foto").value = "";
+    document.getElementById("txt").value = "";
+    document.getElementById("nama").value = "";
+    syncFields();
+    sheet.classList.add("open");
+    if(window.innerWidth > 700) setTimeout(function(){ document.getElementById("txt").focus(); }, 120);
+  }
+  function closeSheet(){ sheet.classList.remove("open"); }
+
+  document.getElementById("cancel").onclick = closeSheet;
+  sheet.addEventListener("click", function(e){ if(e.target === sheet) closeSheet(); });
+
+  document.getElementById("place").onclick = function(){
+    var text = document.getElementById("txt").value.trim();
+    var name = document.getElementById("nama").value.trim();
+    if(pendingKind !== "polaroid" && !text){ say("Isi dulu tulisannya"); return; }
+    if(pendingKind === "polaroid" && !pendingImage){ say("Pilih foto dulu"); return; }
+
+    var data = {
+      id: "p" + Date.now().toString(36) + Math.random().toString(36).slice(2, 6),
+      kind: pendingKind,
+      x: Math.max(0, Math.min(BOARD_W - 280, pendingPoint.x - 100)),
+      y: Math.max(0, Math.min(BOARD_H - 300, pendingPoint.y - 100)),
+      rot: (Math.random() * 6 - 3),
+      text: text, name: name,
+      color: NOTE_COLORS[Math.floor(Math.random() * NOTE_COLORS.length)],
+      image: pendingKind === "polaroid" ? pendingImage : null,
+      at: Date.now()
+    };
+    items.push(data);
+    canvas.appendChild(makeItem(data));
+    counter.textContent = items.length + " tempelan";
+    hint.classList.add("hide");
+    save();
+    closeSheet();
+    say("Ditempel ke papan");
+  };
 
   document.querySelectorAll("[data-soon]").forEach(function(el){
     el.addEventListener("click", function(e){
       e.preventDefault();
-      toast.textContent = el.getAttribute("data-soon") + " — segera hadir";
-      toast.classList.add("show");
-      setTimeout(function(){ toast.classList.remove("show"); }, 2000);
+      say(el.getAttribute("data-soon") + " — segera hadir");
     });
   });
-  document.getElementById("writeClose").addEventListener("click", closeWrite);
-  document.getElementById("writeCancel").addEventListener("click", closeWrite);
 
-  [readSheet, writeSheet].forEach(function(s){
-    s.addEventListener("click", function(e){ if(e.target === s) s.classList.remove("open"); });
-  });
-  document.addEventListener("keydown", function(e){
-    if(e.key === "Escape"){ readSheet.classList.remove("open"); writeSheet.classList.remove("open"); }
-  });
-
-  var toast = document.getElementById("toast");
-  document.getElementById("writeForm").addEventListener("submit", function(e){
-    e.preventDefault();
-    var data = load();
-    if(!data.length) data = seed.slice();
-    data.push({
-      nama: document.getElementById("fNama").value.trim(),
-      kelas: document.getElementById("fKelas").value.trim(),
-      tipe: document.getElementById("fTipe").value,
-      isi: document.getElementById("fIsi").value.trim(),
-      at: Date.now()
-    });
-    save(data);
-    e.target.reset();
-    closeWrite();
-    render();
-    toast.textContent = "Kiriman terkirim ke papan";
-    toast.classList.add("show");
-    setTimeout(function(){ toast.classList.remove("show"); }, 2400);
-  });
-
-  render();
+  items = load();
+  renderAll();
+  fit();
+  window.addEventListener("resize", function(){ fit(); });
 })();
 </script>
 </body>
