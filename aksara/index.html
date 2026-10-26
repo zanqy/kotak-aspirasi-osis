@@ -71,8 +71,7 @@ body{background:radial-gradient(circle at 50% -10%,#F6F0E1,var(--paper) 65%);col
 .stage.grabbing{cursor:grabbing}
 .canvas{position:absolute;top:0;left:0;width:1400px;height:1400px;transform-origin:0 0;will-change:transform;
   background:#E9DDC4;
-  background-image:url("data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='b'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='220' height='220' filter='url(%23b)' opacity='0.5'/%3E%3C/svg%3E");
-  background-blend-mode:multiply;
+  background-image:linear-gradient(160deg,rgba(255,255,255,.5),rgba(255,255,255,0) 45%,rgba(120,92,52,.06));
   box-shadow:0 0 0 1px rgba(34,29,21,.3),0 18px 34px -22px rgba(24,20,16,.55),
     inset 0 0 60px rgba(120,92,52,.12)}
 
@@ -81,8 +80,6 @@ body{background:radial-gradient(circle at 50% -10%,#F6F0E1,var(--paper) 65%);col
   filter:drop-shadow(0 6px 8px rgba(24,20,16,.22));transition:filter .18s}
 .item.dragging{cursor:grabbing;filter:drop-shadow(0 18px 22px rgba(24,20,16,.32));z-index:20}
 .item .body{position:relative;z-index:1;overflow:hidden;backface-visibility:hidden}
-.item .body::after{content:"";position:absolute;inset:0;pointer-events:none;opacity:.07;mix-blend-mode:multiply;
-  background-image:url("data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='p'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23p)'/%3E%3C/svg%3E")}
 
 .item.note .body{width:196px;min-height:196px;padding:20px 18px 26px;
   display:flex;align-items:center;justify-content:center;text-align:center;
@@ -262,6 +259,7 @@ body{background:radial-gradient(circle at 50% -10%,#F6F0E1,var(--paper) 65%);col
 (function(){
   var KEY = "aksara_papan_v1";
   var BOARD_W = 1400, BOARD_H = 1400;
+  var MAX_SCALE = 6;   /* batas zoom masuk */
   var NOTE_COLORS = ["#F7E39B","#F6D8DD","#DCE7CB","#D7E4EF","#F1E0C4"];
 
   var stage = document.getElementById("stage");
@@ -426,11 +424,11 @@ body{background:radial-gradient(circle at 50% -10%,#F6F0E1,var(--paper) 65%);col
 
   stage.addEventListener("wheel", function(e){
     e.preventDefault();
-    zoomAt(e.clientX, e.clientY, e.deltaY < 0 ? 1.12 : 1 / 1.12);
+    zoomAt(e.clientX, e.clientY, e.deltaY < 0 ? 1.15 : 1 / 1.15);
   }, { passive: false });
 
   function zoomAt(cx, cy, factor){
-    var ns = Math.min(2.4, Math.max(fitScale(), view.s * factor));
+    var ns = Math.min(MAX_SCALE, Math.max(fitScale(), view.s * factor));
     var r = stage.getBoundingClientRect();
     var bx = (cx - r.left - view.x) / view.s;
     var by = (cy - r.top - view.y) / view.s;
@@ -465,8 +463,8 @@ body{background:radial-gradient(circle at 50% -10%,#F6F0E1,var(--paper) 65%);col
   stage.addEventListener("pointerup", function(e){ delete pts[e.pointerId]; if(Object.keys(pts).length < 2) pinch = null; }, true);
   stage.addEventListener("pointercancel", function(e){ delete pts[e.pointerId]; pinch = null; }, true);
 
-  document.getElementById("zIn").onclick = function(){ zoomAt(stage.clientWidth/2, stage.clientHeight/2, 1.2); };
-  document.getElementById("zOut").onclick = function(){ zoomAt(stage.clientWidth/2, stage.clientHeight/2, 1/1.2); };
+  document.getElementById("zIn").onclick = function(){ zoomAt(stage.clientWidth/2, stage.clientHeight/2, 1.35); };
+  document.getElementById("zOut").onclick = function(){ zoomAt(stage.clientWidth/2, stage.clientHeight/2, 1/1.35); };
   document.getElementById("zFit").onclick = fit;
 
   function boardPoint(cx, cy){
