@@ -69,18 +69,17 @@ body{background:radial-gradient(circle at 50% -10%,#F6F0E1,var(--paper) 65%);col
 
 .stage{position:absolute;inset:0;overflow:hidden;touch-action:none;cursor:grab}
 .stage.grabbing{cursor:grabbing}
-.canvas{position:absolute;top:0;left:0;width:1400px;height:1400px;transform-origin:0 0;will-change:transform;
+.canvas{position:absolute;top:0;left:0;width:1400px;height:1400px;transform-origin:0 0;backface-visibility:hidden;
   background-color:#E9DDC4;
   background-image:url("data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='b'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='220' height='220' filter='url(%23b)' opacity='0.5'/%3E%3C/svg%3E");
   background-size:220px 220px;
-  background-blend-mode:multiply;
-  box-shadow:0 0 0 1px rgba(34,29,21,.3),0 18px 34px -22px rgba(24,20,16,.55),
-    inset 0 0 60px rgba(120,92,52,.12)}
+  box-shadow:0 0 0 1px rgba(34,29,21,.3),0 18px 34px -22px rgba(24,20,16,.55)}
 
 /* ---------- tempelan ---------- */
-.item{position:absolute;touch-action:none;cursor:grab;user-select:none;
-  filter:drop-shadow(0 6px 8px rgba(24,20,16,.22));transition:filter .18s}
-.item.dragging{cursor:grabbing;filter:drop-shadow(0 18px 22px rgba(24,20,16,.32));z-index:20}
+.item{position:absolute;touch-action:none;cursor:grab;user-select:none}
+.item.dragging{cursor:grabbing;z-index:20}
+.item .body{box-shadow:0 6px 10px -6px rgba(24,20,16,.45)}
+.item.dragging .body{box-shadow:0 16px 22px -12px rgba(24,20,16,.55)}
 .item .body{position:relative;z-index:1;overflow:hidden;backface-visibility:hidden}
 
 .item.note .body{width:196px;min-height:196px;padding:20px 18px 26px;
@@ -272,6 +271,8 @@ body{background:radial-gradient(circle at 50% -10%,#F6F0E1,var(--paper) 65%);col
   var counter = document.getElementById("counter");
 
   var view = { x: 0, y: 0, s: 0.55 };
+  var SW = 0, SH = 0;
+  function measure(){ SW = stage.clientWidth; SH = stage.clientHeight; }
   var items = [];
   var pendingPoint = null, pendingKind = "note", pendingImage = null;
 
@@ -288,16 +289,21 @@ body{background:radial-gradient(circle at 50% -10%,#F6F0E1,var(--paper) 65%);col
     clearTimeout(say._t); say._t = setTimeout(function(){ toast.classList.remove("show"); }, 2200);
   }
 
-  function applyView(){
+  var lastBgScale = -1;
+
+  function applyView(zoomChanged){
     clampView();
     canvas.style.transform = "translate(" + view.x + "px," + view.y + "px) scale(" + view.s + ")";
-    /* tekstur papan dijaga tetap halus walau di-zoom */
-    canvas.style.backgroundSize = (200 / view.s) + "px " + (200 / view.s) + "px";
+    /* tekstur cuma dihitung ulang saat skala berubah, bukan tiap geser */
+    if(zoomChanged || view.s !== lastBgScale){
+      canvas.style.backgroundSize = (200 / view.s) + "px " + (200 / view.s) + "px";
+      lastBgScale = view.s;
+    }
   }
 
   /* jangan biarkan papan digeser keluar dari pandangan */
   function clampView(){
-    var sw = stage.clientWidth, sh = stage.clientHeight;
+    var sw = SW, sh = SH;
     var bw = BOARD_W * view.s, bh = BOARD_H * view.s;
     if(bw <= sw) view.x = (sw - bw) / 2;
     else view.x = Math.min(0, Math.max(sw - bw, view.x));
@@ -307,15 +313,18 @@ body{background:radial-gradient(circle at 50% -10%,#F6F0E1,var(--paper) 65%);col
 
   /* skala terkecil: seluruh papan kelihatan utuh di dalam bingkai */
   function fitScale(){
-    return Math.min(stage.clientWidth / BOARD_W, stage.clientHeight / BOARD_H) * 0.94;
+    if(!SW || !SH) measure();
+    return Math.min(SW / BOARD_W, SH / BOARD_H) * 0.94;
   }
   /* skala awal: papan mengisi bingkai penuh (bisa digeser) */
   function coverScale(){
-    return Math.max(stage.clientWidth / BOARD_W, stage.clientHeight / BOARD_H);
+    if(!SW || !SH) measure();
+    return Math.max(SW / BOARD_W, SH / BOARD_H);
   }
 
   function fit(){
-    var sw = stage.clientWidth, sh = stage.clientHeight;
+    measure();
+    var sw = SW, sh = SH;
     view.s = fitScale();
     view.x = (sw - BOARD_W * view.s) / 2;
     view.y = (sh - BOARD_H * view.s) / 2;
@@ -367,28 +376,34 @@ body{background:radial-gradient(circle at 50% -10%,#F6F0E1,var(--paper) 65%);col
   }
 
   function attachDrag(el, data){
-    var start = null;
+    var start = null, w = 0, h = 0, raf = 0;
     el.addEventListener("pointerdown", function(e){
       if(e.button !== undefined && e.button !== 0) return;
       e.stopPropagation();
       try { el.setPointerCapture(e.pointerId); } catch(_) {}
       el.classList.add("dragging");
+      w = el.offsetWidth; h = el.offsetHeight;      /* ukur sekali saja */
       start = { px: e.clientX, py: e.clientY, x: data.x, y: data.y };
     });
     el.addEventListener("pointermove", function(e){
       if(!start) return;
       e.stopPropagation();
-      var w = el.offsetWidth, h = el.offsetHeight;
-      data.x = start.x + (e.clientX - start.px) / view.s;
-      data.y = start.y + (e.clientY - start.py) / view.s;
+      var nx = start.x + (e.clientX - start.px) / view.s;
+      var ny = start.y + (e.clientY - start.py) / view.s;
       /* tempelan tidak boleh tenggelam di tepi papan */
-      data.x = Math.max(6, Math.min(BOARD_W - w - 6, data.x));
-      data.y = Math.max(10, Math.min(BOARD_H - h - 6, data.y));
-      el.style.left = data.x + "px";
-      el.style.top = data.y + "px";
+      data.x = Math.max(6, Math.min(BOARD_W - w - 6, nx));
+      data.y = Math.max(10, Math.min(BOARD_H - h - 6, ny));
+      if(!raf) raf = requestAnimationFrame(function(){
+        raf = 0;
+        el.style.left = data.x + "px";
+        el.style.top = data.y + "px";
+      });
     });
     function end(){
       if(!start) return;
+      if(raf){ cancelAnimationFrame(raf); raf = 0; }
+      el.style.left = data.x + "px";
+      el.style.top = data.y + "px";
       el.classList.remove("dragging");
       start = null;
       save();
@@ -408,12 +423,13 @@ body{background:radial-gradient(circle at 50% -10%,#F6F0E1,var(--paper) 65%);col
     try { stage.setPointerCapture(e.pointerId); } catch(_) {}
   });
 
+  var rafId = 0;
   stage.addEventListener("pointermove", function(e){
     if(pinch || !pan) return;
     var dx = e.clientX - pan.px, dy = e.clientY - pan.py;
     if(Math.abs(dx) + Math.abs(dy) > 6) moved = true;
     view.x = pan.x + dx; view.y = pan.y + dy;
-    applyView();
+    if(!rafId) rafId = requestAnimationFrame(function(){ rafId = 0; applyView(); });
   });
 
   stage.addEventListener("pointerup", function(e){
@@ -594,6 +610,7 @@ body{background:radial-gradient(circle at 50% -10%,#F6F0E1,var(--paper) 65%);col
   renderAll();
   fit();
   window.addEventListener("resize", function(){ fit(); });
+  measure();
 })();
 </script>
 </body>
