@@ -172,12 +172,21 @@ p.body.drop::first-letter{font:900 3rem/.8 var(--fd);float:left;padding:6px 10px
 .empty-sub{font:italic 400 .88rem/1.55 var(--fs);color:rgba(34,29,21,.58);margin-bottom:14px}
 .empty-frame .btn{padding:10px 18px;font-size:.9rem}
 
+
+/* ---------- papan kosong (tanpa kotak placeholder) ---------- */
+.emptyBoard{min-height:min(46vh,360px);display:flex;flex-direction:column;align-items:center;justify-content:center;
+  padding:clamp(48px,12vw,90px) 18px;text-align:center;border-bottom:1px solid var(--hair)}
+.ebLabel{font:500 10px var(--fm);letter-spacing:.3em;text-transform:uppercase;color:var(--red);margin-bottom:12px}
+.ebNote{font:italic 400 clamp(.96rem,2.8vw,1.06rem)/1.65 var(--fs);color:rgba(34,29,21,.55);margin:0 auto 20px;max-width:34ch}
+.emptyBoard .btn{padding:12px 24px}
+
 /* ---------- compose FAB + sheet ---------- */
 .fab{position:fixed;right:clamp(14px,4vw,26px);bottom:calc(18px + env(safe-area-inset-bottom));z-index:70;
   display:inline-flex;align-items:center;gap:8px;background:var(--ink);color:var(--paper);border:0;
   border-radius:99px;padding:13px 20px;font:600 .95rem var(--fd);cursor:pointer;
   box-shadow:0 16px 30px -16px rgba(24,20,16,.7);transition:transform .18s,box-shadow .18s}
 .fab:hover{transform:translate(-2px,-2px);box-shadow:6px 6px 0 var(--red)}
+.fab[hidden]{display:none}
 
 .sheet{position:fixed;inset:0;z-index:100;display:none;align-items:center;justify-content:center;
   padding:16px;background:rgba(24,20,16,.55);backdrop-filter:blur(3px)}
@@ -262,42 +271,51 @@ p.body.drop::first-letter{font:900 3rem/.8 var(--fd);float:left;padding:6px 10px
   </div>
 
   <article class="paper">
+    <div class="emptyBoard" id="emptyBoard">
+      <p class="ebLabel">Papan</p>
+      <p class="ebNote">Belum ada satu pun yang menempel hari ini.</p>
+      <button class="btn" data-compose>Tulis Surat Pertama</button>
+    </div>
+
+    <div class="folio" id="emptyFolio">
+      <span><b>AKSARA</b> · HAL. 1/2</span>
+      <span>0 kiriman</span>
+      <span>MENUNGGU KIRIMAN PERTAMA</span>
+    </div>
+
+    <div id="fullBoard" hidden>
     <div class="cols three">
       <section class="col">
         <p class="eyebrow">Berita Utama</p>
-        <div class="slot slot--big">
-          <span class="slot-mark">＋</span>
-          <p class="slot-title">Belum ada berita utama</p>
-          <p class="slot-sub">Rubrik ini menunggu tulisan pertama dari redaksi atau siswa.</p>
-        </div>
-        <p class="byline"><b>Menunggu diterbitkan</b> · Edisi 231</p>
-        <div class="figure" aria-hidden="true"><span>Foto: belum ada</span></div>
+        <h2 class="lead">Papan Ini Akhirnya Dibuka — Semua Boleh Menulis</h2>
+        <p class="dek">Bukan surat resmi, bukan pengumuman. Ini papan tempat kata-kata siswa berhenti sejenak.</p>
+        <p class="byline"><b>Oleh Humas OSIS</b> · 2 menit baca</p>
+        <div class="figure" aria-hidden="true"><span>Foto: papan sebelum diisi</span></div>
+        <p class="body drop">Papan yang selama ini dingin akhirnya dibuka lebih lebar. AKSARA menampung surat, ucapan, dan pesan yang biasanya cuma lewat di koridor. Semua orang berhak menulis — asal tulisannya tetap layak dibaca orang lain.</p>
+        <p class="body">Redaksi mengingatkan: papan ini bukan tempat dendam, bukan ujaran kebencian, bukan pasar barang. Kalau ada yang melanggar, kiriman bisa dilaporkan dan ditinjau Humas.</p>
       </section>
 
       <section class="col">
-        <p class="h2">Rubrik <em>Kosong</em></p>
-        <p class="sub">Setiap rubrik terisi begitu ada yang menempel di papan.</p>
-        <div class="slot">
-          <p class="slot-title">Kutipan</p>
-          <p class="slot-sub">Kalimat pendek yang kamu suka.</p>
+        <p class="h2"><span class="mark-c">Ujian Dimulai Senin</span></p>
+        <p class="sub">Bima menulis panjang soal tidur — panjangnya satu kalimat saja</p>
+        <div class="pull">
+          <q>Turun boleh, nangis boleh, nyerah jangan.</q>
+          <span>— Aulia, XI IPA 1</span>
         </div>
-        <div class="slot">
-          <p class="slot-title">Iklan Baris</p>
-          <p class="slot-sub">Cari, tawarkan, atau titip pesan singkat.</p>
-        </div>
+        <p class="h2" style="margin-top:14px">Iklan Baris</p>
+        <ul class="ads">
+          <li><b>FU.</b> Futsal sore jam 4, lapangan sekolah — bawa sepatu.</li>
+          <li><b>HA.</b> Kunci 214 hilang. Ada yang nemu?</li>
+          <li><b>PU.</b> Payung bunga tertinggal di lab, ambil di gudang.</li>
+        </ul>
       </section>
 
       <section class="col">
         <p class="h2">Kiriman <em>Pembaca</em></p>
         <p class="sub">Ketuk kliping untuk membaca pesan lengkapnya.</p>
         <div class="clips" id="clips"></div>
-        <div class="board-empty" id="boardEmpty">
-          <div class="empty-frame">
-            <span class="empty-mark">＋</span>
-            <p class="empty-title">Papan masih kosong</p>
-            <p class="empty-sub">Belum ada satu pun kiriman hari ini. Jadilah yang pertama menempel.</p>
-            <button class="btn" data-compose>Tulis Surat Pertama</button>
-          </div>
+        <div class="empty" id="clipsEmpty" hidden>
+          Belum ada kiriman — <button class="linkbtn" data-compose>jadilah yang pertama</button>
         </div>
       </section>
     </div>
@@ -307,6 +325,7 @@ p.body.drop::first-letter{font:900 3rem/.8 var(--fd);float:left;padding:6px 10px
       <span id="counter">0 kiriman</span>
       <span>LANJUTAN: HAL. 2 →</span>
     </div>
+  </div>
   </article>
 </main>
 
@@ -372,15 +391,22 @@ p.body.drop::first-letter{font:900 3rem/.8 var(--fd);float:left;padding:6px 10px
   function items(){ return load(); }
 
   var list = document.getElementById("clips");
-  var emptyEl = document.getElementById("boardEmpty");
+  var emptyBoard = document.getElementById("emptyBoard");
+  var fullBoard = document.getElementById("fullBoard");
   var counter = document.getElementById("counter");
 
   function render(){
     var data = items();
     list.innerHTML = "";
     counter.textContent = data.length + " kiriman";
-    if(!data.length){ if(emptyEl) emptyEl.hidden = false; return; }
-    if(emptyEl) emptyEl.hidden = true;
+    var emptyFolio = document.getElementById("emptyFolio");
+    var isEmpty = data.length === 0;
+    if(emptyBoard) emptyBoard.hidden = !isEmpty;
+    if(emptyFolio) emptyFolio.hidden = !isEmpty;
+    if(fullBoard) fullBoard.hidden = isEmpty;
+    var fab = document.querySelector(".fab");
+    if(fab) fab.hidden = isEmpty;
+    if(isEmpty) return;
 
     data.slice().reverse().forEach(function(it, i){
       var b = document.createElement("button");
