@@ -64,12 +64,17 @@ body{background:radial-gradient(circle at 50% -10%,#F6F0E1,var(--paper) 65%);col
   clip-path:polygon(100% 0,0 100%,100% 100%)}
 
 /* ---------- papan kanvas ---------- */
-.boardWrap{position:relative;overflow:hidden;height:clamp(400px,58vh,560px);background:transparent}
-@media(min-width:860px){.boardWrap{height:clamp(500px,62vh,680px)}}
+.boardWrap{position:relative;overflow:hidden;height:clamp(320px,46vh,520px);background:transparent}
+@media(min-width:860px){.boardWrap{height:clamp(520px,64vh,720px)}}
 
 .stage{position:absolute;inset:0;overflow:hidden;touch-action:none;cursor:grab}
 .stage.grabbing{cursor:grabbing}
-.canvas{position:absolute;top:0;left:0;width:1300px;height:1300px;transform-origin:0 0;will-change:transform}
+.canvas{position:absolute;top:0;left:0;width:1400px;height:1400px;transform-origin:0 0;will-change:transform;
+  background:#E9DDC4;
+  background-image:url("data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='b'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='220' height='220' filter='url(%23b)' opacity='0.5'/%3E%3C/svg%3E");
+  background-blend-mode:multiply;
+  box-shadow:0 0 0 1px rgba(34,29,21,.3),0 18px 34px -22px rgba(24,20,16,.55),
+    inset 0 0 60px rgba(120,92,52,.12)}
 
 /* ---------- tempelan ---------- */
 .item{position:absolute;touch-action:none;cursor:grab;user-select:none;
@@ -111,12 +116,12 @@ body{background:radial-gradient(circle at 50% -10%,#F6F0E1,var(--paper) 65%);col
 .boardHint p.bhText{font:italic 400 clamp(.94rem,2.7vw,1.04rem)/1.6 var(--fs);color:rgba(34,29,21,.55);max-width:30ch;margin:0 auto}
 .boardHint.hide{display:none}
 
-.tools{position:absolute;right:9px;bottom:9px;z-index:6;display:flex;flex-direction:column;gap:6px}
-.tool{width:36px;height:36px;border-radius:50%;border:1px solid rgba(34,29,21,.2);
-  background:rgba(247,241,225,.94);color:var(--ink);font:500 .95rem/1 var(--fm);cursor:pointer;
-  display:grid;place-items:center;box-shadow:0 6px 14px -8px rgba(24,20,16,.6)}
+.tools{display:flex;gap:5px;margin-left:auto;align-self:center}
+.tool{width:28px;height:28px;border-radius:7px;border:1px solid rgba(34,29,21,.22);
+  background:rgba(255,255,255,.5);color:var(--ink);font:500 .84rem/1 var(--fm);cursor:pointer;
+  display:grid;place-items:center}
 .tool:active{transform:scale(.94)}
-.tool.small{width:32px;height:32px;font-size:.7rem}
+.tool.small{width:32px;font-size:.62rem;letter-spacing:.04em}
 
 /* ---------- folio ---------- */
 .folio{display:flex;flex-wrap:wrap;gap:6px 16px;justify-content:space-between;margin-top:12px;
@@ -204,18 +209,17 @@ body{background:radial-gradient(circle at 50% -10%,#F6F0E1,var(--paper) 65%);col
         <p class="bhLabel">Papan</p>
         <p class="bhText">Ketuk di mana saja untuk menempel note, kliping, atau foto.</p>
       </div>
-
-      <div class="tools">
-        <button class="tool" id="zIn" aria-label="Perbesar">＋</button>
-        <button class="tool" id="zOut" aria-label="Perkecil">−</button>
-        <button class="tool small" id="zFit" aria-label="Paskan">fit</button>
-      </div>
     </div>
 
     <div class="folio">
       <span><b>AKSARA</b> · HAL. 1/1</span>
       <span id="counter">0 tempelan</span>
       <span>EDISI 231</span>
+      <div class="tools">
+        <button class="tool" id="zIn" aria-label="Perbesar">＋</button>
+        <button class="tool" id="zOut" aria-label="Perkecil">−</button>
+        <button class="tool small" id="zFit" aria-label="Paskan">fit</button>
+      </div>
     </div>
   </article>
 </main>
@@ -257,7 +261,7 @@ body{background:radial-gradient(circle at 50% -10%,#F6F0E1,var(--paper) 65%);col
 <script>
 (function(){
   var KEY = "aksara_papan_v1";
-  var BOARD_W = 1300, BOARD_H = 1300;
+  var BOARD_W = 1400, BOARD_H = 1400;
   var NOTE_COLORS = ["#F7E39B","#F6D8DD","#DCE7CB","#D7E4EF","#F1E0C4"];
 
   var stage = document.getElementById("stage");
@@ -299,32 +303,20 @@ body{background:radial-gradient(circle at 50% -10%,#F6F0E1,var(--paper) 65%);col
     else view.y = Math.min(0, Math.max(sh - bh, view.y));
   }
 
-  /* skala penuh: papan selalu lebih besar dari bingkai di KEDUA arah,
-     supaya bisa digeser ke atas-bawah maupun kiri-kanan */
+  /* skala terkecil: seluruh papan kelihatan utuh di dalam bingkai */
+  function fitScale(){
+    return Math.min(stage.clientWidth / BOARD_W, stage.clientHeight / BOARD_H) * 0.94;
+  }
+  /* skala awal: papan mengisi bingkai penuh (bisa digeser) */
   function coverScale(){
-    return Math.max(stage.clientWidth / BOARD_W, stage.clientHeight / BOARD_H) * 1.3;
+    return Math.max(stage.clientWidth / BOARD_W, stage.clientHeight / BOARD_H);
   }
 
   function fit(){
     var sw = stage.clientWidth, sh = stage.clientHeight;
-    var cs = coverScale();
-
-    if(!items.length){
-      view.s = cs;
-      view.x = (sw - BOARD_W * view.s) / 2;
-      view.y = (sh - BOARD_H * view.s) / 2;
-    } else {
-      var minX = Infinity, minY = Infinity, maxX = -Infinity, maxY = -Infinity;
-      items.forEach(function(it){
-        minX = Math.min(minX, it.x); minY = Math.min(minY, it.y);
-        maxX = Math.max(maxX, it.x + 240); maxY = Math.max(maxY, it.y + 240);
-      });
-      var pad = 90;
-      var w = maxX - minX + pad * 2, h = maxY - minY + pad * 2;
-      view.s = Math.max(cs, Math.min(1.2, Math.min(sw / w, sh / h)));
-      view.x = sw / 2 - (minX - pad + w / 2) * view.s;
-      view.y = sh / 2 - (minY - pad + h / 2) * view.s;
-    }
+    view.s = fitScale();
+    view.x = (sw - BOARD_W * view.s) / 2;
+    view.y = (sh - BOARD_H * view.s) / 2;
     applyView();
   }
 
@@ -384,12 +376,21 @@ body{background:radial-gradient(circle at 50% -10%,#F6F0E1,var(--paper) 65%);col
     el.addEventListener("pointermove", function(e){
       if(!start) return;
       e.stopPropagation();
+      var w = el.offsetWidth, h = el.offsetHeight;
       data.x = start.x + (e.clientX - start.px) / view.s;
       data.y = start.y + (e.clientY - start.py) / view.s;
+      /* tempelan tidak boleh tenggelam di tepi papan */
+      data.x = Math.max(6, Math.min(BOARD_W - w - 6, data.x));
+      data.y = Math.max(10, Math.min(BOARD_H - h - 6, data.y));
       el.style.left = data.x + "px";
       el.style.top = data.y + "px";
     });
-    function end(){ if(!start) return; el.classList.remove("dragging"); start = null; save(); }
+    function end(){
+      if(!start) return;
+      el.classList.remove("dragging");
+      start = null;
+      save();
+    }
     el.addEventListener("pointerup", end);
     el.addEventListener("pointercancel", end);
   }
@@ -429,7 +430,7 @@ body{background:radial-gradient(circle at 50% -10%,#F6F0E1,var(--paper) 65%);col
   }, { passive: false });
 
   function zoomAt(cx, cy, factor){
-    var ns = Math.min(2.4, Math.max(coverScale(), view.s * factor));
+    var ns = Math.min(2.4, Math.max(fitScale(), view.s * factor));
     var r = stage.getBoundingClientRect();
     var bx = (cx - r.left - view.x) / view.s;
     var by = (cy - r.top - view.y) / view.s;
@@ -545,8 +546,8 @@ body{background:radial-gradient(circle at 50% -10%,#F6F0E1,var(--paper) 65%);col
     var data = {
       id: "p" + Date.now().toString(36) + Math.random().toString(36).slice(2, 6),
       kind: pendingKind,
-      x: Math.max(0, Math.min(BOARD_W - 280, pendingPoint.x - 100)),
-      y: Math.max(0, Math.min(BOARD_H - 300, pendingPoint.y - 100)),
+      x: pendingPoint.x - 100,
+      y: pendingPoint.y - 100,
       rot: (Math.random() * 6 - 3),
       text: text, name: name,
       color: NOTE_COLORS[Math.floor(Math.random() * NOTE_COLORS.length)],
@@ -554,18 +555,27 @@ body{background:radial-gradient(circle at 50% -10%,#F6F0E1,var(--paper) 65%);col
       at: Date.now()
     };
     items.push(data);
-    canvas.appendChild(makeItem(data));
+    var node = makeItem(data);
+    canvas.appendChild(node);
+
+    /* ukur dulu, baru dijepit supaya pas di dalam papan */
+    var iw = node.offsetWidth, ih = node.offsetHeight;
+    data.x = Math.max(6, Math.min(BOARD_W - iw - 6, data.x));
+    data.y = Math.max(10, Math.min(BOARD_H - ih - 6, data.y));
+    node.style.left = data.x + "px";
+    node.style.top = data.y + "px";
+
     counter.textContent = items.length + " tempelan";
     hint.classList.add("hide");
     save();
     closeSheet();
 
     /* kalau masih terlalu zoom-out, dekatkan ke tempelan baru biar kebaca */
-    if(view.s < 0.4){
+    if(view.s < fitScale() * 1.6){
       var sw = stage.clientWidth, sh = stage.clientHeight;
-      view.s = 0.7;
-      view.x = sw / 2 - (data.x + 100) * view.s;
-      view.y = sh / 2 - (data.y + 110) * view.s;
+      view.s = Math.min(1.1, Math.max(fitScale() * 1.6, 0.6));
+      view.x = sw / 2 - (data.x + iw / 2) * view.s;
+      view.y = sh / 2 - (data.y + ih / 2) * view.s;
       applyView();
     }
     say("Ditempel ke papan");
