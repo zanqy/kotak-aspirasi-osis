@@ -503,6 +503,8 @@ body{background:radial-gradient(circle at 50% -10%,#F6F0E1,var(--paper) 65%);col
     reader.readAsDataURL(f);
   });
 
+  var openedAt = 0;
+
   function openSheet(pt){
     pendingPoint = pt; pendingImage = null;
     document.getElementById("preview").classList.remove("on");
@@ -511,12 +513,17 @@ body{background:radial-gradient(circle at 50% -10%,#F6F0E1,var(--paper) 65%);col
     document.getElementById("nama").value = "";
     syncFields();
     sheet.classList.add("open");
+    openedAt = Date.now();
     if(window.innerWidth > 700) setTimeout(function(){ document.getElementById("txt").focus(); }, 120);
   }
   function closeSheet(){ sheet.classList.remove("open"); }
 
   document.getElementById("cancel").onclick = closeSheet;
-  sheet.addEventListener("click", function(e){ if(e.target === sheet) closeSheet(); });
+  sheet.addEventListener("click", function(e){
+    if(e.target !== sheet) return;
+    if(Date.now() - openedAt < 400) return;   /* cegah tap pembuka ikut menutup */
+    closeSheet();
+  });
 
   document.getElementById("place").onclick = function(){
     var text = document.getElementById("txt").value.trim();
