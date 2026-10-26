@@ -64,7 +64,7 @@ body{background:radial-gradient(circle at 50% -10%,#F6F0E1,var(--paper) 65%);col
 .cols{display:grid;grid-template-columns:minmax(0,1fr);gap:0}
 @media(min-width:860px){
   .cols{grid-template-columns:minmax(0,1.5fr) minmax(0,1fr)}
-  .cols.three{grid-template-columns:minmax(0,1.4fr) minmax(0,1fr) minmax(0,1fr)}
+  .cols.three{grid-template-columns:minmax(0,1.25fr) minmax(0,1fr) minmax(0,1.15fr)}
 }
 .col{padding:16px 0}
 @media(min-width:860px){
@@ -112,9 +112,7 @@ p.body.drop::first-letter{font:900 3rem/.8 var(--fd);float:left;padding:6px 10px
 .count{margin-left:auto;font:500 10px var(--fm);letter-spacing:.14em;text-transform:uppercase;color:rgba(34,29,21,.52);white-space:nowrap}
 .section-sub{font:italic 400 .88rem/1.55 var(--fs);color:var(--ink-60);margin:4px 0 12px;
   padding-bottom:8px;border-bottom:1px solid var(--hair)}
-.clips{display:grid;grid-template-columns:minmax(0,1fr);gap:12px}
-@media(min-width:560px){.clips{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}}
-@media(min-width:900px){.clips{grid-template-columns:repeat(3,minmax(0,1fr))}}
+.clips{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:12px}
 
 .clip{position:relative;min-width:0;padding:14px 16px 12px;background:var(--paper-2);border:1px solid rgba(34,29,21,.2);
   cursor:pointer;text-align:left;width:100%;font:inherit;color:inherit;
@@ -153,6 +151,26 @@ p.body.drop::first-letter{font:900 3rem/.8 var(--fd);float:left;padding:6px 10px
   border-top:1px solid var(--line);padding-top:9px;font:400 9.5px var(--fm);letter-spacing:.12em;
   text-transform:uppercase;color:rgba(34,29,21,.55)}
 .folio b{color:var(--ink)}
+
+
+/* ---------- slot kosong ---------- */
+.slot{border:1px dashed rgba(34,29,21,.32);border-radius:2px;padding:14px;margin-bottom:10px;
+  background:rgba(255,255,255,.28);position:relative}
+.slot--big{min-height:150px;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:24px 18px}
+.slot-mark{display:block;font:400 1.5rem/1 var(--fs);color:rgba(192,59,33,.7);margin-bottom:6px}
+.slot-title{font:600 1rem/1.3 var(--fd);color:rgba(34,29,21,.78);margin-bottom:3px}
+.slot-sub{font:italic 400 .86rem/1.5 var(--fs);color:rgba(34,29,21,.5)}
+
+.board-empty{margin-top:4px}
+.empty-frame{border:1px dashed rgba(34,29,21,.3);background:rgba(255,255,255,.3);
+  padding:26px 18px;text-align:center;position:relative}
+.empty-frame::before,.empty-frame::after{content:"";position:absolute;width:16px;height:16px;border:1px solid rgba(192,59,33,.55)}
+.empty-frame::before{top:6px;left:6px;border-right:0;border-bottom:0}
+.empty-frame::after{bottom:6px;right:6px;border-left:0;border-top:0}
+.empty-mark{display:block;font:300 1.9rem/1 var(--fs);color:rgba(192,59,33,.65);margin-bottom:8px}
+.empty-title{font:600 1.12rem/1.25 var(--fd);margin-bottom:5px}
+.empty-sub{font:italic 400 .88rem/1.55 var(--fs);color:rgba(34,29,21,.58);margin-bottom:14px}
+.empty-frame .btn{padding:10px 18px;font-size:.9rem}
 
 /* ---------- compose FAB + sheet ---------- */
 .fab{position:fixed;right:clamp(14px,4vw,26px);bottom:calc(18px + env(safe-area-inset-bottom));z-index:70;
@@ -247,35 +265,39 @@ p.body.drop::first-letter{font:900 3rem/.8 var(--fd);float:left;padding:6px 10px
     <div class="cols three">
       <section class="col">
         <p class="eyebrow">Berita Utama</p>
-        <h2 class="lead">Papan Ini Akhirnya Dibuka — Semua Boleh Menulis</h2>
-        <p class="dek">Bukan surat resmi, bukan pengumuman. Ini papan tempat kata-kata siswa berhenti sejenak.</p>
-        <p class="byline"><b>Oleh Humas OSIS</b> · 2 menit baca</p>
-        <div class="figure" aria-hidden="true"><span>Foto: papan sebelum diisi</span></div>
-        <p class="body drop">Papan yang selama ini dingin akhirnya dibuka lebih lebar. AKSARA menampung surat, ucapan, dan pesan yang biasanya cuma lewat di koridor. Semua orang berhak menulis — asal tulisannya tetap layak dibaca orang lain.</p>
-        <p class="body">Redaksi mengingatkan: papan ini bukan tempat dendam, bukan ujaran kebencian, bukan pasar barang. Kalau ada yang melanggar, kiriman bisa dilaporkan dan ditinjau Humas.</p>
+        <div class="slot slot--big">
+          <span class="slot-mark">＋</span>
+          <p class="slot-title">Belum ada berita utama</p>
+          <p class="slot-sub">Rubrik ini menunggu tulisan pertama dari redaksi atau siswa.</p>
+        </div>
+        <p class="byline"><b>Menunggu diterbitkan</b> · Edisi 231</p>
+        <div class="figure" aria-hidden="true"><span>Foto: belum ada</span></div>
       </section>
 
       <section class="col">
-        <p class="h2"><span class="mark-c">Ujian Dimulai Senin</span></p>
-        <p class="sub">Bima menulis panjang soal tidur — panjangnya satu kalimat saja</p>
-        <div class="pull">
-          <q>Turun boleh, nangis boleh, nyerah jangan.</q>
-          <span>— Aulia, XI IPA 1</span>
+        <p class="h2">Rubrik <em>Kosong</em></p>
+        <p class="sub">Setiap rubrik terisi begitu ada yang menempel di papan.</p>
+        <div class="slot">
+          <p class="slot-title">Kutipan</p>
+          <p class="slot-sub">Kalimat pendek yang kamu suka.</p>
         </div>
-        <p class="h2" style="margin-top:14px">Iklan Baris</p>
-        <ul class="ads">
-          <li><b>FU.</b> Futsal sore jam 4, lapangan sekolah — bawa sepatu.</li>
-          <li><b>HA.</b> Kunci 214 hilang. Ada yang nemu?</li>
-          <li><b>PU.</b> Payung bunga tertinggal di lab, ambil di gudang.</li>
-        </ul>
+        <div class="slot">
+          <p class="slot-title">Iklan Baris</p>
+          <p class="slot-sub">Cari, tawarkan, atau titip pesan singkat.</p>
+        </div>
       </section>
 
       <section class="col">
         <p class="h2">Kiriman <em>Pembaca</em></p>
         <p class="sub">Ketuk kliping untuk membaca pesan lengkapnya.</p>
         <div class="clips" id="clips"></div>
-        <div class="empty" id="clipsEmpty" hidden>
-          Belum ada kiriman — <button class="linkbtn" data-compose>jadilah yang pertama</button>
+        <div class="board-empty" id="boardEmpty">
+          <div class="empty-frame">
+            <span class="empty-mark">＋</span>
+            <p class="empty-title">Papan masih kosong</p>
+            <p class="empty-sub">Belum ada satu pun kiriman hari ini. Jadilah yang pertama menempel.</p>
+            <button class="btn" data-compose>Tulis Surat Pertama</button>
+          </div>
         </div>
       </section>
     </div>
@@ -345,27 +367,20 @@ p.body.drop::first-letter{font:900 3rem/.8 var(--fd);float:left;padding:6px 10px
     return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]; }); }
   function tgl(ts){ return new Date(ts).toLocaleDateString("id-ID",{day:"2-digit",month:"short"}); }
 
-  var seed = [
-    { nama:"Bima Saputra", kelas:"XI IPA 2", tipe:"kiriman",
-      isi:"Semangat UAS semua!! jangan lupa tidur yang cukup ya, soalnya aku aja belum tidur gara-gara nonton bola. Jangan lupa bawa alat tulis lengkap juga.", at: Date.now()-86400000 },
-    { nama:"Citra Dewi", kelas:"XI IPS 1", tipe:"kutipan",
-      isi:"makasih paduan suara kemarin, keren banget sampai merinding.", at: Date.now()-172800000 },
-    { nama:"Eka Putri", kelas:"X MIPA 1", tipe:"iklan",
-      isi:"Yang menemukan payung bunga di depan lab, boleh balik ke gudang ya. Aku tunggu sampai sore.", at: Date.now()-259200000 }
-  ];
+  var seed = [];
 
-  function items(){ var d = load(); return d.length ? d : seed; }
+  function items(){ return load(); }
 
   var list = document.getElementById("clips");
-  var emptyEl = document.getElementById("clipsEmpty");
+  var emptyEl = document.getElementById("boardEmpty");
   var counter = document.getElementById("counter");
 
   function render(){
     var data = items();
     list.innerHTML = "";
     counter.textContent = data.length + " kiriman";
-    if(!data.length){ emptyEl.hidden = false; return; }
-    emptyEl.hidden = true;
+    if(!data.length){ if(emptyEl) emptyEl.hidden = false; return; }
+    if(emptyEl) emptyEl.hidden = true;
 
     data.slice().reverse().forEach(function(it, i){
       var b = document.createElement("button");
