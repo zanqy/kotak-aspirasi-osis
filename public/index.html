@@ -1,2369 +1,667 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
-    <title>Dari Bisikan ke Suara — OSIS Humas</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>KATAKAN. — Gerakan Aspirasi Siswa</title>
+<meta name="description" content="Gerakan aspirasi siswa OSIS — tulis yang selama ini kau simpan. Anonim, dibaca langsung oleh pengurus OSIS.">
+<meta name="theme-color" content="#F2ECDE">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='12' fill='%23F2ECDE'/%3E%3Ctext x='10' y='46' font-family='Georgia,serif' font-size='36' font-weight='700' fill='%23221D15'%3EK%3C/text%3E%3Ccircle cx='47' cy='43' r='8' fill='%23C03B21'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..900;1,9..144,300..900&family=IBM+Plex+Mono:wght@400;500&family=Spectral:ital,wght@0,400;0,500;1,400;1,500&display=swap" rel="stylesheet">
+<style>
+/* ============================================================
+   KATAKAN. — surat di amplop.
+   Dua keadaan: AMPLOP TERTUTUP (intro) → KARTU TERBUKA (form).
+   Gerak hanya sebagai jawaban atas aksi user — tidak ada
+   gerak yang jalan sendiri, tidak ada mesin scroll.
+   ============================================================ */
+:root{
+  --paper:#F2ECDE; --paper-2:#EDE4CF; --paper-deep:#E6EAE2; --lembar:#FBF7EC;
+  --ink:#221D15; --ink-60:rgba(34,29,21,.6); --ink-40:rgba(34,29,21,.4);
+  --red:#C03B21; --dark:#181410; --line:rgba(34,29,21,.16);
+  --ui:rgba(34,29,21,.45); --ui-line:rgba(34,29,21,.22);
+  --fd:'Fraunces',serif; --fs:'Spectral',serif; --fm:'IBM Plex Mono',monospace;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{background:var(--paper);overflow-x:clip;max-width:100%}
+body{background:var(--paper);color:var(--ink);font-family:var(--fs);
+  -webkit-font-smoothing:antialiased;overflow-x:clip;max-width:100%}
+::selection{background:var(--red);color:var(--paper)}
+:focus-visible{outline:2px dashed var(--red);outline-offset:3px}
 
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,400;9..144,450;9..144,500;9..144,600;9..144,ital,350;9..144,ital,400;9..144,ital,450&family=Inter:wght@300;400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.30.0/dist/tabler-icons.min.css">
+/* tekstur kertas — statis, tidak beranimasi */
+.grain{position:fixed;inset:0;pointer-events:none;z-index:200;opacity:.05;
+  background-image:url("data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='260' height='260'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='260' height='260' filter='url(%23n)' opacity='0.55'/%3E%3C/svg%3E")}
 
-    <style>
-        :root {
-            --bg-deep: #080706;
-            --bg-spot: #1c1712;
-            --bg-spot-2: #120f0b;
-            --paper: #F4EBD8;
-            --paper-deep: #E2D4B7;
-            --paper-dark: #C9B78F;
-            --card: #FCF9F2;
-            --ink: #1F1A15;
-            --ink-soft: #5C5042;
-            --ink-faint: #7A6B54;
-            --seal: #D9A036;
-            --seal-bright: #F0B94A;
-            --seal-glow: rgba(217, 160, 54, 0.28);
-            --seal-deep: #A5730D;
-            --wax: #8C2F1D;
-            --wax-deep: #5E1D11;
-            --wax-glow: rgba(140, 47, 29, 0.35);
-            --line: #D4C4A3;
-            --ok: #3C6B33;
-            --registry-cream: #FDF8F0;
-            --registry-border: #DCC8A0;
-            --ease-silk: cubic-bezier(0.19, 1, 0.22, 1);
-            --ease-out-q: cubic-bezier(0.25, 0.46, 0.45, 0.94);
-            --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
-        }
+/* bilah atas (muncul setelah amplop dibuka) */
+body.sedang-intro{overflow:hidden;height:100dvh}
+.topbar{display:flex;justify-content:space-between;align-items:baseline;gap:10px;
+  padding:11px 26px;border-bottom:1px solid var(--line);opacity:0;visibility:hidden;
+  font:500 8.5px var(--fm);letter-spacing:.3em;color:var(--ui);text-transform:uppercase;
+  flex-wrap:wrap}
+body.tetap-terbuka .topbar{opacity:1;visibility:visible;transition:opacity .45s ease .1s}
+.topbar b{color:var(--ink);font-weight:500}
+@media(max-width:640px){.topbar{padding:10px 14px;font-size:8px;letter-spacing:.16em;gap:6px}}
+@media(max-width:400px){.topbar{font-size:7.5px;letter-spacing:.1em}}
 
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+/* ============================================================
+   INTRO — AMPLOP TERTUTUP
+   ============================================================ */
+.intro{position:fixed;inset:0;z-index:500;background:var(--paper);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  gap:clamp(8px,2vh,20px);padding:20px 16px;text-align:center;overflow:auto}
+.intro-kicker{font:500 10px var(--fm);letter-spacing:.34em;color:var(--ink-60);text-transform:uppercase;
+  max-width:100%;overflow-wrap:anywhere}
+.intro-title{font-family:var(--fd);font-weight:640;line-height:.9;letter-spacing:-.015em;
+  font-size:clamp(2.5rem,12vw,5.6rem);color:var(--ink)}
+.intro-title .dot{color:var(--red)}
+.intro-sub{font:italic 400 clamp(.95rem,1.6vw,1.05rem)/1.6 var(--fs);color:var(--ink-60);max-width:40ch}
 
-        @media(prefers-reduced-motion: reduce) {
-            * {
-                animation-duration: 0.01ms !important;
-                animation-iteration-count: 1 !important;
-                transition-duration: 0.01ms !important;
-                scroll-behavior: auto !important;
-            }
-        }
+/* amplop: badan + lembar kertas di dalam + tutup + segel */
+.amplop{position:relative;width:min(250px,min(60vw,46vh));aspect-ratio:7/5;border:0;background:transparent;
+  cursor:pointer;padding:0;margin-top:clamp(6px,1.5vh,14px);
+  -webkit-tap-highlight-color:transparent;touch-action:manipulation}
+.amplop-layar{display:block;position:relative;width:100%;height:100%;perspective:700px;pointer-events:none;
+  filter:drop-shadow(0 22px 32px rgba(24,20,16,.30))}
+.amplop i{display:block}
+/* lembar surat: di belakang panel depan - hanya yang keluar dari amplop yang terlihat */
+.lembar{position:absolute;left:5%;right:5%;top:7%;bottom:7%;z-index:2;
+  background:#FCF8ED;border:1px solid rgba(34,29,21,.32);border-radius:3px;
+  display:flex;align-items:flex-start;justify-content:center;padding-top:10%;
+  transition:transform .55s cubic-bezier(.2,.85,.3,1) .2s;
+  box-shadow:0 4px 12px -6px rgba(24,20,16,.35)}
+.lembar i{font:italic 400 clamp(.78rem,2.4vw,.92rem)/1 var(--fs);color:var(--ink-60)}
+/* panel depan amplop: rect penuh, menutupi kertas */
+.badan{position:absolute;inset:0;z-index:3;
+  background:linear-gradient(160deg,#EFE6D2,#E8DCC0);border-radius:8px;
+  box-shadow:inset 0 0 0 1px rgba(34,29,21,.42), inset 0 -14px 24px -18px rgba(24,20,16,.4)}
+/* flap atas yang membuka (rotateX) — khas amplop */
+.tutup{position:absolute;left:0;right:0;top:0;height:52%;z-index:4;
+  background:linear-gradient(180deg,#E6D7B4,#DECDA6);
+  clip-path:polygon(0 0, 100% 0, 50% 96%);
+  border-top-left-radius:8px;border-top-right-radius:8px;
+  transform-origin:top center;transition:transform .4s cubic-bezier(.55,0,.3,1),z-index 0s .28s;
+  filter:drop-shadow(0 1.5px 0 rgba(34,29,21,.35))}
+.amplop.buka .tutup{transform:rotateX(-172deg)}
+.amplop:hover .tutup{filter:drop-shadow(0 1.5px 0 rgba(34,29,21,.35)) brightness(1.03)}
+/* segel lilin di ujung flap */
+.mata{position:absolute;left:50%;top:49%;transform:translate(-50%,-50%);
+  width:30px;height:30px;border-radius:50%;background:var(--red);z-index:5;
+  box-shadow:0 3px 10px rgba(140,47,29,.45), inset 0 -2px 0 rgba(94,29,17,.55), inset 0 2px 0 rgba(242,236,222,.25);
+  display:flex;align-items:center;justify-content:center;
+  transition:opacity .2s ease .1s,transform .16s ease}
+.amplop:hover .mata{transform:translate(-50%,-50%) scale(1.08)}
+.amplop:active .mata{transform:translate(-50%,-50%) scale(.94)}
+.mata::after{content:"";width:9px;height:9px;border-radius:50%;
+  background:rgba(242,236,222,.9);box-shadow:0 0 0 4px rgba(192,59,33,.30)}
+/* tulisan alamat di amplop - memudar saat dibuka */
+.tulis-amplop{position:absolute;left:50%;bottom:8%;transform:translateX(-50%);z-index:6;
+  font:italic 500 clamp(.8rem,2.4vw,.98rem)/1.3 var(--fs);color:var(--ink-60);
+  white-space:nowrap;text-align:center;padding:0 6px;
+  transition:opacity .25s ease .08s}
+.amplop.buka .tulis-amplop{opacity:0}
+/* klik → tutup terbuka, kertas terangkat */
+.amplop.buka .tutup{transform:rotateX(-176deg);z-index:1}
+.amplop.buka .mata{opacity:0}
+.amplop.buka .lembar{transform:translateY(-92%)}
+/* hint di bawah amplop */
+.amplop-hint{font:500 10.5px var(--fm);letter-spacing:.26em;text-transform:lowercase;
+  color:var(--ink);opacity:.75;transition:opacity .3s;padding:6px 10px;border-radius:999px;
+  background:rgba(252,248,237,.7);border:1px solid var(--ui-line)}
+.intro.dibuka .amplop-hint{opacity:0}
+.intro.pergi{opacity:0;visibility:hidden;pointer-events:none;transition:opacity .3s ease,visibility 0s .32s}
 
-        html {
-            scroll-behavior: auto;
-        }
-        body {
-            font-family: 'Inter', sans-serif;
-            background-color: var(--bg-deep);
-            color: var(--paper);
-            -webkit-font-smoothing: antialiased;
-            text-rendering: optimizeLegibility;
-            overflow-x: hidden;
-            cursor: default;
-        }
-        body::before {
-            content: "";
-            position: fixed;
-            inset: 0;
-            z-index: 9997;
-            pointer-events: none;
-            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.045'/%3E%3C/svg%3E");
-            opacity: 0.85;
-            mix-blend-mode: overlay;
-        }
-        body::after {
-            content: "";
-            position: fixed;
-            inset: 0;
-            z-index: 9996;
-            pointer-events: none;
-            background: radial-gradient(ellipse at 50% -10%, rgba(217, 160, 54, 0.04), transparent 60%);
-        }
-        ::selection {
-            background: var(--seal);
-            color: var(--ink);
-        }
-        ::-webkit-scrollbar {
-            width: 5px;
-        }
-        ::-webkit-scrollbar-track {
-            background: var(--bg-deep);
-        }
-        ::-webkit-scrollbar-thumb {
-            background: var(--ink-soft);
-            border-radius: 10px;
-        }
-        :focus-visible {
-            outline: 2px solid var(--seal);
-            outline-offset: 4px;
-            border-radius: 1px;
-        }
+/* ============================================================
+   ISI — KARTU SURAT (setelah amplop dibuka)
+   ============================================================ */
+main{max-width:980px;margin:0 auto;padding:0 22px;opacity:0;visibility:hidden}
+main.tampak{opacity:1;visibility:visible;transition:opacity .45s ease}
+@media(max-width:640px){main{padding:0 14px}}
+@keyframes rise{from{opacity:0;transform:translateY(22px) scale(.97)}to{opacity:1;transform:none}}
+main.tampak .card{animation:rise .5s cubic-bezier(.2,.8,.3,1) both}
 
-        .page-loader {
-            position: fixed;
-            inset: 0;
-            z-index: 9999;
-            background: var(--bg-deep);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            flex-direction: column;
-            gap: 22px;
-            transition: opacity 1.1s var(--ease-silk), visibility 1.1s;
-        }
-        .page-loader.hidden {
-            opacity: 0;
-            visibility: hidden;
-            pointer-events: none;
-        }
-        .loader-seal {
-            position: relative;
-            width: 46px;
-            height: 46px;
-        }
-        .loader-seal svg {
-            width: 100%;
-            height: 100%;
-            transform: rotate(-90deg);
-        }
-        .loader-seal circle.track {
-            stroke: rgba(244, 235, 216, 0.08);
-        }
-        .loader-seal circle.fill {
-            stroke: var(--seal);
-            stroke-linecap: round;
-            stroke-dasharray: 126;
-            stroke-dashoffset: 126;
-            transition: stroke-dashoffset 0.25s var(--ease-out-q);
-            filter: drop-shadow(0 0 6px var(--seal-glow));
-        }
-        .loader-word {
-            font-family: 'Space Mono', monospace;
-            font-size: 10px;
-            letter-spacing: 3px;
-            text-transform: uppercase;
-            color: rgba(244, 235, 216, 0.4);
-        }
+.card{position:relative;width:min(660px,100%);margin:clamp(20px,4vh,44px) auto 0;
+  background:var(--lembar);border:1px solid rgba(34,29,21,.3);border-radius:14px;
+  padding:clamp(16px,3.4vw,32px) clamp(18px,5vw,42px);
+  box-shadow:0 24px 60px -30px rgba(24,20,16,.35);
+  overflow:hidden}
+.card-head{position:relative;min-height:76px}
+.stampwrap{position:absolute;top:0;right:0;padding:6px;transform:rotate(4deg);
+  background-image:radial-gradient(circle 2.7px, var(--paper) 2.25px, transparent 3px);background-size:9px 9px}
+.stamp{width:56px;height:68px;background:var(--paper-2);border:1px solid rgba(34,29,21,.35);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;color:var(--ink)}
+.stamp b{font:500 12px var(--fm);letter-spacing:.08em}
+.postmark{position:absolute;top:-14px;right:64px;width:94px;color:var(--ink);opacity:.5;transform:rotate(-12deg)}
+@media(max-width:600px){.postmark{width:78px;right:70px;top:-6px}}
 
-        .cursor-dot,
-        .cursor-ring {
-            position: fixed;
-            top: 0;
-            left: 0;
-            pointer-events: none;
-            z-index: 60;
-            border-radius: 50%;
-            opacity: 0;
-            transition: opacity 0.4s ease;
-        }
-        .cursor-dot {
-            width: 5px;
-            height: 5px;
-            background: var(--seal);
-            transform: translate(-50%, -50%);
-        }
-        .cursor-ring {
-            width: 32px;
-            height: 32px;
-            border: 1px solid rgba(217, 160, 54, 0.5);
-            transform: translate(-50%, -50%);
-        }
-        .cursor-dot.show,
-        .cursor-ring.show {
-            opacity: 1;
-        }
-        @media(hover: none),
-        (pointer: coarse) {
-            .cursor-dot,
-            .cursor-ring {
-                display: none;
-            }
-        }
+.card-kicker{font:500 10px var(--fm);letter-spacing:.32em;text-transform:uppercase;color:var(--red);margin:6px 0 8px}
+.card-title{font:600 clamp(1.5rem,4vw,2.2rem)/1.14 var(--fd);letter-spacing:-.012em}
+.card-title em{font-style:italic;color:var(--red)}
+.card-sub{margin:10px 0 16px;font:italic 400 .92rem/1.6 var(--fs);color:var(--ink-60);max-width:54ch}
 
-        .nav-float {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            z-index: 50;
-            padding: 26px clamp(24px, 5vw, 48px);
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            mix-blend-mode: difference;
-            pointer-events: none;
-        }
-        .nav-float * {
-            pointer-events: auto;
-        }
-        .nav-brand {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            color: #fff;
-        }
-        .nav-dot {
-            width: 6px;
-            height: 6px;
-            border-radius: 50%;
-            background: var(--seal);
-            box-shadow: 0 0 10px var(--seal);
-        }
-        .nav-name {
-            font-family: 'Fraunces', serif;
-            font-weight: 500;
-            font-size: 14px;
-            letter-spacing: 0.5px;
-        }
-        .nav-progress-label {
-            font-family: 'Space Mono', monospace;
-            font-size: 11px;
-            color: rgba(255, 255, 255, 0.7);
-            letter-spacing: 2.5px;
-            font-variant-numeric: tabular-nums;
-        }
-        .progress-rail {
-            position: fixed;
-            right: 26px;
-            top: 50%;
-            transform: translateY(-50%);
-            z-index: 50;
-            width: 1px;
-            height: 180px;
-            background: rgba(255, 255, 255, 0.09);
-            display: none;
-        }
-        .progress-fill {
-            width: 100%;
-            background: linear-gradient(to bottom, var(--seal-bright), var(--seal));
-            height: 0%;
-            transition: height 0.1s linear;
-            box-shadow: 0 0 10px var(--seal-glow);
-        }
-        @media(min-width:860px) {
-            .progress-rail {
-                display: block;
-            }
-        }
+.frow{display:grid;grid-template-columns:1.3fr 1fr;gap:18px}
+@media(max-width:560px){.frow{grid-template-columns:1fr}}
+.field{margin-bottom:14px;text-align:left}
+.field>label{display:block;font:500 9.5px var(--fm);letter-spacing:.26em;text-transform:uppercase;
+  color:var(--ink-60);margin-bottom:5px;transition:color .2s}
+.field>label span{opacity:.55;letter-spacing:.1em}
+.field input{width:100%;background:transparent;border:0;border-bottom:1px solid var(--ink-40);
+  font:400 1rem var(--fs);color:var(--ink);padding:7px 2px;border-radius:0;
+  -webkit-appearance:none;appearance:none}
+.field input::placeholder,.field textarea::placeholder{color:var(--ink-40);font-style:italic}
+.field input:focus{outline:none;border-color:var(--red)}
+.field:focus-within>label{color:var(--red)}
+.field textarea{width:100%;border:1px solid var(--line);border-radius:8px;resize:none;min-height:112px;
+  background-image:repeating-linear-gradient(180deg,transparent 0 28px,var(--line) 28px 29px);
+  background-position:0 8px;font:400 1rem/29px var(--fs);color:var(--ink);padding:6px 13px;
+  transition:border-color .2s,box-shadow .2s;
+  -webkit-appearance:none;appearance:none}
+.field textarea:focus{outline:none;border-color:var(--red);box-shadow:0 0 0 3px rgba(192,59,33,.08)}
+.ferr{font:italic 400 11.5px var(--fs);color:var(--red);margin-top:5px;min-height:14px}
+.ta-foot{display:flex;justify-content:space-between;align-items:baseline;gap:12px}
+.counter{font:400 9.5px var(--fm);letter-spacing:.14em;color:var(--ink-40)}
+.send{margin-top:16px;width:100%;padding:14px;background:var(--ink);color:var(--paper);border:0;border-radius:8px;
+  font:600 1rem var(--fd);letter-spacing:.02em;display:flex;align-items:center;justify-content:center;gap:12px;
+  transition:transform .16s,box-shadow .16s,opacity .2s}
+.send svg{width:18px;height:18px;flex:none}
+.send:hover:not(:disabled){transform:translate(-3px,-3px);box-shadow:5px 5px 0 var(--red)}
+.send:active:not(:disabled){transform:translate(0,0);box-shadow:0 0 0 var(--red)}
+.send:disabled{opacity:.7}
 
-        .autoscroll-toggle {
-            position: fixed;
-            right: 26px;
-            bottom: 28px;
-            z-index: 50;
-            width: 42px;
-            height: 42px;
-            border-radius: 50%;
-            border: 1px solid rgba(244, 235, 216, 0.25);
-            background: rgba(28, 23, 18, 0.55);
-            backdrop-filter: blur(6px);
-            -webkit-backdrop-filter: blur(6px);
-            color: var(--paper);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            font-size: 16px;
-            transition: border-color 0.3s ease, background-color 0.3s ease, transform 0.3s var(--ease-spring);
-        }
-        .autoscroll-toggle:hover {
-            border-color: var(--seal);
-            background: rgba(28, 23, 18, 0.8);
-        }
-        .autoscroll-toggle:active {
-            transform: scale(0.94);
-        }
-        .autoscroll-toggle .ring {
-            position: absolute;
-            inset: -3px;
-            border-radius: 50%;
-            border: 1.5px solid var(--seal);
-            opacity: 0;
-            transition: opacity 0.3s ease;
-        }
-        .autoscroll-toggle.playing .ring {
-            opacity: 0.6;
-            animation: autoscrollPulse 1.8s ease-in-out infinite;
-        }
-        @keyframes autoscrollPulse {
-            0%, 100% { transform: scale(1); opacity: 0.5; }
-            50% { transform: scale(1.12); opacity: 0.1; }
-        }
-        .autoscroll-toggle .sr-label {
-            position: absolute;
-            width: 1px;
-            height: 1px;
-            overflow: hidden;
-            clip: rect(0 0 0 0);
-            white-space: nowrap;
-        }
+.draft-row{margin-top:10px;display:flex;justify-content:space-between;align-items:center;gap:12px}
+.draft-hint{font:400 9px var(--fm);letter-spacing:.12em;color:var(--ink-40)}
+.draft-flash{font:italic 500 10px var(--fs);color:var(--red);opacity:0;transition:opacity .35s ease}
+.draft-flash.show{opacity:1}
+.card-note{margin-top:10px;font:400 9.5px var(--fm);letter-spacing:.1em;line-height:1.7;color:var(--ink-40);text-align:center}
 
-        .story {
-            position: relative;
-            height: 540vh;
-        }
-        .stage {
-            position: sticky;
-            top: 0;
-            height: 100vh;
-            width: 100%;
-            overflow: hidden;
-            background: radial-gradient(circle at 50% 38%, var(--bg-spot) 0%, var(--bg-spot-2) 45%, var(--bg-deep) 78%);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            perspective: 1400px;
-        }
-        .stage::before {
-            content: "";
-            position: absolute;
-            inset: 0;
-            pointer-events: none;
-            z-index: 1;
-            box-shadow: inset 0 0 220px 40px rgba(0, 0, 0, 0.55);
-        }
-        .stage-motes {
-            position: absolute;
-            inset: 0;
-            z-index: 1;
-            pointer-events: none;
-            overflow: hidden;
-        }
-        .mote {
-            position: absolute;
-            width: 2px;
-            height: 2px;
-            border-radius: 50%;
-            background: rgba(217, 160, 54, 0.5);
-            filter: blur(0.4px);
-            will-change: transform, opacity;
-        }
-        .scene-caption {
-            position: absolute;
-            left: 0;
-            right: 0;
-            top: 12%;
-            text-align: center;
-            padding: 0 24px;
-            z-index: 5;
-            pointer-events: none;
-        }
-        .scene-caption .eyebrow {
-            font-family: 'Space Mono', monospace;
-            font-size: 10px;
-            letter-spacing: 5px;
-            text-transform: uppercase;
-            color: var(--seal);
-            margin-bottom: 18px;
-            opacity: 0;
-            transition: opacity 0.7s var(--ease-out-q), transform 0.7s var(--ease-out-q), letter-spacing 0.9s var(--ease-out-q);
-            transform: translateY(10px);
-        }
-        .scene-caption h2 {
-            font-family: 'Fraunces', serif;
-            font-weight: 380;
-            font-size: clamp(26px, 4.5vw, 49px);
-            line-height: 1.22;
-            color: var(--paper);
-            max-width: 720px;
-            margin: 0 auto;
-            opacity: 0;
-            transition: opacity 0.9s var(--ease-silk), transform 0.9s var(--ease-silk), filter 0.9s var(--ease-silk);
-            transform: translateY(28px);
-            filter: blur(6px);
-            text-shadow: 0 14px 40px rgba(0, 0, 0, 0.75);
-            letter-spacing: -0.01em;
-        }
-        .scene-caption h2 em {
-            font-style: italic;
-            color: var(--seal-bright);
-            font-weight: 340;
-        }
-        .scene-caption.active .eyebrow {
-            opacity: 1;
-            transform: translateY(0);
-            letter-spacing: 3.4px;
-        }
-        .scene-caption.active h2 {
-            opacity: 1;
-            transform: translateY(0);
-            filter: blur(0);
-        }
+@media(max-height:560px) and (orientation:landscape){
+  .intro{flex-direction:row;flex-wrap:wrap;justify-content:center;gap:10px 26px;padding:16px}
+  .intro-kicker,.intro-sub{width:100%;text-align:center}
+  .intro-title{font-size:clamp(1.9rem,6vw,2.6rem)}
+  .amplop{width:min(170px,34vw)}
+  .amplop-hint{width:100%;text-align:center}
+  .card{padding:10px 22px}
+  .card-head{min-height:42px}
+}
 
-        .paper-object {
-            position: relative;
-            z-index: 3;
-            width: 220px;
-            height: 280px;
-            transform-style: preserve-3d;
-            will-change: transform, width, height;
-        }
-        .paper-object .shadow-cast {
-            position: absolute;
-            left: 50%;
-            bottom: -34px;
-            width: 70%;
-            height: 22px;
-            background: radial-gradient(ellipse at center, rgba(0, 0, 0, 0.55), transparent 72%);
-            transform: translateX(-50%) rotateX(90deg);
-            filter: blur(2px);
-            pointer-events: none;
-        }
-        .paper-object .sheet {
-            position: absolute;
-            inset: 0;
-            background: linear-gradient(135deg, var(--card) 0%, var(--paper) 62%, var(--paper-deep) 100%);
-            border-radius: 1px;
-            box-shadow: 0 8px 20px -6px rgba(0, 0, 0, 0.5), 0 40px 80px -18px rgba(0, 0, 0, 0.75), 0 0 130px var(--seal-glow), inset 0 0 0 1px rgba(255, 255, 255, 0.55), inset 0 -20px 40px -20px rgba(120, 95, 45, 0.18);
-            transform-origin: center;
-            backface-visibility: hidden;
-        }
-        .paper-object .sheet::after {
-            content: "";
-            position: absolute;
-            inset: 0;
-            border-radius: 1px;
-            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='p'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23p)' opacity='0.05'/%3E%3C/svg%3E");
-            mix-blend-mode: multiply;
-            opacity: 0.6;
-            pointer-events: none;
-        }
-        .paper-object .fold-tr {
-            position: absolute;
-            top: 0;
-            right: 0;
-            width: 0;
-            height: 0;
-            border-style: solid;
-            border-width: 0 28px 28px 0;
-            border-color: transparent var(--paper-dark) transparent transparent;
-            box-shadow: -3px 3px 8px rgba(0, 0, 0, 0.15);
-        }
-        .paper-object .ink-lines {
-            position: absolute;
-            left: 14%;
-            right: 14%;
-            top: 22%;
-            display: flex;
-            flex-direction: column;
-            gap: 14px;
-        }
-        .paper-object .ink-lines .rl {
-            height: 1px;
-            background: var(--line);
-            border-radius: 1px;
-            opacity: 0.6;
-        }
-        .paper-object .ink-lines .rl.accent {
-            background: linear-gradient(90deg, var(--seal), var(--seal-bright));
-            width: 35%;
-            height: 2px;
-            opacity: 1;
-            box-shadow: 0 0 8px var(--seal-glow);
-        }
-        .paper-object .env-flap {
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 50%;
-            background: linear-gradient(to bottom, var(--paper-dark), var(--paper));
-            clip-path: polygon(0 0, 100% 0, 50% 100%);
-            transform-origin: top center;
-            transform: rotateX(-180deg);
-            backface-visibility: hidden;
-            z-index: 4;
-            box-shadow: 0 12px 26px rgba(0, 0, 0, 0.25);
-        }
-        .paper-object .env-flap::after {
-            content: "";
-            position: absolute;
-            inset: 0;
-            background: linear-gradient(to bottom, transparent 60%, rgba(0, 0, 0, 0.12));
-            clip-path: inherit;
-        }
-        .wax-seal {
-            position: absolute;
-            left: 50%;
-            top: 46%;
-            width: 38px;
-            height: 38px;
-            transform: translate(-50%, -50%) scale(0);
-            border-radius: 50%;
-            background: radial-gradient(circle at 34% 30%, var(--wax) 0%, var(--wax-deep) 72%, #3d130a 100%);
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4), inset 0 2px 3px rgba(255, 255, 255, 0.18), inset 0 -6px 10px rgba(0, 0, 0, 0.35);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            z-index: 5;
-            transition: transform 0.5s var(--ease-spring);
-        }
-        .wax-seal svg {
-            width: 18px;
-            height: 18px;
-            opacity: 0.85;
-        }
-        .wax-seal.pressed {
-            transform: translate(-50%, -50%) scale(1);
-        }
+/* layar pendek = rapatkan kartu supaya tombol kirim tetap terlihat */
+@media(max-height:780px){
+  .card{padding:10px 22px}
+  .card-head{min-height:46px}
+  .stamp{width:44px;height:56px}
+  .stamp b{font-size:10px}
+  .postmark{width:74px;top:-8px;right:50px}
+  .card-kicker{margin:2px 0 3px}
+  .card-title{font-size:clamp(1.25rem,3.2vw,1.7rem)}
+  .card-sub{font-size:.84rem;margin:5px 0 9px}
+  .field{margin-bottom:7px}
+  .field textarea{min-height:64px}
+  .send{padding:10px;margin-top:8px}
+  .card-note{margin-top:8px;font-size:9px}
+}
 
-        .whisper {
-            position: absolute;
-            font-family: 'Fraunces', serif;
-            font-style: italic;
-            font-size: clamp(14px, 1.5vw, 18px);
-            color: rgba(244, 235, 216, 0.25);
-            white-space: nowrap;
-            opacity: 0;
-            z-index: 2;
-            will-change: transform, opacity, filter;
-            text-shadow: 0 4px 14px rgba(0, 0, 0, 0.55);
-            pointer-events: none;
-        }
-        .whisper.cut {
-            color: rgba(240, 185, 74, 0.65);
-            -webkit-mask-image: linear-gradient(90deg, #000 0%, #000 40%, transparent 90%);
-            mask-image: linear-gradient(90deg, #000 0%, #000 40%, transparent 90%);
-        }
+/* cek status */
+.cek-row{margin-top:clamp(14px,3vh,24px);padding-bottom:clamp(26px,5vh,50px);text-align:center}
+.cek-link{font:500 10.5px var(--fm);letter-spacing:.26em;text-transform:uppercase;color:var(--ink-60);
+  text-decoration:none;border-bottom:1px solid var(--ui-line);padding:4px 2px;transition:color .2s,border-color .2s}
+.cek-link:hover{color:var(--red);border-color:var(--red)}
 
-        .form-card-wrapper {
-            position: absolute;
-            z-index: 4;
-            width: 100%;
-            max-width: 580px;
-            padding: 0 20px;
-            left: 50%;
-            top: 50%;
-            transform: translate(-50%, -50%) scale(0.96) translateY(70px);
-            opacity: 0;
-            pointer-events: none;
-            transition: opacity 0.5s var(--ease-out-q), transform 0.6s var(--ease-spring);
-        }
-        .form-card-wrapper.visible {
-            pointer-events: auto;
-            opacity: 1;
-            transform: translate(-50%, -50%) scale(1) translateY(0);
-        }
-        .envelope {
-            background: var(--card);
-            border-radius: 2px;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.65), 0 40px 90px -20px rgba(0, 0, 0, 0.8), 0 0 120px rgba(217, 160, 54, 0.15), inset 0 1px 0 rgba(255, 255, 255, 0.8);
-            border: 1px solid rgba(212, 196, 163, 0.25);
-            position: relative;
-            transform: translateY(30px) scale(0.97);
-            opacity: 0;
-            transition: transform 0.8s var(--ease-spring), opacity 0.6s var(--ease-out-q);
-            padding: 0;
-            overflow: visible;
-            min-height: 420px;
-            display: flex;
-            flex-direction: column;
-            background-color: #FCF9F2;
-        }
-        .form-card-wrapper.ready .envelope {
-            transform: translateY(0) scale(1);
-            opacity: 1;
-        }
-        .flap-container {
-            position: relative;
-            width: 100%;
-            height: 0;
-            padding-bottom: 22%;
-            overflow: visible;
-            z-index: 6;
-            transform-origin: top center;
-            transition: transform 0.7s var(--ease-spring);
-            transform: rotateX(0deg);
-        }
-        .flap-container.closed {
-            transform: rotateX(180deg);
-        }
-        .flap {
-            position: absolute;
-            inset: 0;
-            background: linear-gradient(to bottom, var(--paper-deep), var(--paper));
-            clip-path: polygon(0 0, 100% 0, 50% 100%);
-            box-shadow: 0 -8px 20px rgba(0, 0, 0, 0.08);
-            border-radius: 2px 2px 0 0;
-            border-bottom: 1px solid rgba(212, 196, 163, 0.3);
-        }
-        .flap::after {
-            content: "";
-            position: absolute;
-            inset: 0;
-            background: linear-gradient(to bottom, rgba(0, 0, 0, 0.04), transparent);
-            clip-path: polygon(0 0, 100% 0, 50% 100%);
-            pointer-events: none;
-        }
-        .flap-line {
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            height: 2px;
-            background: rgba(212, 196, 163, 0.5);
-        }
-        .envelope-seal {
-            position: absolute;
-            top: 18%;
-            left: 50%;
-            transform: translate(-50%, -50%) scale(0);
-            width: 44px;
-            height: 44px;
-            border-radius: 50%;
-            background: radial-gradient(circle at 34% 30%, var(--wax) 0%, var(--wax-deep) 72%, #3d130a 100%);
-            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.5), inset 0 2px 4px rgba(255, 255, 255, 0.25), inset 0 -8px 12px rgba(0, 0, 0, 0.3);
-            z-index: 10;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: transform 0.6s var(--ease-spring), box-shadow 0.6s ease;
-            pointer-events: none;
-        }
-        .envelope-seal svg {
-            width: 22px;
-            height: 22px;
-            opacity: 0.9;
-        }
-        .envelope-seal.pressed {
-            transform: translate(-50%, -50%) scale(1);
-            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.6), inset 0 2px 4px rgba(255, 255, 255, 0.3), inset 0 -8px 12px rgba(0, 0, 0, 0.4), 0 0 40px var(--wax-glow);
-        }
-        .envelope-body {
-            padding: clamp(24px, 4vw, 42px) clamp(20px, 4vw, 38px) 32px;
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            background: var(--card);
-            border-radius: 0 0 2px 2px;
-            position: relative;
-            z-index: 2;
-            background-color: #FCF9F2;
-        }
-        .envelope-body::before {
-            content: "";
-            position: absolute;
-            inset: 10px;
-            border: 1px solid rgba(212, 196, 163, 0.2);
-            pointer-events: none;
-            border-radius: 1px;
-        }
-        .envelope-body .intro-mini {
-            font-family: 'Space Mono', monospace;
-            font-size: 10px;
-            letter-spacing: 2.5px;
-            text-transform: uppercase;
-            color: var(--seal-deep);
-            margin-bottom: 4px;
-            opacity: 0;
-            transform: translateY(10px);
-            transition: opacity 0.6s var(--ease-out-q), transform 0.6s var(--ease-out-q);
-        }
-        .envelope-body .intro-mini.show {
-            opacity: 1;
-            transform: translateY(0);
-        }
-        .envelope-body h3 {
-            font-family: 'Fraunces', serif;
-            font-weight: 390;
-            font-size: clamp(20px, 2.8vw, 30px);
-            color: var(--ink);
-            line-height: 1.2;
-            letter-spacing: -0.01em;
-            margin-bottom: 18px;
-            opacity: 0;
-            transform: translateY(12px);
-            transition: opacity 0.7s var(--ease-out-q), transform 0.7s var(--ease-out-q);
-        }
-        .envelope-body h3 em {
-            font-style: italic;
-            color: var(--seal-deep);
-            font-weight: 350;
-        }
-        .envelope-body h3.show {
-            opacity: 1;
-            transform: translateY(0);
-        }
-        .envelope-body .field {
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-            margin-bottom: 16px;
-            opacity: 0;
-            transform: translateY(16px);
-            transition: opacity 0.5s var(--ease-out-q), transform 0.5s var(--ease-out-q);
-        }
-        .envelope-body .field.stagger-show {
-            opacity: 1;
-            transform: translateY(0);
-        }
-        .envelope-body .field label {
-            font-family: 'Space Mono', monospace;
-            font-size: 10px;
-            text-transform: uppercase;
-            letter-spacing: 1.4px;
-            font-weight: 700;
-            color: var(--ink-soft);
-            display: flex;
-            align-items: center;
-            gap: 6px;
-        }
-        .envelope-body .field label .opt {
-            font-weight: 400;
-            color: var(--ink-faint);
-            text-transform: none;
-            letter-spacing: 0;
-        }
-        .field-underline {
-            position: relative;
-        }
-        .field-underline::after {
-            content: "";
-            position: absolute;
-            left: 0;
-            bottom: 0;
-            height: 1px;
-            width: 0;
-            background: var(--seal);
-            transition: width 0.45s var(--ease-out-q);
-            box-shadow: 0 0 6px var(--seal-glow);
-        }
-        .field-underline.focused::after {
-            width: 100%;
-        }
-        .envelope-body select,
-        .envelope-body input[type="email"],
-        .envelope-body textarea {
-            font-family: 'Inter', sans-serif;
-            font-size: 14px;
-            color: var(--ink);
-            background: transparent;
-            border: none;
-            border-bottom: 1px solid var(--line);
-            border-radius: 0;
-            padding: 12px 0 10px;
-            outline: none;
-            width: 100%;
-            transition: border-color 0.3s ease;
-        }
-        .envelope-body select:hover,
-        .envelope-body input:hover,
-        .envelope-body textarea:hover {
-            border-bottom-color: var(--ink-soft);
-        }
-        .envelope-body select:focus,
-        .envelope-body input:focus,
-        .envelope-body textarea:focus {
-            border-bottom-color: transparent;
-        }
-        .envelope-body textarea {
-            min-height: 110px;
-            resize: vertical;
-            line-height: 1.7;
-            font-family: 'Fraunces', serif;
-            font-size: 16px;
-        }
-        .envelope-body textarea::placeholder {
-            font-family: 'Inter', sans-serif;
-            font-size: 13px;
-            font-style: italic;
-            color: var(--ink-faint);
-        }
-        .envelope-body .help {
-            font-size: 11px;
-            color: var(--ink-faint);
-            margin-top: 2px;
-        }
-        .char-count {
-            position: absolute;
-            right: 0;
-            bottom: -19px;
-            font-family: 'Space Mono', monospace;
-            font-size: 10px;
-            color: var(--ink-faint);
-            opacity: 0;
-            transition: opacity 0.3s ease;
-        }
-        .char-count.show {
-            opacity: 1;
-        }
-        .envelope-body .field-actions {
-            display: flex;
-            gap: 14px;
-            flex-wrap: wrap;
-            margin-top: 8px;
-            opacity: 0;
-            transform: translateY(16px);
-            transition: opacity 0.6s var(--ease-out-q), transform 0.6s var(--ease-out-q);
-        }
-        .envelope-body .field-actions.stagger-show {
-            opacity: 1;
-            transform: translateY(0);
-        }
-        .btn-seal {
-            flex: 1;
-            min-width: 180px;
-            background: var(--ink);
-            color: var(--paper);
-            border: none;
-            border-radius: 0;
-            padding: 16px 22px;
-            font-family: 'Space Mono', monospace;
-            text-transform: uppercase;
-            letter-spacing: 1.4px;
-            font-weight: 700;
-            font-size: 12px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 12px;
-            cursor: pointer;
-            transition: background-color 0.4s var(--ease-out-q), transform 0.35s var(--ease-spring), box-shadow 0.4s var(--ease-out-q);
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.12);
-            position: relative;
-            overflow: hidden;
-        }
-        .btn-seal::before {
-            content: "";
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.10), transparent);
-            transition: left 0.55s ease;
-        }
-        .btn-seal:hover::before {
-            left: 100%;
-        }
-        .btn-seal:hover {
-            background: var(--seal-deep);
-            transform: translateY(-2px);
-            box-shadow: 0 14px 32px -10px var(--seal-glow);
-        }
-        .btn-seal:active {
-            transform: translateY(0) scale(0.98);
-        }
-        .btn-seal.success {
-            background: var(--ok);
-        }
-        .btn-seal .ti-loader-2 {
-            animation: spin 0.9s linear infinite;
-        }
-        @keyframes spin {
-            to {
-                transform: rotate(360deg);
-            }
-        }
-        .btn-track {
-            padding: 16px 22px;
-            background: transparent;
-            border: 1px solid var(--line);
-            border-radius: 0;
-            color: var(--ink-soft);
-            font-family: 'Space Mono', monospace;
-            text-transform: uppercase;
-            letter-spacing: 1.4px;
-            font-size: 12px;
-            cursor: pointer;
-            white-space: nowrap;
-            transition: all 0.3s ease;
-        }
-        .btn-track:hover {
-            border-color: var(--ink);
-            color: var(--ink);
-            background: rgba(0, 0, 0, 0.02);
-        }
-        .btn-track:active {
-            transform: translateY(0) scale(0.98);
-        }
-        .envelope-body .side-note {
-            margin-top: 22px;
-            text-align: center;
-            font-size: 12px;
-            color: var(--ink-faint);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-            font-style: italic;
-            opacity: 0;
-            transform: translateY(10px);
-            transition: opacity 0.8s var(--ease-out-q), transform 0.8s var(--ease-out-q);
-        }
-        .envelope-body .side-note.stagger-show {
-            opacity: 1;
-            transform: translateY(0);
-        }
-        .field.shake {
-            animation: shake 0.5s cubic-bezier(.36, .07, .19, .97) both;
-        }
-        .field-error {
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            font-size: 11.5px;
-            color: var(--wax);
-            margin-top: 2px;
-            max-height: 0;
-            opacity: 0;
-            overflow: hidden;
-            transition: max-height 0.35s var(--ease-out-q), opacity 0.3s ease, margin-top 0.35s ease;
-        }
-        .field-error.show {
-            max-height: 40px;
-            opacity: 1;
-            margin-top: 6px;
-        }
-        .field-error i {
-            font-size: 13px;
-            flex-shrink: 0;
-        }
-        .field.has-error .field-underline::after {
-            background: var(--wax);
-            width: 100%;
-            box-shadow: none;
-        }
-        @keyframes shake {
-            10%,
-            90% {
-                transform: translate3d(-1px, 0, 0);
-            }
-            20%,
-            80% {
-                transform: translate3d(2px, 0, 0);
-            }
-            30%,
-            50%,
-            70% {
-                transform: translate3d(-4px, 0, 0);
-            }
-            40%,
-            60% {
-                transform: translate3d(4px, 0, 0);
-            }
-        }
+/* ---------------- status terkirim ---------------- */
+@keyframes shake{10%,90%{transform:translateX(-1px) rotate(-.6deg)}20%,80%{transform:translateX(2px) rotate(-.4deg)}30%,50%,70%{transform:translateX(-3px) rotate(-.7deg)}40%,60%{transform:translateX(3px) rotate(-.5deg)}}
+.card.shake{animation:shake .5s}
+#letterForm{transition:opacity .45s}
+#letterForm.sent{opacity:.05;pointer-events:none}
+.card-success{position:absolute;inset:0;background:var(--lembar);z-index:6;border-radius:14px;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;
+  padding:26px 22px;opacity:0;visibility:hidden;transition:opacity .4s ease,visibility 0s .4s}
+.card-success.show{opacity:1;visibility:visible;transition:opacity .4s ease}
+/* momen tanda tangan: sekali, saat surat terkirim */
+.seal{display:inline-flex;flex-direction:column;align-items:center;padding:12px 24px 9px;border:3px solid var(--red);
+  border-radius:10px;color:var(--red);position:relative;transform:rotate(-11deg);opacity:0}
+.seal::after{content:"";position:absolute;inset:4px;border:1px solid var(--red);border-radius:7px}
+.seal span{font:800 clamp(1.3rem,3.8vw,1.75rem) var(--fd);letter-spacing:.14em}
+.seal small{font:500 9.5px var(--fm);letter-spacing:.18em;margin-top:5px}
+@keyframes stampIn{0%{transform:scale(3) rotate(6deg);opacity:0}55%{transform:scale(.9) rotate(-13deg);opacity:1}
+  75%{transform:scale(1.05) rotate(-10deg)}100%{transform:scale(1) rotate(-11deg);opacity:1}}
+.card-success.show .seal{animation:stampIn .6s cubic-bezier(.2,1.4,.3,1) .3s forwards}
+.fx{opacity:0;transform:translateY(14px);transition:opacity .5s ease,transform .5s ease}
+.card-success.show .fx{opacity:1;transform:none}
+.card-success.show .fx:nth-of-type(2){transition-delay:.45s}
+.card-success.show .fx:nth-of-type(3){transition-delay:.55s}
+.card-success.show .fx:nth-of-type(4){transition-delay:.65s}
+.card-success.show .fx:nth-of-type(5){transition-delay:.78s}
+.s-lead{font:600 clamp(1.05rem,2.7vw,1.35rem) var(--fd);margin-top:20px}
+.s-quote{font:italic 400 .92rem/1.6 var(--fs);color:var(--ink-60);max-width:44ch;margin-top:12px}
+.s-meta{font:500 9.5px var(--fm);letter-spacing:.22em;text-transform:uppercase;color:var(--ink-60);margin-top:10px}
+.s-count{font:400 9.5px var(--fm);letter-spacing:.12em;color:var(--ink-40);margin-top:6px}
+.ghostbtn{margin-top:18px;background:transparent;border:0;font:500 10.5px var(--fm);letter-spacing:.26em;
+  text-transform:uppercase;color:var(--ink);border-bottom:1px solid var(--ink);padding:6px 2px;
+  transition:color .2s,border-color .2s;font-family:var(--fm)}
+.ghostbtn:hover{color:var(--red);border-color:var(--red)}
 
-        .scroll-hint {
-            position: absolute;
-            bottom: 6%;
-            left: 50%;
-            transform: translateX(-50%);
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 12px;
-            color: var(--seal);
-            font-family: 'Space Mono', monospace;
-            font-size: 10px;
-            letter-spacing: 2.5px;
-            text-transform: uppercase;
-            z-index: 5;
-            transition: opacity 0.6s ease;
-        }
-        .scroll-hint .chevron {
-            width: 16px;
-            height: 16px;
-            border-right: 1px solid var(--seal);
-            border-bottom: 1px solid var(--seal);
-            transform: rotate(45deg);
-            animation: bob 2.2s var(--ease-out-q) infinite;
-        }
-        @keyframes bob {
-            0%,
-            100% {
-                transform: rotate(45deg) translate(0, 0);
-                opacity: 0.5;
-            }
-            50% {
-                transform: rotate(45deg) translate(6px, 6px);
-                opacity: 1;
-            }
-        }
+/* jalur kedua — amplop kecil di pojok kartu */
+/* baris ajakan: in-flow, rata kanan - bukan absolut yang menggantung */
+.env-row{display:flex;justify-content:flex-end;align-items:flex-start;
+  margin-top:14px;padding-top:4px}
+.env-peek{position:relative;width:72px;height:52px;flex:none;
+  pointer-events:auto;transition:transform .3s ease;
+  transform:rotate(-3deg);cursor:pointer;z-index:7}
+.env-peek:hover{transform:translateY(-4px) rotate(0deg)}
+@media(max-width:640px){.env-peek{width:60px;height:44px}}
+.env-peek-inner{position:relative;width:100%;height:100%;filter:drop-shadow(0 8px 14px rgba(0,0,0,.25))}
+.env-svg{width:100%;height:100%;overflow:visible}
+.env-body{fill:#EDE4CF;stroke:rgba(34,29,21,.55);stroke-width:1.2}
+.env-flap{fill:#E5D9BE;stroke:rgba(34,29,21,.55);stroke-width:1.2}
+.env-peek .env-hint{position:absolute;left:50%;top:-2px;transform:translate(-50%,-100%);
+  font:500 8.5px var(--fm);letter-spacing:.26em;text-transform:uppercase;color:var(--red);
+  background:var(--paper);padding:3px 8px;border-radius:999px;white-space:nowrap;
+  opacity:0;transition:opacity .3s ease;border:1px solid var(--red)}
+.env-peek.open .env-hint,.env-peek:hover .env-hint{opacity:1}
+.env-label{position:absolute;right:100%;bottom:50%;transform:translateY(50%);
+  margin-right:12px;
+  font:italic 400 11px var(--fs);color:var(--ink-40);white-space:nowrap;text-align:right;
+  opacity:0;transition:opacity .6s ease .2s;pointer-events:none}
+.env-peek.open .env-label{opacity:1}
+@media(max-width:640px){.env-label{right:auto;left:100%;margin-right:0;margin-left:12px;text-align:left}}
+/* dialog: anak body, fixed, diposisikan JS dekat amplop */
+.env-ask{position:fixed;left:0;top:0;width:min(280px,calc(100vw - 32px));
+  background:var(--paper);border:1px solid rgba(34,29,21,.35);border-radius:10px;
+  padding:12px 14px;text-align:left;box-shadow:0 14px 30px -14px rgba(0,0,0,.35);
+  transform:translateY(6px) scale(.97);transform-origin:50% 100%;
+  opacity:0;visibility:hidden;pointer-events:none;
+  transition:opacity .2s ease,transform .2s ease,visibility 0s .2s;z-index:700}
+.env-ask.buka{opacity:1;visibility:visible;pointer-events:auto;transform:translateY(0) scale(1)}
+.env-ask-t{font:600 11.5px var(--fm);letter-spacing:.04em;color:var(--ink);margin-bottom:6px}
+.env-ask-t b{color:var(--red);font-weight:600}
+.env-ask-txt{font:italic 400 12.5px/1.5 var(--fs);color:var(--ink-60);margin-bottom:10px}
+.env-ask-btns{display:flex;gap:8px;align-items:center;justify-content:flex-end}
+.env-btn{font:500 9.5px var(--fm);letter-spacing:.2em;text-transform:uppercase;font-family:var(--fm);
+  padding:7px 10px;border-radius:6px;border:1px solid transparent;
+  background:transparent;color:var(--ink);transition:color .2s,border-color .2s,background .2s}
+.env-btn.ghost{border-color:rgba(34,29,21,.3)}
+.env-btn.ghost:hover{border-color:var(--ink)}
+.env-btn.yes{background:var(--ink);color:var(--paper);display:inline-flex;align-items:center;gap:6px}
+.env-btn.yes:hover{background:var(--red)}
+.env-btn.yes svg{width:10px;height:10px}
 
-        .toast {
-            position: fixed;
-            left: 50%;
-            bottom: 32px;
-            transform: translateX(-50%) translateY(150%);
-            background: var(--ink);
-            color: var(--paper);
-            padding: 17px 26px;
-            border-radius: 1px;
-            display: flex;
-            align-items: center;
-            gap: 16px;
-            box-shadow: 0 28px 70px -16px rgba(0, 0, 0, 0.65);
-            z-index: 1000;
-            transition: transform 0.65s var(--ease-silk);
-            max-width: min(90vw, 400px);
-        }
-        .toast.show {
-            transform: translateX(-50%) translateY(0);
-        }
-        .toast .toast-icon {
-            width: 36px;
-            height: 36px;
-            border-radius: 50%;
-            background: var(--seal);
-            color: var(--ink);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            flex-shrink: 0;
-            font-size: 18px;
-            box-shadow: 0 0 16px var(--seal-glow);
-        }
-        .toast b {
-            display: block;
-            font-size: 14px;
-            margin-bottom: 4px;
-            font-family: 'Fraunces', serif;
-        }
-        .toast span {
-            font-size: 12px;
-            color: rgba(244, 235, 216, 0.6);
-            font-family: 'Space Mono', monospace;
-            letter-spacing: 1px;
-        }
+/* ---------------- modal AKAR (segera hadir) ---------------- */
+body.soon-open{overflow:hidden}
+.soon-modal{position:fixed;inset:0;z-index:800;display:flex;align-items:center;justify-content:center;
+  padding:22px;background:rgba(24,20,16,.72);backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px);
+  opacity:0;visibility:hidden;transition:opacity .25s ease,visibility 0s .25s}
+.soon-modal.show{opacity:1;visibility:visible;transition:opacity .25s ease}
+.soon-card{position:relative;width:min(480px,100%);background:var(--paper);
+  border:1px solid rgba(34,29,21,.28);border-radius:14px;padding:34px 30px 26px;
+  box-shadow:0 24px 60px -24px rgba(0,0,0,.55);overflow:hidden;
+  opacity:0;transform:translateY(14px) scale(.97);
+  transition:opacity .3s ease,transform .3s cubic-bezier(.2,.8,.3,1)}
+.soon-modal.show .soon-card{opacity:1;transform:none}
+.soon-tape{position:absolute;left:50%;top:-8px;transform:translateX(-50%) rotate(-2deg);
+  width:92px;height:22px;background:rgba(192,59,33,.22);
+  border-left:1px dashed rgba(34,29,21,.18);border-right:1px dashed rgba(34,29,21,.18);pointer-events:none}
+.soon-close{position:absolute;top:12px;right:12px;width:28px;height:28px;border-radius:50%;
+  background:transparent;border:1px solid rgba(34,29,21,.2);color:var(--ink-40);
+  display:flex;align-items:center;justify-content:center;transition:color .2s,border-color .2s}
+.soon-close:hover{color:var(--red);border-color:var(--red)}
+.soon-close svg{width:11px;height:11px}
+.soon-kicker{font:500 9.5px var(--fm);letter-spacing:.3em;text-transform:uppercase;color:var(--red);
+  margin-bottom:8px;display:flex;align-items:center;gap:8px}
+.soon-kicker::before{content:"";width:14px;height:1px;background:var(--red)}
+.soon-title{font:600 clamp(2.2rem,7vw,3.2rem)/.95 var(--fd);letter-spacing:-.02em;color:var(--ink);margin-bottom:12px}
+.soon-title em{font-style:italic;color:var(--red)}
+.soon-badge{display:inline-flex;align-items:center;gap:6px;padding:4px 10px;
+  border:1px dashed rgba(34,29,21,.35);border-radius:999px;
+  font:500 9px var(--fm);letter-spacing:.18em;text-transform:uppercase;color:var(--ink-60);margin-bottom:14px}
+.soon-badge i{display:inline-block;width:6px;height:6px;border-radius:50%;background:var(--red)}
+.soon-text{font:italic 400 .92rem/1.65 var(--fs);color:var(--ink-60);margin-bottom:18px}
+.soon-text em{font-style:italic;color:var(--ink);font-weight:500}
+.soon-feats{display:flex;flex-direction:column;gap:10px;margin-bottom:20px;padding-top:16px;
+  border-top:1px dashed rgba(34,29,21,.18)}
+.soon-feat{display:flex;gap:14px;align-items:flex-start}
+.soon-feat-no{flex:none;width:26px;height:26px;border-radius:50%;border:1px solid rgba(34,29,21,.25);
+  display:flex;align-items:center;justify-content:center;font:500 10px var(--fm);color:var(--ink-40)}
+.soon-feat-txt{flex:1;font:400 .86rem/1.55 var(--fs);color:var(--ink);padding-top:3px}
+.soon-feat-txt b{font-weight:600}
+.soon-note{font:italic 400 .82rem/1.6 var(--fs);color:var(--ink-40);padding:10px 12px;
+  background:rgba(192,59,33,.06);border-left:2px solid rgba(192,59,33,.5);border-radius:0 6px 6px 0;margin-bottom:20px}
+.soon-ok{width:100%;padding:13px;background:var(--ink);color:var(--paper);border:0;border-radius:8px;
+  font:600 .95rem var(--fd);letter-spacing:.02em;display:flex;align-items:center;justify-content:center;
+  transition:transform .16s,box-shadow .16s}
+.soon-ok:hover{transform:translate(-2px,-2px);box-shadow:4px 4px 0 var(--red)}
+.soon-ok:active{transform:none;box-shadow:none}
 
-        /* ============================================================
-           MODAL — RUANG PRIVAT
-           ============================================================ */
-        .modal-overlay {
-            position: fixed;
-            inset: 0;
-            z-index: 1100;
-            background: rgba(8, 7, 6, 0.72);
-            backdrop-filter: blur(6px);
-            -webkit-backdrop-filter: blur(6px);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 24px;
-            opacity: 0;
-            pointer-events: none;
-            transition: opacity 0.45s var(--ease-out-q), backdrop-filter 0.45s var(--ease-out-q);
-        }
-        .modal-overlay.show {
-            opacity: 1;
-            pointer-events: auto;
-            backdrop-filter: blur(9px);
-            -webkit-backdrop-filter: blur(9px);
-        }
-        .modal-box {
-            background: var(--registry-cream);
-            max-width: 480px;
-            width: 100%;
-            border-radius: 3px;
-            position: relative;
-            box-shadow: 0 30px 80px -16px rgba(0, 0, 0, 0.7), 0 0 0 1px rgba(212, 196, 163, 0.35), 0 0 100px rgba(217, 160, 54, 0.10);
-            transform: translateY(24px) scale(0.94);
-            transition: transform 0.5s var(--ease-spring);
-            overflow: visible;
-        }
-        .modal-overlay.show .modal-box {
-            transform: translateY(0) scale(1);
-        }
-        .modal-box::after {
-            content: "";
-            position: absolute;
-            inset: 14px;
-            border: 1px solid rgba(180, 155, 110, 0.20);
-            pointer-events: none;
-            border-radius: 2px;
-            z-index: 1;
-        }
-        .modal-inner {
-            position: relative;
-            z-index: 3;
-            padding: 34px 34px 30px;
-        }
-        .modal-close {
-            position: absolute;
-            top: 18px;
-            right: 20px;
-            z-index: 5;
-            width: 34px;
-            height: 34px;
-            border-radius: 50%;
-            border: 1px solid rgba(180, 155, 110, 0.4);
-            background: transparent;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: var(--ink-soft);
-            transition: all 0.3s ease;
-            font-size: 16px;
-        }
-        .modal-close:hover {
-            background: rgba(180, 155, 110, 0.12);
-            color: var(--ink);
-            border-color: var(--ink-soft);
-        }
-        .modal-header-registry {
-            display: flex;
-            align-items: center;
-            gap: 14px;
-            margin-bottom: 10px;
-        }
-        .registry-icon {
-            width: 42px;
-            height: 42px;
-            border-radius: 50%;
-            background: radial-gradient(circle at 34% 30%, var(--seal) 0%, var(--seal-deep) 78%, #7a5309 100%);
-            box-shadow: 0 4px 14px rgba(0, 0, 0, 0.25), inset 0 2px 3px rgba(255, 255, 255, 0.28);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            flex-shrink: 0;
-        }
-        .registry-icon svg {
-            width: 19px;
-            height: 19px;
-            color: #2a1d05;
-            opacity: 0.92;
-        }
-        .registry-title-group h3 {
-            font-family: 'Fraunces', serif;
-            font-weight: 450;
-            font-size: 20px;
-            color: var(--ink);
-            margin: 0 0 2px 0;
-            letter-spacing: -0.01em;
-        }
-        .registry-title-group .subtitle {
-            font-family: 'Space Mono', monospace;
-            font-size: 9px;
-            letter-spacing: 2px;
-            text-transform: uppercase;
-            color: var(--ink-faint);
-        }
-        .modal-privacy-line {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            font-size: 12px;
-            color: var(--ink-soft);
-            font-style: italic;
-            margin-bottom: 24px;
-            padding-bottom: 18px;
-            border-bottom: 1px solid rgba(180, 155, 110, 0.3);
-        }
-        .modal-privacy-line i {
-            color: var(--seal-deep);
-            font-style: normal;
-        }
-        .modal-box label.registry-label {
-            font-family: 'Space Mono', monospace;
-            font-size: 10px;
-            text-transform: uppercase;
-            letter-spacing: 1.6px;
-            font-weight: 700;
-            color: var(--ink-soft);
-            display: block;
-            margin-bottom: 10px;
-        }
-        .modal-box .search-row {
-            display: flex;
-            gap: 10px;
-            margin-bottom: 6px;
-        }
-        .modal-box input {
-            flex: 1;
-            font-family: 'Space Mono', monospace;
-            font-size: 13px;
-            letter-spacing: 1.2px;
-            border: none;
-            border-bottom: 2px solid var(--line);
-            background: transparent;
-            padding: 12px 0 10px;
-            outline: none;
-            color: var(--ink);
-            transition: border-bottom-color 0.3s ease;
-        }
-        .modal-box input:focus {
-            border-bottom-color: var(--seal);
-        }
-        .modal-box input::placeholder {
-            color: var(--ink-faint);
-            letter-spacing: 0.5px;
-            font-style: italic;
-        }
-        .btn-lacak {
-            padding: 12px 20px;
-            background: var(--ink);
-            color: var(--paper);
-            border: none;
-            border-radius: 0;
-            font-family: 'Space Mono', monospace;
-            text-transform: uppercase;
-            letter-spacing: 1.2px;
-            font-weight: 700;
-            font-size: 11px;
-            cursor: pointer;
-            white-space: nowrap;
-            transition: all 0.3s ease;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-        .btn-lacak:hover {
-            background: var(--seal-deep);
-        }
-        .btn-lacak:active {
-            transform: scale(0.97);
-        }
-        .btn-lacak .ti-loader-2 {
-            animation: spin 0.9s linear infinite;
-        }
-        .modal-hint {
-            font-size: 11px;
-            color: var(--ink-faint);
-            font-style: italic;
-            margin-bottom: 4px;
-            min-height: 18px;
-            transition: color 0.3s ease;
-        }
-        .modal-hint.error {
-            color: var(--wax);
-        }
+footer{border-top:1px solid var(--line);padding:20px 26px 26px;
+  display:flex;justify-content:space-between;align-items:baseline;gap:14px;flex-wrap:wrap;
+  font:500 8.5px var(--fm);letter-spacing:.3em;color:var(--ui);text-transform:uppercase}
+footer a{color:var(--ink-60);text-decoration:none;border-bottom:1px solid var(--ui-line);
+  padding-bottom:2px;transition:color .2s,border-color .2s}
+footer a:hover{color:var(--red);border-color:var(--red)}
 
-        /* Registry result — simple 3-stage status */
-        .registry-result {
-            margin-top: 24px;
-            padding-top: 22px;
-            border-top: 1px dashed rgba(180, 155, 110, 0.5);
-            display: none;
-        }
-        .registry-result.show {
-            display: block;
-            animation: resultReveal 0.55s var(--ease-out-q) forwards;
-        }
-        @keyframes resultReveal {
-            from {
-                opacity: 0;
-                transform: translateY(10px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-        .result-ticket {
-            font-family: 'Space Mono', monospace;
-            font-size: 13px;
-            letter-spacing: 1.5px;
-            color: var(--seal-deep);
-            background: rgba(217, 160, 54, 0.07);
-            padding: 8px 14px;
-            display: inline-block;
-            border: 1px solid rgba(217, 160, 54, 0.25);
-            margin-bottom: 20px;
-            border-radius: 1px;
-        }
-        .result-ticket .ti {
-            margin-right: 6px;
-            font-size: 14px;
-        }
+/* aman untuk notch & bilah bawah HP */
+@supports (padding: max(0px)){
+  .intro{padding-top:max(20px,env(safe-area-inset-top));padding-bottom:max(20px,env(safe-area-inset-bottom))}
+  .topbar{padding-top:max(11px,env(safe-area-inset-top));padding-left:max(26px,env(safe-area-inset-left));
+    padding-right:max(26px,env(safe-area-inset-right))}
+  @media(max-width:640px){.topbar{padding-left:max(14px,env(safe-area-inset-left));
+    padding-right:max(14px,env(safe-area-inset-right))}}
+  .cek-row{padding-bottom:max(26px,env(safe-area-inset-bottom))}
+}
 
-        /* Three-stage horizontal status strip — no "moving" metaphor */
-        .status-strip {
-            display: flex;
-            align-items: flex-start;
-            gap: 0;
-            margin-bottom: 20px;
-        }
-        .status-node {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            text-align: center;
-            position: relative;
-        }
-        .status-node .node-dot {
-            width: 30px;
-            height: 30px;
-            border-radius: 50%;
-            border: 2px solid rgba(180, 155, 110, 0.4);
-            background: var(--registry-cream);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 14px;
-            color: var(--ink-faint);
-            margin-bottom: 10px;
-            transition: all 0.4s var(--ease-spring);
-            z-index: 2;
-        }
-        .status-node .node-line {
-            position: absolute;
-            top: 15px;
-            left: 50%;
-            width: 100%;
-            height: 2px;
-            background: rgba(180, 155, 110, 0.25);
-            z-index: 1;
-        }
-        .status-node:last-child .node-line {
-            display: none;
-        }
-        .status-node .node-label {
-            font-family: 'Space Mono', monospace;
-            font-size: 9.5px;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            color: var(--ink-faint);
-            line-height: 1.4;
-            padding: 0 4px;
-            transition: color 0.4s ease;
-        }
-        .status-node.completed .node-dot {
-            background: var(--seal);
-            border-color: var(--seal);
-            color: #2a1d05;
-        }
-        .status-node.completed .node-line {
-            background: var(--seal);
-        }
-        .status-node.completed .node-label {
-            color: var(--ink-soft);
-        }
-        .status-node.current .node-dot {
-            background: var(--seal-bright);
-            border-color: var(--seal-bright);
-            color: #2a1d05;
-            box-shadow: 0 0 0 5px rgba(240, 185, 74, 0.18);
-            animation: nodePulse 2s ease-in-out infinite;
-        }
-        @keyframes nodePulse {
-            0%,
-            100% {
-                box-shadow: 0 0 0 5px rgba(240, 185, 74, 0.18);
-            }
-            50% {
-                box-shadow: 0 0 0 9px rgba(240, 185, 74, 0.10);
-            }
-        }
-        .status-node.current .node-label {
-            color: var(--ink);
-            font-weight: 700;
-        }
-        .result-message {
-            padding: 14px 16px;
-            background: rgba(217, 160, 54, 0.06);
-            border-left: 3px solid var(--seal);
-            font-family: 'Fraunces', serif;
-            font-size: 14px;
-            color: var(--ink-soft);
-            line-height: 1.6;
-            font-style: italic;
-            border-radius: 0 2px 2px 0;
-        }
-        .result-message strong {
-            color: var(--ink);
-            font-weight: 500;
-        }
-        .result-privacy-note {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            margin-top: 16px;
-            font-size: 11px;
-            color: var(--ink-faint);
-            font-style: italic;
-        }
-        .result-privacy-note i {
-            color: var(--seal-deep);
-        }
-        .modal-actions-bottom {
-            margin-top: 20px;
-            display: flex;
-            gap: 10px;
-        }
-        .modal-actions-bottom button {
-            flex: 1;
-            padding: 12px;
-            font-family: 'Space Mono', monospace;
-            font-size: 10px;
-            letter-spacing: 1.2px;
-            text-transform: uppercase;
-            border: 1px solid var(--line);
-            background: transparent;
-            color: var(--ink-soft);
-            cursor: pointer;
-            transition: all 0.25s ease;
-            border-radius: 0;
-        }
-        .modal-actions-bottom button:hover {
-            background: rgba(0, 0, 0, 0.03);
-            border-color: var(--ink-soft);
-            color: var(--ink);
-        }
-        .modal-actions-bottom button.primary {
-            background: var(--ink);
-            color: var(--paper);
-            border-color: var(--ink);
-        }
-        .modal-actions-bottom button.primary:hover {
-            background: var(--seal-deep);
-            border-color: var(--seal-deep);
-        }
-
-        @media(max-width:600px) {
-            .modal-inner {
-                padding: 26px 20px;
-            }
-            .modal-box .search-row {
-                flex-direction: column;
-            }
-            .modal-header-registry {
-                gap: 10px;
-            }
-            .registry-title-group h3 {
-                font-size: 17px;
-            }
-            .modal-actions-bottom {
-                flex-direction: column;
-            }
-            .status-node .node-label {
-                font-size: 8.5px;
-            }
-        }
-    </style>
+/* aksesibilitas: hormati preferensi gerak minimal */
+@media (prefers-reduced-motion:reduce){
+  .amplop-layar{perspective:none}
+  .amplop .tutup,.amplop .lembar,.intro,main,.topbar,body.tetap-terbuka .topbar{transition:none}
+  .amplop.buka .tutup{transform:none;opacity:0}
+  .amplop.buka .lembar{transform:none}
+  .intro.pergi{transition:none}
+  .card-success.show .seal{animation:none;opacity:1;transform:rotate(-11deg)}
+  .card.shake{animation:none}
+  .send:hover:not(:disabled),.soon-ok:hover{transform:none;box-shadow:none}
+  .fx,.card-success{transition:none}
+  .card-success.show .fx{transition:none}
+}
+</style>
 </head>
 <body>
 
-    <!-- LOADER -->
-    <div class="page-loader" id="pageLoader">
-        <div class="loader-seal">
-            <svg viewBox="0 0 46 46">
-                <circle class="track" cx="23" cy="23" r="20" fill="none" stroke-width="2"></circle>
-                <circle class="fill" id="loaderFill" cx="23" cy="23" r="20" fill="none" stroke-width="2"></circle>
-            </svg>
-        </div>
-        <div class="loader-word">Menyegel halaman</div>
+<div class="grain" aria-hidden="true"></div>
+
+<!-- ============ INTRO: AMPLOP TERTUTUP ============ -->
+<div class="intro" id="intro">
+  <p class="intro-kicker">MPK · OSIS — Gerakan Aspirasi Siswa</p>
+  <h1 class="intro-title" aria-label="KATAKAN.">KATAKAN<span class="dot">.</span></h1>
+  <p class="intro-sub">ada surat yang menunggu tulisanmu</p>
+
+  <button class="amplop" id="amplop" aria-label="Buka surat — tulis aspirasi">
+    <span class="amplop-layar" aria-hidden="true">
+      <i class="badan"></i>
+      <i class="lembar"><i>untukmu</i></i>
+      <i class="tutup"></i>
+      <i class="mata"></i>
+    </span>
+    <span class="tulis-amplop">Kepada: Sekolah Kita<span style="display:block;font:500 8px var(--fm);letter-spacing:.24em;text-transform:uppercase;color:var(--red);margin-top:5px">GERAKAN ASPIRASI SISWA</span></span>
+  </button>
+  <span class="amplop-hint" id="amplopHint" aria-hidden="true">klik untuk membuka</span>
+</div>
+
+<!-- ============ ISI: KARTU SURAT ============ -->
+<div class="topbar">
+  <span>MPK · OSIS — <b>KATAKAN.</b></span>
+  <span id="topbarRight">MMXXV · Untuk Sekolah Kita</span>
+</div>
+
+<main id="isi">
+  <section class="card" id="cardEl" aria-label="Formulir aspirasi">
+    <div class="card-head">
+      <svg class="postmark" viewBox="0 0 130 130" aria-hidden="true">
+        <defs><path id="pmc" d="M65 65 m -47 0 a 47 47 0 1 1 94 0 a 47 47 0 1 1 -94 0"/></defs>
+        <circle cx="65" cy="65" r="58" fill="none" stroke="currentColor" stroke-width="1.6"/>
+        <circle cx="65" cy="65" r="36" fill="none" stroke="currentColor" stroke-width="1.2"/>
+        <text font-size="10.5" letter-spacing="2.4" fill="currentColor" font-family="IBM Plex Mono,monospace"><textPath href="#pmc">GERAKAN ASPIRASI SISWA · KATAKAN · SEKOLAH KITA ·</textPath></text>
+        <text x="65" y="62" text-anchor="middle" font-size="9" letter-spacing="2.5" fill="currentColor" font-family="IBM Plex Mono,monospace">OSIS</text>
+        <text x="65" y="75" text-anchor="middle" font-size="9" letter-spacing="2.5" fill="currentColor" font-family="IBM Plex Mono,monospace">MMXXV</text>
+      </svg>
+      <div class="stampwrap"><div class="stamp">
+        <svg width="30" height="22" viewBox="-20 -16 40 26"><path d="M0 0 L-14 -9 L-5 1 Z" fill="currentColor" opacity=".5"/><path d="M0 0 L15 -11 L7 2 Z" fill="currentColor"/><path d="M0 0 L9 4 L0 8 L-7 4 Z" fill="currentColor"/></svg>
+        <b>50</b>
+      </div></div>
     </div>
 
-    <!-- CUSTOM CURSOR -->
-    <div class="cursor-dot" id="cursorDot"></div>
-    <div class="cursor-ring" id="cursorRing"></div>
+    <p class="card-kicker">Surat untuk Sekolah</p>
+    <h2 class="card-title">Tulis yang selama ini <em>kau simpan.</em></h2>
+    <p class="card-sub">Setiap surat dibaca langsung oleh pengurus OSIS, dirangkum setiap Jumat, dan dibahas dalam rapat bulanan bersama kepala sekolah. Boleh anonim — kehormatanmu kami jaga.</p>
 
-    <!-- NAV -->
-    <nav class="nav-float">
-        <div class="nav-brand">
-            <div class="nav-dot"></div>
-            <div class="nav-name">OSIS Humas</div>
+    <form id="letterForm" novalidate>
+      <div class="frow">
+        <div class="field"><label for="fNama">Nama <span>(opsional)</span></label>
+          <input id="fNama" type="text" autocomplete="name" placeholder="Boleh kosong — suratmu tetap sampai"></div>
+        <div class="field"><label for="fKelas">Kelas</label>
+          <input id="fKelas" type="text" autocomplete="off" placeholder="cth. XI RPL 2"></div>
+      </div>
+      <div class="field"><label for="fIsi">Aspirasimu</label>
+        <textarea id="fIsi" maxlength="600" placeholder="Tulis apa pun — ruang kelas, kegiatan, kantin, taman, guru, apa saja…"></textarea>
+        <div class="ta-foot"><p class="ferr" id="errIsi"></p><span class="counter" id="isiCount">0 / 600</span></div>
+      </div>
+      <button type="submit" class="send" id="sendBtn"><span>Kirim Surat</span>
+        <svg viewBox="0 0 24 24" fill="none"><path d="M3 12h17M14 6l7 6-7 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
+      <div class="draft-row">
+        <span class="draft-hint">draf tersimpan otomatis di perangkat ini</span>
+        <span class="draft-flash" id="draftFlash" aria-hidden="true">tersimpan</span>
+      </div>
+      <p class="card-note">Identitas (jika diisi) hanya dipakai untuk tindak lanjut.<br>Aspirasi dibahas pada rapat OSIS terdekat.</p>
+    </form>
+
+    <div class="env-row">
+      <div class="env-peek" id="envPeek" role="button" tabindex="0" aria-label="Buka jalur dengan nama">
+        <span class="env-hint">ada yang nyelip</span>
+        <div class="env-peek-inner">
+          <svg class="env-svg" viewBox="0 0 78 56" aria-hidden="true">
+            <rect class="env-body" x="2" y="10" width="74" height="44" rx="4"/>
+            <path class="env-flap" d="M2 12 L39 40 L76 12 L76 14 L39 42 L2 14 Z"/>
+            <circle cx="39" cy="42" r="5.5" fill="none" stroke="#C03B21" stroke-width="1.6"/>
+            <circle cx="39" cy="42" r="2" fill="#C03B21"/>
+          </svg>
         </div>
-        <div class="nav-progress-label" id="progressLabel">01 / 04</div>
-    </nav>
-    <div class="progress-rail"><div class="progress-fill" id="progressFill"></div></div>
+        <span class="env-label">untukmu yang lebih dari sekadar anonim</span>
+      </div>
+    </div>
 
-    <!-- AUTO-SCROLL PLAY/PAUSE -->
-    <button type="button" class="autoscroll-toggle playing" id="autoscrollToggle" aria-pressed="true">
-        <span class="ring" aria-hidden="true"></span>
-        <i class="ti ti-player-pause-filled" id="autoscrollIcon" aria-hidden="true"></i>
-        <span class="sr-label" id="autoscrollLabel">Jeda gulir otomatis</span>
+    <div class="card-success" id="cardSuccess" role="status" aria-live="polite">
+      <div class="seal"><span>TERCATAT</span><small id="sealNo">No. —</small></div>
+      <p class="s-lead fx">Suratmu sudah kami terima.</p>
+      <p class="s-quote fx" id="sQuote"></p>
+      <p class="s-meta fx" id="sMeta"></p>
+      <p class="s-count fx" id="sCount"></p>
+      <button type="button" class="ghostbtn fx" id="againBtn">tulis surat lain</button>
+    </div>
+  </section>
+
+  <p class="cek-row"><a class="cek-link" id="cekLink" href="/cek-aspirasi">sudah kirim? cek status aspirasimu</a></p>
+</main>
+
+<footer>
+  <span>MPK · OSIS · MMXXV</span>
+  <span><a id="footerLink" href="/cek-aspirasi">Cek status aspirasi</a></span>
+</footer>
+
+<!-- dialog jalur kedua: anak body, diposisikan JS (bukan anak amplop) -->
+<div class="env-ask" id="envAsk" role="dialog" aria-label="Pertanyaan jalur">
+  <p class="env-ask-t">Mau yang bisa <b>dibalas</b>?</p>
+  <p class="env-ask-txt">Ada jalur lain — di situ kau menyertakan nama, dan kami bisa benar-benar mengetuk pintumu kembali.</p>
+  <div class="env-ask-btns">
+    <button type="button" class="env-btn ghost" id="envNo">Nanti saja</button>
+    <button type="button" class="env-btn yes" id="envYes">
+      <span>Buka</span>
+      <svg viewBox="0 0 24 24" fill="none"><path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </button>
+  </div>
+</div>
+
+<!-- JALUR KEDUA (SEGERA HADIR) -->
+<div class="soon-modal" id="soonModal" role="dialog" aria-modal="true" aria-labelledby="soonTitle">
+  <div class="soon-card" id="soonCard">
+    <span class="soon-tape" aria-hidden="true"></span>
+    <button type="button" class="soon-close" id="soonClose" aria-label="Tutup">
+      <svg viewBox="0 0 24 24" fill="none"><path d="M6 6l12 12M18 6 6 18" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/></svg>
     </button>
 
-    <!-- STORY -->
-    <section class="story" id="story">
-        <div class="stage" id="stage">
-            <div class="stage-motes" id="stageMotes"></div>
+    <p class="soon-kicker">Jalur kedua</p>
+    <h2 class="soon-title" id="soonTitle">AKAR<em>.</em></h2>
+    <span class="soon-badge"><i></i>sedang dibangun</span>
 
-            <div class="scene-caption" id="cap1">
-                <div class="eyebrow">Sebelum kamu bicara</div>
-                <h2>Ada yang kamu simpan sendiri —<br>ditulis, lalu <em>tidak pernah dikirim.</em></h2>
-            </div>
-            <div class="scene-caption" id="cap2">
-                <div class="eyebrow">Ternyata bukan cuma kamu</div>
-                <h2>Banyak yang juga <em>menyimpan sesuatu</em> —<br>ada yang gampang dibilang, ada yang belum.</h2>
-            </div>
-            <div class="scene-caption" id="cap3">
-                <div class="eyebrow">Sekarang, siap dikirim</div>
-                <h2>Kali ini, <em>kirim saja.</em><br>Tidak perlu nama.</h2>
-            </div>
-            <div class="scene-caption" id="cap4">
-                <div class="eyebrow">Suratmu terbuka di sini</div>
-                <h2>Tulis apa pun yang mau kamu sampaikan.</h2>
-            </div>
+    <p class="soon-text">Halaman ini masih <em>dalam tahap pengembangan.</em> Saat siap, di sini kau bisa menyertakan NIS dan namamu — lalu masuk ke ruang bicara bersama humas OSIS.</p>
 
-            <div id="whisperLayer"></div>
-
-            <!-- Amplop 3D -->
-            <div class="paper-object" id="paperObject">
-                <div class="shadow-cast"></div>
-                <div class="env-flap" id="envFlap"></div>
-                <div class="wax-seal" id="waxSeal">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="#f4ebd8" stroke-width="1.3">
-                        <path d="M12 3l2.2 4.6 5 .7-3.6 3.6.9 5-4.5-2.4-4.5 2.4.9-5-3.6-3.6 5-.7z"/>
-                    </svg>
-                </div>
-                <div class="sheet">
-                    <div class="fold-tr"></div>
-                    <div class="ink-lines">
-                        <div class="rl" style="width:62%"></div>
-                        <div class="rl" style="width:80%"></div>
-                        <div class="rl" style="width:45%"></div>
-                        <div class="rl accent"></div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- FORM AMPLOP -->
-            <div class="form-card-wrapper" id="formCardWrapper">
-                <div class="envelope" id="envelope">
-                    <div class="flap-container" id="flapContainer">
-                        <div class="flap"></div>
-                        <div class="flap-line"></div>
-                        <div class="envelope-seal" id="envelopeSeal">
-                            <svg viewBox="0 0 24 24" fill="none" stroke="#f4ebd8" stroke-width="1.3">
-                                <path d="M12 3l2.2 4.6 5 .7-3.6 3.6.9 5-4.5-2.4-4.5 2.4.9-5-3.6-3.6 5-.7z"/>
-                            </svg>
-                        </div>
-                    </div>
-                    <div class="envelope-body" id="envelopeBody">
-                        <div class="intro-mini" id="fmIntro">Tulis di sini</div>
-                        <h3 id="fmTitle">Suratmu, <em>didengar sungguhan.</em></h3>
-                        <form id="aspirasiForm" novalidate>
-                            <div style="display:grid; grid-template-columns:1fr 1fr; gap:18px; margin-bottom:4px;">
-                                <div class="field" id="fldKategori">
-                                    <label for="kategori">Kategori Topik <span class="opt">(opsional)</span></label>
-                                    <div class="field-underline" id="ulKategori">
-                                        <select id="kategori">
-                                            <option value="">Pilih topik pembicaraan</option>
-                                            <option value="akademik">Akademik & Belajar</option>
-                                            <option value="fasilitas">Fasilitas Sekolah</option>
-                                            <option value="kegiatan">Kegiatan & Acara</option>
-                                            <option value="lainnya">Lainnya / Cerita Bebas</option>
-                                        </select>
-                                    </div>
-                                </div>
-                                <div class="field" id="fldEmail">
-                                    <label for="email">Kontak Email <span class="opt">(opsional)</span></label>
-                                    <div class="field-underline" id="ulEmail">
-                                        <input type="email" id="email" placeholder="Hanya untuk mengirim kode tiket">
-                                    </div>
-                                    <div class="field-error" id="errEmail" role="alert"><i class="ti ti-alert-circle" aria-hidden="true"></i> <span>Format email belum benar. Contoh: nama@email.com</span></div>
-                                </div>
-                            </div>
-                            <div class="field" id="fldAspirasi" style="margin-bottom:10px;">
-                                <label for="aspirasi">Isi Suratmu</label>
-                                <div class="field-underline" id="ulAspirasi">
-                                    <textarea id="aspirasi" placeholder="Boleh soal sekolah, boleh cuma ingin cerita. Mulai dari mana saja — kami akan baca sampai selesai." required maxlength="1200"></textarea>
-                                </div>
-                                <div class="char-count" id="charCount">0 / 1200</div>
-                                <div class="field-error" id="errAspirasi" role="alert"><i class="ti ti-alert-circle" aria-hidden="true"></i> <span>Harap isi suratmu terlebih dahulu.</span></div>
-                            </div>
-                            <div class="field-actions" id="fldActions">
-                                <button type="submit" class="btn-seal" id="btnKirim">
-                                    <i class="ti ti-send" aria-hidden="true"></i>
-                                    <span id="btnKirimText">Segel & Kirim</span>
-                                </button>
-                                <button type="button" class="btn-track" id="btnOpenStatus">Lacak Status Surat</button>
-                            </div>
-                        </form>
-                        <div class="side-note" id="fmNote"><i class="ti ti-shield-lock" aria-hidden="true"></i> Identitasmu 100% rahasia. Kami tidak pernah meminta nama.</div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="scroll-hint" id="scrollHint">
-                <span>Scroll perlahan</span>
-                <div class="chevron"></div>
-            </div>
-        </div>
-    </section>
-
-    <!-- TOAST -->
-    <div class="toast" id="toast">
-        <div class="toast-icon"><i class="ti ti-check" aria-hidden="true"></i></div>
-        <div>
-            <b>Surat Berhasil Mendarat</b>
-            <span id="toastCode">ASP-XXXX</span>
-        </div>
+    <div class="soon-feats">
+      <div class="soon-feat">
+        <span class="soon-feat-no">01</span>
+        <p class="soon-feat-txt"><b>Menyertakan identitas.</b> NIS dan nama dipakai sebagai kunci agar kami tahu siapa yang bicara.</p>
+      </div>
+      <div class="soon-feat">
+        <span class="soon-feat-no">02</span>
+        <p class="soon-feat-txt"><b>Ruang bicara dengan humas.</b> Aspirasimu tidak berhenti di kotak masuk — kau bisa menunggu balasan, bertanya lagi, dan berdiskusi.</p>
+      </div>
+      <div class="soon-feat">
+        <span class="soon-feat-no">03</span>
+        <p class="soon-feat-txt"><b>Nomor tiket.</b> Setiap surat bernama punya nomor unik untuk melacak percakapanmu.</p>
+      </div>
     </div>
 
-    <!-- ============================================================
-         MODAL — RUANG PRIVAT (status surat, 3 tahap, tanpa kesan "dibawa-bawa")
-         ============================================================ -->
-    <div class="modal-overlay" id="statusModal">
-        <div class="modal-box" id="modalBox">
-            <button class="modal-close" id="btnCloseModal" aria-label="Tutup">
-                <i class="ti ti-x"></i>
-            </button>
-            <div class="modal-inner">
-                <!-- Header -->
-                <div class="modal-header-registry">
-                    <div class="registry-icon">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6">
-                            <path d="M12 2l3 6 6.5.9-4.7 4.6 1.1 6.5L12 16.9 6.1 20l1.1-6.5L2.5 8.9 9 8z"/>
-                        </svg>
-                    </div>
-                    <div class="registry-title-group">
-                        <h3>Ruang Privat</h3>
-                        <div class="subtitle">Cek Status Suratmu</div>
-                    </div>
-                </div>
-                <div class="modal-privacy-line">
-                    <i class="ti ti-lock"></i> Halaman ini hanya menunjukkan status, bukan isi suratmu — dan tidak menyimpan siapa yang mengecek.
-                </div>
+    <p class="soon-note">Untuk sekarang, jalur anonim di atas tetap terbuka — dan suratmu tetap sampai. Jalur ini hanya untuk yang ingin lebih jauh.</p>
 
-                <!-- Search -->
-                <label class="registry-label" for="statusInput">Masukkan Kode Tiket Surat</label>
-                <div class="search-row">
-                    <input type="text" id="statusInput" placeholder="ASP-XXXX" autocomplete="off">
-                    <button type="button" class="btn-lacak" id="btnLacak">
-                        <i class="ti ti-search"></i> Lacak
-                    </button>
-                </div>
-                <div class="modal-hint" id="modalHint">Kode tiket diberikan saat surat selesai dikirim.</div>
+    <button type="button" class="soon-ok" id="soonOk">mengerti</button>
+  </div>
+</div>
 
-                <!-- Result -->
-                <div class="registry-result" id="registryResult">
-                    <div class="result-ticket" id="resultTicket">
-                        <i class="ti ti-ticket"></i> <span id="resultCodeDisplay">—</span>
-                    </div>
-                    <div class="status-strip" id="statusStrip"></div>
-                    <div class="result-message" id="resultMessage"></div>
-                    <div class="result-privacy-note"><i class="ti ti-eye-off"></i> Suratmu tetap tersimpan aman dan anonim di sini — tidak berpindah tempat.</div>
-                    <div class="modal-actions-bottom">
-                        <button type="button" id="btnCloseBottom">Tutup</button>
-                        <button type="button" class="primary" id="btnResetCheck">Cek Surat Lain</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
+<noscript><div style="padding:24px;text-align:center;font-family:Georgia,serif">Halaman ini membutuhkan JavaScript untuk berjalan. Matikan mode pembatas, lalu muat ulang.</div></noscript>
 
-    <script>
-        /* ============================================================
-           SHIM matchMedia — window.matchMedia bukan API stabil di semua
-           browser. Helper ini guard supaya script tidak berhenti di tengah
-           jalan kalau method tidak dimplementasi (fallback false).
-           ============================================================ */
-        function mqMatches(query) {
-            try {
-                return !!(window.matchMedia && window.matchMedia(query).matches);
-            } catch (e) {
-                return false;
-            }
-        }
+<script>
+(function(){
+'use strict';
+const $=s=>document.querySelector(s);
+const REDUCED=matchMedia('(prefers-reduced-motion: reduce)').matches;
+const OFF_HOST=!(['kotak-aspirasi-osis.vercel.app','localhost','127.0.0.1'].some(h=>location.hostname===h));
 
-        /* ============================================================
-           LOADER
-           ============================================================ */
-        (function() {
-            var loaderFill = document.getElementById('loaderFill');
-            var loader = document.getElementById('pageLoader');
-            var CIRC = 126;
-            var progress = 0;
-            var fontsReady = false,
-                minTimeReached = false;
+/* ---------------- intro: klik amplop → surat terbuka ---------------- */
+const intro=$('#intro'),isi=$('#isi'),amplop=$('#amplop'),hint=$('#amplopHint'),topbar=$('.topbar');
+document.body.classList.add('sedang-intro');
+/* satu fungsi, satu keadaan: intro hilang total LALU kartu muncul.
+   Tidak ada crossfade - kalau transisi macet di tengah (tab sempat
+   ke-background), hantu transparan yang menutupi formulir tidak mungkin */
+function tampilkanSurat(){
+  document.body.classList.remove('sedang-intro');
+  intro.style.display='none';
+  isi.classList.add('tampak');
+  document.body.classList.add('tetap-terbuka');
+}
+let bukaSelesai=false;
+function selesaiBuka(){
+  if(bukaSelesai)return; bukaSelesai=true;
+  tampilkanSurat();
+}
+amplop.addEventListener('click',()=>{
+  if(amplop.classList.contains('buka'))return;
+  amplop.classList.add('buka');intro.classList.add('dibuka');
+  const lembar=document.querySelector('.lembar');
+  if(lembar&&!REDUCED)lembar.addEventListener('transitionend',e=>{
+    if(e.propertyName==='transform')selesaiBuka();
+  },{once:true});
+  setTimeout(selesaiBuka,REDUCED?80:900);
+});
+/* kalau user sempatkeh pindah aplikasi saat animasi jalan: tuntaskan */
+document.addEventListener('visibilitychange',()=>{
+  if(!document.hidden&&amplop.classList.contains('buka'))selesaiBuka();
+});
+/* klik di luar = tutup dialog jalur kedua */
+document.addEventListener('click',e=>{
+  if(!envTerbuka)return;
+  if(e.target.closest('.env-ask')||e.target.closest('#envPeek'))return;
+  tutupDialog();
+});
+amplop.addEventListener('keydown',e=>{
+  if(e.key==='Enter'||e.key===' '){e.preventDefault();amplop.click();}
+});
 
-            function setProgress(p) {
-                progress = Math.min(1, p);
-                loaderFill.style.strokeDashoffset = (CIRC - CIRC * progress).toFixed(1);
-            }
+/* ---------------- form: counter + draf ---------------- */
+const fIsi=$('#fIsi'),isiCount=$('#isiCount'),draftFlash=$('#draftFlash');
+const DKEY='katakan_draft';let draftT=null,flashT=null;
+function saveDraft(now){clearTimeout(draftT);draftT=setTimeout(()=>{
+  try{localStorage.setItem(DKEY,JSON.stringify({nama:$('#fNama').value,kelas:$('#fKelas').value,isi:fIsi.value}));}catch(_){}
+  draftFlash.classList.add('show');clearTimeout(flashT);
+  flashT=setTimeout(()=>draftFlash.classList.remove('show'),1300);},now?0:700);}
+function clearDraft(){clearTimeout(draftT);try{localStorage.removeItem(DKEY);}catch(_){}draftFlash.classList.remove('show');}
+fIsi.addEventListener('input',()=>{isiCount.textContent=fIsi.value.length+' / 600';$('#errIsi').textContent='';saveDraft();});
+$('#fNama').addEventListener('input',()=>saveDraft());
+$('#fKelas').addEventListener('input',()=>saveDraft());
+try{const dr=JSON.parse(localStorage.getItem(DKEY)||'null');
+ if(dr){$('#fNama').value=dr.nama||'';$('#fKelas').value=dr.kelas||'';fIsi.value=dr.isi||'';
+  isiCount.textContent=fIsi.value.length+' / 600';}}catch(_){}
 
-            function tick() {
-                if (progress < 0.9) { setProgress(progress + (0.9 - progress) * 0.08 + 0.004);
-                    requestAnimationFrame(tick); }
-            }
-            tick();
+/* ---------------- kirim ---------------- */
+const KEY='katakan_letters';
+function loadLetters(){try{return JSON.parse(localStorage.getItem(KEY)||'[]');}catch(e){return[];}}
+const formEl=$('#letterForm'),sendBtn=$('#sendBtn'),successEl=$('#cardSuccess'),cardEl=$('#cardEl');
+formEl.addEventListener('submit',e=>{e.preventDefault();
+ const nama=$('#fNama').value.trim(),kelas=$('#fKelas').value.trim(),isi=fIsi.value.trim();
+ let ok=true;if(isi.length<20){$('#errIsi').textContent='Tulis setidaknya 20 karakter — suaramu layak dibaca utuh.';ok=false;}
+ if(!ok){cardEl.classList.remove('shake');void cardEl.offsetWidth;cardEl.classList.add('shake');return;}
+ sendBtn.disabled=true;sendBtn.querySelector('span').textContent='Menjahit suratmu…';
+ const API=OFF_HOST?'https://kotak-aspirasi-osis.vercel.app/api/aspirasi':'/api/aspirasi';
+ fetch(API,{method:'POST',headers:{'Content-Type':'application/json'},
+  body:JSON.stringify({isi})})
+ .then(res=>{if(!res.ok)throw new Error('server');return res.json();})
+ .then(data=>{
+  const no=data.kode_tiket||'No. —';
+  $('#sealNo').textContent=no;
+  $('#sQuote').textContent='\u201C'+isi.slice(0,140)+(isi.length>140?'\u2026':'')+'\u201D';
+  $('#sMeta').textContent=(nama||'Anonim')+(kelas?', '+kelas:'');
+  const arr=loadLetters();arr.push({nama,kelas,isi,no,t:Date.now()});
+  try{localStorage.setItem(KEY,JSON.stringify(arr));}catch(e2){}
+  $('#sCount').textContent='aspirasi ke-'+arr.length+' yang tercatat di perangkat ini';
+  clearDraft();formEl.classList.add('sent');successEl.classList.add('show');
+  sendBtn.disabled=false;sendBtn.querySelector('span').textContent='Kirim Surat';
+ })
+ .catch(()=>{
+  $('#errIsi').innerHTML=OFF_HOST
+    ?'Ini halaman demo statis — pengiriman diblokir lintas-domain. Kirim asli lewat <a style="color:var(--red);text-decoration:underline" href="https://kotak-aspirasi-osis.vercel.app/">kotak-aspirasi-osis.vercel.app</a>.'
+    :'Gagal terhubung ke server. Coba lagi nanti.';
+  cardEl.classList.remove('shake');void cardEl.offsetWidth;cardEl.classList.add('shake');
+  sendBtn.disabled=false;sendBtn.querySelector('span').textContent='Kirim Surat';
+ });});
+$('#againBtn').addEventListener('click',()=>{successEl.classList.remove('show');
+ formEl.classList.remove('sent');formEl.reset();isiCount.textContent='0 / 600';
+ $('#errIsi').textContent='';clearDraft();});
 
-            function maybeFinish() {
-                if (fontsReady && minTimeReached) {
-                    setProgress(1);
-                    setTimeout(function() { loader.classList.add('hidden'); }, 320);
-                }
-            }
-            if (document.fonts && document.fonts.ready) {
-                document.fonts.ready.then(function() { fontsReady = true;
-                    maybeFinish(); });
-            } else { fontsReady = true; }
-            setTimeout(function() { minTimeReached = true;
-                maybeFinish(); }, 900);
-            window.addEventListener('load', function() { fontsReady = true;
-                maybeFinish(); });
-        })();
+/* ---------------- amplop kecil → jalur kedua ---------------- */
+const envPeek=$('#envPeek'),envAsk=$('#envAsk'),soonModal=$('#soonModal');
+let envTerbuka=false;
+function tempatkanDialog(){
+  if(!envAsk||!envPeek)return;
+  const p=envPeek.getBoundingClientRect();
+  const w=envAsk.offsetWidth,h=envAsk.offsetHeight;
+  const M=12;
+  let left=p.left+ p.width/2 - w/2;              /* di atas amplop, rata tengah */
+  let top=p.top-h-10;
+  if(top<M) top=p.bottom+10;                      /* kalau tak cukup di atas -> di bawah */
+  left=Math.max(M,Math.min(left,innerWidth-w-M));
+  top=Math.max(M,Math.min(top,innerHeight-h-M));
+  envAsk.style.left=Math.round(left)+'px';
+  envAsk.style.top=Math.round(top)+'px';
+}
+function bukaDialog(){
+  envTerbuka=true;envPeek.classList.add('open');
+  tempatkanDialog();envAsk.classList.add('buka');
+}
+function tutupDialog(){
+  envTerbuka=false;envPeek.classList.remove('open');
+  envAsk.classList.remove('buka');
+}
+envPeek.addEventListener('click',e=>{
+ if(e.target.closest('.env-ask'))return;
+ envTerbuka?tutupDialog():bukaDialog();});
+envPeek.addEventListener('keydown',e=>{
+ if(e.key==='Enter'||e.key===' '){e.preventDefault();envPeek.click();}});
+$('#envNo').addEventListener('click',e=>{e.stopPropagation();tutupDialog();});
+addEventListener('resize',()=>{if(envTerbuka)tempatkanDialog();});
+function openSoon(){soonModal.classList.add('show');document.body.classList.add('soon-open');}
+function closeSoon(){soonModal.classList.remove('show');document.body.classList.remove('soon-open');}
+$('#envYes').addEventListener('click',e=>{e.stopPropagation();tutupDialog();openSoon();});
+$('#soonClose').addEventListener('click',closeSoon);
+$('#soonOk').addEventListener('click',closeSoon);
+soonModal.addEventListener('click',e=>{if(e.target===soonModal)closeSoon();});
+addEventListener('keydown',e=>{if(e.key==='Escape'&&soonModal.classList.contains('show'))closeSoon();});
 
-        /* ============================================================
-           CUSTOM CURSOR
-           ============================================================ */
-        (function() {
-            if (mqMatches('(hover: none), (pointer: coarse)')) return;
-            var dot = document.getElementById('cursorDot');
-            var ring = document.getElementById('cursorRing');
-            var rx = 0,
-                ry = 0,
-                tx = 0,
-                ty = 0;
-            window.addEventListener('pointermove', function(e) {
-                tx = e.clientX;
-                ty = e.clientY;
-                dot.style.transform = 'translate(' + tx + 'px,' + ty + 'px) translate(-50%,-50%)';
-                dot.classList.add('show');
-                ring.classList.add('show');
-            }, { passive: true });
-
-            function loop() {
-                rx += (tx - rx) * 0.16;
-                ry += (ty - ry) * 0.16;
-                ring.style.transform = 'translate(' + rx + 'px,' + ry + 'px) translate(-50%,-50%)';
-                requestAnimationFrame(loop);
-            }
-            loop();
-            document.querySelectorAll('button, a, select, textarea, input').forEach(function(el) {
-                el.addEventListener('mouseenter', function() { ring.style.width = '44px';
-                    ring.style.height = '44px';
-                    ring.style.borderColor = 'rgba(217,160,54,0.9)'; });
-                el.addEventListener('mouseleave', function() { ring.style.width = '32px';
-                    ring.style.height = '32px';
-                    ring.style.borderColor = 'rgba(217,160,54,0.5)'; });
-            });
-        })();
-
-        /* ============================================================
-           AMBIENT MOTES
-           Dikurangi drastis (atau dimatikan) jika pengguna meminta
-           reduced motion, dan jumlah partikel diskalakan ke lebar layar
-           supaya perangkat kelas bawah tidak terbebani.
-           ============================================================ */
-        var prefersReducedMotion = mqMatches('(prefers-reduced-motion: reduce)');
-        (function() {
-            if (prefersReducedMotion) return;
-            var layer = document.getElementById('stageMotes');
-            var n = window.innerWidth < 700 ? 14 : 26;
-            var motes = [];
-            for (var i = 0; i < n; i++) {
-                var el = document.createElement('div');
-                el.className = 'mote';
-                var size = 1 + Math.random() * 2;
-                el.style.width = size + 'px';
-                el.style.height = size + 'px';
-                el.style.left = (Math.random() * 100) + '%';
-                el.style.top = (Math.random() * 100) + '%';
-                el.style.opacity = (0.15 + Math.random() * 0.35).toFixed(2);
-                layer.appendChild(el);
-                motes.push({ el: el, phase: Math.random() * Math.PI * 2, speed: 0.15 + Math.random() * 0.25, amp: 10 + Math
-                        .random() * 22, driftX: (Math.random() - 0.5) * 14 });
-            }
-            var t = 0;
-
-            function tick() {
-                t += 0.016;
-                motes.forEach(function(m) {
-                    var y = Math.sin(t * m.speed + m.phase) * m.amp;
-                    var x = Math.cos(t * m.speed * 0.7 + m.phase) * m.driftX;
-                    m.el.style.transform = 'translate(' + x.toFixed(1) + 'px,' + y.toFixed(1) + 'px)';
-                });
-                requestAnimationFrame(tick);
-            }
-            tick();
-        })();
-
-        /* ============================================================
-           WHISPER WORDS
-           ============================================================ */
-        var whispers = [
-            { text: 'kantin penuh pas istirahat', cut: false },
-            { text: 'kadang pengen cerita, tapi—', cut: true },
-            { text: 'wifi lab sering mati', cut: false },
-            { text: 'sebenernya ada yang ngeganjel dari—', cut: true },
-            { text: 'jadwal ulangan numpuk', cut: false },
-            { text: 'nggak semua yang keliatan baik-baik aja—', cut: true },
-            { text: 'mading udah lama gitu-gitu aja', cut: false },
-            { text: 'udah lama pengen bilang ini, cuma—', cut: true },
-            { text: 'toilet lantai 2 kurang bersih', cut: false },
-            { text: 'kalau boleh jujur, aku—', cut: true },
-            { text: 'pengen ada lomba futsal', cut: false },
-            { text: 'capek juga sebenernya, tapi—', cut: true },
-            { text: 'kelas kepanasan pas siang', cut: false },
-            { text: 'susah jelasinnya, pokoknya—', cut: true }
-        ];
-        var whisperLayer = document.getElementById('whisperLayer');
-        var whisperPositions = [
-            { top: '15%', left: '5%', z: -20, blur: 2 }, { top: '35%', left: '25%', z: 10, blur: 0 },
-            { top: '65%', left: '8%', z: -40, blur: 3 }, { top: '55%', left: '70%', z: 20, blur: 0 },
-            { top: '12%', left: '85%', z: -10, blur: 1 }, { top: '45%', left: '35%', z: 30, blur: 0 },
-            { top: '78%', left: '75%', z: -30, blur: 2 }, { top: '25%', left: '65%', z: 5, blur: 0 },
-            { top: '40%', left: '88%', z: -15, blur: 1 }, { top: '60%', left: '45%', z: 25, blur: 0 },
-            { top: '48%', left: '2%', z: -25, blur: 2 }, { top: '28%', left: '78%', z: 15, blur: 0 },
-            { top: '85%', left: '35%', z: -5, blur: 1 }, { top: '18%', left: '55%', z: 35, blur: 0 }
-        ];
-        var whisperDrift = [];
-        whispers.forEach(function(w, i) {
-            var el = document.createElement('div');
-            el.className = 'whisper' + (w.cut ? ' cut' : '');
-            el.textContent = w.text;
-            var pos = whisperPositions[i % whisperPositions.length];
-            el.style.top = pos.top;
-            el.style.left = pos.left;
-            el.style.filter = 'blur(' + pos.blur + 'px)';
-            el.dataset.index = i;
-            el.dataset.z = pos.z;
-            whisperLayer.appendChild(el);
-            whisperDrift.push(w.cut ? {
-                ampY: 8 + (i * 3) % 10,
-                ampX: 4 + (i * 2) % 6,
-                speedY: 0.20 + (i % 4) * 0.05,
-                speedX: 0.15 + (i % 3) * 0.06,
-                phase: i * 1.5,
-                rot: (i % 2 === 0 ? 1 : -1) * (0.5 + (i % 2))
-            } : {
-                ampY: 15 + (i * 7) % 20,
-                ampX: 8 + (i * 5) % 12,
-                speedY: 0.4 + (i % 4) * 0.1,
-                speedX: 0.3 + (i % 3) * 0.12,
-                phase: i * 1.5,
-                rot: (i % 2 === 0 ? 1 : -1) * (1 + (i % 3))
-            });
-        });
-        var whisperEls = document.querySelectorAll('.whisper');
-        var whisperClock = 0;
-        var whisperVisibility = whispers.map(function() { return 0; });
-        var whisperBaseY = whispers.map(function() { return 14; });
-
-        /* ============================================================
-           SCROLL-DRIVEN 3D + FORM AMPLOP REVEAL
-           ============================================================ */
-        var story = document.getElementById('story');
-        var paperObject = document.getElementById('paperObject');
-        var envFlap = document.getElementById('envFlap');
-        var waxSeal = document.getElementById('waxSeal');
-        var progressFill = document.getElementById('progressFill');
-        var progressLabel = document.getElementById('progressLabel');
-        var scrollHint = document.getElementById('scrollHint');
-        var caps = [document.getElementById('cap1'), document.getElementById('cap2'), document.getElementById('cap3'),
-            document.getElementById('cap4')
-        ];
-        var formWrapper = document.getElementById('formCardWrapper');
-        var envelope = document.getElementById('envelope');
-        var flapContainer = document.getElementById('flapContainer');
-        var envelopeSeal = document.getElementById('envelopeSeal');
-        var fmIntro = document.getElementById('fmIntro');
-        var fmTitle = document.getElementById('fmTitle');
-        var fldKategori = document.getElementById('fldKategori');
-        var fldEmail = document.getElementById('fldEmail');
-        var fldAspirasi = document.getElementById('fldAspirasi');
-        var fldActions = document.getElementById('fldActions');
-        var fmNote = document.getElementById('fmNote');
-        var allStagger = [fmIntro, fmTitle, fldKategori, fldEmail, fldAspirasi, fldActions, fmNote];
-
-        function clamp(v, min, max) { return Math.max(min, Math.min(max, v)); }
-
-        function lerp(a, b, t) { return a + (b - a) * t; }
-
-        function easeOutQuad(x) { return 1 - (1 - x) * (1 - x); }
-
-        function easeOutCubic(x) { return 1 - Math.pow(1 - x, 3); }
-        var tiltX = 0,
-            tiltY = 0,
-            tiltTargetX = 0,
-            tiltTargetY = 0;
-        window.addEventListener('pointermove', function(e) {
-            var w = window.innerWidth,
-                h = window.innerHeight;
-            tiltTargetY = ((e.clientX / w) - 0.5) * 10;
-            tiltTargetX = ((e.clientY / h) - 0.5) * -8;
-        }, { passive: true });
-        var lastP = 0;
-
-        function updateScroll() {
-            var rect = story.getBoundingClientRect();
-            var total = rect.height - window.innerHeight;
-            var scrolled = clamp(-rect.top, 0, total);
-            var p = total > 0 ? scrolled / total : 0;
-            lastP = p;
-            progressFill.style.height = (p * 100) + '%';
-            var sceneIdx = Math.min(3, Math.floor(p * 4));
-            progressLabel.textContent = ('0' + (sceneIdx + 1)) + ' / 04';
-            caps.forEach(function(cap, i) {
-                var segStart = i * 0.25,
-                    segEnd = segStart + 0.25;
-                var inSeg = p >= segStart - 0.05 && p < segEnd - 0.02;
-                cap.classList.toggle('active', inSeg);
-            });
-            scrollHint.style.opacity = p < 0.03 ? '1' : '0';
-            var w, h, rotZ, rotX, rotY, scale, flapRot, opacity, waxScale;
-            if (p < 0.25) {
-                var t1 = easeOutQuad(p / 0.25);
-                w = lerp(160, 220, t1);
-                h = lerp(200, 280, t1);
-                rotZ = lerp(-8, -2, t1);
-                rotX = lerp(30, 10, t1);
-                rotY = lerp(-15, -5, t1);
-                scale = 1;
-                flapRot = -180;
-                opacity = lerp(0.5, 1, t1 * 2);
-                waxScale = 0;
-                whisperEls.forEach(function(el, i) { whisperVisibility[i] = 0; });
-            } else if (p < 0.5) {
-                var t2 = (p - 0.25) / 0.25;
-                w = lerp(220, 280, t2);
-                h = lerp(280, 320, t2);
-                rotZ = lerp(-2, 2, t2);
-                rotX = lerp(10, 5, t2);
-                rotY = lerp(-5, 5, t2);
-                scale = 1;
-                flapRot = -180;
-                opacity = 1;
-                waxScale = 0;
-                whisperEls.forEach(function(el, i) {
-                    var stagger = (i % 14) * 0.02;
-                    var localT = clamp((t2 - stagger) / 0.5, 0, 1);
-                    whisperVisibility[i] = Math.sin(localT * Math.PI);
-                    whisperBaseY[i] = lerp(20, -15, localT);
-                });
-            } else if (p < 0.75) {
-                var t3 = easeOutCubic((p - 0.5) / 0.25);
-                w = lerp(280, 240, t3);
-                h = lerp(320, 200, t3);
-                rotZ = lerp(2, 0, t3);
-                rotX = lerp(5, 0, t3);
-                rotY = lerp(5, 0, t3);
-                scale = 1;
-                flapRot = lerp(-180, 0, t3);
-                opacity = 1;
-                waxScale = t3 > 0.82 ? clamp((t3 - 0.82) / 0.18, 0, 1) : 0;
-                whisperEls.forEach(function(el, i) { whisperVisibility[i] = (1 - t3); });
-            } else {
-                var t4 = (p - 0.75) / 0.25;
-                w = 240;
-                h = 200;
-                rotZ = 0;
-                rotX = lerp(0, -10, t4);
-                rotY = 0;
-                scale = lerp(1, 1.2, t4);
-                flapRot = 0;
-                opacity = lerp(1, 0, clamp((t4 - 0.4) / 0.4, 0, 1));
-                waxScale = 1;
-                whisperEls.forEach(function(el, i) { whisperVisibility[i] = 0; });
-            }
-            tiltX += (tiltTargetX - tiltX) * 0.06;
-            tiltY += (tiltTargetY - tiltY) * 0.06;
-            var tiltFactor = p < 0.5 ? (1 - p * 1.4) : 0;
-            paperObject.style.width = w + 'px';
-            paperObject.style.height = h + 'px';
-            paperObject.style.transform = 'scale(' + scale + ') rotateX(' + (rotX + tiltX * clamp(tiltFactor, 0, 1)) +
-                'deg) rotateY(' + (rotY + tiltY * clamp(tiltFactor, 0, 1)) + 'deg) rotateZ(' + rotZ + 'deg)';
-            paperObject.style.opacity = opacity;
-            envFlap.style.transform = 'rotateX(' + flapRot + 'deg)';
-            waxSeal.classList.toggle('pressed', waxScale > 0.5);
-            var formStart = 0.72;
-            var formEnd = 1.0;
-            var fp = clamp((p - formStart) / (formEnd - formStart), 0, 1);
-            if (fp > 0.02) { formWrapper.classList.add('visible'); } else { formWrapper.classList.remove('visible');
-                formWrapper.classList.remove('ready'); }
-            if (fp > 0.08) { formWrapper.classList.add('ready'); } else { formWrapper.classList.remove('ready'); }
-            var staggerThresholds = [
-                { el: fmIntro, threshold: 0.10 }, { el: fmTitle, threshold: 0.18 }, { el: fldKategori, threshold: 0.28 },
-                { el: fldEmail, threshold: 0.36 }, { el: fldAspirasi, threshold: 0.46 }, { el: fldActions,
-                    threshold: 0.60 }, { el: fmNote, threshold: 0.72 }
-            ];
-            staggerThresholds.forEach(function(item) {
-                var show = fp > item.threshold;
-                if (show) { item.el.classList.add('stagger-show'); if (item.el === fmIntro) item.el.classList.add(
-                        'show'); if (item.el === fmTitle) item.el.classList.add('show'); } else { item.el.classList
-                        .remove('stagger-show'); if (item.el === fmIntro) item.el.classList.remove('show'); if (item
-                        .el === fmTitle) item.el.classList.remove('show'); }
-            });
-            if (fp < 0.02) { allStagger.forEach(function(el) { el.classList.remove('stagger-show', 'show'); });
-                formWrapper.classList.remove('ready'); }
-        }
-        window.addEventListener('resize', updateScroll);
-        updateScroll();
-
-        /* ============================================================
-           AUTO-SCROLL
-           ============================================================ */
-        var AUTO_SCROLL_SPEED = 0.6;
-        var RESUME_DELAY = 2000;
-        var autoScrollEnabled = true;
-        var manualPause = false;
-        var resumeTimer = null;
-        var lastFrameTime = null;
-        var isSyncingScroll = false;
-
-        function storyBottomY() { var rect = story.getBoundingClientRect(); return window.scrollY + rect.height - window
-                .innerHeight; }
-
-        function pauseAutoScroll() { if (!autoScrollEnabled) return;
-            manualPause = true; if (resumeTimer) clearTimeout(resumeTimer);
-            resumeTimer = setTimeout(function() { manualPause = false; }, RESUME_DELAY); }
-        ['wheel', 'touchstart', 'keydown'].forEach(function(evt) {
-            window.addEventListener(evt, function(e) { if (evt === 'keydown') { var navKeys = ['ArrowDown', 'ArrowUp',
-                        'PageDown', 'PageUp', ' ', 'Spacebar', 'Home', 'End'
-                    ]; if (navKeys.indexOf(e.key) === -1) return; }
-                pauseAutoScroll(); }, { passive: true });
-        });
-        window.addEventListener('scroll', function() { if (isSyncingScroll) { updateScroll(); return; }
-            pauseAutoScroll();
-            updateScroll(); }, { passive: true });
-
-        function autoScrollTick(now) { if (lastFrameTime === null) lastFrameTime = now; var dt = now - lastFrameTime;
-            lastFrameTime = now; if (autoScrollEnabled && !manualPause) { var bottom = storyBottomY(); if (window.scrollY <
-                    bottom - 1) { var step = AUTO_SCROLL_SPEED * (dt / 16.6);
-                    isSyncingScroll = true;
-                    window.scrollTo(0, Math.min(window.scrollY + step, bottom));
-                    isSyncingScroll = false;
-                    updateScroll(); } else { autoScrollEnabled = false; } }
-            requestAnimationFrame(autoScrollTick); }
-        requestAnimationFrame(autoScrollTick);
-
-        /* ============================================================
-           WHISPER DRIFT
-           ============================================================ */
-        var maxOpacity = 0.65;
-
-        function whisperTick() { whisperClock += 1; var t = whisperClock * 0.016;
-            whisperEls.forEach(function(el, i) { var vis = whisperVisibility[i] || 0; if (vis <= 0.001) { el.style.opacity =
-                        0; return; }
-                el.style.opacity = (vis * maxOpacity).toFixed(3);
-                if (prefersReducedMotion) { el.style.transform = 'translate3d(0,0,0)'; return; }
-                var d = whisperDrift[i]; var driftY = Math.sin(t * d
-                    .speedY + d.phase) * d.ampY; var driftX = Math.cos(t * d.speedX + d.phase) * d.ampX; var driftRot = Math
-                    .sin(t * d.speedY * 0.5 + d.phase) * d.rot; var baseY = whisperBaseY[i] || 0; var z = el.dataset.z;
-                el.style.transform = 'translate3d(' + driftX.toFixed(1) + 'px,' + (baseY + driftY).toFixed(1) + 'px,' +
-                    z + 'px) rotate(' + driftRot.toFixed(1) + 'deg)'; });
-            requestAnimationFrame(whisperTick); }
-        requestAnimationFrame(whisperTick);
-
-        // idleTiltTick hanya perlu berjalan terus-menerus untuk efek tilt 3D
-        // mengikuti kursor; jika reduced motion diminta, cukup panggil sekali
-        // saat scroll/resize (sudah ditangani listener lain) dan hentikan RAF ini.
-        if (!prefersReducedMotion) {
-            (function idleTiltTick() { updateScroll();
-                requestAnimationFrame(idleTiltTick); })();
-        }
-
-        /* ============================================================
-           FORM LOGIC
-           ============================================================ */
-        ['ulKategori', 'ulEmail', 'ulAspirasi'].forEach(function(id) {
-            var wrap = document.getElementById(id);
-            var control = wrap.querySelector('select, input, textarea');
-            control.addEventListener('focus', function() { wrap.classList.add('focused'); });
-            control.addEventListener('blur', function() { wrap.classList.remove('focused'); });
-        });
-        var aspirasiEl = document.getElementById('aspirasi');
-        var charCount = document.getElementById('charCount');
-        aspirasiEl.addEventListener('input', function() {
-            var len = aspirasiEl.value.length;
-            charCount.textContent = len + ' / 1200';
-            charCount.classList.toggle('show', len > 0);
-        });
-
-        function showToast(code) {
-            var toast = document.getElementById('toast');
-            document.getElementById('toastCode').textContent = code;
-            toast.classList.add('show');
-            setTimeout(function() { toast.classList.remove('show'); }, 4000);
-        }
-
-        function shakeField(el) { el.classList.add('shake');
-            setTimeout(function() { el.classList.remove('shake'); }, 500); }
-
-        function showFieldError(field, errorEl) {
-            field.classList.add('has-error');
-            errorEl.classList.add('show');
-            shakeField(field);
-        }
-
-        function clearFieldError(field, errorEl) {
-            field.classList.remove('has-error');
-            errorEl.classList.remove('show');
-        }
-
-        var errAspirasi = document.getElementById('errAspirasi');
-        var errEmail = document.getElementById('errEmail');
-        var fieldAspirasiEl = document.getElementById('fldAspirasi');
-        var fieldEmailEl = document.getElementById('fldEmail');
-
-        // Bersihkan pesan error begitu pengguna mulai memperbaiki isian
-        aspirasiEl.addEventListener('input', function() {
-            if (aspirasiEl.value.trim()) clearFieldError(fieldAspirasiEl, errAspirasi);
-        });
-        document.getElementById('email').addEventListener('input', function() {
-            var v = document.getElementById('email').value.trim();
-            if (!v || v.includes('@')) clearFieldError(fieldEmailEl, errEmail);
-        });
-
-        function handleSubmit(e) {
-            e.preventDefault();
-            var textarea = document.getElementById('aspirasi');
-            var text = textarea.value.trim();
-            var field = textarea.closest('.field');
-            if (!text) { showFieldError(field, errAspirasi);
-                textarea.focus(); return; }
-            clearFieldError(field, errAspirasi);
-            var emailInput = document.getElementById('email');
-            var email = emailInput.value.trim();
-            if (email && !email.includes('@')) { var ef = emailInput.closest('.field');
-                showFieldError(ef, errEmail);
-                emailInput.focus(); return; }
-            clearFieldError(fieldEmailEl, errEmail);
-            var kategori = document.getElementById('kategori').value;
-            var dniErrorDefault = errAspirasi.querySelector('span').textContent;
-
-            var btn = document.getElementById('btnKirim');
-            var btnText = document.getElementById('btnKirimText');
-            var icon = btn.querySelector('i');
-            btn.style.width = btn.offsetWidth + 'px';
-            icon.className = 'ti ti-loader-2';
-            btnText.textContent = 'Menyegel…';
-            btn.disabled = true;
-
-            function resetFormState() {
-                btn.classList.remove('success');
-                btnText.textContent = 'Segel & Kirim';
-                icon.className = 'ti ti-send';
-                btn.style.width = '';
-                btn.disabled = false;
-                errAspirasi.querySelector('span').textContent = dniErrorDefault;
-                document.getElementById('aspirasiForm').reset();
-                charCount.classList.remove('show');
-                charCount.textContent = '0 / 1200';
-                clearFieldError(fieldAspirasiEl, errAspirasi);
-                clearFieldError(fieldEmailEl, errEmail);
-                flapContainer.classList.remove('closed');
-                envelopeSeal.classList.remove('pressed');
-            }
-
-            fetch('/api/aspirasi', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    isi: text,
-                    kategori: kategori || null,
-                    email_siswa: email || null
-                })
-            }).then(function(res) {
-                if (!res.ok) throw new Error('server');
-                return res.json();
-            }).then(function(data) {
-                var code = data.kode_tiket || '';
-                flapContainer.classList.add('closed');
-                envelopeSeal.classList.add('pressed');
-                setTimeout(function() {
-                    btn.classList.add('success');
-                    btnText.textContent = 'Tersegel';
-                    icon.className = 'ti ti-check';
-                    showToast(code);
-                    setTimeout(resetFormState, 3000);
-                }, 650);
-            }).catch(function() {
-                btnText.textContent = 'Segel & Kirim';
-                icon.className = 'ti ti-send';
-                btn.style.width = '';
-                btn.disabled = false;
-                errAspirasi.querySelector('span').textContent = 'Gagal terhubung ke server. Coba lagi nanti.';
-                showFieldError(field, errAspirasi);
-            });
-        }
-
-        /* ============================================================
-           STATUS MODAL — 3 tahap sederhana, tanpa kesan "surat dibawa-bawa"
-           Diterima -> Dibaca -> Ditindaklanjuti
-           ============================================================ */
-        var statusModal = document.getElementById('statusModal');
-        var statusInput = document.getElementById('statusInput');
-        var registryResult = document.getElementById('registryResult');
-        var statusStrip = document.getElementById('statusStrip');
-        var resultMessage = document.getElementById('resultMessage');
-        var resultCodeDisplay = document.getElementById('resultCodeDisplay');
-        var modalHint = document.getElementById('modalHint');
-        var btnLacak = document.getElementById('btnLacak');
-
-        // 3 tahap saja — semuanya terjadi "di tempat", tidak ada bahasa "diteruskan/dibawa ke pihak lain"
-        var statusStages = [
-            { label: 'Diterima', icon: 'ti-inbox' },
-            { label: 'Dibaca', icon: 'ti-eye' },
-            { label: 'Ditindaklanjuti', icon: 'ti-check' }
-        ];
-
-        var statusProfiles = [
-            { stage: 0, message: 'Suratmu <strong>sudah diterima</strong> dan tersimpan aman di ruang ini. Belum ada yang membacanya — beri kami waktu 1–2 hari.' },
-            { stage: 1, message: 'Suratmu <strong>sedang dibaca</strong> oleh tim Humas OSIS. Setiap kata kami perhatikan dengan serius.' },
-            { stage: 2, message: 'Aspirasimu <strong>sudah ditindaklanjuti</strong>. Terima kasih sudah berani bersuara — suaramu berarti untuk sekolah kita.' }
-        ];
-
-        function buildStatusStrip(currentStage) {
-            var html = '';
-            for (var i = 0; i < statusStages.length; i++) {
-                var stageClass = '';
-                if (i < currentStage) stageClass = 'completed';
-                else if (i === currentStage) stageClass = 'current';
-                var iconClass = (i <= currentStage) ? 'ti ti-check' : 'ti ' + statusStages[i].icon;
-                html += '<div class="status-node ' + stageClass + '">';
-                html += '<div class="node-dot"><i class="' + iconClass + '"></i><div class="node-line"></div></div>';
-                html += '<div class="node-label">' + statusStages[i].label + '</div>';
-                html += '</div>';
-            }
-            return html;
-        }
-
-        function openStatusModal() {
-            statusModal.classList.add('show');
-            registryResult.classList.remove('show');
-            statusInput.value = '';
-            modalHint.textContent = 'Kode tiket diberikan saat surat selesai dikirim.';
-            modalHint.classList.remove('error');
-            btnLacak.innerHTML = '<i class="ti ti-search"></i> Lacak';
-            btnLacak.disabled = false;
-            setTimeout(function() { statusInput.focus(); }, 400);
-        }
-
-        function closeStatusModal() {
-            statusModal.classList.remove('show');
-            registryResult.classList.remove('show');
-        }
-
-        function resetStatusCheck() {
-            registryResult.classList.remove('show');
-            statusInput.value = '';
-            modalHint.textContent = 'Kode tiket diberikan saat surat selesai dikirim.';
-            modalHint.classList.remove('error');
-            btnLacak.innerHTML = '<i class="ti ti-search"></i> Lacak';
-            btnLacak.disabled = false;
-            statusInput.focus();
-        }
-
-        function submitStatusCheck() {
-            var code = statusInput.value.trim();
-            if (!code) {
-                modalHint.textContent = 'Silakan masukkan kode tiket terlebih dahulu.';
-                modalHint.classList.add('error');
-                shakeField(statusInput.closest('.modal-box'));
-                statusInput.focus();
-                return;
-            }
-            if (code.length < 5) {
-                modalHint.textContent = 'Format kode tiket tidak dikenali. Coba periksa kembali.';
-                modalHint.classList.add('error');
-                shakeField(statusInput.closest('.modal-box'));
-                return;
-            }
-            modalHint.classList.remove('error');
-            modalHint.textContent = 'Mencari kode tiket…';
-            btnLacak.innerHTML = '<i class="ti ti-loader-2"></i> Mencari';
-            btnLacak.disabled = true;
-
-            var normalize = code.toUpperCase();
-            fetch('/api/aspirasi/' + encodeURIComponent(normalize))
-                .then(function(res) {
-                    if (res.status === 404) throw new Error('notfound');
-                    if (!res.ok) throw new Error('server');
-                    return res.json();
-                })
-                .then(function(json) {
-                    var aspirasi = json.aspirasi;
-                    var statusMap = {
-                        menunggu: 0,
-                        diproses: 1,
-                        diteruskan: 1,
-                        dibalas: 2
-                    };
-                    var currentStage = statusMap[aspirasi.status] || 0;
-                    resultCodeDisplay.textContent = aspirasi.kode_tiket;
-                    statusStrip.innerHTML = buildStatusStrip(currentStage);
-                    resultMessage.innerHTML = statusProfiles[currentStage].message;
-                    registryResult.classList.add('show');
-                    modalHint.textContent = 'Kode tiket ditemukan.';
-                    modalHint.classList.remove('error');
-                })
-                .catch(function(err) {
-                    var msg = err.message === 'notfound'
-                        ? 'Kode tiket tidak ditemukan. Periksa kembali kode suratmu.'
-                        : 'Gagal terhubung ke server. Coba lagi nanti.';
-                    modalHint.textContent = msg;
-                    modalHint.classList.add('error');
-                    shakeField(statusInput.closest('.modal-box'));
-                })
-                .finally(function() {
-                    btnLacak.innerHTML = '<i class="ti ti-search"></i> Lacak';
-                    btnLacak.disabled = false;
-                });
-        }
-
-        /* ============================================================
-           UNOBTROSIVE JS — semua event dipasang di sini, bukan lewat
-           atribut onclick/onsubmit di HTML
-           ============================================================ */
-        document.getElementById('aspirasiForm').addEventListener('submit', handleSubmit);
-        document.getElementById('btnOpenStatus').addEventListener('click', openStatusModal);
-        document.getElementById('btnCloseModal').addEventListener('click', closeStatusModal);
-        document.getElementById('btnLacak').addEventListener('click', submitStatusCheck);
-        document.getElementById('btnCloseBottom').addEventListener('click', closeStatusModal);
-        document.getElementById('btnResetCheck').addEventListener('click', resetStatusCheck);
-        statusModal.addEventListener('click', function(e) { if (e.target === statusModal) closeStatusModal(); });
-        statusInput.addEventListener('keydown', function(e) { if (e.key === 'Enter') submitStatusCheck(); });
-        document.addEventListener('keydown', function(e) { if (e.key === 'Escape') closeStatusModal(); });
-
-        /* ============================================================
-           TOMBOL PLAY/PAUSE AUTO-SCROLL
-           Memberi indikator visual + kontrol eksplisit, selain
-           pause-otomatis saat pengguna scroll manual.
-           ============================================================ */
-        var autoscrollToggle = document.getElementById('autoscrollToggle');
-        var autoscrollIcon = document.getElementById('autoscrollIcon');
-        var autoscrollLabel = document.getElementById('autoscrollLabel');
-        var userPausedManually = false;
-
-        function setAutoscrollUI(isPlaying) {
-            autoscrollToggle.classList.toggle('playing', isPlaying);
-            autoscrollToggle.setAttribute('aria-pressed', isPlaying ? 'true' : 'false');
-            autoscrollIcon.className = isPlaying ? 'ti ti-player-pause-filled' : 'ti ti-player-play-filled';
-            autoscrollLabel.textContent = isPlaying ? 'Jeda gulir otomatis' : 'Lanjutkan gulir otomatis';
-        }
-
-        autoscrollToggle.addEventListener('click', function() {
-            if (userPausedManually || manualPause) {
-                // Lanjutkan
-                userPausedManually = false;
-                manualPause = false;
-                if (resumeTimer) clearTimeout(resumeTimer);
-                if (window.scrollY < storyBottomY() - 1) { autoScrollEnabled = true; }
-                setAutoscrollUI(true);
-            } else {
-                // Jeda permanen sampai ditekan lagi
-                userPausedManually = true;
-                manualPause = true;
-                if (resumeTimer) clearTimeout(resumeTimer);
-                setAutoscrollUI(false);
-            }
-        });
-
-        // Jika pengguna men-scroll manual, tombol ikut menunjukkan status "jeda"
-        // selama masa jeda otomatis (RESUME_DELAY) berlangsung.
-        var _origPause = pauseAutoScroll;
-        pauseAutoScroll = function() {
-            if (userPausedManually) return; // sudah dijeda manual, jangan diubah timer-nya
-            _origPause();
-            setAutoscrollUI(false);
-            if (resumeTimer) clearTimeout(resumeTimer);
-            resumeTimer = setTimeout(function() {
-                manualPause = false;
-                if (!userPausedManually) setAutoscrollUI(true);
-            }, RESUME_DELAY);
-        };
-
-        // Saat auto-scroll berhenti karena sudah sampai bawah halaman
-        (function watchAutoScrollEnd() {
-            var checkInterval = setInterval(function() {
-                if (!autoScrollEnabled && !userPausedManually) {
-                    setAutoscrollUI(false);
-                    clearInterval(checkInterval);
-                }
-            }, 500);
-        })();
-    </script>
+/* di host demo: tautan mengarah ke situs asli */
+if(OFF_HOST){
+  const L='https://kotak-aspirasi-osis.vercel.app';
+  const cek=$('#cekLink'),foot=$('#footerLink'),tb=$('#topbarRight');
+  if(cek)cek.href=L+'/cek-aspirasi';
+  if(foot)foot.href=L+'/cek-aspirasi';
+  if(tb)tb.innerHTML='<a href="'+L+'/" style="color:var(--ink-60)">halaman demo · site asli ↗</a>';
+}
+})();
+</script>
 </body>
 </html>
