@@ -65,9 +65,9 @@ body{background:radial-gradient(circle at 50% -10%,#F6F0E1,var(--paper) 65%);col
 
 /* ---------- papan kanvas ---------- */
 .boardWrap{position:relative;border:1px solid rgba(34,29,21,.26);overflow:hidden;
-  aspect-ratio:3/4;height:auto;background:#D8CCAF;
+  height:clamp(420px, calc(100dvh - 230px), 760px);background:#D8CCAF;
   box-shadow:inset 0 0 40px rgba(120,92,52,.22)}
-@media(min-width:860px){.boardWrap{aspect-ratio:auto;height:clamp(500px,62vh,680px)}}
+@media(min-width:860px){.boardWrap{height:clamp(520px, calc(100dvh - 260px), 720px)}}
 
 .stage{position:absolute;inset:0;overflow:hidden;touch-action:none;cursor:grab}
 .stage.grabbing{cursor:grabbing}
