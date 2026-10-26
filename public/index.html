@@ -259,6 +259,7 @@ main.tampak .card{animation:rise .5s cubic-bezier(.2,.8,.3,1) both}
   background:var(--paper);padding:3px 8px;border-radius:999px;white-space:nowrap;
   opacity:0;transition:opacity .3s ease;border:1px solid var(--red)}
 .env-peek.open .env-hint,.env-peek:hover .env-hint{opacity:1}
+.card.selesai .env-peek{opacity:0;visibility:hidden;pointer-events:none;transition:opacity .25s ease,visibility 0s .25s}
 .env-label{position:absolute;right:100%;bottom:50%;transform:translateY(50%);
   margin-right:12px;
   font:italic 400 11px var(--fs);color:var(--ink-40);white-space:nowrap;text-align:right;
@@ -600,7 +601,7 @@ formEl.addEventListener('submit',e=>{e.preventDefault();
   const arr=loadLetters();arr.push({nama,kelas,isi,no,t:Date.now()});
   try{localStorage.setItem(KEY,JSON.stringify(arr));}catch(e2){}
   $('#sCount').textContent='aspirasi ke-'+arr.length+' yang tercatat di perangkat ini';
-  clearDraft();formEl.classList.add('sent');successEl.classList.add('show');
+  clearDraft();formEl.classList.add('sent');successEl.classList.add('show');cardEl.classList.add('selesai');
   sendBtn.disabled=false;sendBtn.querySelector('span').textContent='Kirim Surat';
  })
  .catch(()=>{
@@ -610,7 +611,7 @@ formEl.addEventListener('submit',e=>{e.preventDefault();
   cardEl.classList.remove('shake');void cardEl.offsetWidth;cardEl.classList.add('shake');
   sendBtn.disabled=false;sendBtn.querySelector('span').textContent='Kirim Surat';
  });});
-$('#againBtn').addEventListener('click',()=>{successEl.classList.remove('show');
+$('#againBtn').addEventListener('click',()=>{successEl.classList.remove('show');cardEl.classList.remove('selesai');
  formEl.classList.remove('sent');formEl.reset();isiCount.textContent='0 / 600';
  $('#errIsi').textContent='';clearDraft();});
 
