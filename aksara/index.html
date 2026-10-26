@@ -70,8 +70,10 @@ body{background:radial-gradient(circle at 50% -10%,#F6F0E1,var(--paper) 65%);col
 .stage{position:absolute;inset:0;overflow:hidden;touch-action:none;cursor:grab}
 .stage.grabbing{cursor:grabbing}
 .canvas{position:absolute;top:0;left:0;width:1400px;height:1400px;transform-origin:0 0;will-change:transform;
-  background:#E9DDC4;
-  background-image:linear-gradient(160deg,rgba(255,255,255,.5),rgba(255,255,255,0) 45%,rgba(120,92,52,.06));
+  background-color:#E9DDC4;
+  background-image:url("data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='b'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='220' height='220' filter='url(%23b)' opacity='0.5'/%3E%3C/svg%3E");
+  background-size:220px 220px;
+  background-blend-mode:multiply;
   box-shadow:0 0 0 1px rgba(34,29,21,.3),0 18px 34px -22px rgba(24,20,16,.55),
     inset 0 0 60px rgba(120,92,52,.12)}
 
@@ -289,6 +291,8 @@ body{background:radial-gradient(circle at 50% -10%,#F6F0E1,var(--paper) 65%);col
   function applyView(){
     clampView();
     canvas.style.transform = "translate(" + view.x + "px," + view.y + "px) scale(" + view.s + ")";
+    /* tekstur papan dijaga tetap halus walau di-zoom */
+    canvas.style.backgroundSize = (200 / view.s) + "px " + (200 / view.s) + "px";
   }
 
   /* jangan biarkan papan digeser keluar dari pandangan */
