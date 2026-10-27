@@ -152,8 +152,7 @@ body{background:radial-gradient(circle at 50% -10%,#F6F0E1,var(--paper) 65%);col
 .sheet{position:fixed;inset:0;z-index:100;display:none;align-items:flex-end;justify-content:center;
   background:rgba(24,20,16,.45);backdrop-filter:blur(2px)}
 .sheet.open{display:flex}
-/* panel atur tempelan: latar jangan diburamkan supaya tempelan tetap kelihatan jelas saat diputar */
-#itemSheet{background:rgba(24,20,16,.14);backdrop-filter:none}
+
 .panel{width:min(520px,100%);background:var(--paper);border-radius:18px 18px 0 0;
   border-top:2px solid var(--ink);padding:16px clamp(16px,5vw,26px) calc(18px + env(safe-area-inset-bottom));
   animation:up .28s cubic-bezier(.2,.8,.3,1) both;max-height:92vh;overflow-y:auto}
@@ -211,9 +210,21 @@ input[type=range]::-moz-range-thumb{width:22px;height:22px;border-radius:50%;bac
 .ctx{position:fixed;inset:0;z-index:95;display:none}
 .ctx.open{display:block;background:rgba(24,20,16,.26);backdrop-filter:blur(5px)}
 .ctxGhost{position:fixed;z-index:96;pointer-events:none;transform-origin:0 0}
-.ctxMenu{position:fixed;z-index:97;min-width:200px;background:rgba(247,241,225,.985);
-  border:1px solid rgba(34,29,21,.22);border-radius:14px;padding:6px;
+.ctxMenu{position:fixed;z-index:120;display:none;min-width:238px;max-width:min(320px,calc(100vw - 20px));
+  background:rgba(247,241,225,.99);border:1px solid rgba(34,29,21,.22);border-radius:14px;padding:8px;
   box-shadow:0 26px 44px -24px rgba(24,20,16,.75)}
+.ctxMenu.open{display:block}
+.cmTitle{font:600 .78rem var(--fm);letter-spacing:.18em;text-transform:uppercase;color:rgba(34,29,21,.5);
+  padding:4px 8px 8px}
+.cmRot{padding:0 8px 8px}
+.cmRot label{display:block;font:500 .78rem var(--fm);letter-spacing:.1em;text-transform:uppercase;
+  color:rgba(34,29,21,.6);margin-bottom:2px}
+.cmRot label span{float:right;color:var(--red);letter-spacing:0}
+.cmRow{display:flex;gap:5px;margin-top:7px}
+.cmRow button{flex:1;padding:8px 4px !important;justify-content:center;font:500 .8rem var(--fs) !important;
+  border:1px solid rgba(34,29,21,.2) !important;border-radius:8px}
+.ctxMenu.bottom{left:10px !important;right:10px;top:auto !important;bottom:calc(12px + env(safe-area-inset-bottom));
+  min-width:0;max-width:none}
 .ctxMenu button{display:flex;align-items:center;gap:10px;width:100%;background:none;border:0;
   padding:11px 12px;border-radius:9px;font:500 .95rem var(--fs);color:var(--ink);cursor:pointer;text-align:left}
 .ctxMenu button:hover,.ctxMenu button:active{background:rgba(34,29,21,.07)}
@@ -322,39 +333,29 @@ input[type=range]::-moz-range-thumb{width:22px;height:22px;border-radius:50%;bac
   </div>
 </div>
 
-<div class="sheet" id="itemSheet">
-  <div class="panel">
-    <h3>Atur tempelan</h3>
-    <p class="sub">Putar sesuai selera, atau hapus kalau salah tempel.</p>
+<div class="ctx" id="ctx"></div>
 
-    <div class="field">
-      <label>Sudut <span id="rotVal">0°</span></label>
-      <input type="range" id="rotRange" min="-180" max="180" step="1" value="0">
-    </div>
+<!-- satu menu untuk semua: muncul di luar overlay supaya tidak tertutup item -->
+<div class="ctxMenu" id="ctxMenu">
+  <p class="cmTitle">Atur tempelan</p>
 
-    <div class="row" style="margin-bottom:10px">
-      <button class="btn ghost" id="rotL">↺ 15°</button>
-      <button class="btn ghost" id="rotR">↻ 15°</button>
-      <button class="btn ghost" id="rot0">Luruskan</button>
-    </div>
-
-    <div class="row">
-      <button class="btn ghost" id="delItem">Hapus</button>
-      <button class="btn grow" id="itemDone">Selesai</button>
+  <div class="cmRot">
+    <label>Sudut <span id="rotVal">0°</span></label>
+    <input type="range" id="rotRange" min="-180" max="180" step="1" value="0">
+    <div class="cmRow">
+      <button data-act="rotL">↺ 15°</button>
+      <button data-act="rotR">↻ 15°</button>
+      <button data-act="rot0">Luruskan</button>
     </div>
   </div>
-</div>
 
-<div class="ctx" id="ctx">
-  <div class="ctxMenu" id="ctxMenu">
-    <button data-act="move">✥ Pindah posisi</button>
-    <button data-act="rotate">⟳ Putar bingkai</button>
-    <button data-act="front">↑ Kirim ke depan</button>
-    <button data-act="back">↓ Kirim ke belakang</button>
-    <button data-act="dup">⧉ Duplikat</button>
-    <hr>
-    <button data-act="del" class="danger">🗑 Hapus</button>
-  </div>
+  <hr>
+  <button data-act="move">✥ Pindah posisi</button>
+  <button data-act="front">↑ Kirim ke depan</button>
+  <button data-act="back">↓ Kirim ke belakang</button>
+  <button data-act="dup">⧉ Duplikat</button>
+  <hr>
+  <button data-act="del" class="danger">🗑 Hapus</button>
 </div>
 
 <div class="toast" id="toast"></div>
@@ -510,6 +511,7 @@ input[type=range]::-moz-range-thumb{width:22px;height:22px;border-radius:50%;bac
     var r = el.getBoundingClientRect();
 
     /* salinan melayang supaya item tetap tajam di atas latar yang diburamkan */
+    if(ctxGhost && ctxGhost.parentNode) ctxGhost.parentNode.removeChild(ctxGhost);
     ctxGhost = el.cloneNode(true);
     ctxGhost.classList.add("ctxGhost");
     ctxGhost.style.left = r.left + "px";
@@ -522,17 +524,48 @@ input[type=range]::-moz-range-thumb{width:22px;height:22px;border-radius:50%;bac
 
     ctx.classList.add("open");
 
+    /* isi slider sudut */
+    var rv = document.getElementById("rotVal"), rr = document.getElementById("rotRange");
+    rv.textContent = Math.round(data.rot || 0) + "°";
+    rr.value = Math.round(data.rot || 0);
+
+    /* tampilkan menu dulu (belum terlihat), ukur, baru tempatkan */
+    ctxMenu.classList.add("open");
+    ctxMenu.style.left = "-9999px";
+    ctxMenu.style.top = "-9999px";
+    ctxMenu.classList.remove("bottom");
+
     var mw = ctxMenu.offsetWidth, mh = ctxMenu.offsetHeight;
-    var left = Math.round(r.left + r.width / 2 - mw / 2);
-    left = Math.max(10, Math.min(window.innerWidth - mw - 10, left));
-    var top = Math.round(r.top - mh - 14);
-    if(top < 10) top = Math.round(Math.min(window.innerHeight - mh - 10, r.bottom + 14));
-    ctxMenu.style.left = left + "px";
-    ctxMenu.style.top = top + "px";
+    var vw = window.innerWidth, vh = window.innerHeight, gap = 12;
+
+    var spots = [
+      { left: r.left + r.width / 2 - mw / 2, top: r.top - mh - gap },        /* atas */
+      { left: r.left + r.width / 2 - mw / 2, top: r.bottom + gap },          /* bawah */
+      { left: r.right + gap, top: r.top + r.height / 2 - mh / 2 },           /* kanan */
+      { left: r.left - mw - gap, top: r.top + r.height / 2 - mh / 2 }        /* kiri */
+    ];
+
+    for(var i = 0; i < spots.length; i++){
+      var s = spots[i];
+      if(s.left >= 8 && s.left + mw <= vw - 8 && s.top >= 8 && s.top + mh <= vh - 8){
+        ctxMenu.style.left = Math.round(s.left) + "px";
+        ctxMenu.style.top = Math.round(s.top) + "px";
+        return;
+      }
+    }
+
+    /* tidak ada ruang di sekeliling: jadikan panel bawah, tempelan digeser ke atasnya */
+    ctxMenu.classList.add("bottom");
+    var sheetTop = vh - mh - 12;
+    if(r.bottom > sheetTop - 8){
+      ctxGhost.style.top = Math.max(10, sheetTop - r.height - 14) + "px";
+    }
   }
 
   function closeCtx(){
     ctx.classList.remove("open");
+    ctxMenu.classList.remove("open", "bottom");
+    save();
     if(ctxGhost && ctxGhost.parentNode) ctxGhost.parentNode.removeChild(ctxGhost);
     if(ctxEl) ctxEl.style.visibility = "";
     ctxGhost = null; ctxData = null; ctxEl = null;
@@ -586,6 +619,10 @@ input[type=range]::-moz-range-thumb{width:22px;height:22px;border-radius:50%;bac
     var btn = e.target.closest("button");
     if(!btn || !ctxData) return;
     var act = btn.dataset.act, data = ctxData, el = ctxEl;
+
+    if(act === "rotL"){ setRot(((data && data.rot) || 0) - 15); return; }
+    if(act === "rotR"){ setRot(((data && data.rot) || 0) + 15); return; }
+    if(act === "rot0"){ setRot(0); return; }
 
     if(act === "del"){
       var i = items.indexOf(data);
@@ -735,59 +772,25 @@ input[type=range]::-moz-range-thumb{width:22px;height:22px;border-radius:50%;bac
   document.getElementById("zFit").onclick = showAll;
 
   /* ---------- atur tempelan: putar & hapus ---------- */
-  var itemSheet = document.getElementById("itemSheet");
-  var rotRange = document.getElementById("rotRange");
-  var rotVal = document.getElementById("rotVal");
-  var editData = null, editEl = null;
+  /* panel putar sekarang menyatu di menu kontekstual */
+  function openItemSheet(data, el){ openCtx(data, el); }
+  function closeItemSheet(){ closeCtx(); }
 
   function setRot(v){
-    if(!editData) return;
+    if(!ctxData) return;
     v = Math.max(-180, Math.min(180, Math.round(v)));
-    editData.rot = v;
-    editEl.style.transform = "rotate(" + v + "deg)";
-    rotVal.textContent = v + "°";
-    rotRange.value = v;
+    ctxData.rot = v;
+    ctxEl.style.transform = "rotate(" + v + "deg)";
+    document.getElementById("rotVal").textContent = v + "°";
+    document.getElementById("rotRange").value = v;
+    if(ctxGhost){
+      var m = /scale\(([0-9.]+)\)/.exec(ctxGhost.style.transform || "");
+      ctxGhost.style.transform = "rotate(" + v + "deg)" + (m ? " scale(" + m[1] + ")" : "");
+    }
   }
 
-  var itemOpenedAt = 0;
+  document.getElementById("rotRange").addEventListener("input", function(){ setRot(+this.value); });
 
-  function openItemSheet(data, el){
-    editData = data; editEl = el;
-    rotVal.textContent = Math.round(data.rot || 0) + "°";
-    rotRange.value = Math.round(data.rot || 0);
-    itemSheet.classList.add("open");
-    itemOpenedAt = Date.now();
-  }
-
-  function closeItemSheet(){
-    itemSheet.classList.remove("open");
-    save();
-    editData = null; editEl = null;
-  }
-
-  rotRange.addEventListener("input", function(){ setRot(+rotRange.value); });
-  document.getElementById("rotL").onclick = function(){ setRot((editData ? editData.rot : 0) - 15); };
-  document.getElementById("rotR").onclick = function(){ setRot((editData ? editData.rot : 0) + 15); };
-  document.getElementById("rot0").onclick = function(){ setRot(0); };
-  document.getElementById("itemDone").onclick = closeItemSheet;
-  itemSheet.addEventListener("click", function(e){
-    if(e.target !== itemSheet) return;
-    if(Date.now() - itemOpenedAt < 400) return;   /* tap pembuka jangan ikut menutup */
-    closeItemSheet();
-  });
-
-  document.getElementById("delItem").onclick = function(){
-    if(!editData) return;
-    var i = items.indexOf(editData);
-    if(i > -1) items.splice(i, 1);
-    if(editEl && editEl.parentNode) editEl.parentNode.removeChild(editEl);
-    counter.textContent = items.length + " tempelan";
-    if(!items.length) hint.classList.remove("hide");
-    itemSheet.classList.remove("open");
-    editData = null; editEl = null;
-    save();
-    say("Tempelan dihapus");
-  };
 
   function boardPoint(cx, cy){
     var r = stage.getBoundingClientRect();
