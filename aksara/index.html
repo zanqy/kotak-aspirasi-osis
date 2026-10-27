@@ -107,15 +107,19 @@ body{background:radial-gradient(circle at 50% -10%,#F6F0E1,var(--paper) 65%);col
 .item.clip .who{margin-top:8px;font:500 8.5px var(--fm);letter-spacing:.14em;text-transform:uppercase;color:rgba(43,36,28,.5)}
 
 .item.pola .body{width:212px;padding:12px 12px 0;background:#FCF9F0;border:1px solid rgba(34,29,21,.16)}
-.item.pola .ph{width:100%;height:170px;background:#CDC0A6 center/cover no-repeat;display:grid;place-items:center;
+.item.pola .ph{width:100%;height:auto;aspect-ratio:1/1;background:#CDC0A6 center/cover no-repeat;display:grid;place-items:center;
   font:500 8.5px var(--fm);letter-spacing:.14em;text-transform:uppercase;color:rgba(43,36,28,.55)}
 .item.pola .cap{font:500 1.16rem/1.2 var(--fh);color:#2b241c;padding:9px 4px 13px;text-align:center;word-break:break-word}
+/* rasio foto */
+.item.pola.r43 .ph{aspect-ratio:4/3}
+.item.pola.r34 .ph{aspect-ratio:3/4}
+.item.pola.r169 .ph{aspect-ratio:16/9}
 /* bentuk foto */
 .item.pola.flat .body{width:206px;padding:8px 8px 0}
-.item.pola.flat .ph{height:190px}
-.item.pola.round .ph{height:186px;border-radius:50%}
+.item.pola.flat .ph{aspect-ratio:1/1}
+.item.pola.round .ph{aspect-ratio:1/1;border-radius:50%}
 .item.pola.round .body{width:200px}
-.item.pola.arch .ph{border-radius:100px 100px 4px 4px;height:196px}
+.item.pola.arch .ph{border-radius:100px 100px 4px 4px;aspect-ratio:3/4}
 .item.pola.arch .body{width:186px}
 
 .tape{position:absolute;z-index:3;left:50%;top:-9px;width:66px;height:17px;transform:translateX(-50%) rotate(var(--tr,-3deg));
@@ -148,6 +152,8 @@ body{background:radial-gradient(circle at 50% -10%,#F6F0E1,var(--paper) 65%);col
 .sheet{position:fixed;inset:0;z-index:100;display:none;align-items:flex-end;justify-content:center;
   background:rgba(24,20,16,.45);backdrop-filter:blur(2px)}
 .sheet.open{display:flex}
+/* panel atur tempelan: latar jangan diburamkan supaya tempelan tetap kelihatan jelas saat diputar */
+#itemSheet{background:rgba(24,20,16,.14);backdrop-filter:none}
 .panel{width:min(520px,100%);background:var(--paper);border-radius:18px 18px 0 0;
   border-top:2px solid var(--ink);padding:16px clamp(16px,5vw,26px) calc(18px + env(safe-area-inset-bottom));
   animation:up .28s cubic-bezier(.2,.8,.3,1) both;max-height:92vh;overflow-y:auto}
@@ -281,6 +287,7 @@ input[type=range]::-moz-range-thumb{width:22px;height:22px;border-radius:50%;bac
     </div>
 
     <div class="shapes" id="shapes"></div>
+    <div class="shapes" id="ratios" hidden></div>
 
     <div class="preview" id="preview"><img id="previewImg" alt="Pratinjau foto"></div>
 
@@ -351,7 +358,8 @@ input[type=range]::-moz-range-thumb{width:22px;height:22px;border-radius:50%;bac
   var SW = 0, SH = 0;
   function measure(){ SW = stage.clientWidth; SH = stage.clientHeight; }
   var items = [];
-  var pendingPoint = null, pendingKind = "note", pendingImage = null, pendingShape = "sq";
+  var pendingPoint = null, pendingKind = "note", pendingImage = null, pendingShape = "sq", pendingRatio = "11";
+  var RATIOS = [["11","1:1"],["43","4:3"],["34","3:4"],["169","16:9"]];
 
   function load(){
     try { var d = JSON.parse(localStorage.getItem(KEY)); return Array.isArray(d) ? d : []; }
@@ -421,7 +429,7 @@ input[type=range]::-moz-range-thumb{width:22px;height:22px;border-radius:50%;bac
   function makeItem(data){
     var el = document.createElement("div");
     var base = data.kind === "polaroid" ? "pola" : data.kind === "clip" ? "clip" : "note";
-    el.className = "item " + base + (data.shape ? " " + data.shape : "");
+    el.className = "item " + base + (data.shape && data.shape !== base ? " " + data.shape : "") + (data.ratio ? " r" + data.ratio : "");
     el.dataset.id = data.id;
     el.style.left = data.x + "px";
     el.style.top = data.y + "px";
@@ -643,6 +651,33 @@ input[type=range]::-moz-range-thumb{width:22px;height:22px;border-radius:50%;bac
   var kinds = [].slice.call(document.querySelectorAll(".kind"));
   var shapesBox = document.getElementById("shapes");
 
+  function renderRatios(){
+    var rBox = document.getElementById("ratios");
+    rBox.hidden = pendingKind !== "polaroid";
+    if(rBox.hidden){ rBox.innerHTML = ""; return; }
+    if(rBox.children.length){
+      [].forEach.call(rBox.children, function(c){
+        c.setAttribute("aria-pressed", c.dataset.ratio === pendingRatio ? "true" : "false");
+      });
+      return;
+    }
+    RATIOS.forEach(function(r){
+      var b = document.createElement("button");
+      b.type = "button";
+      b.className = "shape";
+      b.dataset.ratio = r[0];
+      b.setAttribute("aria-pressed", r[0] === pendingRatio ? "true" : "false");
+      b.innerHTML = '<b style="width:' + (r[0] === "34" ? 13 : r[0] === "169" ? 27 : 20) + 'px"></b><span>' + r[1] + "</span>";
+      b.addEventListener("click", function(){
+        pendingRatio = r[0];
+        [].forEach.call(rBox.children, function(c){
+          c.setAttribute("aria-pressed", c.dataset.ratio === pendingRatio ? "true" : "false");
+        });
+      });
+      rBox.appendChild(b);
+    });
+  }
+
   function renderShapes(){
     var list = SHAPES[pendingKind] || [];
     if(!list.some(function(s){ return s[0] === pendingShape; })) pendingShape = list[0][0];
@@ -669,6 +704,7 @@ input[type=range]::-moz-range-thumb{width:22px;height:22px;border-radius:50%;bac
       pendingKind = k.dataset.kind;
       kinds.forEach(function(o){ o.setAttribute("aria-pressed", o === k ? "true" : "false"); });
       renderShapes();
+      renderRatios();
       syncFields();
     });
   });
@@ -714,6 +750,7 @@ input[type=range]::-moz-range-thumb{width:22px;height:22px;border-radius:50%;bac
     document.getElementById("txt").value = "";
     document.getElementById("nama").value = "";
     renderShapes();
+    renderRatios();
     syncFields();
     sheet.classList.add("open");
     openedAt = Date.now();
@@ -738,6 +775,7 @@ input[type=range]::-moz-range-thumb{width:22px;height:22px;border-radius:50%;bac
       id: "p" + Date.now().toString(36) + Math.random().toString(36).slice(2, 6),
       kind: pendingKind,
       shape: pendingShape,
+      ratio: pendingKind === "polaroid" ? pendingRatio : null,
       x: pendingPoint.x - 100,
       y: pendingPoint.y - 100,
       rot: (Math.random() * 6 - 3),
