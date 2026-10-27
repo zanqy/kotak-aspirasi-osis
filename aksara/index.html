@@ -211,12 +211,12 @@ input[type=range]::-moz-range-thumb{width:22px;height:22px;border-radius:50%;bac
 .ctx.open{display:block;background:rgba(24,20,16,.26);backdrop-filter:blur(5px)}
 .ctxGhost{position:fixed;z-index:96;pointer-events:none;transform-origin:0 0}
 .ctxMenu{position:fixed;z-index:120;display:none;min-width:238px;max-width:min(320px,calc(100vw - 20px));
-  background:rgba(247,241,225,.99);border:1px solid rgba(34,29,21,.22);border-radius:14px;padding:8px;
+  background:rgba(247,241,225,.99);border:1px solid rgba(34,29,21,.22);border-radius:14px;padding:6px;
   box-shadow:0 26px 44px -24px rgba(24,20,16,.75)}
 .ctxMenu.open{display:block}
-.cmTitle{font:600 .78rem var(--fm);letter-spacing:.18em;text-transform:uppercase;color:rgba(34,29,21,.5);
-  padding:4px 8px 8px}
-.cmRot{padding:0 8px 8px}
+.cmTitle{font:600 .72rem var(--fm);letter-spacing:.16em;text-transform:uppercase;color:rgba(34,29,21,.45);
+  padding:3px 8px 6px}
+.cmRot{padding:0 8px 6px}
 .cmRot label{display:block;font:500 .78rem var(--fm);letter-spacing:.1em;text-transform:uppercase;
   color:rgba(34,29,21,.6);margin-bottom:2px}
 .cmRot label span{float:right;color:var(--red);letter-spacing:0}
@@ -226,7 +226,7 @@ input[type=range]::-moz-range-thumb{width:22px;height:22px;border-radius:50%;bac
 .ctxMenu.bottom{left:10px !important;right:10px;top:auto !important;bottom:calc(12px + env(safe-area-inset-bottom));
   min-width:0;max-width:none}
 .ctxMenu button{display:flex;align-items:center;gap:10px;width:100%;background:none;border:0;
-  padding:11px 12px;border-radius:9px;font:500 .95rem var(--fs);color:var(--ink);cursor:pointer;text-align:left}
+  padding:9px 10px;border-radius:9px;font:500 .95rem var(--fs);color:var(--ink);cursor:pointer;text-align:left}
 .ctxMenu button:hover,.ctxMenu button:active{background:rgba(34,29,21,.07)}
 .ctxMenu button.danger{color:var(--red)}
 .ctxMenu hr{border:0;border-top:1px solid rgba(34,29,21,.14);margin:5px 6px}
@@ -529,36 +529,49 @@ input[type=range]::-moz-range-thumb{width:22px;height:22px;border-radius:50%;bac
     rv.textContent = Math.round(data.rot || 0) + "°";
     rr.value = Math.round(data.rot || 0);
 
-    /* tampilkan menu dulu (belum terlihat), ukur, baru tempatkan */
+    /* tampilkan dulu tanpa terlihat, ukur, lalu cari tempat yang tidak menutupi tempelan */
     ctxMenu.classList.add("open");
+    ctxMenu.classList.remove("bottom");
     ctxMenu.style.left = "-9999px";
     ctxMenu.style.top = "-9999px";
-    ctxMenu.classList.remove("bottom");
 
     var mw = ctxMenu.offsetWidth, mh = ctxMenu.offsetHeight;
-    var vw = window.innerWidth, vh = window.innerHeight, gap = 12;
+    var vw = window.innerWidth, vh = window.innerHeight;
+    var gap = 22, pad = 8;
 
+    function hits(a, b, m){
+      return !(a.right + m < b.left || a.left - m > b.right || a.bottom + m < b.top || a.top - m > b.bottom);
+    }
+
+    var cx = r.left + r.width / 2, cy = r.top + r.height / 2;
     var spots = [
-      { left: r.left + r.width / 2 - mw / 2, top: r.top - mh - gap },        /* atas */
-      { left: r.left + r.width / 2 - mw / 2, top: r.bottom + gap },          /* bawah */
-      { left: r.right + gap, top: r.top + r.height / 2 - mh / 2 },           /* kanan */
-      { left: r.left - mw - gap, top: r.top + r.height / 2 - mh / 2 }        /* kiri */
+      [cx - mw / 2, r.top - mh - gap],        /* atas */
+      [cx - mw / 2, r.bottom + gap],          /* bawah */
+      [r.right + gap, cy - mh / 2],           /* kanan tengah */
+      [r.left - mw - gap, cy - mh / 2],       /* kiri tengah */
+      [r.right + gap, r.top],                 /* kanan atas */
+      [r.left - mw - gap, r.top],             /* kiri atas */
+      [r.right + gap, r.bottom - mh],         /* kanan bawah */
+      [r.left - mw - gap, r.bottom - mh]      /* kiri bawah */
     ];
 
     for(var i = 0; i < spots.length; i++){
-      var s = spots[i];
-      if(s.left >= 8 && s.left + mw <= vw - 8 && s.top >= 8 && s.top + mh <= vh - 8){
-        ctxMenu.style.left = Math.round(s.left) + "px";
-        ctxMenu.style.top = Math.round(s.top) + "px";
-        return;
-      }
+      var L = Math.max(pad, Math.min(vw - mw - pad, spots[i][0]));
+      var T = Math.max(pad, Math.min(vh - mh - pad, spots[i][1]));
+      ctxMenu.style.left = Math.round(L) + "px";
+      ctxMenu.style.top = Math.round(T) + "px";
+      if(!hits(ctxMenu.getBoundingClientRect(), r, 12)) return;
     }
 
-    /* tidak ada ruang di sekeliling: jadikan panel bawah, tempelan digeser ke atasnya */
+    /* tidak ada tempat: jadikan panel bawah, tempelan digeser ke atasnya */
     ctxMenu.classList.add("bottom");
-    var sheetTop = vh - mh - 12;
-    if(r.bottom > sheetTop - 8){
-      ctxGhost.style.top = Math.max(10, sheetTop - r.height - 14) + "px";
+    ctxMenu.style.left = "";
+    ctxMenu.style.top = "";
+    var mr = ctxMenu.getBoundingClientRect();
+    if(hits(mr, r, 12)){
+      var newTop = Math.max(12, mr.top - r.height - 16);
+      var dy = newTop - r.top;
+      ctxGhost.style.top = Math.round(r.top + dy) + "px";
     }
   }
 
@@ -713,12 +726,7 @@ input[type=range]::-moz-range-thumb{width:22px;height:22px;border-radius:50%;bac
     pan = null;
     if(!wasPan || didMove){ panTarget = null; return; }
 
-    if(panTarget){
-      var d = dataOf(panTarget);
-      var node = panTarget;
-      panTarget = null;
-      if(d){ openItemSheet(d, node); return; }
-    }
+    if(panTarget){ panTarget = null; return; }   /* ketuk tempelan: tidak melakukan apa-apa */
     openSheet(boardPoint(e.clientX, e.clientY));
   });
   stage.addEventListener("pointercancel", function(){
