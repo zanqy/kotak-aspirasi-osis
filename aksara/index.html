@@ -192,6 +192,13 @@ body{background:radial-gradient(circle at 50% -10%,#F6F0E1,var(--paper) 65%);col
   font:600 .94rem var(--fd);cursor:pointer}
 .btn.ghost{background:transparent;color:var(--ink);border:1px solid rgba(34,29,21,.24);font:500 .92rem var(--fs)}
 .btn.grow{flex:1}
+input[type=range]{-webkit-appearance:none;appearance:none;width:100%;height:6px;border-radius:99px;
+  background:rgba(34,29,21,.18);outline:none;margin:8px 0 2px}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:24px;height:24px;border-radius:50%;
+  background:var(--ink);border:2px solid var(--paper);box-shadow:0 2px 6px rgba(24,20,16,.4);cursor:pointer}
+input[type=range]::-moz-range-thumb{width:22px;height:22px;border-radius:50%;background:var(--ink);
+  border:2px solid var(--paper);cursor:pointer}
+.field label span{float:right;color:var(--red);letter-spacing:0}
 .preview{display:none;margin-bottom:10px}
 .preview.on{display:block}
 .preview img{width:100%;max-height:150px;object-fit:cover;border-radius:9px;border:1px solid rgba(34,29,21,.2)}
@@ -291,6 +298,29 @@ body{background:radial-gradient(circle at 50% -10%,#F6F0E1,var(--paper) 65%);col
     <div class="row">
       <button class="btn ghost" id="cancel">Batal</button>
       <button class="btn grow" id="place">Tempel di sini</button>
+    </div>
+  </div>
+</div>
+
+<div class="sheet" id="itemSheet">
+  <div class="panel">
+    <h3>Atur tempelan</h3>
+    <p class="sub">Putar sesuai selera, atau hapus kalau salah tempel.</p>
+
+    <div class="field">
+      <label>Sudut <span id="rotVal">0°</span></label>
+      <input type="range" id="rotRange" min="-180" max="180" step="1" value="0">
+    </div>
+
+    <div class="row" style="margin-bottom:10px">
+      <button class="btn ghost" id="rotL">↺ 15°</button>
+      <button class="btn ghost" id="rotR">↻ 15°</button>
+      <button class="btn ghost" id="rot0">Luruskan</button>
+    </div>
+
+    <div class="row">
+      <button class="btn ghost" id="delItem">Hapus</button>
+      <button class="btn grow" id="itemDone">Selesai</button>
     </div>
   </div>
 </div>
@@ -433,7 +463,7 @@ body{background:radial-gradient(circle at 50% -10%,#F6F0E1,var(--paper) 65%);col
   }
 
   function attachDrag(el, data){
-    var start = null, w = 0, h = 0, raf = 0;
+    var start = null, w = 0, h = 0, raf = 0, moved = false, t0 = 0;
     el.addEventListener("pointerdown", function(e){
       if(e.button !== undefined && e.button !== 0) return;
       e.stopPropagation();
@@ -441,12 +471,14 @@ body{background:radial-gradient(circle at 50% -10%,#F6F0E1,var(--paper) 65%);col
       el.classList.add("dragging");
       w = el.offsetWidth; h = el.offsetHeight;      /* ukur sekali saja */
       start = { px: e.clientX, py: e.clientY, x: data.x, y: data.y };
+      moved = false; t0 = Date.now();
     });
     el.addEventListener("pointermove", function(e){
       if(!start) return;
       e.stopPropagation();
       var nx = start.x + (e.clientX - start.px) / view.s;
       var ny = start.y + (e.clientY - start.py) / view.s;
+      if(Math.abs(e.clientX - start.px) + Math.abs(e.clientY - start.py) > 12) moved = true;
       /* tempelan tidak boleh tenggelam di tepi papan */
       data.x = Math.max(6, Math.min(BOARD_W - w - 6, nx));
       data.y = Math.max(10, Math.min(BOARD_H - h - 6, ny));
@@ -464,6 +496,7 @@ body{background:radial-gradient(circle at 50% -10%,#F6F0E1,var(--paper) 65%);col
       el.classList.remove("dragging");
       start = null;
       save();
+      if(!moved && Date.now() - t0 < 600) openItemSheet(data, el);
     }
     el.addEventListener("pointerup", end);
     el.addEventListener("pointercancel", end);
@@ -543,6 +576,61 @@ body{background:radial-gradient(circle at 50% -10%,#F6F0E1,var(--paper) 65%);col
   document.getElementById("zIn").onclick = function(){ zoomAt(stage.clientWidth/2, stage.clientHeight/2, 1.35); };
   document.getElementById("zOut").onclick = function(){ zoomAt(stage.clientWidth/2, stage.clientHeight/2, 1/1.35); };
   document.getElementById("zFit").onclick = showAll;
+
+  /* ---------- atur tempelan: putar & hapus ---------- */
+  var itemSheet = document.getElementById("itemSheet");
+  var rotRange = document.getElementById("rotRange");
+  var rotVal = document.getElementById("rotVal");
+  var editData = null, editEl = null;
+
+  function setRot(v){
+    if(!editData) return;
+    v = Math.max(-180, Math.min(180, Math.round(v)));
+    editData.rot = v;
+    editEl.style.transform = "rotate(" + v + "deg)";
+    rotVal.textContent = v + "°";
+    rotRange.value = v;
+  }
+
+  var itemOpenedAt = 0;
+
+  function openItemSheet(data, el){
+    editData = data; editEl = el;
+    rotVal.textContent = Math.round(data.rot || 0) + "°";
+    rotRange.value = Math.round(data.rot || 0);
+    itemSheet.classList.add("open");
+    itemOpenedAt = Date.now();
+  }
+
+  function closeItemSheet(){
+    itemSheet.classList.remove("open");
+    save();
+    editData = null; editEl = null;
+  }
+
+  rotRange.addEventListener("input", function(){ setRot(+rotRange.value); });
+  document.getElementById("rotL").onclick = function(){ setRot((editData ? editData.rot : 0) - 15); };
+  document.getElementById("rotR").onclick = function(){ setRot((editData ? editData.rot : 0) + 15); };
+  document.getElementById("rot0").onclick = function(){ setRot(0); };
+  document.getElementById("itemDone").onclick = closeItemSheet;
+  itemSheet.addEventListener("click", function(e){
+    if(e.target !== itemSheet) return;
+    if(Date.now() - itemOpenedAt < 400) return;   /* tap pembuka jangan ikut menutup */
+    closeItemSheet();
+  });
+
+  document.getElementById("delItem").onclick = function(){
+    if(!editData) return;
+    var i = items.indexOf(editData);
+    if(i > -1) items.splice(i, 1);
+    if(editEl && editEl.parentNode) editEl.parentNode.removeChild(editEl);
+    counter.textContent = items.length + " tempelan";
+    if(!items.length) hint.classList.remove("hide");
+    itemSheet.classList.remove("open");
+    editData = null; editEl = null;
+    save();
+    say("Tempelan dihapus");
+  };
 
   function boardPoint(cx, cy){
     var r = stage.getBoundingClientRect();
