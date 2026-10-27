@@ -96,7 +96,41 @@ body{background:radial-gradient(circle at 50% -10%,#F6F0E1,var(--paper) 65%);col
 .item.note.round .txt{font-size:1.2rem;max-height:120px}
 .item.note.torn .body{border-radius:2px;
   clip-path:polygon(0 0,100% 0,100% 93%,96% 97%,92% 93%,88% 98%,84% 93%,80% 98%,76% 93%,72% 98%,68% 93%,64% 98%,60% 93%,56% 98%,52% 93%,48% 98%,44% 93%,40% 98%,36% 93%,32% 98%,28% 93%,24% 98%,20% 93%,16% 98%,12% 93%,8% 98%,4% 93%,0 97%)}
-/* model kertas note */
+/* gaya tulisan */
+.item.note.fnt-tegak .txt{font:600 1.16rem/1.3 var(--fs)}
+.item.note.fnt-ketik .txt{font:500 .96rem/1.42 var(--fm);letter-spacing:.01em}
+.item.note.fnt-stencil .txt{font:800 1.02rem/1.3 var(--fd);text-transform:uppercase;letter-spacing:.03em}
+.item.clip.fnt-tegak .txt{font:600 .98rem/1.32 var(--fs)}
+.item.clip.fnt-ketik .txt{font:500 .9rem/1.45 var(--fm)}
+.item.clip.fnt-stencil .txt{font:800 .94rem/1.3 var(--fd);text-transform:uppercase}
+/* warna tinta */
+.item.ink-merah .txt{color:#C03B21}
+.item.ink-biru .txt{color:#2C5E9E}
+.item.ink-ungu .txt{color:#7B4B94}
+.item.ink-hijau .txt{color:#3E6B35}
+/* stempel karet */
+.stamp{position:absolute;z-index:5;left:50%;bottom:14px;transform:translateX(-50%) rotate(-6deg);
+  font:700 10px/1 var(--fm);letter-spacing:.18em;text-transform:uppercase;color:#C03B21;
+  border:2px solid rgba(192,59,33,.8);border-radius:4px;padding:5px 8px 4px;opacity:.85;pointer-events:none;
+  text-shadow:0 0 1px rgba(192,59,33,.4)}
+/* bingkai foto */
+.item.pola.frame-krem .body{background:#F3E9D2}
+.item.pola.frame-pink .body{background:#F9E8EC}
+.item.pola.frame-hitam .body{background:#2B241C}
+.item.pola.frame-hitam .cap{color:#F2ECDE}
+/* kertas polka & strip */
+.item.note.paper-polka .body{background:radial-gradient(circle at 7px 7px,rgba(43,36,28,.14) 1.7px,transparent 2.4px) 0 0/14px 14px,linear-gradient(170deg,rgba(255,255,255,.45),rgba(255,255,255,0) 45%),var(--c,#F7E39B)}
+.item.note.paper-strip .body{background:repeating-linear-gradient(45deg,transparent 0 9px,rgba(43,36,28,.08) 9px 18px),linear-gradient(170deg,rgba(255,255,255,.45),rgba(255,255,255,0) 45%),var(--c,#F7E39B)}
+/* selotip polka & strip */
+.tape.t-polka{background:radial-gradient(circle at 5px 5px,rgba(255,255,255,.7) 1.4px,transparent 2px) 0 0/10px 10px,rgba(192,59,33,.42)}
+.tape.t-strip{background:repeating-linear-gradient(45deg,rgba(255,255,255,.5) 0 7px,rgba(192,59,33,.45) 7px 14px)}
+/* stiker tambahan */
+.stk.bunga{color:#B4536B;text-shadow:0 1px 0 rgba(255,255,255,.7)}
+.stk.kupu{color:#5B7DB1;text-shadow:0 1px 0 rgba(255,255,255,.7)}
+.stk.awan{color:#8A8578;text-shadow:0 1px 0 rgba(255,255,255,.8)}
+.stk.kilau{color:#E8A013;text-shadow:0 1px 2px rgba(24,20,16,.3)}
+.stk.mahkota{color:#E8A013;text-shadow:0 1px 2px rgba(24,20,16,.3)}
+.stk.salju{color:#7FA8C9;text-shadow:0 1px 1px rgba(255,255,255,.8)}
 .item.note.paper-garis .body{background:repeating-linear-gradient(180deg,transparent 0 25px,rgba(43,36,28,.16) 25px 26px),linear-gradient(170deg,rgba(255,255,255,.5),rgba(255,255,255,0) 40%),var(--c,#F7E39B)}
 .item.note.paper-kotak .body{background:repeating-linear-gradient(180deg,transparent 0 21px,rgba(43,36,28,.13) 21px 22px),repeating-linear-gradient(90deg,transparent 0 21px,rgba(43,36,28,.13) 21px 22px),linear-gradient(170deg,rgba(255,255,255,.5),rgba(255,255,255,0) 40%),var(--c,#F7E39B)}
 .item.note.paper-kraft .body{background:linear-gradient(170deg,rgba(255,255,255,.28),rgba(255,255,255,0) 45%),#D9B98A;box-shadow:inset 0 -14px 20px -16px rgba(120,92,52,.6),inset 0 0 0 1px rgba(255,255,255,.25)}
@@ -351,8 +385,12 @@ input[type=range]::-moz-range-thumb{width:22px;height:22px;border-radius:50%;bac
     <div class="shapes" id="ratios" hidden></div>
     <div class="shapes" id="colors" hidden></div>
     <div class="shapes" id="papers" hidden></div>
+    <div class="shapes" id="fonts" hidden></div>
+    <div class="shapes" id="inks" hidden></div>
     <div class="shapes" id="filters" hidden></div>
     <div class="shapes" id="tapes" hidden></div>
+    <div class="shapes" id="frames" hidden></div>
+    <div class="shapes" id="stamps" hidden></div>
     <div class="shapes" id="stickers" hidden></div>
 
     <div class="preview" id="preview"><img id="previewImg" alt="Pratinjau foto"></div>
@@ -439,7 +477,13 @@ input[type=range]::-moz-range-thumb{width:22px;height:22px;border-radius:50%;bac
   var pendingColor = NOTE_COLORS[0];
   var pendingFilter = "biasa", pendingSticker = "tanpa";
   var pendingPaper = "polos", pendingTape = "bening";
+  var pendingFont = "tangan", pendingInk = "hitam", pendingStamp = "tanpa", pendingFrame = "putih";
   function tapeClass(){ return pendingTape && pendingTape !== "bening" ? " t-" + pendingTape : ""; }
+  function fontClass(){ return pendingKind === "polaroid" ? "" : (pendingFont && pendingFont !== "tangan" ? " fnt-" + pendingFont : ""); }
+  function inkClass(){ return pendingKind === "polaroid" ? "" : (pendingInk && pendingInk !== "hitam" ? " ink-" + pendingInk : ""); }
+  function frameClass(){ return pendingKind === "polaroid" && pendingFrame !== "putih" ? " frame-" + pendingFrame : ""; }
+  function stampHTML(){ return pendingStamp && pendingStamp !== "tanpa" ? '<div class="stamp">' + STAMP_TEXT[pendingStamp] + "</div>" : ""; }
+  var STAMP_TEXT = {penting:"PENTING",rahasia:"RAHASIA",osis:"DARI OSIS",eksklusif:"EKSKLUSIF",senyum:"SENYUM DULU"};
   function paperClass(kind){
     if(kind === "note") return pendingPaper && pendingPaper !== "polos" ? " paper-" + pendingPaper : "";
     if(kind === "clip") return pendingPaper && pendingPaper !== "koran" ? " paper-" + pendingPaper : "";
@@ -447,10 +491,14 @@ input[type=range]::-moz-range-thumb{width:22px;height:22px;border-radius:50%;bac
   }
   var RATIOS = [["11","1:1"],["43","4:3"],["34","3:4"],["169","16:9"]];
   var FILTERS = [["biasa","Biasa"],["sepia","Sepia"],["bw","Hitam putih"],["pudar","Pudar"]];
-  var PAPERS = {note:[["polos","Polos"],["garis","Garis"],["kotak","Kotak"],["kraft","Kraft"]],clip:[["koran","Koran"],["hvs","Putih"],["kraft","Kraft"]]};
-  var TAPES = [["bening","Bening"],["merah","Merah"],["biru","Biru"],["hitam","Hitam"]];
-  var STICKERS = [["tanpa","Tanpa"],["bintang","Bintang"],["hati","Hati"],["petir","Petir"],["cap","Cap merah"]];
-  var STICKER_GLYPH = {bintang:"★",hati:"♥",petir:"⚡",cap:""};
+  var PAPERS = {note:[["polos","Polos"],["garis","Garis"],["kotak","Kotak"],["polka","Polka"],["strip","Garis miring"],["kraft","Kraft"]],clip:[["koran","Koran"],["hvs","Putih"],["kraft","Kraft"]]};
+  var TAPES = [["bening","Bening"],["merah","Merah"],["biru","Biru"],["hitam","Hitam"],["polka","Polka"],["strip","Strip"]];
+  var FONTS = [["tangan","Tangan"],["tegak","Tegak"],["ketik","Mesin ketik"],["stencil","Stencil"]];
+  var INKS = [["hitam","Hitam"],["merah","Merah"],["biru","Biru"],["ungu","Ungu"],["hijau","Hijau"]];
+  var STAMPS = [["tanpa","Tanpa"],["penting","Penting"],["rahasia","Rahasia"],["osis","Dari OSIS"],["eksklusif","Eksklusif"],["senyum","Senyum dulu"]];
+  var FRAMES = [["putih","Putih"],["krem","Krem"],["pink","Pink"],["hitam","Hitam"]];
+  var STICKERS = [["tanpa","Tanpa"],["bintang","Bintang"],["hati","Hati"],["bunga","Bunga"],["kupu","Kupu-kupu"],["petir","Petir"],["kilau","Kilau"],["mahkota","Mahkota"],["awan","Awan"],["salju","Salju"],["cap","Cap merah"]];
+  var STICKER_GLYPH = {bintang:"★",hati:"♥",bunga:"✿",kupu:"❋",petir:"⚡",kilau:"✦",mahkota:"♛",awan:"☁",salju:"❄",cap:""};
   function stickerHTML(s){
     if(!s || s === "tanpa") return "";
     return '<div class="stk ' + s + '">' + (STICKER_GLYPH[s] || "") + "</div>";
@@ -526,7 +574,10 @@ input[type=range]::-moz-range-thumb{width:22px;height:22px;border-radius:50%;bac
     var el = document.createElement("div");
     var base = data.kind === "polaroid" ? "pola" : data.kind === "clip" ? "clip" : "note";
     el.className = "item " + base + (data.shape && data.shape !== base ? " " + data.shape : "") + (data.ratio ? " r" + data.ratio : "")
-      + (data.paper && ((base === "note" && data.paper !== "polos") || (base === "clip" && data.paper !== "koran")) ? " paper-" + data.paper : "");
+      + (data.paper && ((base === "note" && data.paper !== "polos") || (base === "clip" && data.paper !== "koran")) ? " paper-" + data.paper : "")
+      + (data.font && data.font !== "tangan" && base !== "pola" ? " fnt-" + data.font : "")
+      + (data.ink && data.ink !== "hitam" && base !== "pola" ? " ink-" + data.ink : "")
+      + (data.frame && data.frame !== "putih" && base === "pola" ? " frame-" + data.frame : "");
     el.dataset.id = data.id;
     el.style.left = data.x + "px";
     el.style.top = data.y + "px";
@@ -550,6 +601,12 @@ input[type=range]::-moz-range-thumb{width:22px;height:22px;border-radius:50%;bac
         st.textContent = STICKER_GLYPH[data.sticker] || "";
         el.appendChild(st);
       }
+      if(data.stamp && data.stamp !== "tanpa"){
+        var smp = document.createElement("div");
+        smp.className = "stamp";
+        smp.textContent = STAMP_TEXT[data.stamp] || "";
+        el.appendChild(smp);
+      }
       el.insertAdjacentHTML("afterbegin", '<div class="tape' + (data.tape && data.tape !== "bening" ? " t-" + data.tape : "") + '"></div>');
     } else if(data.kind === "clip"){
       body.innerHTML = '<div class="txt"></div><div class="who"></div>';
@@ -562,6 +619,12 @@ input[type=range]::-moz-range-thumb{width:22px;height:22px;border-radius:50%;bac
         st.textContent = STICKER_GLYPH[data.sticker] || "";
         el.appendChild(st);
       }
+      if(data.stamp && data.stamp !== "tanpa"){
+        var smp = document.createElement("div");
+        smp.className = "stamp";
+        smp.textContent = STAMP_TEXT[data.stamp] || "";
+        el.appendChild(smp);
+      }
       el.insertAdjacentHTML("afterbegin", '<div class="tape' + (data.tape && data.tape !== "bening" ? " t-" + data.tape : "") + '"></div>');
     } else {
       body.innerHTML = '<div class="txt"></div>';
@@ -572,6 +635,12 @@ input[type=range]::-moz-range-thumb{width:22px;height:22px;border-radius:50%;bac
         st.className = "stk " + data.sticker;
         st.textContent = STICKER_GLYPH[data.sticker] || "";
         el.appendChild(st);
+      }
+      if(data.stamp && data.stamp !== "tanpa"){
+        var smp = document.createElement("div");
+        smp.className = "stamp";
+        smp.textContent = STAMP_TEXT[data.stamp] || "";
+        el.appendChild(smp);
       }
       el.insertAdjacentHTML("afterbegin", '<div class="pin"></div>');
     }
@@ -1000,13 +1069,13 @@ input[type=range]::-moz-range-thumb{width:22px;height:22px;border-radius:50%;bac
     var name = document.getElementById("nama").value.trim();
     if(pendingKind === "note"){
       box.classList.add("on");
-      box.innerHTML = '<div class="item note' + (pendingShape && pendingShape !== "note" ? " " + pendingShape : "") + paperClass("note") + '" style="--c:' + pendingColor + '">' + stickerHTML(pendingSticker) + '<div class="pin"></div>' +
+      box.innerHTML = '<div class="item note' + (pendingShape && pendingShape !== "note" ? " " + pendingShape : "") + paperClass("note") + fontClass() + inkClass() + '" style="--c:' + pendingColor + '">' + stickerHTML(pendingSticker) + stampHTML() + '<div class="pin"></div>' +
         '<div class="body"><div class="txt">' + (escPrev(txt) || "Tulisanmu…") + "</div></div></div>";
       return;
     }
     if(pendingKind === "clip"){
       box.classList.add("on");
-      box.innerHTML = '<div class="item clip' + (pendingShape && pendingShape !== "clip" ? " " + pendingShape : "") + paperClass("clip") + '">' + stickerHTML(pendingSticker) + '<div class="tape' + tapeClass() + '"></div>' +
+      box.innerHTML = '<div class="item clip' + (pendingShape && pendingShape !== "clip" ? " " + pendingShape : "") + paperClass("clip") + fontClass() + inkClass() + '">' + stickerHTML(pendingSticker) + stampHTML() + '<div class="tape' + tapeClass() + '"></div>' +
         '<div class="body"><div class="txt">' + (escPrev(txt) || "Klipingmu…") + '</div><div class="who">' + (escPrev(name) || "tanpa nama") + "</div></div></div>";
       return;
     }
@@ -1014,8 +1083,8 @@ input[type=range]::-moz-range-thumb{width:22px;height:22px;border-radius:50%;bac
     box.classList.add("on");
     document.getElementById("preview").classList.remove("on"); /* diganti livePrev */
     var cls = "item pola" + (pendingShape && pendingShape !== "pola" ? " " + pendingShape : "")
-      + (pendingRatio ? " r" + pendingRatio : "");
-    box.innerHTML = '<div class="' + cls + '">' + stickerHTML(pendingSticker) + '<div class="tape' + tapeClass() + '"></div>' +
+      + (pendingRatio ? " r" + pendingRatio : "") + frameClass();
+    box.innerHTML = '<div class="' + cls + '">' + stickerHTML(pendingSticker) + stampHTML() + '<div class="tape' + tapeClass() + '"></div>' +
       '<div class="body"><div class="ph' + (pendingFilter && pendingFilter !== "biasa" ? " f-" + pendingFilter : "") + '"' +
       (pendingImage ? ' style="background-image:url(' + pendingImage + ')"' : "") + ">" +
       (pendingImage ? "" : "pilih foto dulu") + "</div>" +
@@ -1107,6 +1176,51 @@ input[type=range]::-moz-range-thumb{width:22px;height:22px;border-radius:50%;bac
     });
   }
 
+  function chipRow(id, list, dataset, cur, onPick, paint){
+    var box = document.getElementById(id);
+    if(!list){ box.hidden = true; box.innerHTML = ""; return; }
+    box.hidden = false;
+    box.innerHTML = "";
+    list.forEach(function(t){
+      var b = document.createElement("button");
+      b.type = "button";
+      b.className = "shape";
+      b.dataset[dataset] = t[0];
+      b.setAttribute("aria-pressed", t[0] === cur() ? "true" : "false");
+      b.innerHTML = (paint ? paint(t) : "<b></b>") + "<span>" + t[1] + "</span>";
+      b.addEventListener("click", function(){
+        onPick(t[0]);
+        [].forEach.call(box.children, function(c){
+          c.setAttribute("aria-pressed", c.dataset[dataset] === t[0] ? "true" : "false");
+        });
+        updateLivePrev();
+      });
+      box.appendChild(b);
+    });
+  }
+  function renderFonts(){
+    chipRow("fonts", (pendingKind === "note" || pendingKind === "clip") ? FONTS : null, "font",
+      function(){ return pendingFont; }, function(v){ pendingFont = v; },
+      function(t){ return '<b style="font-family:' + (t[0] === "tegak" ? "var(--fs)" : t[0] === "ketik" ? "var(--fm)" : t[0] === "stencil" ? "var(--fd)" : "var(--fh)") + ';font-size:11px">Aa</b>'; });
+  }
+  function renderInks(){
+    var cols = {hitam:"#2b241c",merah:"#C03B21",biru:"#2C5E9E",ungu:"#7B4B94",hijau:"#3E6B35"};
+    chipRow("inks", (pendingKind === "note" || pendingKind === "clip") ? INKS : null, "ink",
+      function(){ return pendingInk; }, function(v){ pendingInk = v; },
+      function(t){ return '<b style="background:' + cols[t[0]] + ';border-radius:50%"></b>'; });
+  }
+  function renderStamps(){
+    chipRow("stamps", STAMPS, "stamp",
+      function(){ return pendingStamp; }, function(v){ pendingStamp = v; },
+      function(t){ return t[0] === "tanpa" ? "<b></b>" : '<b style="border:1.5px solid rgba(192,59,33,.8);border-radius:3px;font:700 7px var(--fm);letter-spacing:.08em;color:#C03B21;display:inline-flex;align-items:center;padding:0 3px">' + t[1].split(" ")[0].slice(0, 8) + "</b>"; });
+  }
+  function renderFrames(){
+    var cols = {putih:"#FFFDF7",krem:"#F3E9D2",pink:"#F9E8EC",hitam:"#2B241C"};
+    chipRow("frames", pendingKind === "polaroid" ? FRAMES : null, "frame",
+      function(){ return pendingFrame; }, function(v){ pendingFrame = v; },
+      function(t){ return '<b style="background:' + cols[t[0]] + ';border-color:rgba(34,29,21,.35)"></b>'; });
+  }
+
   function renderPapers(){
     var box = document.getElementById("papers");
     var list = PAPERS[pendingKind] || [];
@@ -1166,8 +1280,12 @@ input[type=range]::-moz-range-thumb{width:22px;height:22px;border-radius:50%;bac
       renderRatios();
       renderColors();
       renderPapers();
+      renderFonts();
+      renderInks();
       renderFilters();
       renderTapes();
+      renderFrames();
+      renderStamps();
       renderStickers();
       syncFields();
     });
@@ -1232,8 +1350,12 @@ input[type=range]::-moz-range-thumb{width:22px;height:22px;border-radius:50%;bac
     renderRatios();
     renderColors();
     renderPapers();
+    renderFonts();
+    renderInks();
     renderFilters();
     renderTapes();
+    renderFrames();
+    renderStamps();
     renderStickers();
     syncFields();
     sheet.classList.add("open");
@@ -1273,6 +1395,10 @@ input[type=range]::-moz-range-thumb{width:22px;height:22px;border-radius:50%;bac
       sticker: pendingSticker,
       paper: (pendingKind === "note" || pendingKind === "clip") ? pendingPaper : null,
       tape: (pendingKind === "clip" || pendingKind === "polaroid") ? pendingTape : null,
+      font: (pendingKind === "note" || pendingKind === "clip") ? pendingFont : null,
+      ink: (pendingKind === "note" || pendingKind === "clip") ? pendingInk : null,
+      stamp: pendingStamp,
+      frame: pendingKind === "polaroid" ? pendingFrame : null,
       image: pendingKind === "polaroid" ? pendingImage : null,
       at: Date.now()
     };
