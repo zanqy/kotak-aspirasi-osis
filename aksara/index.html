@@ -231,6 +231,13 @@ input[type=range]::-moz-range-thumb{width:22px;height:22px;border-radius:50%;bac
 .ctxMenu button.danger{color:var(--red)}
 .ctxMenu hr{border:0;border-top:1px solid rgba(34,29,21,.14);margin:3px 6px}
 .item.move-mode{outline:2px dashed var(--red);outline-offset:5px}
+.moveBar{position:fixed;left:10px;right:10px;bottom:calc(12px + env(safe-area-inset-bottom));z-index:120;
+  display:none;background:rgba(247,241,225,.98);border:1px solid rgba(34,29,21,.22);border-radius:14px;
+  padding:10px 12px;box-shadow:0 26px 44px -24px rgba(24,20,16,.75)}
+.moveBar.open{display:block}
+.moveHint{display:block;font:italic 400 .86rem/1.5 var(--fs);color:rgba(34,29,21,.65);margin-bottom:8px;text-align:center}
+.moveActions{display:flex;gap:8px}
+.moveActions .btn{flex:1;padding:11px 10px;font-size:.92rem}
 .toast{position:fixed;left:50%;bottom:26px;transform:translate(-50%,14px);z-index:120;
   background:rgba(34,29,21,.93);color:var(--paper);padding:10px 18px;border-radius:99px;
   font:500 .86rem var(--fs);opacity:0;pointer-events:none;transition:opacity .26s,transform .26s}
@@ -359,6 +366,14 @@ input[type=range]::-moz-range-thumb{width:22px;height:22px;border-radius:50%;bac
 </div>
 
 <div class="toast" id="toast"></div>
+
+<div class="moveBar" id="moveBar">
+  <span class="moveHint">Geser ke posisi yang pas…</span>
+  <div class="moveActions">
+    <button class="btn ghost" id="moveCancel">Batal</button>
+    <button class="btn" id="moveConfirm">Tetapkan posisi</button>
+  </div>
+</div>
 
 <script>
 (function(){
@@ -610,13 +625,18 @@ input[type=range]::-moz-range-thumb{width:22px;height:22px;border-radius:50%;bac
     if(!e.target.closest(".ctxMenu")) closeCtx();
   });
 
-  /* geser tempelan hanya setelah memilih "Pindah posisi" */
+  /* geser tempelan hanya setelah memilih "Pindah posisi" — bebas atur, lalu kunci */
   var moveMode = false;
+  var moveData = null, moveEl = null, moveOrig = null;
+  var moveBar = document.getElementById("moveBar");
 
   function startMove(data, el){
     moveMode = true;
+    moveData = data; moveEl = el;
+    moveOrig = { x: data.x, y: data.y };
     el.classList.add("move-mode");
-    say("Geser tempelannya, lalu lepas");
+    moveBar.classList.add("open");
+    void moveBar.offsetHeight;   /* paksa repaint supaya bar langsung tampil */
 
     function onDown(e){
       if(e.button !== undefined && e.button !== 0) return;
@@ -637,18 +657,32 @@ input[type=range]::-moz-range-thumb{width:22px;height:22px;border-radius:50%;bac
         el.removeEventListener("pointermove", onMove);
         el.removeEventListener("pointerup", onUp);
         el.removeEventListener("pointercancel", onUp);
-        el.classList.remove("move-mode");
-        moveMode = false;
-        save();
-        say("Posisi disimpan");
       }
       el.addEventListener("pointermove", onMove);
       el.addEventListener("pointerup", onUp);
       el.addEventListener("pointercancel", onUp);
     }
 
-    el.addEventListener("pointerdown", onDown, { once: true });
+    el._moveDown = onDown;
+    el.addEventListener("pointerdown", onDown);
   }
+
+  function endMove(saveIt){
+    if(!moveMode || !moveEl) return;
+    if(!saveIt && moveOrig){
+      moveData.x = moveOrig.x; moveData.y = moveOrig.y;
+      moveEl.style.left = moveData.x + "px";
+      moveEl.style.top = moveData.y + "px";
+    }
+    moveEl.classList.remove("move-mode");
+    if(moveEl._moveDown){ moveEl.removeEventListener("pointerdown", moveEl._moveDown); moveEl._moveDown = null; }
+    moveBar.classList.remove("open");
+    moveMode = false; moveData = null; moveEl = null; moveOrig = null;
+    if(saveIt){ save(); say("Posisi dikunci"); }
+  }
+
+  document.getElementById("moveConfirm").onclick = function(){ endMove(true); };
+  document.getElementById("moveCancel").onclick = function(){ endMove(false); say("Pindah dibatalkan"); };
 
   ctxMenu.addEventListener("click", function(e){
     var btn = e.target.closest("button");
