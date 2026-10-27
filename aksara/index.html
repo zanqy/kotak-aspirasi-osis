@@ -321,12 +321,22 @@ body{background:radial-gradient(circle at 50% -10%,#F6F0E1,var(--paper) 65%);col
     return Math.max(SW / BOARD_W, SH / BOARD_H);
   }
 
+  /* tampilan awal: papan mengisi bingkai penuh, tanpa ruang mati */
   function fit(){
     measure();
     var sw = SW, sh = SH;
-    view.s = fitScale();
+    view.s = coverScale();
     view.x = (sw - BOARD_W * view.s) / 2;
     view.y = (sh - BOARD_H * view.s) / 2;
+    applyView();
+  }
+
+  /* tombol "fit": seluruh papan kelihatan utuh */
+  function showAll(){
+    measure();
+    view.s = fitScale();
+    view.x = (SW - BOARD_W * view.s) / 2;
+    view.y = (SH - BOARD_H * view.s) / 2;
     applyView();
   }
 
@@ -484,7 +494,7 @@ body{background:radial-gradient(circle at 50% -10%,#F6F0E1,var(--paper) 65%);col
 
   document.getElementById("zIn").onclick = function(){ zoomAt(stage.clientWidth/2, stage.clientHeight/2, 1.35); };
   document.getElementById("zOut").onclick = function(){ zoomAt(stage.clientWidth/2, stage.clientHeight/2, 1/1.35); };
-  document.getElementById("zFit").onclick = fit;
+  document.getElementById("zFit").onclick = showAll;
 
   function boardPoint(cx, cy){
     var r = stage.getBoundingClientRect();
