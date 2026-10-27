@@ -207,6 +207,13 @@ input[type=range]::-moz-range-thumb{width:22px;height:22px;border-radius:50%;bac
 .preview{display:none;margin-bottom:10px}
 .preview.on{display:block}
 .preview img{width:100%;max-height:150px;object-fit:cover;border-radius:9px;border:1px solid rgba(34,29,21,.2)}
+/* pratinjau bingkai live: pakai kelas item asli supaya sama persis dengan hasil tempel */
+.livePrev{display:none;margin:2px 0 13px;justify-content:center}
+.livePrev.on{display:flex}
+.livePrev .item{position:relative;left:auto !important;top:auto !important;
+  transform:rotate(-2deg) !important;cursor:default;max-width:100%}
+.livePrev .item .body{box-shadow:0 8px 14px -8px rgba(24,20,16,.45)}
+.livePrev .cap:empty::before{content:"Caption…";opacity:.45}
 .ctx{position:fixed;inset:0;z-index:95;display:none}
 .ctx.open{display:block;background:rgba(24,20,16,.26);backdrop-filter:blur(5px)}
 .ctxGhost{position:fixed;z-index:96;pointer-events:none;transform-origin:0 0}
@@ -320,6 +327,7 @@ input[type=range]::-moz-range-thumb{width:22px;height:22px;border-radius:50%;bac
     <div class="shapes" id="ratios" hidden></div>
 
     <div class="preview" id="preview"><img id="previewImg" alt="Pratinjau foto"></div>
+    <div class="livePrev" id="livePrev"></div>
 
     <div class="field" id="fotoField" hidden>
       <input type="file" id="foto" accept="image/*">
@@ -866,7 +874,7 @@ input[type=range]::-moz-range-thumb{width:22px;height:22px;border-radius:50%;bac
 
   function renderRatios(){
     var rBox = document.getElementById("ratios");
-    rBox.hidden = pendingKind !== "polaroid";
+    rBox.hidden = pendingKind !== "polaroid" || pendingShape === "round";
     if(rBox.hidden){ rBox.innerHTML = ""; return; }
     if(rBox.children.length){
       [].forEach.call(rBox.children, function(c){
@@ -886,6 +894,7 @@ input[type=range]::-moz-range-thumb{width:22px;height:22px;border-radius:50%;bac
         [].forEach.call(rBox.children, function(c){
           c.setAttribute("aria-pressed", c.dataset.ratio === pendingRatio ? "true" : "false");
         });
+        updateLivePrev();
       });
       rBox.appendChild(b);
     });
@@ -907,9 +916,30 @@ input[type=range]::-moz-range-thumb{width:22px;height:22px;border-radius:50%;bac
         [].forEach.call(shapesBox.children, function(c){
           c.setAttribute("aria-pressed", c.dataset.shape === pendingShape ? "true" : "false");
         });
+        renderRatios();
+        updateLivePrev();
       });
       shapesBox.appendChild(b);
     });
+  }
+
+  /* pratinjau bingkai live: rakit dari kelas item asli supaya identik dengan hasil tempel */
+  function escPrev(s){ return String(s == null ? "" : s).replace(/[&<>"]/g, function(c){
+    return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]; }); }
+
+  function updateLivePrev(){
+    var box = document.getElementById("livePrev");
+    if(pendingKind !== "polaroid"){ box.classList.remove("on"); box.innerHTML = ""; return; }
+    box.classList.add("on");
+    document.getElementById("preview").classList.remove("on"); /* diganti livePrev */
+    var cls = "item pola" + (pendingShape && pendingShape !== "pola" ? " " + pendingShape : "")
+      + (pendingRatio ? " r" + pendingRatio : "");
+    box.innerHTML = '<div class="' + cls + '"><div class="tape"></div>' +
+      '<div class="body"><div class="ph"' +
+      (pendingImage ? ' style="background-image:url(' + pendingImage + ')"' : "") + ">" +
+      (pendingImage ? "" : "pilih foto dulu") + "</div>" +
+      '<div class="cap">' + escPrev(document.getElementById("txt").value.trim()) + "</div>" +
+      "</div></div>";
   }
 
   kinds.forEach(function(k){
@@ -929,6 +959,7 @@ input[type=range]::-moz-range-thumb{width:22px;height:22px;border-radius:50%;bac
     document.getElementById("nameField").hidden = pendingKind === "note";
     document.getElementById("txt").placeholder = isPola ? "Caption foto (boleh kosong)" :
       pendingKind === "clip" ? "Tulis klipingmu..." : "Tulis sesuatu...";
+    updateLivePrev();
   }
 
   document.getElementById("foto").addEventListener("change", function(e){
@@ -947,6 +978,7 @@ input[type=range]::-moz-range-thumb{width:22px;height:22px;border-radius:50%;bac
         pendingImage = c.toDataURL("image/jpeg", 0.72);
         document.getElementById("previewImg").src = pendingImage;
         document.getElementById("preview").classList.add("on");
+        updateLivePrev();
         say("Foto siap ditempel");
       };
       img.src = ev.target.result;
@@ -972,6 +1004,9 @@ input[type=range]::-moz-range-thumb{width:22px;height:22px;border-radius:50%;bac
   function closeSheet(){ sheet.classList.remove("open"); }
 
   document.getElementById("cancel").onclick = closeSheet;
+  document.getElementById("txt").addEventListener("input", function(){
+    if(pendingKind === "polaroid") updateLivePrev();
+  });
   sheet.addEventListener("click", function(e){
     if(e.target !== sheet) return;
     if(Date.now() - openedAt < 400) return;   /* cegah tap pembuka ikut menutup */
