@@ -187,6 +187,19 @@ body{background:radial-gradient(circle at 50% -10%,#F6F0E1,var(--paper) 65%);col
   clip-path:polygon(0 0,100% 0,100% 78%,92% 100%,84% 78%,76% 100%,68% 78%,60% 100%,52% 78%,44% 100%,36% 78%,28% 100%,20% 78%,12% 100%,4% 78%,0 92%)}
 .shape span{font:500 8.5px var(--fm);letter-spacing:.06em;text-transform:uppercase;color:rgba(34,29,21,.7)}
 .shape[aria-pressed="true"] span{color:var(--red)}
+.shape.swatch b{border-radius:50%;width:22px;height:22px;border:1.6px solid rgba(34,29,21,.4)}
+.shape .pick{width:22px;height:22px;border-radius:50%;border:1.6px dashed rgba(34,29,21,.5);display:grid;place-items:center;font-size:13px;color:rgba(34,29,21,.6);overflow:hidden;position:relative}
+.shape .pick input{position:absolute;inset:-6px;width:40px;height:40px;opacity:0;cursor:pointer}
+/* stiker tempel */
+.stk{position:absolute;z-index:4;top:-13px;right:0;font-size:28px;line-height:1;pointer-events:none;transform:rotate(10deg)}
+.stk.bintang{color:#E8A013;text-shadow:0 1px 0 rgba(255,255,255,.7),0 2px 3px rgba(24,20,16,.35)}
+.stk.hati{color:#C03B21;text-shadow:0 1px 0 rgba(255,255,255,.7),0 2px 3px rgba(24,20,16,.3)}
+.stk.petir{color:#E8A013;text-shadow:0 1px 0 rgba(255,255,255,.7),0 2px 3px rgba(24,20,16,.35)}
+.stk.cap{width:46px;height:46px;border:3px solid rgba(192,59,33,.85);border-radius:50%;top:-15px;right:-8px;transform:rotate(-12deg);box-shadow:inset 0 0 0 1px rgba(255,255,255,.35)}
+/* filter foto ala cetakan lama */
+.item.pola .ph.f-sepia{filter:sepia(.65) contrast(.96) brightness(.99)}
+.item.pola .ph.f-bw{filter:grayscale(1) contrast(1.06)}
+.item.pola .ph.f-pudar{filter:sepia(.28) brightness(1.07) contrast(.88)}
 .field{margin-bottom:10px}
 .field textarea,.field input[type=text]{width:100%;font:400 1rem/1.55 var(--fs);color:var(--ink);
   background:rgba(255,255,255,.55);border:1px solid rgba(34,29,21,.22);border-radius:9px;padding:10px 12px}
@@ -325,6 +338,9 @@ input[type=range]::-moz-range-thumb{width:22px;height:22px;border-radius:50%;bac
 
     <div class="shapes" id="shapes"></div>
     <div class="shapes" id="ratios" hidden></div>
+    <div class="shapes" id="colors" hidden></div>
+    <div class="shapes" id="filters" hidden></div>
+    <div class="shapes" id="stickers" hidden></div>
 
     <div class="preview" id="preview"><img id="previewImg" alt="Pratinjau foto"></div>
     <div class="livePrev" id="livePrev"></div>
@@ -408,7 +424,15 @@ input[type=range]::-moz-range-thumb{width:22px;height:22px;border-radius:50%;bac
   var items = [];
   var pendingPoint = null, pendingKind = "note", pendingImage = null, pendingShape = "sq", pendingRatio = "11";
   var pendingColor = NOTE_COLORS[0];
+  var pendingFilter = "biasa", pendingSticker = "tanpa";
   var RATIOS = [["11","1:1"],["43","4:3"],["34","3:4"],["169","16:9"]];
+  var FILTERS = [["biasa","Biasa"],["sepia","Sepia"],["bw","Hitam putih"],["pudar","Pudar"]];
+  var STICKERS = [["tanpa","Tanpa"],["bintang","Bintang"],["hati","Hati"],["petir","Petir"],["cap","Cap merah"]];
+  var STICKER_GLYPH = {bintang:"★",hati:"♥",petir:"⚡",cap:""};
+  function stickerHTML(s){
+    if(!s || s === "tanpa") return "";
+    return '<div class="stk ' + s + '">' + (STICKER_GLYPH[s] || "") + "</div>";
+  }
 
   function load(){
     try { var d = JSON.parse(localStorage.getItem(KEY)); return Array.isArray(d) ? d : []; }
@@ -492,21 +516,40 @@ input[type=range]::-moz-range-thumb{width:22px;height:22px;border-radius:50%;bac
     if(data.kind === "polaroid"){
       body.innerHTML = '<div class="ph"></div><div class="cap"></div>';
       var ph = body.querySelector(".ph");
+      if(data.filter && data.filter !== "biasa") ph.classList.add("f-" + data.filter);
       if(data.image){ ph.style.backgroundImage = "url(" + data.image + ")"; ph.textContent = ""; }
       else { ph.textContent = "belum ada foto"; }
       body.querySelector(".cap").textContent = data.text || "";
       el.appendChild(body);
+      if(data.sticker && data.sticker !== "tanpa"){
+        var st = document.createElement("div");
+        st.className = "stk " + data.sticker;
+        st.textContent = STICKER_GLYPH[data.sticker] || "";
+        el.appendChild(st);
+      }
       el.insertAdjacentHTML("afterbegin", '<div class="tape"></div>');
     } else if(data.kind === "clip"){
       body.innerHTML = '<div class="txt"></div><div class="who"></div>';
       body.querySelector(".txt").textContent = data.text || "";
       body.querySelector(".who").textContent = data.name || "tanpa nama";
       el.appendChild(body);
+      if(data.sticker && data.sticker !== "tanpa"){
+        var st = document.createElement("div");
+        st.className = "stk " + data.sticker;
+        st.textContent = STICKER_GLYPH[data.sticker] || "";
+        el.appendChild(st);
+      }
       el.insertAdjacentHTML("afterbegin", '<div class="tape"></div>');
     } else {
       body.innerHTML = '<div class="txt"></div>';
       body.querySelector(".txt").textContent = data.text || "";
       el.appendChild(body);
+      if(data.sticker && data.sticker !== "tanpa"){
+        var st = document.createElement("div");
+        st.className = "stk " + data.sticker;
+        st.textContent = STICKER_GLYPH[data.sticker] || "";
+        el.appendChild(st);
+      }
       el.insertAdjacentHTML("afterbegin", '<div class="pin"></div>');
     }
 
@@ -934,13 +977,13 @@ input[type=range]::-moz-range-thumb{width:22px;height:22px;border-radius:50%;bac
     var name = document.getElementById("nama").value.trim();
     if(pendingKind === "note"){
       box.classList.add("on");
-      box.innerHTML = '<div class="item note' + (pendingShape && pendingShape !== "note" ? " " + pendingShape : "") + '" style="--c:' + pendingColor + '"><div class="pin"></div>' +
+      box.innerHTML = '<div class="item note' + (pendingShape && pendingShape !== "note" ? " " + pendingShape : "") + '" style="--c:' + pendingColor + '">' + stickerHTML(pendingSticker) + '<div class="pin"></div>' +
         '<div class="body"><div class="txt">' + (escPrev(txt) || "Tulisanmu…") + "</div></div></div>";
       return;
     }
     if(pendingKind === "clip"){
       box.classList.add("on");
-      box.innerHTML = '<div class="item clip' + (pendingShape && pendingShape !== "clip" ? " " + pendingShape : "") + '"><div class="tape"></div>' +
+      box.innerHTML = '<div class="item clip' + (pendingShape && pendingShape !== "clip" ? " " + pendingShape : "") + '">' + stickerHTML(pendingSticker) + '<div class="tape"></div>' +
         '<div class="body"><div class="txt">' + (escPrev(txt) || "Klipingmu…") + '</div><div class="who">' + (escPrev(name) || "tanpa nama") + "</div></div></div>";
       return;
     }
@@ -949,12 +992,96 @@ input[type=range]::-moz-range-thumb{width:22px;height:22px;border-radius:50%;bac
     document.getElementById("preview").classList.remove("on"); /* diganti livePrev */
     var cls = "item pola" + (pendingShape && pendingShape !== "pola" ? " " + pendingShape : "")
       + (pendingRatio ? " r" + pendingRatio : "");
-    box.innerHTML = '<div class="' + cls + '"><div class="tape"></div>' +
-      '<div class="body"><div class="ph"' +
+    box.innerHTML = '<div class="' + cls + '">' + stickerHTML(pendingSticker) + '<div class="tape"></div>' +
+      '<div class="body"><div class="ph' + (pendingFilter && pendingFilter !== "biasa" ? " f-" + pendingFilter : "") + '"' +
       (pendingImage ? ' style="background-image:url(' + pendingImage + ')"' : "") + ">" +
       (pendingImage ? "" : "pilih foto dulu") + "</div>" +
       '<div class="cap">' + escPrev(document.getElementById("txt").value.trim()) + "</div>" +
       "</div></div>";
+  }
+
+  function renderColors(){
+    var box = document.getElementById("colors");
+    box.hidden = pendingKind !== "note";
+    if(box.hidden){ box.innerHTML = ""; return; }
+    box.innerHTML = "";
+    NOTE_COLORS.forEach(function(c){
+      var b = document.createElement("button");
+      b.type = "button";
+      b.className = "shape swatch";
+      b.setAttribute("aria-pressed", c === pendingColor ? "true" : "false");
+      b.innerHTML = '<b style="background:' + c + '"></b><span>Warna</span>';
+      b.addEventListener("click", function(){
+        pendingColor = c;
+        document.getElementById("customColor").value = c;
+        [].forEach.call(box.querySelectorAll(".shape"), function(o){
+          o.setAttribute("aria-pressed", o === b ? "true" : "false");
+        });
+        updateLivePrev();
+      });
+      box.appendChild(b);
+    });
+    var free = document.createElement("label");
+    free.className = "shape swatch";
+    free.setAttribute("aria-pressed", NOTE_COLORS.indexOf(pendingColor) < 0 ? "true" : "false");
+    free.innerHTML = '<span class="pick">+<input type="color" id="customColor" value="' + pendingColor + '"></span><span>Bebas</span>';
+    free.querySelector("input").addEventListener("input", function(e){
+      pendingColor = e.target.value;
+      [].forEach.call(box.querySelectorAll(".shape"), function(o){
+        o.setAttribute("aria-pressed", o === free ? "true" : "false");
+      });
+      updateLivePrev();
+    });
+    box.appendChild(free);
+  }
+
+  function renderFilters(){
+    var box = document.getElementById("filters");
+    box.hidden = pendingKind !== "polaroid";
+    if(box.hidden){ box.innerHTML = ""; return; }
+    box.innerHTML = "";
+    FILTERS.forEach(function(f){
+      var b = document.createElement("button");
+      b.type = "button";
+      b.className = "shape";
+      b.dataset.filter = f[0];
+      b.setAttribute("aria-pressed", f[0] === pendingFilter ? "true" : "false");
+      b.innerHTML = "<b></b><span>" + f[1] + "</span>";
+      b.addEventListener("click", function(){
+        pendingFilter = f[0];
+        [].forEach.call(box.children, function(c){
+          c.setAttribute("aria-pressed", c.dataset.filter === pendingFilter ? "true" : "false");
+        });
+        updateLivePrev();
+      });
+      box.appendChild(b);
+    });
+  }
+
+  function renderStickers(){
+    var box = document.getElementById("stickers");
+    box.hidden = false;
+    box.innerHTML = "";
+    STICKERS.forEach(function(s){
+      var b = document.createElement("button");
+      b.type = "button";
+      b.className = "shape";
+      b.dataset.sticker = s[0];
+      b.setAttribute("aria-pressed", s[0] === pendingSticker ? "true" : "false");
+      b.innerHTML = "<b>" + (STICKER_GLYPH[s[0]] || "") + "</b><span>" + s[1] + "</span>";
+      var glyph = b.querySelector("b");
+      if(s[0] === "bintang" || s[0] === "petir"){ glyph.style.color = "#E8A013"; glyph.style.border = "0"; glyph.style.fontSize = "18px"; }
+      if(s[0] === "hati"){ glyph.style.color = "#C03B21"; glyph.style.border = "0"; glyph.style.fontSize = "18px"; }
+      if(s[0] === "cap"){ glyph.style.borderRadius = "50%"; glyph.style.borderColor = "rgba(192,59,33,.85)"; }
+      b.addEventListener("click", function(){
+        pendingSticker = s[0];
+        [].forEach.call(box.children, function(c){
+          c.setAttribute("aria-pressed", c.dataset.sticker === pendingSticker ? "true" : "false");
+        });
+        updateLivePrev();
+      });
+      box.appendChild(b);
+    });
   }
 
   kinds.forEach(function(k){
@@ -963,6 +1090,9 @@ input[type=range]::-moz-range-thumb{width:22px;height:22px;border-radius:50%;bac
       kinds.forEach(function(o){ o.setAttribute("aria-pressed", o === k ? "true" : "false"); });
       renderShapes();
       renderRatios();
+      renderColors();
+      renderFilters();
+      renderStickers();
       syncFields();
     });
   });
@@ -1024,6 +1154,9 @@ input[type=range]::-moz-range-thumb{width:22px;height:22px;border-radius:50%;bac
     document.getElementById("nama").value = "";
     renderShapes();
     renderRatios();
+    renderColors();
+    renderFilters();
+    renderStickers();
     syncFields();
     sheet.classList.add("open");
     openedAt = Date.now();
@@ -1058,6 +1191,8 @@ input[type=range]::-moz-range-thumb{width:22px;height:22px;border-radius:50%;bac
       rot: (Math.random() * 6 - 3),
       text: text, name: name,
       color: pendingColor,
+      filter: pendingKind === "polaroid" ? pendingFilter : null,
+      sticker: pendingSticker,
       image: pendingKind === "polaroid" ? pendingImage : null,
       at: Date.now()
     };
