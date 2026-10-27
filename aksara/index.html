@@ -258,6 +258,7 @@ input[type=range]::-moz-range-thumb{width:22px;height:22px;border-radius:50%;bac
     <div class="folio">
       <span><b>AKSARA</b> · HAL. 1/1</span>
       <span id="counter">0 tempelan</span>
+      <span id="tip" hidden>ketuk tempelan untuk memutar</span>
       <span>EDISI 231</span>
       <div class="tools">
         <button class="tool" id="zIn" aria-label="Perbesar">＋</button>
@@ -460,6 +461,8 @@ input[type=range]::-moz-range-thumb{width:22px;height:22px;border-radius:50%;bac
     items.forEach(function(it){ canvas.appendChild(makeItem(it)); });
     counter.textContent = items.length + " tempelan";
     hint.classList.toggle("hide", items.length > 0);
+    var tip = document.getElementById("tip");
+    if(tip) tip.hidden = items.length === 0;
   }
 
   function attachDrag(el, data){
@@ -478,7 +481,7 @@ input[type=range]::-moz-range-thumb{width:22px;height:22px;border-radius:50%;bac
       e.stopPropagation();
       var nx = start.x + (e.clientX - start.px) / view.s;
       var ny = start.y + (e.clientY - start.py) / view.s;
-      if(Math.abs(e.clientX - start.px) + Math.abs(e.clientY - start.py) > 12) moved = true;
+      if(Math.abs(e.clientX - start.px) + Math.abs(e.clientY - start.py) > 14) moved = true;
       /* tempelan tidak boleh tenggelam di tepi papan */
       data.x = Math.max(6, Math.min(BOARD_W - w - 6, nx));
       data.y = Math.max(10, Math.min(BOARD_H - h - 6, ny));
@@ -496,7 +499,7 @@ input[type=range]::-moz-range-thumb{width:22px;height:22px;border-radius:50%;bac
       el.classList.remove("dragging");
       start = null;
       save();
-      if(!moved && Date.now() - t0 < 600) openItemSheet(data, el);
+      if(!moved && Date.now() - t0 < 900) openItemSheet(data, el);
     }
     el.addEventListener("pointerup", end);
     el.addEventListener("pointercancel", end);
@@ -756,6 +759,8 @@ input[type=range]::-moz-range-thumb{width:22px;height:22px;border-radius:50%;bac
 
     counter.textContent = items.length + " tempelan";
     hint.classList.add("hide");
+    var tipEl = document.getElementById("tip");
+    if(tipEl) tipEl.hidden = false;
     save();
     closeSheet();
 
