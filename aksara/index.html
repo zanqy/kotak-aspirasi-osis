@@ -208,6 +208,18 @@ input[type=range]::-moz-range-thumb{width:22px;height:22px;border-radius:50%;bac
 .preview{display:none;margin-bottom:10px}
 .preview.on{display:block}
 .preview img{width:100%;max-height:150px;object-fit:cover;border-radius:9px;border:1px solid rgba(34,29,21,.2)}
+.ctx{position:fixed;inset:0;z-index:95;display:none}
+.ctx.open{display:block;background:rgba(24,20,16,.26);backdrop-filter:blur(5px)}
+.ctxGhost{position:fixed;z-index:96;pointer-events:none;transform-origin:0 0}
+.ctxMenu{position:fixed;z-index:97;min-width:200px;background:rgba(247,241,225,.985);
+  border:1px solid rgba(34,29,21,.22);border-radius:14px;padding:6px;
+  box-shadow:0 26px 44px -24px rgba(24,20,16,.75)}
+.ctxMenu button{display:flex;align-items:center;gap:10px;width:100%;background:none;border:0;
+  padding:11px 12px;border-radius:9px;font:500 .95rem var(--fs);color:var(--ink);cursor:pointer;text-align:left}
+.ctxMenu button:hover,.ctxMenu button:active{background:rgba(34,29,21,.07)}
+.ctxMenu button.danger{color:var(--red)}
+.ctxMenu hr{border:0;border-top:1px solid rgba(34,29,21,.14);margin:5px 6px}
+.item.move-mode{outline:2px dashed var(--red);outline-offset:5px}
 .toast{position:fixed;left:50%;bottom:26px;transform:translate(-50%,14px);z-index:120;
   background:rgba(34,29,21,.93);color:var(--paper);padding:10px 18px;border-radius:99px;
   font:500 .86rem var(--fs);opacity:0;pointer-events:none;transition:opacity .26s,transform .26s}
@@ -330,6 +342,18 @@ input[type=range]::-moz-range-thumb{width:22px;height:22px;border-radius:50%;bac
       <button class="btn ghost" id="delItem">Hapus</button>
       <button class="btn grow" id="itemDone">Selesai</button>
     </div>
+  </div>
+</div>
+
+<div class="ctx" id="ctx">
+  <div class="ctxMenu" id="ctxMenu">
+    <button data-act="move">✥ Pindah posisi</button>
+    <button data-act="rotate">⟳ Putar bingkai</button>
+    <button data-act="front">↑ Kirim ke depan</button>
+    <button data-act="back">↓ Kirim ke belakang</button>
+    <button data-act="dup">⧉ Duplikat</button>
+    <hr>
+    <button data-act="del" class="danger">🗑 Hapus</button>
   </div>
 </div>
 
@@ -473,75 +497,197 @@ input[type=range]::-moz-range-thumb{width:22px;height:22px;border-radius:50%;bac
     if(tip) tip.hidden = items.length === 0;
   }
 
-  function attachDrag(el, data){
-    var start = null, w = 0, h = 0, raf = 0, moved = false, t0 = 0;
-    el.addEventListener("pointerdown", function(e){
-      if(e.button !== undefined && e.button !== 0) return;
-      e.stopPropagation();
-      try { el.setPointerCapture(e.pointerId); } catch(_) {}
-      el.classList.add("dragging");
-      w = el.offsetWidth; h = el.offsetHeight;      /* ukur sekali saja */
-      start = { px: e.clientX, py: e.clientY, x: data.x, y: data.y };
-      moved = false; t0 = Date.now();
-    });
-    el.addEventListener("pointermove", function(e){
-      if(!start) return;
-      e.stopPropagation();
-      var nx = start.x + (e.clientX - start.px) / view.s;
-      var ny = start.y + (e.clientY - start.py) / view.s;
-      if(Math.abs(e.clientX - start.px) + Math.abs(e.clientY - start.py) > 14) moved = true;
-      /* tempelan tidak boleh tenggelam di tepi papan */
-      data.x = Math.max(6, Math.min(BOARD_W - w - 6, nx));
-      data.y = Math.max(10, Math.min(BOARD_H - h - 6, ny));
-      if(!raf) raf = requestAnimationFrame(function(){
-        raf = 0;
-        el.style.left = data.x + "px";
-        el.style.top = data.y + "px";
-      });
-    });
-    function end(){
-      if(!start) return;
-      if(raf){ cancelAnimationFrame(raf); raf = 0; }
-      el.style.left = data.x + "px";
-      el.style.top = data.y + "px";
-      el.classList.remove("dragging");
-      start = null;
-      save();
-      if(!moved && Date.now() - t0 < 900) openItemSheet(data, el);
-    }
-    el.addEventListener("pointerup", end);
-    el.addEventListener("pointercancel", end);
+  /* gestur tempelan ditangani terpusat di stage (lihat di bawah) */
+  function attachDrag(el, data){}
+
+  /* ---------- menu kontekstual (tekan lama) ---------- */
+  var ctx = document.getElementById("ctx");
+  var ctxMenu = document.getElementById("ctxMenu");
+  var ctxData = null, ctxEl = null, ctxGhost = null;
+
+  function openCtx(data, el){
+    ctxData = data; ctxEl = el;
+    var r = el.getBoundingClientRect();
+
+    /* salinan melayang supaya item tetap tajam di atas latar yang diburamkan */
+    ctxGhost = el.cloneNode(true);
+    ctxGhost.classList.add("ctxGhost");
+    ctxGhost.style.left = r.left + "px";
+    ctxGhost.style.top = r.top + "px";
+    ctxGhost.style.width = el.offsetWidth + "px";
+    ctxGhost.style.height = el.offsetHeight + "px";
+    ctxGhost.style.transform = "rotate(" + (data.rot || 0) + "deg) scale(" + (r.width / el.offsetWidth) + ")";
+    document.body.appendChild(ctxGhost);
+    el.style.visibility = "hidden";
+
+    ctx.classList.add("open");
+
+    var mw = ctxMenu.offsetWidth, mh = ctxMenu.offsetHeight;
+    var left = Math.round(r.left + r.width / 2 - mw / 2);
+    left = Math.max(10, Math.min(window.innerWidth - mw - 10, left));
+    var top = Math.round(r.top - mh - 14);
+    if(top < 10) top = Math.round(Math.min(window.innerHeight - mh - 10, r.bottom + 14));
+    ctxMenu.style.left = left + "px";
+    ctxMenu.style.top = top + "px";
   }
 
-  var pan = null, pinch = null, moved = false;
+  function closeCtx(){
+    ctx.classList.remove("open");
+    if(ctxGhost && ctxGhost.parentNode) ctxGhost.parentNode.removeChild(ctxGhost);
+    if(ctxEl) ctxEl.style.visibility = "";
+    ctxGhost = null; ctxData = null; ctxEl = null;
+  }
+
+  ctx.addEventListener("pointerdown", function(e){
+    if(!e.target.closest(".ctxMenu")) closeCtx();
+  });
+
+  /* geser tempelan hanya setelah memilih "Pindah posisi" */
+  var moveMode = false;
+
+  function startMove(data, el){
+    moveMode = true;
+    el.classList.add("move-mode");
+    say("Geser tempelannya, lalu lepas");
+
+    function onDown(e){
+      if(e.button !== undefined && e.button !== 0) return;
+      e.stopPropagation();
+      var w = el.offsetWidth, h = el.offsetHeight;
+      var s = { px: e.clientX, py: e.clientY, x: data.x, y: data.y };
+      try { el.setPointerCapture(e.pointerId); } catch(_) {}
+
+      function onMove(ev){
+        var nx = s.x + (ev.clientX - s.px) / view.s;
+        var ny = s.y + (ev.clientY - s.py) / view.s;
+        data.x = Math.max(6, Math.min(BOARD_W - w - 6, nx));
+        data.y = Math.max(10, Math.min(BOARD_H - h - 6, ny));
+        el.style.left = data.x + "px";
+        el.style.top = data.y + "px";
+      }
+      function onUp(){
+        el.removeEventListener("pointermove", onMove);
+        el.removeEventListener("pointerup", onUp);
+        el.removeEventListener("pointercancel", onUp);
+        el.classList.remove("move-mode");
+        moveMode = false;
+        save();
+        say("Posisi disimpan");
+      }
+      el.addEventListener("pointermove", onMove);
+      el.addEventListener("pointerup", onUp);
+      el.addEventListener("pointercancel", onUp);
+    }
+
+    el.addEventListener("pointerdown", onDown, { once: true });
+  }
+
+  ctxMenu.addEventListener("click", function(e){
+    var btn = e.target.closest("button");
+    if(!btn || !ctxData) return;
+    var act = btn.dataset.act, data = ctxData, el = ctxEl;
+
+    if(act === "del"){
+      var i = items.indexOf(data);
+      if(i > -1) items.splice(i, 1);
+      if(el && el.parentNode) el.parentNode.removeChild(el);
+      counter.textContent = items.length + " tempelan";
+      if(!items.length) hint.classList.remove("hide");
+      save();
+      closeCtx();
+      say("Tempelan dihapus");
+      return;
+    }
+    if(act === "rotate"){ closeCtx(); openItemSheet(data, el); return; }
+    if(act === "move"){ closeCtx(); setTimeout(function(){ startMove(data, el); }, 40); return; }
+    if(act === "front" || act === "back"){
+      var list = [].slice.call(canvas.querySelectorAll(".item"));
+      var idx = list.indexOf(el);
+      if(act === "front" && idx > -1){ canvas.appendChild(el); }
+      if(act === "back" && idx > -1){ canvas.insertBefore(el, canvas.firstChild); }
+      closeCtx();
+      say(act === "front" ? "Dikirim ke depan" : "Dikirim ke belakang");
+      return;
+    }
+    if(act === "dup"){
+      var copy = JSON.parse(JSON.stringify(data));
+      copy.id = "p" + Date.now().toString(36) + Math.random().toString(36).slice(2, 6);
+      copy.x = Math.min(BOARD_W - 260, data.x + 26);
+      copy.y = Math.min(BOARD_H - 300, data.y + 26);
+      items.push(copy);
+      var node = makeItem(copy);
+      canvas.appendChild(node);
+      counter.textContent = items.length + " tempelan";
+      save();
+      closeCtx();
+      say("Diduplikat");
+      return;
+    }
+  });
+
+  var pan = null, pinch = null, moved = false, rafId = 0;
+  var panTarget = null, holdTimer = null, holdPt = null;
+
+  function dataOf(el){
+    if(!el) return null;
+    for(var i = 0; i < items.length; i++) if(items[i].id === el.dataset.id) return items[i];
+    return null;
+  }
 
   stage.addEventListener("pointerdown", function(e){
-    if(e.target.closest(".item")) return;
+    if(moveMode) return;
     moved = false;
     if(e.pointerType === "touch" && e.isPrimary === false) return;
     pan = { px: e.clientX, py: e.clientY, x: view.x, y: view.y };
     stage.classList.add("grabbing");
     try { stage.setPointerCapture(e.pointerId); } catch(_) {}
+
+    panTarget = e.target.closest(".item");
+    clearTimeout(holdTimer); holdTimer = null;
+    if(panTarget){
+      holdPt = { x: e.clientX, y: e.clientY };
+      holdTimer = setTimeout(function(){
+        holdTimer = null;
+        var d = dataOf(panTarget);
+        if(!d) return;
+        pan = null; moved = true;
+        openCtx(d, panTarget);
+      }, 450);
+    }
   });
 
-  var rafId = 0;
   stage.addEventListener("pointermove", function(e){
     if(pinch || !pan) return;
     var dx = e.clientX - pan.px, dy = e.clientY - pan.py;
     if(Math.abs(dx) + Math.abs(dy) > 6) moved = true;
+
+    if(holdTimer && holdPt && Math.abs(e.clientX - holdPt.x) + Math.abs(e.clientY - holdPt.y) > 10){
+      clearTimeout(holdTimer); holdTimer = null;
+    }
+
     view.x = pan.x + dx; view.y = pan.y + dy;
     if(!rafId) rafId = requestAnimationFrame(function(){ rafId = 0; applyView(); });
   });
 
   stage.addEventListener("pointerup", function(e){
     stage.classList.remove("grabbing");
+    clearTimeout(holdTimer); holdTimer = null;
     var wasPan = pan, didMove = moved;
     pan = null;
-    if(!wasPan || didMove) return;
-    if(e.target.closest(".item")) return;
+    if(!wasPan || didMove){ panTarget = null; return; }
+
+    if(panTarget){
+      var d = dataOf(panTarget);
+      var node = panTarget;
+      panTarget = null;
+      if(d){ openItemSheet(d, node); return; }
+    }
     openSheet(boardPoint(e.clientX, e.clientY));
   });
-  stage.addEventListener("pointercancel", function(){ pan = null; stage.classList.remove("grabbing"); });
+  stage.addEventListener("pointercancel", function(){
+    clearTimeout(holdTimer); holdTimer = null;
+    pan = null; panTarget = null; stage.classList.remove("grabbing");
+  });
 
   stage.addEventListener("wheel", function(e){
     e.preventDefault();
