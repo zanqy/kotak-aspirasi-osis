@@ -89,9 +89,20 @@ body{background:radial-gradient(circle at 50% -10%,#F6F0E1,var(--paper) 65%);col
   background:linear-gradient(315deg,rgba(120,92,52,.24) 0 46%,rgba(255,255,255,.5) 47% 100%);
   clip-path:polygon(100% 0,0 100%,100% 100%)}
 .item.note .txt{font:600 1.42rem/1.24 var(--fh);color:#2b241c;word-break:break-word;max-height:150px;overflow:hidden}
+/* bentuk note */
+.item.note.wide .body{width:250px;min-height:160px}
+.item.note.tall .body{width:158px;min-height:250px}
+.item.note.round .body{width:200px;height:200px;min-height:0;border-radius:50%;padding:34px 30px}
+.item.note.round .txt{font-size:1.2rem;max-height:120px}
+.item.note.torn .body{border-radius:2px;
+  clip-path:polygon(0 0,100% 0,100% 93%,96% 97%,92% 93%,88% 98%,84% 93%,80% 98%,76% 93%,72% 98%,68% 93%,64% 98%,60% 93%,56% 98%,52% 93%,48% 98%,44% 93%,40% 98%,36% 93%,32% 98%,28% 93%,24% 98%,20% 93%,16% 98%,12% 93%,8% 98%,4% 93%,0 97%)}
 
 .item.clip .body{width:266px;padding:16px 18px 20px;background:#FBF6E8;
   border:1px solid rgba(34,29,21,.2);box-shadow:inset 0 0 26px rgba(120,92,52,.12)}
+/* bentuk kliping */
+.item.clip.strip .body{width:190px;padding:14px 15px 18px}
+.item.clip.torn .body{border:0;
+  clip-path:polygon(0 0,100% 0,100% 94%,96% 98%,92% 94%,88% 99%,84% 94%,80% 99%,76% 94%,72% 99%,68% 94%,64% 99%,60% 94%,56% 99%,52% 94%,48% 99%,44% 94%,40% 99%,36% 94%,32% 99%,28% 94%,24% 99%,20% 94%,16% 99%,12% 94%,8% 99%,4% 94%,0 98%)}
 .item.clip .txt{font:400 .93rem/1.6 var(--fs);color:#2b241c;max-height:190px;overflow:hidden}
 .item.clip .who{margin-top:8px;font:500 8.5px var(--fm);letter-spacing:.14em;text-transform:uppercase;color:rgba(43,36,28,.5)}
 
@@ -99,6 +110,13 @@ body{background:radial-gradient(circle at 50% -10%,#F6F0E1,var(--paper) 65%);col
 .item.pola .ph{width:100%;height:170px;background:#CDC0A6 center/cover no-repeat;display:grid;place-items:center;
   font:500 8.5px var(--fm);letter-spacing:.14em;text-transform:uppercase;color:rgba(43,36,28,.55)}
 .item.pola .cap{font:500 1.16rem/1.2 var(--fh);color:#2b241c;padding:9px 4px 13px;text-align:center;word-break:break-word}
+/* bentuk foto */
+.item.pola.flat .body{width:206px;padding:8px 8px 0}
+.item.pola.flat .ph{height:190px}
+.item.pola.round .ph{height:186px;border-radius:50%}
+.item.pola.round .body{width:200px}
+.item.pola.arch .ph{border-radius:100px 100px 4px 4px;height:196px}
+.item.pola.arch .body{width:186px}
 
 .tape{position:absolute;z-index:3;left:50%;top:-9px;width:66px;height:17px;transform:translateX(-50%) rotate(var(--tr,-3deg));
   background:linear-gradient(180deg,rgba(255,255,255,.6),rgba(255,255,255,.02)),rgba(206,178,126,.5);
@@ -142,6 +160,28 @@ body{background:radial-gradient(circle at 50% -10%,#F6F0E1,var(--paper) 65%);col
 .kind[aria-pressed="true"]{background:var(--ink);border-color:var(--ink);color:var(--paper)}
 .kind span{font:500 9.5px var(--fm);letter-spacing:.1em;text-transform:uppercase}
 .kind i{font-size:1.15rem;font-style:normal;line-height:1}
+
+/* pemilih bentuk */
+.shapes{display:flex;gap:6px;flex-wrap:wrap;margin:0 0 13px}
+.shape{border:1px solid rgba(34,29,21,.22);background:rgba(255,255,255,.42);border-radius:8px;
+  padding:7px 8px 5px;cursor:pointer;display:grid;justify-items:center;gap:4px;min-width:58px;
+  transition:background .16s,border-color .16s}
+.shape[aria-pressed="true"]{border-color:var(--red);background:rgba(192,59,33,.09)}
+.shape b{display:block;width:22px;height:16px;border:1.6px solid rgba(34,29,21,.55);border-radius:2px}
+.shape[data-shape="round"] b{border-radius:50%;width:18px;height:18px}
+.shape[data-shape="tall"] b{width:13px;height:21px}
+.shape[data-shape="wide"] b{width:27px;height:13px}
+.shape[data-shape="strip"] b{width:12px;height:22px}
+.shape[data-shape="arch"] b{border-radius:11px 11px 2px 2px;width:19px;height:22px}
+.shape[data-shape="flat"] b{border-radius:1px;width:22px;height:22px}
+.shape[data-shape="torn"] b{border:0;height:18px;
+  background:linear-gradient(180deg,rgba(34,29,21,.55),rgba(34,29,21,.55)) top/100% 1.6px no-repeat,
+             linear-gradient(180deg,rgba(34,29,21,.55),rgba(34,29,21,.55)) bottom/100% 1.6px no-repeat,
+             linear-gradient(90deg,rgba(34,29,21,.55),rgba(34,29,21,.55)) left/1.6px 100% no-repeat,
+             linear-gradient(90deg,rgba(34,29,21,.55),rgba(34,29,21,.55)) right/1.6px 70% no-repeat;
+  clip-path:polygon(0 0,100% 0,100% 78%,92% 100%,84% 78%,76% 100%,68% 78%,60% 100%,52% 78%,44% 100%,36% 78%,28% 100%,20% 78%,12% 100%,4% 78%,0 92%)}
+.shape span{font:500 8.5px var(--fm);letter-spacing:.06em;text-transform:uppercase;color:rgba(34,29,21,.7)}
+.shape[aria-pressed="true"] span{color:var(--red)}
 .field{margin-bottom:10px}
 .field textarea,.field input[type=text]{width:100%;font:400 1rem/1.55 var(--fs);color:var(--ink);
   background:rgba(255,255,255,.55);border:1px solid rgba(34,29,21,.22);border-radius:9px;padding:10px 12px}
@@ -232,6 +272,8 @@ body{background:radial-gradient(circle at 50% -10%,#F6F0E1,var(--paper) 65%);col
       <button class="kind" data-kind="clip" aria-pressed="false"><i>▤</i><span>Kliping</span></button>
     </div>
 
+    <div class="shapes" id="shapes"></div>
+
     <div class="preview" id="preview"><img id="previewImg" alt="Pratinjau foto"></div>
 
     <div class="field" id="fotoField" hidden>
@@ -261,6 +303,11 @@ body{background:radial-gradient(circle at 50% -10%,#F6F0E1,var(--paper) 65%);col
   var BOARD_W = 1800, BOARD_H = 1200;
   var MAX_SCALE = 4;   /* batas zoom masuk */
   var NOTE_COLORS = ["#F7E39B","#F6D8DD","#DCE7CB","#D7E4EF","#F1E0C4"];
+  var SHAPES = {
+    note:     [["sq","Persegi"],["wide","Lebar"],["tall","Tinggi"],["round","Bulat"],["torn","Sobek"]],
+    polaroid: [["pola","Polaroid"],["flat","Persegi"],["round","Bulat"],["arch","Lengkung"]],
+    clip:     [["rect","Koran"],["strip","Kolom"],["torn","Sobek"]]
+  };
 
   var stage = document.getElementById("stage");
   var canvas = document.getElementById("canvas");
@@ -273,7 +320,7 @@ body{background:radial-gradient(circle at 50% -10%,#F6F0E1,var(--paper) 65%);col
   var SW = 0, SH = 0;
   function measure(){ SW = stage.clientWidth; SH = stage.clientHeight; }
   var items = [];
-  var pendingPoint = null, pendingKind = "note", pendingImage = null;
+  var pendingPoint = null, pendingKind = "note", pendingImage = null, pendingShape = "sq";
 
   function load(){
     try { var d = JSON.parse(localStorage.getItem(KEY)); return Array.isArray(d) ? d : []; }
@@ -342,7 +389,8 @@ body{background:radial-gradient(circle at 50% -10%,#F6F0E1,var(--paper) 65%);col
 
   function makeItem(data){
     var el = document.createElement("div");
-    el.className = "item " + (data.kind === "polaroid" ? "pola" : data.kind === "clip" ? "clip" : "note");
+    var base = data.kind === "polaroid" ? "pola" : data.kind === "clip" ? "clip" : "note";
+    el.className = "item " + base + (data.shape ? " " + data.shape : "");
     el.dataset.id = data.id;
     el.style.left = data.x + "px";
     el.style.top = data.y + "px";
@@ -502,10 +550,34 @@ body{background:radial-gradient(circle at 50% -10%,#F6F0E1,var(--paper) 65%);col
   }
 
   var kinds = [].slice.call(document.querySelectorAll(".kind"));
+  var shapesBox = document.getElementById("shapes");
+
+  function renderShapes(){
+    var list = SHAPES[pendingKind] || [];
+    if(!list.some(function(s){ return s[0] === pendingShape; })) pendingShape = list[0][0];
+    shapesBox.innerHTML = "";
+    list.forEach(function(s){
+      var b = document.createElement("button");
+      b.type = "button";
+      b.className = "shape";
+      b.dataset.shape = s[0];
+      b.setAttribute("aria-pressed", s[0] === pendingShape ? "true" : "false");
+      b.innerHTML = "<b></b><span>" + s[1] + "</span>";
+      b.addEventListener("click", function(){
+        pendingShape = s[0];
+        [].forEach.call(shapesBox.children, function(c){
+          c.setAttribute("aria-pressed", c.dataset.shape === pendingShape ? "true" : "false");
+        });
+      });
+      shapesBox.appendChild(b);
+    });
+  }
+
   kinds.forEach(function(k){
     k.addEventListener("click", function(){
       pendingKind = k.dataset.kind;
       kinds.forEach(function(o){ o.setAttribute("aria-pressed", o === k ? "true" : "false"); });
+      renderShapes();
       syncFields();
     });
   });
@@ -550,6 +622,7 @@ body{background:radial-gradient(circle at 50% -10%,#F6F0E1,var(--paper) 65%);col
     document.getElementById("foto").value = "";
     document.getElementById("txt").value = "";
     document.getElementById("nama").value = "";
+    renderShapes();
     syncFields();
     sheet.classList.add("open");
     openedAt = Date.now();
@@ -573,6 +646,7 @@ body{background:radial-gradient(circle at 50% -10%,#F6F0E1,var(--paper) 65%);col
     var data = {
       id: "p" + Date.now().toString(36) + Math.random().toString(36).slice(2, 6),
       kind: pendingKind,
+      shape: pendingShape,
       x: pendingPoint.x - 100,
       y: pendingPoint.y - 100,
       rot: (Math.random() * 6 - 3),
