@@ -140,16 +140,50 @@ body{background:radial-gradient(circle at 50% -10%,#F6F0E1,var(--paper) 65%);col
 .tape.tp-kanan{left:auto;right:-15px;top:50%;margin:0;transform:translateY(-50%) rotate(84deg)}
 .tape.tp-bawah{top:auto;bottom:-9px;left:50%;margin:0;transform:translateX(-50%) rotate(3deg)}
 .tape.tp-kiri{left:-15px;top:50%;margin:0;transform:translateY(-50%) rotate(-84deg)}
+/* tiket masuk */
+.item.tiket{background:#FBF6E8;border-radius:3px;box-shadow:0 2px 4px rgba(24,20,16,.16)}
+.item.tiket .tstub{position:absolute;left:0;top:0;bottom:0;width:30px;background:rgba(34,29,21,.07);
+  border-right:1.5px dashed rgba(34,29,21,.45);display:flex;align-items:center;justify-content:center}
+.item.tiket .tstub span{writing-mode:vertical-rl;transform:rotate(180deg);
+  font:700 8px var(--fm);letter-spacing:.22em;color:rgba(34,29,21,.55)}
+.item.tiket .tbody{padding:11px 12px 11px 44px}
+.item.tiket .txt{font:700 .98rem/1.28 var(--fm);color:#2b241c;max-height:78px;overflow:hidden}
+.item.tiket .tno{font:500 7.5px var(--fm);letter-spacing:.15em;color:rgba(34,29,21,.5);
+  margin-top:5px;text-transform:uppercase}
+.item.tiket.tik-pink{background:#F9E3E7}
+.item.tiket.tik-hijau{background:#E4EDDC}
+.item.tiket.tik-sobek{clip-path:polygon(0 0,100% 0,100% 90%,97% 96%,94% 90%,91% 97%,88% 90%,85% 97%,82% 90%,79% 97%,76% 90%,73% 97%,70% 90%,67% 97%,64% 90%,61% 97%,58% 90%,55% 97%,52% 90%,49% 97%,46% 90%,43% 97%,40% 90%,37% 97%,34% 90%,31% 97%,28% 90%,25% 97%,22% 90%,19% 97%,16% 90%,13% 97%,10% 90%,7% 97%,4% 90%,0 96%)}
+/* pita banner */
+.item.pita{background:var(--c,#F6D8DD);border-radius:2px;padding:10px 20px;min-width:150px;
+  box-shadow:0 2px 3px rgba(24,20,16,.2)}
+.item.pita::before,.item.pita::after{content:"";position:absolute;top:9px;width:24px;height:calc(100% - 18px);
+  background:var(--c,#F6D8DD);z-index:-1;box-shadow:0 2px 2px rgba(24,20,16,.18)}
+.item.pita::before{left:-16px;clip-path:polygon(0 0,100% 0,100% 100%,0 100%,11px 50%)}
+.item.pita::after{right:-16px;clip-path:polygon(0 0,100% 0,calc(100% - 11px) 50%,100% 100%,0 100%)}
+.item.pita.pita-sayap::before{clip-path:polygon(0 0,100% 0,100% 100%,0 100%,100% 50%)}
+.item.pita.pita-sayap::after{clip-path:polygon(0 0,100% 0,0 100%,0 0,0 50%)}
+.item.pita .txt{font:600 1.34rem/1.15 var(--fh);color:#2b241c;text-align:center;max-height:100px;word-break:break-word}
+/* kertas kado */
+.item.note.paper-kado .body{background:repeating-linear-gradient(45deg,rgba(192,59,33,.14) 0 8px,transparent 8px 16px,rgba(232,160,19,.12) 16px 24px,transparent 24px 32px),linear-gradient(170deg,rgba(255,255,255,.45),rgba(255,255,255,0) 45%),var(--c,#F7E39B)}
+/* stiker tambahan */
+.stk.nada{color:#7B4B94;text-shadow:0 1px 0 rgba(255,255,255,.7)}
+.stk.payung{color:#2C5E9E;text-shadow:0 1px 0 rgba(255,255,255,.7)}
+.stk.bulan{color:#E8A013;text-shadow:0 1px 2px rgba(24,20,16,.3)}
+/* kombinasi aman: stiker & stempel menyingkir kalau selotip di sisi sama */
+.item[data-tp="kanan"] .stk{right:auto;left:-8px}
+.item[data-tp="kiri"] .stk{left:auto;right:-2px}
+.item[data-tp="bawah"] .stamp{bottom:34px}
+.item[data-tp="kanan"] .stamp{left:44%}
+.item[data-tp="kiri"] .stamp{left:56%}
+/* tiket & pita pendek: stempel di tepi agar tidak menimpa teks */
+.item.tiket .stamp{left:auto;right:-9px;bottom:9px;transform:rotate(-8deg);
+  background:rgba(251,246,232,.85);border-radius:3px}
+.item.tiket.tik-pink .stamp{background:rgba(249,227,231,.88)}
+.item.tiket.tik-hijau .stamp{background:rgba(228,237,220,.88)}
+.item.pita .stamp{left:auto;right:-14px;bottom:-13px;transform:rotate(-9deg);
+  background:rgba(242,236,222,.9);border-radius:3px}
 /* foto cermin */
 .item.pola.flipx .ph{transform:scaleX(-1)}
-/* coretan jari */
-.item.doodle{background:transparent;border:0;box-shadow:none;border-radius:0;overflow:visible}
-.item.doodle svg{display:block;overflow:visible}
-.item.doodle .body{display:none}
-.penCols{display:flex;gap:4px;margin-right:4px}
-.pcol{width:17px;height:17px;border-radius:50%;border:1.5px solid rgba(34,29,21,.4);padding:0}
-.pcol[aria-pressed="true"]{box-shadow:0 0 0 2px var(--paper),0 0 0 3.5px var(--red)}
-.tools .pen{width:30px}
 .item.note.paper-garis .body{background:repeating-linear-gradient(180deg,transparent 0 25px,rgba(43,36,28,.16) 25px 26px),linear-gradient(170deg,rgba(255,255,255,.5),rgba(255,255,255,0) 40%),var(--c,#F7E39B)}
 .item.note.paper-kotak .body{background:repeating-linear-gradient(180deg,transparent 0 21px,rgba(43,36,28,.13) 21px 22px),repeating-linear-gradient(90deg,transparent 0 21px,rgba(43,36,28,.13) 21px 22px),linear-gradient(170deg,rgba(255,255,255,.5),rgba(255,255,255,0) 40%),var(--c,#F7E39B)}
 .item.note.paper-kraft .body{background:linear-gradient(170deg,rgba(255,255,255,.28),rgba(255,255,255,0) 45%),#D9B98A;box-shadow:inset 0 -14px 20px -16px rgba(120,92,52,.6),inset 0 0 0 1px rgba(255,255,255,.25)}
@@ -381,12 +415,6 @@ input[type=range]::-moz-range-thumb{width:22px;height:22px;border-radius:50%;bac
       <span id="tip" hidden>ketuk tempelan untuk memutar</span>
       <span>EDISI 231</span>
       <div class="tools">
-        <span class="penCols" id="penCols" hidden>
-          <button class="pcol" data-col="#C03B21" aria-pressed="true" aria-label="Merah"></button>
-          <button class="pcol" data-col="#2b241c" aria-pressed="false" aria-label="Hitam"></button>
-          <button class="pcol" data-col="#2C5E9E" aria-pressed="false" aria-label="Biru"></button>
-        </span>
-        <button class="tool pen" id="pen" aria-label="Mode coretan" aria-pressed="false">✎</button>
         <button class="tool" id="zIn" aria-label="Perbesar">＋</button>
         <button class="tool" id="zOut" aria-label="Perkecil">−</button>
         <button class="tool small" id="zFit" aria-label="Paskan">fit</button>
@@ -404,6 +432,8 @@ input[type=range]::-moz-range-thumb{width:22px;height:22px;border-radius:50%;bac
       <button class="kind" data-kind="note" aria-pressed="true"><i>▭</i><span>Note</span></button>
       <button class="kind" data-kind="polaroid" aria-pressed="false"><i>▣</i><span>Foto</span></button>
       <button class="kind" data-kind="clip" aria-pressed="false"><i>▤</i><span>Kliping</span></button>
+      <button class="kind" data-kind="tiket" aria-pressed="false"><i>◫</i><span>Tiket</span></button>
+      <button class="kind" data-kind="pita" aria-pressed="false"><i>❯❮</i><span>Pita</span></button>
     </div>
 
     <div class="shapes" id="shapes"></div>
@@ -492,7 +522,9 @@ input[type=range]::-moz-range-thumb{width:22px;height:22px;border-radius:50%;bac
   var SHAPES = {
     note:     [["sq","Persegi"],["wide","Lebar"],["tall","Tinggi"],["round","Bulat"],["torn","Sobek"]],
     polaroid: [["pola","Polaroid"],["flat","Persegi"],["round","Bulat"],["arch","Lengkung"]],
-    clip:     [["rect","Koran"],["strip","Kolom"],["torn","Sobek"]]
+    clip:     [["rect","Koran"],["strip","Kolom"],["torn","Sobek"]],
+    tiket:    [["lurus","Lurus"],["sobek","Sobek"]],
+    pita:     [["lurus","Lurus"],["sayap","Sayap"]]
   };
 
   var stage = document.getElementById("stage");
@@ -512,40 +544,44 @@ input[type=range]::-moz-range-thumb{width:22px;height:22px;border-radius:50%;bac
   var pendingPaper = "polos", pendingTape = "bening";
   var pendingFont = "tangan", pendingInk = "hitam", pendingStamp = "tanpa", pendingFrame = "putih";
   var pendingHighlight = "tanpa", pendingTapePos = "atas";
-  var penMode = false, penColor = "#C03B21", draw = null;
   function tapeClass(){ return pendingTape && pendingTape !== "bening" ? " t-" + pendingTape : ""; }
   function fontClass(){ return pendingKind === "polaroid" ? "" : (pendingFont && pendingFont !== "tangan" ? " fnt-" + pendingFont : ""); }
   function inkClass(){ return pendingKind === "polaroid" ? "" : (pendingInk && pendingInk !== "hitam" ? " ink-" + pendingInk : ""); }
   function frameClass(){ return pendingKind === "polaroid" && pendingFrame !== "putih" ? " frame-" + pendingFrame : ""; }
-  function hlClass(){ return (pendingKind === "note" || pendingKind === "clip") && pendingHighlight !== "tanpa" ? " hl-" + pendingHighlight : ""; }
+  function hlClass(){ return (pendingKind === "note" || pendingKind === "clip" || pendingKind === "tiket") && pendingHighlight !== "tanpa" ? " hl-" + pendingHighlight : ""; }
   function tapePosClass(){ return pendingTapePos && pendingTapePos !== "atas" ? " tp-" + pendingTapePos : ""; }
+  function tpAttr(){ return (pendingKind === "clip" || pendingKind === "polaroid") ? ' data-tp="' + (pendingTapePos || "atas") + '"' : ""; }
   function stampHTML(){ return pendingStamp && pendingStamp !== "tanpa" ? '<div class="stamp">' + STAMP_TEXT[pendingStamp] + "</div>" : ""; }
-  var STAMP_TEXT = {penting:"PENTING",rahasia:"RAHASIA",osis:"DARI OSIS",eksklusif:"EKSKLUSIF",senyum:"SENYUM DULU"};
+  var STAMP_TEXT = {penting:"PENTING",rahasia:"RAHASIA",osis:"DARI OSIS",eksklusif:"EKSKLUSIF",senyum:"SENYUM DULU",love:"LOVE",wow:"WOW",baru:"BARU",rahasia2:"JANGAN DIBUKA"};
   function paperClass(kind){
     if(kind === "note") return pendingPaper && pendingPaper !== "polos" ? " paper-" + pendingPaper : "";
     if(kind === "clip") return pendingPaper && pendingPaper !== "koran" ? " paper-" + pendingPaper : "";
+    if(kind === "tiket") return pendingPaper && pendingPaper !== "krem" ? " tik-" + pendingPaper : "";
     return "";
   }
   var RATIOS = [["11","1:1"],["43","4:3"],["34","3:4"],["169","16:9"]];
   var FILTERS = [["biasa","Biasa"],["sepia","Sepia"],["bw","Hitam putih"],["pudar","Pudar"]];
-  var PAPERS = {note:[["polos","Polos"],["garis","Garis"],["kotak","Kotak"],["polka","Polka"],["strip","Garis miring"],["kraft","Kraft"]],clip:[["koran","Koran"],["hvs","Putih"],["kraft","Kraft"]]};
+  var PAPERS = {note:[["polos","Polos"],["garis","Garis"],["kotak","Kotak"],["polka","Polka"],["strip","Garis miring"],["kado","Kado"],["kraft","Kraft"]],clip:[["koran","Koran"],["hvs","Putih"],["kraft","Kraft"]],tiket:[["krem","Krem"],["pink","Pink"],["hijau","Hijau"]]};
   var TAPES = [["bening","Bening"],["merah","Merah"],["biru","Biru"],["hitam","Hitam"],["polka","Polka"],["strip","Strip"]];
   var FONTS = [["tangan","Tangan"],["tegak","Tegak"],["ketik","Mesin ketik"],["stencil","Stencil"]];
   var INKS = [["hitam","Hitam"],["merah","Merah"],["biru","Biru"],["ungu","Ungu"],["hijau","Hijau"]];
-  var STAMPS = [["tanpa","Tanpa"],["penting","Penting"],["rahasia","Rahasia"],["osis","Dari OSIS"],["eksklusif","Eksklusif"],["senyum","Senyum dulu"]];
+  var STAMPS = [["tanpa","Tanpa"],["penting","Penting"],["rahasia","Rahasia"],["osis","Dari OSIS"],["eksklusif","Eksklusif"],["senyum","Senyum dulu"],["love","LOVE"],["wow","WOW"],["baru","BARU"],["rahasia2","Jangan dibuka"]];
   var FRAMES = [["putih","Putih"],["krem","Krem"],["pink","Pink"],["hitam","Hitam"]];
   var HIGHLIGHTS = [["tanpa","Tanpa"],["kuning","Kuning"],["pink","Pink"],["biru","Biru"],["hijau","Hijau"]];
   var TAPE_POS = [["atas","Atas"],["kanan","Kanan"],["bawah","Bawah"],["kiri","Kiri"]];
-  var STICKERS = [["tanpa","Tanpa"],["bintang","Bintang"],["hati","Hati"],["bunga","Bunga"],["kupu","Kupu-kupu"],["petir","Petir"],["kilau","Kilau"],["mahkota","Mahkota"],["awan","Awan"],["salju","Salju"],["cap","Cap merah"]];
-  var STICKER_GLYPH = {bintang:"★",hati:"♥",bunga:"✿",kupu:"❋",petir:"⚡",kilau:"✦",mahkota:"♛",awan:"☁",salju:"❄",cap:""};
+  var STICKERS = [["tanpa","Tanpa"],["bintang","Bintang"],["hati","Hati"],["bunga","Bunga"],["kupu","Kupu-kupu"],["petir","Petir"],["kilau","Kilau"],["mahkota","Mahkota"],["awan","Awan"],["salju","Salju"],["nada","Nada"],["payung","Payung"],["bulan","Bulan"],["cap","Cap merah"]];
+  var STICKER_GLYPH = {bintang:"★",hati:"♥",bunga:"✿",kupu:"❋",petir:"⚡",kilau:"✦",mahkota:"♛",awan:"☁",salju:"❄",nada:"♪",payung:"☂",bulan:"☾",cap:""};
   function stickerHTML(s){
     if(!s || s === "tanpa") return "";
     return '<div class="stk ' + s + '">' + (STICKER_GLYPH[s] || "") + "</div>";
   }
 
   function load(){
-    try { var d = JSON.parse(localStorage.getItem(KEY)); return Array.isArray(d) ? d : []; }
-    catch(e){ return []; }
+    try {
+      var d = JSON.parse(localStorage.getItem(KEY));
+      if(!Array.isArray(d)) return [];
+      return d.filter(function(x){ return x && x.kind !== "doodle"; });
+    } catch(e){ return []; }
   }
   function save(){
     try { localStorage.setItem(KEY, JSON.stringify(items)); }
@@ -611,43 +647,67 @@ input[type=range]::-moz-range-thumb{width:22px;height:22px;border-radius:50%;bac
 
   function makeItem(data){
     var el = document.createElement("div");
-    var base = data.kind === "polaroid" ? "pola" : data.kind === "clip" ? "clip" : "note";
+    var base = data.kind === "polaroid" ? "pola" : data.kind === "clip" ? "clip" :
+      data.kind === "tiket" ? "tiket" : data.kind === "pita" ? "pita" : "note";
     el.className = "item " + base + (data.shape && data.shape !== base ? " " + data.shape : "") + (data.ratio ? " r" + data.ratio : "")
       + (data.paper && ((base === "note" && data.paper !== "polos") || (base === "clip" && data.paper !== "koran")) ? " paper-" + data.paper : "")
+      + (data.paper && base === "tiket" && data.paper !== "krem" ? " tik-" + data.paper : "")
       + (data.font && data.font !== "tangan" && base !== "pola" ? " fnt-" + data.font : "")
       + (data.ink && data.ink !== "hitam" && base !== "pola" ? " ink-" + data.ink : "")
       + (data.frame && data.frame !== "putih" && base === "pola" ? " frame-" + data.frame : "")
       + (data.highlight && data.highlight !== "tanpa" && (base === "note" || base === "clip") ? " hl-" + data.highlight : "")
       + (data.flip && base === "pola" ? " flipx" : "");
     el.dataset.id = data.id;
+    if(data.tapePos) el.dataset.tp = data.tapePos;
     el.style.left = data.x + "px";
     el.style.top = data.y + "px";
     el.style.transform = "rotate(" + (data.rot || 0) + "deg)" + (data.scale && data.scale !== 1 ? " scale(" + data.scale + ")" : "");
-    if(data.kind === "note") el.style.setProperty("--c", data.color || NOTE_COLORS[0]);
+    if(data.kind === "note" || data.kind === "pita") el.style.setProperty("--c", data.color || (data.kind === "pita" ? "#F6D8DD" : NOTE_COLORS[0]));
 
     var body = document.createElement("div");
     body.className = "body";
 
-    if(data.kind === "doodle"){
-      el.classList.add("doodle");
-      var bb = doodleBox(data.pts || []);
-      el.style.width = bb.w + "px";
-      el.style.height = bb.h + "px";
-      var svg = document.createElementNS(SVGNS, "svg");
-      svg.setAttribute("width", bb.w);
-      svg.setAttribute("height", bb.h);
-      var pl = document.createElementNS(SVGNS, "polyline");
-      pl.setAttribute("points", (data.pts || []).map(function(p){ return (p[0] - bb.minX) + "," + (p[1] - bb.minY); }).join(" "));
-      pl.setAttribute("fill", "none");
-      pl.setAttribute("stroke", data.color || "#C03B21");
-      pl.setAttribute("stroke-width", data.w || 3.5);
-      pl.setAttribute("stroke-linecap", "round");
-      pl.setAttribute("stroke-linejoin", "round");
-      svg.appendChild(pl);
-      el.appendChild(svg);
+    if(data.kind === "tiket"){
+      var stub = document.createElement("div");
+      stub.className = "tstub";
+      stub.innerHTML = "<span>ADMIT ONE</span>";
+      el.appendChild(stub);
+      body.className = "tbody";
+      body.innerHTML = '<div class="txt"></div><div class="tno">SERI 231 · KURSI BEBAS</div>';
+      body.querySelector(".txt").textContent = data.text || "";
+      el.appendChild(body);
+      if(data.sticker && data.sticker !== "tanpa"){
+        var stk1 = document.createElement("div");
+        stk1.className = "stk " + data.sticker;
+        stk1.textContent = STICKER_GLYPH[data.sticker] || "";
+        el.appendChild(stk1);
+      }
+      if(data.stamp && data.stamp !== "tanpa"){
+        var stm1 = document.createElement("div");
+        stm1.className = "stamp";
+        stm1.textContent = STAMP_TEXT[data.stamp] || "";
+        el.appendChild(stm1);
+      }
       return el;
     }
-
+    if(data.kind === "pita"){
+      body.innerHTML = '<div class="txt"></div>';
+      body.querySelector(".txt").textContent = data.text || "";
+      el.appendChild(body);
+      if(data.sticker && data.sticker !== "tanpa"){
+        var stk2 = document.createElement("div");
+        stk2.className = "stk " + data.sticker;
+        stk2.textContent = STICKER_GLYPH[data.sticker] || "";
+        el.appendChild(stk2);
+      }
+      if(data.stamp && data.stamp !== "tanpa"){
+        var stm2 = document.createElement("div");
+        stm2.className = "stamp";
+        stm2.textContent = STAMP_TEXT[data.stamp] || "";
+        el.appendChild(stm2);
+      }
+      return el;
+    }
     if(data.kind === "polaroid"){
       body.innerHTML = '<div class="ph"></div><div class="cap"></div>';
       var ph = body.querySelector(".ph");
@@ -956,7 +1016,6 @@ input[type=range]::-moz-range-thumb{width:22px;height:22px;border-radius:50%;bac
 
   stage.addEventListener("pointerdown", function(e){
     if(moveMode) return;
-    if(penMode){ startDraw(e); return; }
     moved = false;
     if(e.pointerType === "touch" && e.isPrimary === false) return;
     pan = { px: e.clientX, py: e.clientY, x: view.x, y: view.y };
@@ -978,7 +1037,6 @@ input[type=range]::-moz-range-thumb{width:22px;height:22px;border-radius:50%;bac
   });
 
   stage.addEventListener("pointermove", function(e){
-    if(draw){ moveDraw(e); return; }
     if(pinch || !pan) return;
     var dx = e.clientX - pan.px, dy = e.clientY - pan.py;
     if(Math.abs(dx) + Math.abs(dy) > 6) moved = true;
@@ -994,7 +1052,6 @@ input[type=range]::-moz-range-thumb{width:22px;height:22px;border-radius:50%;bac
   stage.addEventListener("pointerup", function(e){
     stage.classList.remove("grabbing");
     clearTimeout(holdTimer); holdTimer = null;
-    if(draw){ endDraw(e); return; }
     var wasPan = pan, didMove = moved;
     pan = null;
     if(!wasPan || didMove){ panTarget = null; return; }
@@ -1004,7 +1061,6 @@ input[type=range]::-moz-range-thumb{width:22px;height:22px;border-radius:50%;bac
   });
   stage.addEventListener("pointercancel", function(){
     clearTimeout(holdTimer); holdTimer = null;
-    if(draw){ cancelDraw(); }
     pan = null; panTarget = null; stage.classList.remove("grabbing");
   });
 
@@ -1027,7 +1083,6 @@ input[type=range]::-moz-range-thumb{width:22px;height:22px;border-radius:50%;bac
   var pts = {};
   stage.addEventListener("pointerdown", function(e){
     if(e.pointerType !== "touch") return;
-    if(penMode || draw){ return; }  /* coretan: jangan picu pinch */
     pts[e.pointerId] = { x: e.clientX, y: e.clientY };
     var ids = Object.keys(pts);
     if(ids.length === 2){
@@ -1082,96 +1137,6 @@ input[type=range]::-moz-range-thumb{width:22px;height:22px;border-radius:50%;bac
   }
 
   document.getElementById("rotRange").addEventListener("input", function(){ setRot(+this.value); });
-
-  /* ---- coretan bebas (doodle) ---- */
-  var SVGNS = "http://www.w3.org/2000/svg";
-  document.getElementById("pen").onclick = function(){
-    penMode = !penMode;
-    this.setAttribute("aria-pressed", penMode ? "true" : "false");
-    document.getElementById("penCols").hidden = !penMode;
-    if(penMode) say("Mode coretan: geser jari di papan. Tap ✎ lagi untuk selesai.");
-  };
-  [].forEach.call(document.querySelectorAll(".pcol"), function(b){
-    b.addEventListener("click", function(){
-      penColor = b.dataset.col;
-      [].forEach.call(document.querySelectorAll(".pcol"), function(o){
-        o.setAttribute("aria-pressed", o === b ? "true" : "false");
-      });
-    });
-  });
-  function startDraw(e){
-    moved = false;
-    try { stage.setPointerCapture(e.pointerId); } catch(_) {}
-    var bp = boardPoint(e.clientX, e.clientY);
-    draw = { pts: [[bp.x, bp.y]], x0: bp.x, y0: bp.y };
-    var s = document.createElementNS(SVGNS, "svg");
-    s.style.position = "absolute"; s.style.overflow = "visible";
-    var pl = document.createElementNS(SVGNS, "polyline");
-    pl.setAttribute("fill", "none");
-    pl.setAttribute("stroke", penColor);
-    pl.setAttribute("stroke-width", "3.5");
-    pl.setAttribute("stroke-linecap", "round");
-    pl.setAttribute("stroke-linejoin", "round");
-    s.appendChild(pl);
-    draw.el = s; draw.pl = pl;
-    draw.el.style.left = "0px"; draw.el.style.top = "0px";
-    canvas.appendChild(s);
-    stage.classList.add("grabbing");
-  }
-  function moveDraw(e){
-    var bp = boardPoint(e.clientX, e.clientY);
-    var last = draw.pts[draw.pts.length - 1];
-    if(Math.abs(bp.x - last[0]) + Math.abs(bp.y - last[1]) < 3) return;
-    draw.pts.push([bp.x, bp.y]);
-    var minX = Math.min.apply(null, draw.pts.map(function(p){ return p[0]; }));
-    var minY = Math.min.apply(null, draw.pts.map(function(p){ return p[1]; }));
-    var maxX = Math.max.apply(null, draw.pts.map(function(p){ return p[0]; }));
-    var maxY = Math.max.apply(null, draw.pts.map(function(p){ return p[1]; }));
-    draw.el.style.left = minX + "px"; draw.el.style.top = minY + "px";
-    draw.el.setAttribute("width", (maxX - minX) + 8);
-    draw.el.setAttribute("height", (maxY - minY) + 8);
-    draw.pl.setAttribute("points", draw.pts.map(function(p){ return (p[0] - minX) + "," + (p[1] - minY); }).join(" "));
-  }
-  function doodleBox(pts){
-    var minX = Infinity, minY = Infinity, maxX = -Infinity, maxY = -Infinity;
-    pts.forEach(function(p){
-      if(p[0] < minX) minX = p[0]; if(p[1] < minY) minY = p[1];
-      if(p[0] > maxX) maxX = p[0]; if(p[1] > maxY) maxY = p[1];
-    });
-    var pad = 8;
-    return { minX: minX - pad, minY: minY - pad, w: (maxX - minX) + pad * 2, h: (maxY - minY) + pad * 2 };
-  }
-  function endDraw(e){
-    stage.classList.remove("grabbing");
-    var live = draw; draw = null;
-    if(!live || !live.pts.length){ return; }
-    if(live.pts.length < 2){
-      var l = live.pts[0];
-      live.pts.push([l[0] + 1.5, l[1] + 1.5]);
-    }
-    var bb = doodleBox(live.pts);
-    var data = {
-      id: "p" + Date.now().toString(36) + Math.random().toString(36).slice(2, 6),
-      kind: "doodle",
-      pts: live.pts,
-      color: penColor, w: 3.5,
-      x: bb.minX, y: bb.minY,
-      rot: 0, scale: null,
-      at: Date.now()
-    };
-    if(live.el && live.el.parentNode) live.el.parentNode.removeChild(live.el);
-    items.push(data);
-    canvas.appendChild(makeItem(data));
-    counter.textContent = items.length + " tempelan";
-    hint.classList.add("hide");
-    save();
-  }
-  function cancelDraw(){
-    stage.classList.remove("grabbing");
-    if(draw && draw.el && draw.el.parentNode) draw.el.parentNode.removeChild(draw.el);
-    draw = null;
-  }
-
 
   function boardPoint(cx, cy){
     var r = stage.getBoundingClientRect();
@@ -1248,8 +1213,20 @@ input[type=range]::-moz-range-thumb{width:22px;height:22px;border-radius:50%;bac
     }
     if(pendingKind === "clip"){
       box.classList.add("on");
-      box.innerHTML = '<div class="item clip' + (pendingShape && pendingShape !== "clip" ? " " + pendingShape : "") + paperClass("clip") + fontClass() + inkClass() + hlClass() + '">' + stickerHTML(pendingSticker) + stampHTML() + '<div class="tape' + tapeClass() + tapePosClass() + '"></div>' +
+      box.innerHTML = '<div class="item clip' + (pendingShape && pendingShape !== "clip" ? " " + pendingShape : "") + paperClass("clip") + fontClass() + inkClass() + hlClass() + '"' + tpAttr() + '>' + stickerHTML(pendingSticker) + stampHTML() + '<div class="tape' + tapeClass() + tapePosClass() + '"></div>' +
         '<div class="body"><div class="txt">' + (escPrev(txt) || "Klipingmu…") + '</div><div class="who">' + (escPrev(name) || "tanpa nama") + "</div></div></div>";
+      return;
+    }
+    if(pendingKind === "tiket"){
+      box.classList.add("on");
+      box.innerHTML = '<div class="item tiket' + (pendingShape && pendingShape !== "tiket" ? " " + pendingShape : "") + paperClass("tiket") + hlClass() + '">' + stickerHTML(pendingSticker) + stampHTML() +
+        '<div class="tstub"><span>ADMIT ONE</span></div><div class="tbody"><div class="txt">' + (escPrev(txt) || "Judul tiket…") + '</div><div class="tno">SERI 231 · KURSI BEBAS</div></div></div>';
+      return;
+    }
+    if(pendingKind === "pita"){
+      box.classList.add("on");
+      box.innerHTML = '<div class="item pita' + (pendingShape && pendingShape !== "pita" ? " " + pendingShape : "") + '" style="--c:' + pendingColor + '">' + stickerHTML(pendingSticker) + stampHTML() +
+        '<div class="txt">' + (escPrev(txt) || "Kalimat singkat…") + "</div></div>";
       return;
     }
     if(pendingKind !== "polaroid"){ box.classList.remove("on"); box.innerHTML = ""; return; }
@@ -1257,7 +1234,7 @@ input[type=range]::-moz-range-thumb{width:22px;height:22px;border-radius:50%;bac
     document.getElementById("preview").classList.remove("on"); /* diganti livePrev */
     var cls = "item pola" + (pendingShape && pendingShape !== "pola" ? " " + pendingShape : "")
       + (pendingRatio ? " r" + pendingRatio : "") + frameClass();
-    box.innerHTML = '<div class="' + cls + '">' + stickerHTML(pendingSticker) + stampHTML() + '<div class="tape' + tapeClass() + tapePosClass() + '"></div>' +
+    box.innerHTML = '<div class="' + cls + '"' + tpAttr() + '>' + stickerHTML(pendingSticker) + stampHTML() + '<div class="tape' + tapeClass() + tapePosClass() + '"></div>' +
       '<div class="body"><div class="ph' + (pendingFilter && pendingFilter !== "biasa" ? " f-" + pendingFilter : "") + '"' +
       (pendingImage ? ' style="background-image:url(' + pendingImage + ')"' : "") + ">" +
       (pendingImage ? "" : "pilih foto dulu") + "</div>" +
@@ -1267,7 +1244,7 @@ input[type=range]::-moz-range-thumb{width:22px;height:22px;border-radius:50%;bac
 
   function renderColors(){
     var box = document.getElementById("colors");
-    box.hidden = pendingKind !== "note";
+    box.hidden = pendingKind !== "note" && pendingKind !== "pita";
     if(box.hidden){ box.innerHTML = ""; return; }
     box.innerHTML = "";
     NOTE_COLORS.forEach(function(c){
@@ -1378,7 +1355,7 @@ input[type=range]::-moz-range-thumb{width:22px;height:22px;border-radius:50%;bac
   }
   function renderInks(){
     var cols = {hitam:"#2b241c",merah:"#C03B21",biru:"#2C5E9E",ungu:"#7B4B94",hijau:"#3E6B35"};
-    chipRow("inks", (pendingKind === "note" || pendingKind === "clip") ? INKS : null, "ink",
+    chipRow("inks", (pendingKind === "note" || pendingKind === "clip" || pendingKind === "tiket" || pendingKind === "pita") ? INKS : null, "ink",
       function(){ return pendingInk; }, function(v){ pendingInk = v; },
       function(t){ return '<b style="background:' + cols[t[0]] + ';border-radius:50%"></b>'; });
   }
@@ -1395,7 +1372,7 @@ input[type=range]::-moz-range-thumb{width:22px;height:22px;border-radius:50%;bac
   }
   function renderHighlights(){
     var cols = {kuning:"#ECC13E",pink:"#E882A0",biru:"#78A0D7",hijau:"#78BE6E"};
-    chipRow("highlights", (pendingKind === "note" || pendingKind === "clip") ? HIGHLIGHTS : null, "hl",
+    chipRow("highlights", (pendingKind === "note" || pendingKind === "clip" || pendingKind === "tiket") ? HIGHLIGHTS : null, "hl",
       function(){ return pendingHighlight; }, function(v){ pendingHighlight = v; },
       function(t){ return t[0] === "tanpa" ? "<b></b>" : '<b style="background:linear-gradient(180deg,transparent 42%,' + cols[t[0]] + ' 42%);border-color:rgba(34,29,21,.3)"></b>'; });
   }
@@ -1481,6 +1458,19 @@ input[type=range]::-moz-range-thumb{width:22px;height:22px;border-radius:50%;bac
       pendingStamp = rnd(STAMPS)[0];
       pendingHighlight = rnd(HIGHLIGHTS)[0];
     }
+    if(pendingKind === "tiket"){
+      pendingPaper = rnd(PAPERS.tiket)[0];
+      pendingSticker = rnd(STICKERS)[0];
+      pendingStamp = rnd(STAMPS)[0];
+      pendingHighlight = rnd(HIGHLIGHTS)[0];
+      pendingInk = rnd(INKS)[0];
+    }
+    if(pendingKind === "pita"){
+      pendingColor = rnd(NOTE_COLORS);
+      pendingSticker = rnd(STICKERS)[0];
+      pendingStamp = rnd(STAMPS)[0];
+      pendingInk = rnd(INKS)[0];
+    }
     if(pendingKind === "polaroid"){
       pendingFilter = rnd(FILTERS)[0];
       pendingTape = rnd(TAPES)[0];
@@ -1520,9 +1510,11 @@ input[type=range]::-moz-range-thumb{width:22px;height:22px;border-radius:50%;bac
     var isPola = pendingKind === "polaroid";
     document.getElementById("fotoField").hidden = !isPola;
     document.getElementById("preview").classList.toggle("on", isPola && !!pendingImage);
-    document.getElementById("nameField").hidden = pendingKind === "note";
+    document.getElementById("nameField").hidden = pendingKind === "note" || pendingKind === "tiket" || pendingKind === "pita";
     document.getElementById("txt").placeholder = isPola ? "Caption foto (boleh kosong)" :
-      pendingKind === "clip" ? "Tulis klipingmu..." : "Tulis sesuatu...";
+      pendingKind === "clip" ? "Tulis klipingmu..." :
+      pendingKind === "tiket" ? "Tulis judul tiket..." :
+      pendingKind === "pita" ? "Tulis kalimat singkat..." : "Tulis sesuatu...";
     updateLivePrev();
   }
 
@@ -1620,7 +1612,7 @@ input[type=range]::-moz-range-thumb{width:22px;height:22px;border-radius:50%;bac
       color: pendingColor,
       filter: pendingKind === "polaroid" ? pendingFilter : null,
       sticker: pendingSticker,
-      paper: (pendingKind === "note" || pendingKind === "clip") ? pendingPaper : null,
+      paper: (pendingKind === "note" || pendingKind === "clip" || pendingKind === "tiket") ? pendingPaper : null,
       tape: (pendingKind === "clip" || pendingKind === "polaroid") ? pendingTape : null,
       font: (pendingKind === "note" || pendingKind === "clip") ? pendingFont : null,
       ink: (pendingKind === "note" || pendingKind === "clip") ? pendingInk : null,
