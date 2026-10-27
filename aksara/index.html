@@ -407,6 +407,7 @@ input[type=range]::-moz-range-thumb{width:22px;height:22px;border-radius:50%;bac
   function measure(){ SW = stage.clientWidth; SH = stage.clientHeight; }
   var items = [];
   var pendingPoint = null, pendingKind = "note", pendingImage = null, pendingShape = "sq", pendingRatio = "11";
+  var pendingColor = NOTE_COLORS[0];
   var RATIOS = [["11","1:1"],["43","4:3"],["34","3:4"],["169","16:9"]];
 
   function load(){
@@ -929,6 +930,20 @@ input[type=range]::-moz-range-thumb{width:22px;height:22px;border-radius:50%;bac
 
   function updateLivePrev(){
     var box = document.getElementById("livePrev");
+    var txt = document.getElementById("txt").value.trim();
+    var name = document.getElementById("nama").value.trim();
+    if(pendingKind === "note"){
+      box.classList.add("on");
+      box.innerHTML = '<div class="item note' + (pendingShape && pendingShape !== "note" ? " " + pendingShape : "") + '" style="--c:' + pendingColor + '"><div class="pin"></div>' +
+        '<div class="body"><div class="txt">' + (escPrev(txt) || "Tulisanmu…") + "</div></div></div>";
+      return;
+    }
+    if(pendingKind === "clip"){
+      box.classList.add("on");
+      box.innerHTML = '<div class="item clip' + (pendingShape && pendingShape !== "clip" ? " " + pendingShape : "") + '"><div class="tape"></div>' +
+        '<div class="body"><div class="txt">' + (escPrev(txt) || "Klipingmu…") + '</div><div class="who">' + (escPrev(name) || "tanpa nama") + "</div></div></div>";
+      return;
+    }
     if(pendingKind !== "polaroid"){ box.classList.remove("on"); box.innerHTML = ""; return; }
     box.classList.add("on");
     document.getElementById("preview").classList.remove("on"); /* diganti livePrev */
@@ -970,6 +985,18 @@ input[type=range]::-moz-range-thumb{width:22px;height:22px;border-radius:50%;bac
       var img = new Image();
       img.onload = function(){
         var max = 560, w = img.width, h = img.height;
+        /* rasio bingkai mengikuti foto yang diupload */
+        var ar = w / h, best = "11", bestD = 1e9;
+        [["11",1],["43",4/3],["34",3/4],["169",16/9]].forEach(function(t){
+          var d = Math.abs(ar - t[1]);
+          if(d < bestD){ bestD = d; best = t[0]; }
+        });
+        if(best !== pendingRatio){
+          pendingRatio = best;
+          [].forEach.call(document.getElementById("ratios").children, function(c){
+            c.setAttribute("aria-pressed", c.dataset.ratio === pendingRatio ? "true" : "false");
+          });
+        }
         if(w > h && w > max){ h = h * max / w; w = max; }
         else if(h >= w && h > max){ w = w * max / h; h = max; }
         var c = document.createElement("canvas");
@@ -990,6 +1017,7 @@ input[type=range]::-moz-range-thumb{width:22px;height:22px;border-radius:50%;bac
 
   function openSheet(pt){
     pendingPoint = pt; pendingImage = null;
+    pendingColor = NOTE_COLORS[Math.floor(Math.random() * NOTE_COLORS.length)];
     document.getElementById("preview").classList.remove("on");
     document.getElementById("foto").value = "";
     document.getElementById("txt").value = "";
@@ -1004,8 +1032,9 @@ input[type=range]::-moz-range-thumb{width:22px;height:22px;border-radius:50%;bac
   function closeSheet(){ sheet.classList.remove("open"); }
 
   document.getElementById("cancel").onclick = closeSheet;
-  document.getElementById("txt").addEventListener("input", function(){
-    if(pendingKind === "polaroid") updateLivePrev();
+  document.getElementById("txt").addEventListener("input", function(){ updateLivePrev(); });
+  document.getElementById("nama").addEventListener("input", function(){
+    if(pendingKind === "clip") updateLivePrev();
   });
   sheet.addEventListener("click", function(e){
     if(e.target !== sheet) return;
@@ -1028,7 +1057,7 @@ input[type=range]::-moz-range-thumb{width:22px;height:22px;border-radius:50%;bac
       y: pendingPoint.y - 100,
       rot: (Math.random() * 6 - 3),
       text: text, name: name,
-      color: NOTE_COLORS[Math.floor(Math.random() * NOTE_COLORS.length)],
+      color: pendingColor,
       image: pendingKind === "polaroid" ? pendingImage : null,
       at: Date.now()
     };
