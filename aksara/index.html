@@ -506,21 +506,28 @@ input[type=range]::-moz-range-thumb{width:22px;height:22px;border-radius:50%;bac
   var ctxMenu = document.getElementById("ctxMenu");
   var ctxData = null, ctxEl = null, ctxGhost = null;
 
+  function centerGhost(){
+    if(!ctxGhost || !ctxEl) return;
+    var b = ctxEl.getBoundingClientRect();
+    ctxGhost.style.left = (b.left + b.width / 2 - ctxEl.offsetWidth / 2) + "px";
+    ctxGhost.style.top = (b.top + b.height / 2 - ctxEl.offsetHeight / 2) + "px";
+  }
+
   function openCtx(data, el){
     ctxData = data; ctxEl = el;
     var r = el.getBoundingClientRect();
 
-    /* salinan melayang supaya item tetap tajam di atas latar yang diburamkan */
+    /* salinan melayang: ukuran & jangkar sama seperti aslinya, jadi tidak bergeser */
     if(ctxGhost && ctxGhost.parentNode) ctxGhost.parentNode.removeChild(ctxGhost);
     ctxGhost = el.cloneNode(true);
     ctxGhost.classList.add("ctxGhost");
-    ctxGhost.style.left = r.left + "px";
-    ctxGhost.style.top = r.top + "px";
     ctxGhost.style.width = el.offsetWidth + "px";
     ctxGhost.style.height = el.offsetHeight + "px";
-    ctxGhost.style.transform = "rotate(" + (data.rot || 0) + "deg) scale(" + (r.width / el.offsetWidth) + ")";
+    ctxGhost.style.transformOrigin = "50% 50%";
+    ctxGhost.style.transform = "rotate(" + (data.rot || 0) + "deg) scale(" + view.s + ")";
     document.body.appendChild(ctxGhost);
     el.style.visibility = "hidden";
+    centerGhost();
 
     ctx.classList.add("open");
 
@@ -544,6 +551,9 @@ input[type=range]::-moz-range-thumb{width:22px;height:22px;border-radius:50%;bac
     }
 
     var cx = r.left + r.width / 2, cy = r.top + r.height / 2;
+    /* zona aman: selebar diagonal, jadi sebesar apa pun sudutnya tidak menabrak menu */
+    var rad = Math.sqrt(r.width * r.width + r.height * r.height) / 2 + 8;
+    var zone = { left: cx - rad, top: cy - rad, right: cx + rad, bottom: cy + rad };
     var spots = [
       [cx - mw / 2, r.top - mh - gap],        /* atas */
       [cx - mw / 2, r.bottom + gap],          /* bawah */
@@ -560,7 +570,7 @@ input[type=range]::-moz-range-thumb{width:22px;height:22px;border-radius:50%;bac
       var T = Math.max(pad, Math.min(vh - mh - pad, spots[i][1]));
       ctxMenu.style.left = Math.round(L) + "px";
       ctxMenu.style.top = Math.round(T) + "px";
-      if(!hits(ctxMenu.getBoundingClientRect(), r, 12)) return;
+      if(!hits(ctxMenu.getBoundingClientRect(), zone, 12)) return;
     }
 
     /* tidak ada tempat: jadikan panel bawah, tempelan digeser ke atasnya */
@@ -568,10 +578,13 @@ input[type=range]::-moz-range-thumb{width:22px;height:22px;border-radius:50%;bac
     ctxMenu.style.left = "";
     ctxMenu.style.top = "";
     var mr = ctxMenu.getBoundingClientRect();
-    if(hits(mr, r, 12)){
-      var newTop = Math.max(12, mr.top - r.height - 16);
-      var dy = newTop - r.top;
-      ctxGhost.style.top = Math.round(r.top + dy) + "px";
+    if(hits(mr, zone, 12)){
+      /* geser kamera, bukan tempelannya: posisi relatif di papan tetap sama */
+      var want = mr.top - rad - 20;
+      var dy = want - cy;
+      view.y += dy;
+      applyView();
+      centerGhost();
     }
   }
 
