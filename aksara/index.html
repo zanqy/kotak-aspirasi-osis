@@ -471,6 +471,13 @@ input[type=range]::-moz-range-thumb{width:22px;height:22px;border-radius:50%;bac
 .ctxMenu button.danger{color:var(--red)}
 .ctxMenu hr{border:0;border-top:1px solid rgba(34,29,21,.14);margin:3px 6px}
 .item.move-mode{outline:2px dashed var(--red);outline-offset:5px}
+#cmMore[hidden]{display:none}
+#cmMore button{margin-top:4px}
+.ctxMenu.peeked{display:none}
+#menuShow{position:fixed;left:50%;bottom:calc(14px + env(safe-area-inset-bottom));transform:translateX(-50%);z-index:130;
+  background:var(--ink);color:var(--paper);border:0;border-radius:99px;padding:10px 18px;
+  font:500 .85rem var(--fs);box-shadow:0 10px 24px rgba(0,0,0,.35);cursor:pointer}
+#menuShow[hidden]{display:none}
 .moveBar{position:fixed;left:10px;right:10px;bottom:calc(12px + env(safe-area-inset-bottom));z-index:120;
   display:none;background:rgba(247,241,225,.98);border:1px solid rgba(34,29,21,.22);border-radius:14px;
   padding:10px 12px;box-shadow:0 26px 44px -24px rgba(24,20,16,.75)}
@@ -636,14 +643,21 @@ input[type=range]::-moz-range-thumb{width:22px;height:22px;border-radius:50%;bac
   </div>
 
   <hr>
+  <div class="cmRow">
+    <button data-act="peek">👁 Intip</button>
+    <button data-act="more">⋯ Lainnya</button>
+  </div>
   <button data-act="edit">✏️ Ubah isi & gaya</button>
   <button data-act="move">✥ Pindah posisi</button>
-  <button data-act="front">↑ Kirim ke depan</button>
-  <button data-act="back">↓ Kirim ke belakang</button>
-  <button data-act="dup">⧉ Duplikat</button>
+  <div id="cmMore" hidden>
+    <button data-act="front">↑ Kirim ke depan</button>
+    <button data-act="back">↓ Kirim ke belakang</button>
+    <button data-act="dup">⧉ Duplikat</button>
+  </div>
   <hr>
   <button data-act="del" class="danger">🗑 Hapus</button>
 </div>
+<button id="menuShow" hidden>☰ Tampilkan menu</button>
 
 <div class="toast" id="toast"></div>
 
@@ -1220,6 +1234,19 @@ input[type=range]::-moz-range-thumb{width:22px;height:22px;border-radius:50%;bac
     rv.textContent = Math.round(data.rot || 0) + "°";
     rr.value = Math.round(data.rot || 0);
 
+    /* reset lipatan + intip setiap buka */
+    ctxMenu.classList.remove("peeked");
+    document.getElementById("menuShow").hidden = true;
+    var cmMore = document.getElementById("cmMore");
+    cmMore.hidden = true;
+    var moreBtn = ctxMenu.querySelector('[data-act="more"]');
+    if(moreBtn) moreBtn.textContent = "\u22EF Lainnya";
+    placeMenu();
+  }
+
+  function placeMenu(){
+    if(!ctxEl || ctxMenu.classList.contains("peeked")) return;
+    var r = ctxEl.getBoundingClientRect();
     /* tampilkan dulu tanpa terlihat, ukur, lalu cari tempat yang tidak menutupi tempelan */
     ctxMenu.classList.add("open");
     ctxMenu.classList.remove("bottom");
@@ -1280,7 +1307,8 @@ input[type=range]::-moz-range-thumb{width:22px;height:22px;border-radius:50%;bac
   function closeCtx(){
     ctxOpen = false;
     ctx.classList.remove("open");
-    ctxMenu.classList.remove("open", "bottom");
+    ctxMenu.classList.remove("open", "bottom", "peeked");
+    document.getElementById("menuShow").hidden = true;
     save();
     if(ctxGhost && ctxGhost.parentNode) ctxGhost.parentNode.removeChild(ctxGhost);
     if(ctxEl) ctxEl.style.visibility = "";
@@ -1290,6 +1318,12 @@ input[type=range]::-moz-range-thumb{width:22px;height:22px;border-radius:50%;bac
 
   ctx.addEventListener("pointerdown", function(e){
     if(!e.target.closest(".ctxMenu")) closeCtx();
+  });
+  document.getElementById("menuShow").addEventListener("click", function(e){
+    e.stopPropagation();
+    ctxMenu.classList.remove("peeked");
+    this.hidden = true;
+    placeMenu();
   });
 
   /* geser tempelan hanya setelah memilih "Pindah posisi" — bebas atur, lalu kunci */
@@ -1381,6 +1415,14 @@ input[type=range]::-moz-range-thumb{width:22px;height:22px;border-radius:50%;bac
       return;
     }
     if(act === "rotate"){ closeCtx(); openItemSheet(data, el); return; }
+    if(act === "peek"){ ctxMenu.classList.add("peeked"); document.getElementById("menuShow").hidden = false; return; }
+    if(act === "more"){
+      var m = document.getElementById("cmMore");
+      m.hidden = !m.hidden;
+      btn.textContent = m.hidden ? "\u22EF Lainnya" : "\u22EF Tutup";
+      placeMenu();
+      return;
+    }
     if(act === "edit"){ closeCtx(); setTimeout(function(){ openEdit(data); }, 40); return; }
     if(act === "move"){ closeCtx(); setTimeout(function(){ startMove(data, el); }, 40); return; }
     if(act === "front" || act === "back"){
