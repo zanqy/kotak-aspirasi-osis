@@ -141,17 +141,11 @@ main.tampak .card{animation:rise .5s cubic-bezier(.2,.8,.3,1) both}
 .card-title em{font-style:italic;color:var(--red)}
 .card-sub{margin:10px 0 16px;font:italic 400 .92rem/1.6 var(--fs);color:var(--ink-60);max-width:54ch}
 
-.frow{display:grid;grid-template-columns:1.3fr 1fr;gap:18px}
-@media(max-width:560px){.frow{grid-template-columns:1fr}}
 .field{margin-bottom:14px;text-align:left}
 .field>label{display:block;font:500 9.5px var(--fm);letter-spacing:.26em;text-transform:uppercase;
   color:var(--ink-60);margin-bottom:5px;transition:color .2s}
 .field>label span{opacity:.55;letter-spacing:.1em}
-.field input{width:100%;background:transparent;border:0;border-bottom:1px solid var(--ink-40);
-  font:400 1rem var(--fs);color:var(--ink);padding:7px 2px;border-radius:0;
-  -webkit-appearance:none;appearance:none}
-.field input::placeholder,.field textarea::placeholder{color:var(--ink-40);font-style:italic}
-.field input:focus{outline:none;border-color:var(--red)}
+.field textarea::placeholder{color:var(--ink-40);font-style:italic}
 .field:focus-within>label{color:var(--red)}
 .field textarea{width:100%;border:1px solid var(--line);border-radius:8px;resize:none;min-height:112px;
   background-image:repeating-linear-gradient(180deg,transparent 0 28px,var(--line) 28px 29px);
@@ -412,15 +406,9 @@ footer a:hover{color:var(--red);border-color:var(--red)}
 
     <p class="card-kicker">Surat untuk Sekolah</p>
     <h2 class="card-title">Tulis yang selama ini <em>kau simpan.</em></h2>
-    <p class="card-sub">Setiap surat dibaca langsung oleh pengurus OSIS, dirangkum setiap Jumat, dan dibahas dalam rapat bulanan bersama kepala sekolah. Boleh anonim — kehormatanmu kami jaga.</p>
+    <p class="card-sub">Setiap surat dibaca langsung oleh pengurus OSIS, dirangkum setiap Jumat, dan dibahas dalam rapat bulanan bersama kepala sekolah. Sepenuhnya anonim — kehormatanmu kami jaga.</p>
 
     <form id="letterForm" novalidate>
-      <div class="frow">
-        <div class="field"><label for="fNama">Nama <span>(opsional)</span></label>
-          <input id="fNama" type="text" autocomplete="name" placeholder="Boleh kosong — suratmu tetap sampai"></div>
-        <div class="field"><label for="fKelas">Kelas</label>
-          <input id="fKelas" type="text" autocomplete="off" placeholder="cth. XI RPL 2"></div>
-      </div>
       <div class="field"><label for="fIsi">Aspirasimu</label>
         <textarea id="fIsi" maxlength="600" placeholder="Tulis apa pun — ruang kelas, kegiatan, kantin, taman, guru, apa saja…"></textarea>
         <div class="ta-foot"><p class="ferr" id="errIsi"></p><span class="counter" id="isiCount">0 / 600</span></div>
@@ -432,7 +420,7 @@ footer a:hover{color:var(--red);border-color:var(--red)}
         <span class="draft-hint">draf tersimpan otomatis di perangkat ini</span>
         <span class="draft-flash" id="draftFlash" aria-hidden="true">tersimpan</span>
       </div>
-      <p class="card-note">Identitas (jika diisi) hanya dipakai untuk tindak lanjut.<br>Aspirasi dibahas pada rapat OSIS terdekat.</p>
+      <p class="card-note">Sepenuhnya anonim — tanpa nama, tanpa kelas.<br>Aspirasi dibahas pada rapat OSIS terdekat.</p>
     </form>
 
     <div class="env-row">
@@ -569,15 +557,13 @@ amplop.addEventListener('keydown',e=>{
 const fIsi=$('#fIsi'),isiCount=$('#isiCount'),draftFlash=$('#draftFlash');
 const DKEY='katakan_draft';let draftT=null,flashT=null;
 function saveDraft(now){clearTimeout(draftT);draftT=setTimeout(()=>{
-  try{localStorage.setItem(DKEY,JSON.stringify({nama:$('#fNama').value,kelas:$('#fKelas').value,isi:fIsi.value}));}catch(_){}
+  try{localStorage.setItem(DKEY,JSON.stringify({isi:fIsi.value}));}catch(_){}
   draftFlash.classList.add('show');clearTimeout(flashT);
   flashT=setTimeout(()=>draftFlash.classList.remove('show'),1300);},now?0:700);}
 function clearDraft(){clearTimeout(draftT);try{localStorage.removeItem(DKEY);}catch(_){}draftFlash.classList.remove('show');}
 fIsi.addEventListener('input',()=>{isiCount.textContent=fIsi.value.length+' / 600';$('#errIsi').textContent='';saveDraft();});
-$('#fNama').addEventListener('input',()=>saveDraft());
-$('#fKelas').addEventListener('input',()=>saveDraft());
 try{const dr=JSON.parse(localStorage.getItem(DKEY)||'null');
- if(dr){$('#fNama').value=dr.nama||'';$('#fKelas').value=dr.kelas||'';fIsi.value=dr.isi||'';
+ if(dr){fIsi.value=dr.isi||'';
   isiCount.textContent=fIsi.value.length+' / 600';}}catch(_){}
 
 /* ---------------- kirim ---------------- */
@@ -585,7 +571,7 @@ const KEY='katakan_letters';
 function loadLetters(){try{return JSON.parse(localStorage.getItem(KEY)||'[]');}catch(e){return[];}}
 const formEl=$('#letterForm'),sendBtn=$('#sendBtn'),successEl=$('#cardSuccess'),cardEl=$('#cardEl');
 formEl.addEventListener('submit',e=>{e.preventDefault();
- const nama=$('#fNama').value.trim(),kelas=$('#fKelas').value.trim(),isi=fIsi.value.trim();
+ const isi=fIsi.value.trim();
  let ok=true;if(isi.length<20){$('#errIsi').textContent='Tulis setidaknya 20 karakter — suaramu layak dibaca utuh.';ok=false;}
  if(!ok){cardEl.classList.remove('shake');void cardEl.offsetWidth;cardEl.classList.add('shake');return;}
  sendBtn.disabled=true;sendBtn.querySelector('span').textContent='Menjahit suratmu…';
@@ -597,8 +583,8 @@ formEl.addEventListener('submit',e=>{e.preventDefault();
   const no=data.kode_tiket||'No. —';
   $('#sealNo').textContent=no;
   $('#sQuote').textContent='\u201C'+isi.slice(0,140)+(isi.length>140?'\u2026':'')+'\u201D';
-  $('#sMeta').textContent=(nama||'Anonim')+(kelas?', '+kelas:'');
-  const arr=loadLetters();arr.push({nama,kelas,isi,no,t:Date.now()});
+  $('#sMeta').textContent='Anonim';
+  const arr=loadLetters();arr.push({isi,no,t:Date.now()});
   try{localStorage.setItem(KEY,JSON.stringify(arr));}catch(e2){}
   $('#sCount').textContent='aspirasi ke-'+arr.length+' yang tercatat di perangkat ini';
   clearDraft();formEl.classList.add('sent');successEl.classList.add('show');cardEl.classList.add('selesai');
