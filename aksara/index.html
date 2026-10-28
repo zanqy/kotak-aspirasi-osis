@@ -556,7 +556,7 @@ input[type=range]::-moz-range-thumb{width:22px;height:22px;border-radius:50%;bac
         <button class="tool" id="zIn" aria-label="Perbesar">＋</button>
         <button class="tool" id="zOut" aria-label="Perkecil">−</button>
         <button class="tool small" id="zFit" aria-label="Paskan">fit</button>
-        <button class="tool" id="zClear" aria-label="Kosongkan papan">🗑</button>
+        <button class="tool" id="zClear" aria-label="Kosongkan papan">×</button>
       </div>
     </div>
   </article>
@@ -576,17 +576,17 @@ input[type=range]::-moz-range-thumb{width:22px;height:22px;border-radius:50%;bac
       <button class="kind" data-kind="perangko" aria-pressed="false"><i>▦</i><span>Perangko</span></button>
       <button class="kind" data-kind="amplop" aria-pressed="false"><i>✉</i><span>Amplop</span></button>
       <button class="kind" data-kind="tag" aria-pressed="false"><i>◈</i><span>Tag</span></button>
-      <button class="kind" data-kind="struk" aria-pressed="false"><i>🧾</i><span>Struk</span></button>
+      <button class="kind" data-kind="struk" aria-pressed="false"><i>≣</i><span>Struk</span></button>
       <button class="kind" data-kind="tulis" aria-pressed="false"><i>✎</i><span>Tulis</span></button>
       <button class="kind" data-kind="polaroid" aria-pressed="false"><i>▣</i><span>Foto</span></button>
       <button class="kind" data-kind="umbul" aria-pressed="false"><i>⚑</i><span>Umbul</span></button>
-      <button class="kind" data-kind="balon" aria-pressed="false"><i>🎈</i><span>Balon</span></button>
+      <button class="kind" data-kind="balon" aria-pressed="false"><i>○</i><span>Balon</span></button>
       <button class="kind" data-kind="badge" aria-pressed="false"><i>✸</i><span>Badge</span></button>
       <button class="kind" data-kind="lampu" aria-pressed="false"><i>✦</i><span>Lampu</span></button>
-      <button class="kind" data-kind="lampion" aria-pressed="false"><i>🏮</i><span>Lampion</span></button>
-      <button class="kind" data-kind="layang" aria-pressed="false"><i>🪁</i><span>Layang</span></button>
-      <button class="kind" data-kind="kipas" aria-pressed="false"><i>❀</i><span>Kipas</span></button>
-      <button class="kind" data-kind="rantai" aria-pressed="false"><i>⛓</i><span>Rantai</span></button>
+      <button class="kind" data-kind="lampion" aria-pressed="false"><i>◍</i><span>Lampion</span></button>
+      <button class="kind" data-kind="layang" aria-pressed="false"><i>◇</i><span>Layang</span></button>
+      <button class="kind" data-kind="kipas" aria-pressed="false"><i>✵</i><span>Kipas</span></button>
+      <button class="kind" data-kind="rantai" aria-pressed="false"><i>∞</i><span>Rantai</span></button>
     </div>
 
     <div class="shapes" id="shapes"></div>
@@ -600,7 +600,7 @@ input[type=range]::-moz-range-thumb{width:22px;height:22px;border-radius:50%;bac
     <div class="shapes" id="frames" hidden></div>
     <div class="shapes" id="stamps" hidden></div>
     <div class="shapes" id="stickers" hidden></div>
-    <button class="advToggle" id="advToggle" type="button">⚙️ Opsi lanjutan</button>
+    <button class="advToggle" id="advToggle" type="button">▸ Opsi lanjutan</button>
     <div id="advOpts" hidden></div>
     <div class="shapes" id="pins" hidden></div>
     <div class="shapes" id="pinpos" hidden></div>
@@ -625,7 +625,7 @@ input[type=range]::-moz-range-thumb{width:22px;height:22px;border-radius:50%;bac
 
     <div class="row">
       <button class="btn ghost" id="cancel">Batal</button>
-      <button class="btn" id="acak" style="background:transparent;color:var(--ink);border:1px solid rgba(34,29,21,.24)">🎲 Kejutan</button>
+      <button class="btn" id="acak" style="background:transparent;color:var(--ink);border:1px solid rgba(34,29,21,.24)">⚄ Kejutan</button>
       <button class="btn grow" id="place">Tempel di sini</button>
     </div>
   </div>
@@ -654,10 +654,10 @@ input[type=range]::-moz-range-thumb{width:22px;height:22px;border-radius:50%;bac
 
   <hr>
   <div class="cmRow">
-    <button data-act="peek">👁 Intip</button>
+    <button data-act="peek">◉ Intip</button>
     <button data-act="more">⋯ Lainnya</button>
   </div>
-  <button data-act="edit">✏️ Ubah isi & gaya</button>
+  <button data-act="edit">✎ Ubah isi & gaya</button>
   <button data-act="move">✥ Pindah posisi</button>
   <div id="cmMore" hidden>
     <button data-act="front">↑ Kirim ke depan</button>
@@ -665,7 +665,7 @@ input[type=range]::-moz-range-thumb{width:22px;height:22px;border-radius:50%;bac
     <button data-act="dup">⧉ Duplikat</button>
   </div>
   <hr>
-  <button data-act="del" class="danger">🗑 Hapus</button>
+  <button data-act="del" class="danger">× Hapus</button>
 </div>
 <button id="menuShow" hidden>☰ Tampilkan menu</button>
 
@@ -2589,7 +2589,7 @@ input[type=range]::-moz-range-thumb{width:22px;height:22px;border-radius:50%;bac
     });
     document.getElementById("advToggle").addEventListener("click", function(){
       adv.hidden = !adv.hidden;
-      this.textContent = adv.hidden ? "\u2699\uFE0F Opsi lanjutan" : "\u2715 Tutup opsi";
+      this.textContent = adv.hidden ? "\u25B8 Opsi lanjutan" : "\u25BE Tutup opsi";
     });
   })();
   var SEED_V = 3, seedDone = 0;
