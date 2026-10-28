@@ -379,8 +379,8 @@ body{background:radial-gradient(circle at 50% -10%,#F6F0E1,var(--paper) 65%);col
 @keyframes up{from{transform:translateY(28px);opacity:.6}to{transform:none;opacity:1}}
 .panel h3{font:600 1.06rem var(--fd);margin-bottom:2px}
 .panel .sub{font:italic 400 .84rem/1.5 var(--fs);color:rgba(34,29,21,.55);margin-bottom:13px}
-.kinds{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:10px}
-.kind{border:1px solid rgba(34,29,21,.22);background:rgba(255,255,255,.42);border-radius:10px;
+.kinds{display:flex;gap:8px;overflow-x:auto;padding-bottom:8px;margin-bottom:6px;scrollbar-width:thin}
+.kind{min-width:74px;flex:0 0 auto;border:1px solid rgba(34,29,21,.22);background:rgba(255,255,255,.42);border-radius:10px;
   padding:10px 6px;cursor:pointer;display:grid;justify-items:center;gap:4px;transition:background .16s,border-color .16s}
 .kind[aria-pressed="true"]{background:var(--ink);border-color:var(--ink);color:var(--paper)}
 .kind span{font:500 9.5px var(--fm);letter-spacing:.1em;text-transform:uppercase}
@@ -471,6 +471,13 @@ input[type=range]::-moz-range-thumb{width:22px;height:22px;border-radius:50%;bac
   padding:8px 10px;border-radius:8px;font:500 .95rem var(--fs);color:var(--ink);cursor:pointer;text-align:left}
 .ctxMenu button:hover,.ctxMenu button:active{background:rgba(34,29,21,.07)}
 .ctxMenu button.danger{color:var(--red)}
+.optLabel{font:600 9px var(--fm);letter-spacing:.14em;text-transform:uppercase;color:rgba(34,29,21,.5);margin:0 0 5px}
+.optLabel[hidden]{display:none}
+.advToggle{width:100%;background:transparent;border:1px dashed rgba(34,29,21,.3);border-radius:9px;
+  padding:9px;font:500 .85rem var(--fs);color:rgba(34,29,21,.65);margin:0 0 10px;cursor:pointer}
+#advOpts[hidden]{display:none}
+.toast button{background:rgba(255,255,255,.18);border:1px solid rgba(255,255,255,.45);color:var(--paper);
+  border-radius:99px;padding:4px 12px;margin-left:10px;font:600 .8rem var(--fs);cursor:pointer}
 .ctxMenu hr{border:0;border-top:1px solid rgba(34,29,21,.14);margin:3px 6px}
 .item.move-mode{outline:2px dashed var(--red);outline-offset:5px}
 #cmMore[hidden]{display:none}
@@ -549,6 +556,7 @@ input[type=range]::-moz-range-thumb{width:22px;height:22px;border-radius:50%;bac
         <button class="tool" id="zIn" aria-label="Perbesar">＋</button>
         <button class="tool" id="zOut" aria-label="Perkecil">−</button>
         <button class="tool small" id="zFit" aria-label="Paskan">fit</button>
+        <button class="tool" id="zClear" aria-label="Kosongkan papan">🗑</button>
       </div>
     </div>
   </article>
@@ -562,7 +570,6 @@ input[type=range]::-moz-range-thumb{width:22px;height:22px;border-radius:50%;bac
 
     <div class="kinds">
       <button class="kind" data-kind="note" aria-pressed="true"><i>▭</i><span>Note</span></button>
-      <button class="kind" data-kind="polaroid" aria-pressed="false"><i>▣</i><span>Foto</span></button>
       <button class="kind" data-kind="clip" aria-pressed="false"><i>▤</i><span>Kliping</span></button>
       <button class="kind" data-kind="tiket" aria-pressed="false"><i>◫</i><span>Tiket</span></button>
       <button class="kind" data-kind="pita" aria-pressed="false"><i>❯❮</i><span>Pita</span></button>
@@ -570,10 +577,11 @@ input[type=range]::-moz-range-thumb{width:22px;height:22px;border-radius:50%;bac
       <button class="kind" data-kind="amplop" aria-pressed="false"><i>✉</i><span>Amplop</span></button>
       <button class="kind" data-kind="tag" aria-pressed="false"><i>◈</i><span>Tag</span></button>
       <button class="kind" data-kind="struk" aria-pressed="false"><i>🧾</i><span>Struk</span></button>
+      <button class="kind" data-kind="tulis" aria-pressed="false"><i>✎</i><span>Tulis</span></button>
+      <button class="kind" data-kind="polaroid" aria-pressed="false"><i>▣</i><span>Foto</span></button>
       <button class="kind" data-kind="umbul" aria-pressed="false"><i>⚑</i><span>Umbul</span></button>
       <button class="kind" data-kind="balon" aria-pressed="false"><i>🎈</i><span>Balon</span></button>
       <button class="kind" data-kind="badge" aria-pressed="false"><i>✸</i><span>Badge</span></button>
-      <button class="kind" data-kind="tulis" aria-pressed="false"><i>✎</i><span>Tulis</span></button>
       <button class="kind" data-kind="lampu" aria-pressed="false"><i>✦</i><span>Lampu</span></button>
       <button class="kind" data-kind="lampion" aria-pressed="false"><i>🏮</i><span>Lampion</span></button>
       <button class="kind" data-kind="layang" aria-pressed="false"><i>🪁</i><span>Layang</span></button>
@@ -592,6 +600,8 @@ input[type=range]::-moz-range-thumb{width:22px;height:22px;border-radius:50%;bac
     <div class="shapes" id="frames" hidden></div>
     <div class="shapes" id="stamps" hidden></div>
     <div class="shapes" id="stickers" hidden></div>
+    <button class="advToggle" id="advToggle" type="button">⚙️ Opsi lanjutan</button>
+    <div id="advOpts" hidden></div>
     <div class="shapes" id="pins" hidden></div>
     <div class="shapes" id="pinpos" hidden></div>
     <div class="shapes" id="aligns" hidden></div>
@@ -600,8 +610,6 @@ input[type=range]::-moz-range-thumb{width:22px;height:22px;border-radius:50%;bac
     <div class="shapes" id="sgs" hidden></div>
     <div class="shapes" id="highlights" hidden></div>
     <div class="shapes" id="tapePos" hidden></div>
-
-    <div class="preview" id="preview" hidden><img id="previewImg" alt="Pratinjau foto"></div>
 
     <div class="field" id="fotoField" hidden>
       <input type="file" id="foto" accept="image/*">
@@ -858,15 +866,44 @@ input[type=range]::-moz-range-thumb{width:22px;height:22px;border-radius:50%;bac
     return s + "</svg>";
   }
 
+  var IMG_KEY = "aksara_img_v1";
+  var IMGS = {};
+  try{ IMGS = JSON.parse(localStorage.getItem(IMG_KEY)) || {}; }catch(e){ IMGS = {}; }
+  function imgId(url){
+    if(!url) return null;
+    if(url.indexOf("img:") === 0) return url;
+    var h = 5381;
+    for(var i = 0; i < url.length; i++){ h = ((h << 5) + h + url.charCodeAt(i)) & 0xffffffff; }
+    var id = "i" + (h >>> 0).toString(36);
+    IMGS[id] = url;
+    return "img:" + id;
+  }
+  function imgUrl(ref){
+    if(!ref) return null;
+    if(ref.indexOf("img:") === 0) return IMGS[ref.slice(4)] || null;
+    return ref;
+  }
   function load(){
     try {
       var d = JSON.parse(localStorage.getItem(KEY));
       if(!Array.isArray(d)) return [];
-      return d.filter(function(x){ return x && x.kind !== "doodle"; });
+      return d.filter(function(x){ return x && x.kind !== "doodle"; }).map(function(x){
+        if(x.image && x.image.indexOf("data:") === 0) x.image = imgId(x.image);
+        return x;
+      });
     } catch(e){ return []; }
   }
   function save(){
-    try { localStorage.setItem(KEY, JSON.stringify(items)); }
+    try {
+      var used = {};
+      for(var i = 0; i < items.length; i++){
+        var im = items[i].image;
+        if(im && im.indexOf("img:") === 0) used[im.slice(4)] = 1;
+      }
+      Object.keys(IMGS).forEach(function(k){ if(!used[k]) delete IMGS[k]; });
+      localStorage.setItem(IMG_KEY, JSON.stringify(IMGS));
+      localStorage.setItem(KEY, JSON.stringify(items));
+    }
     catch(e){ say("Penyimpanan penuh — pakai foto yang lebih kecil"); }
   }
   function say(msg){
@@ -1127,7 +1164,8 @@ input[type=range]::-moz-range-thumb{width:22px;height:22px;border-radius:50%;bac
       body.innerHTML = '<div class="ph"></div><div class="cap"></div>';
       var ph = body.querySelector(".ph");
       if(data.filter && data.filter !== "biasa") ph.classList.add("f-" + data.filter);
-      if(data.image){ ph.style.backgroundImage = 'url("' + data.image + '")'; ph.textContent = ""; }
+      var _iu = imgUrl(data.image);
+      if(_iu){ ph.style.backgroundImage = 'url("' + _iu + '")'; ph.textContent = ""; }
       else { ph.textContent = "belum ada foto"; }
       body.querySelector(".cap").textContent = data.text || "";
       el.appendChild(body);
@@ -1318,6 +1356,21 @@ input[type=range]::-moz-range-thumb{width:22px;height:22px;border-radius:50%;bac
     applyView();
   }
 
+  var delStash = null, undoTimer = null;
+  function toastUndo(){
+    clearTimeout(say._t); clearTimeout(undoTimer);
+    toast.innerHTML = 'Tempelan dihapus <button id="undoBtn" type="button">Urungkan</button>';
+    toast.classList.add("show");
+    document.getElementById("undoBtn").onclick = function(e){
+      e.stopPropagation();
+      clearTimeout(undoTimer);
+      if(delStash){ items.splice(Math.min(delStash.index, items.length), 0, delStash.data); delStash = null; save(); renderAll(); }
+      toast.classList.remove("show");
+      say("Dikembalikan");
+    };
+    undoTimer = setTimeout(function(){ toast.classList.remove("show"); delStash = null; }, 6000);
+  }
+
   ctx.addEventListener("pointerdown", function(e){
     if(!e.target.closest(".ctxMenu")) closeCtx();
   });
@@ -1413,7 +1466,8 @@ input[type=range]::-moz-range-thumb{width:22px;height:22px;border-radius:50%;bac
       if(!items.length) hint.classList.remove("hide");
       save();
       closeCtx();
-      say("Tempelan dihapus");
+      delStash = { data: data, index: Math.max(0, i) };
+      toastUndo();
       return;
     }
     if(act === "rotate"){ closeCtx(); openItemSheet(data, el); return; }
@@ -1555,6 +1609,20 @@ input[type=range]::-moz-range-thumb{width:22px;height:22px;border-radius:50%;bac
   document.getElementById("zIn").onclick = function(){ zoomAt(stage.clientWidth/2, stage.clientHeight/2, 1.35); };
   document.getElementById("zOut").onclick = function(){ zoomAt(stage.clientWidth/2, stage.clientHeight/2, 1/1.35); };
   document.getElementById("zFit").onclick = showAll;
+  var clearArmed = false, clearTimer = null;
+  document.getElementById("zClear").onclick = function(){
+    if(!items.length){ say("Papan sudah kosong"); return; }
+    if(!clearArmed){
+      clearArmed = true;
+      say("Ketuk lagi untuk mengosongkan papan");
+      clearTimeout(clearTimer);
+      clearTimer = setTimeout(function(){ clearArmed = false; }, 4000);
+      return;
+    }
+    clearArmed = false; clearTimeout(clearTimer);
+    items = []; save(); renderAll();
+    say("Papan dikosongkan");
+  };
 
   /* ---------- atur tempelan: putar & hapus ---------- */
   /* panel putar sekarang menyatu di menu kontekstual */
@@ -1770,7 +1838,6 @@ input[type=range]::-moz-range-thumb{width:22px;height:22px;border-radius:50%;bac
     }
     if(pendingKind !== "polaroid"){ box.classList.remove("on"); box.innerHTML = ""; return; }
     box.classList.add("on");
-    document.getElementById("preview").classList.remove("on"); /* diganti livePrev */
     var cls = "item pola" + (pendingShape && pendingShape !== "pola" ? " " + pendingShape : "")
       + (pendingRatio ? " r" + pendingRatio : "") + frameClass() + fontClass() + inkClass() + shClass();
     box.innerHTML = '<div class="' + cls + '"' + tpAttr() + '>' + stickerHTML(pendingSticker).replace('class="stk', 'class="stk' + stkClass()) + stampHTML() + '<div class="tape' + tapeClass() + tapePosClass() + '"></div>' +
@@ -1872,7 +1939,9 @@ input[type=range]::-moz-range-thumb{width:22px;height:22px;border-radius:50%;bac
 
   function chipRow(id, list, dataset, cur, onPick, paint){
     var box = document.getElementById(id);
-    if(!list){ box.hidden = true; box.innerHTML = ""; return; }
+    var lb = document.getElementById("lb-" + id);
+    function syncLb(){ if(lb) lb.hidden = box.hidden || !box.children.length; }
+    if(!list){ box.hidden = true; box.innerHTML = ""; syncLb(); return; }
     box.hidden = false;
     box.innerHTML = "";
     list.forEach(function(t){
@@ -1891,6 +1960,8 @@ input[type=range]::-moz-range-thumb{width:22px;height:22px;border-radius:50%;bac
       });
       box.appendChild(b);
     });
+    var _lb = document.getElementById("lb-" + id);
+    if(_lb) _lb.hidden = box.hidden || !box.children.length;
   }
   function renderFonts(){
     chipRow("fonts", ["note","clip","tiket","polaroid","amplop","tag"].indexOf(pendingKind) >= 0 ? FONTS : null, "font",
@@ -2151,8 +2222,12 @@ input[type=range]::-moz-range-thumb{width:22px;height:22px;border-radius:50%;bac
 
   function syncFields(){
     var isPola = pendingKind === "polaroid";
+    Object.keys(ROW_LABELS).forEach(function(id){
+      var box = document.getElementById(id);
+      var lb = document.getElementById("lb-" + id);
+      if(box && lb) lb.hidden = box.hidden || !box.children.length;
+    });
     document.getElementById("fotoField").hidden = !isPola;
-    document.getElementById("preview").classList.toggle("on", isPola && !!pendingImage);
     document.getElementById("nameField").hidden = pendingKind !== "clip" && pendingKind !== "polaroid";
     document.getElementById("txt").placeholder = isPola ? "Caption foto (boleh kosong)" :
       pendingKind === "clip" ? "Tulis klipingmu..." :
@@ -2195,8 +2270,6 @@ input[type=range]::-moz-range-thumb{width:22px;height:22px;border-radius:50%;bac
         c.width = w; c.height = h;
         c.getContext("2d").drawImage(img, 0, 0, w, h);
         pendingImage = c.toDataURL("image/jpeg", 0.72);
-        document.getElementById("previewImg").src = pendingImage;
-        document.getElementById("preview").classList.add("on");
         updateLivePrev();
         say("Foto siap ditempel");
       };
@@ -2213,7 +2286,6 @@ input[type=range]::-moz-range-thumb{width:22px;height:22px;border-radius:50%;bac
     document.getElementById("sheetTitle").textContent = "Tempel di papan";
     document.getElementById("place").textContent = "Tempel di sini";
     pendingColor = NOTE_COLORS[Math.floor(Math.random() * NOTE_COLORS.length)];
-    document.getElementById("preview").classList.remove("on");
     document.getElementById("foto").value = "";
     document.getElementById("txt").value = "";
     document.getElementById("nama").value = "";
@@ -2265,11 +2337,10 @@ input[type=range]::-moz-range-thumb{width:22px;height:22px;border-radius:50%;bac
     pendingShadow = data.shadow || "lembut";
     pendingStamp = data.stamp || "tanpa";
     pendingSticker = data.sticker || "tanpa";
-    pendingImage = data.image || null;
+    pendingImage = imgUrl(data.image) || null;
     kinds.forEach(function(o){ o.setAttribute("aria-pressed", o.dataset.kind === pendingKind ? "true" : "false"); });
     document.getElementById("sheetTitle").textContent = "Ubah tempelan";
     document.getElementById("place").textContent = "Simpan perubahan";
-    document.getElementById("preview").classList.remove("on");
     document.getElementById("foto").value = "";
     document.getElementById("txt").value = data.text || "";
     document.getElementById("nama").value = data.name || "";
@@ -2337,7 +2408,7 @@ input[type=range]::-moz-range-thumb{width:22px;height:22px;border-radius:50%;bac
       d.shadow = pendingShadow;
       d.highlight = ["note","clip","tiket"].indexOf(pendingKind) >= 0 ? pendingHighlight : null;
       d.tapePos = (pendingKind === "clip" || pendingKind === "polaroid") ? pendingTapePos : null;
-      d.image = pendingKind === "polaroid" ? pendingImage : null;
+      d.image = pendingKind === "polaroid" ? imgId(pendingImage) : null;
       var fresh = makeItem(d);
       var oldEl = canvas.querySelector('[data-id="' + d.id + '"]');
       if(oldEl && oldEl.parentNode) oldEl.parentNode.replaceChild(fresh, oldEl);
@@ -2374,7 +2445,7 @@ input[type=range]::-moz-range-thumb{width:22px;height:22px;border-radius:50%;bac
       shadow: pendingShadow,
       highlight: ["note","clip","tiket"].indexOf(pendingKind) >= 0 ? pendingHighlight : null,
       tapePos: (pendingKind === "clip" || pendingKind === "polaroid") ? pendingTapePos : null,
-      image: pendingKind === "polaroid" ? pendingImage : null,
+      image: pendingKind === "polaroid" ? imgId(pendingImage) : null,
       at: Date.now()
     };
     items.push(data);
@@ -2450,7 +2521,7 @@ input[type=range]::-moz-range-thumb{width:22px;height:22px;border-radius:50%;bac
     return [
       S({ id: seedId(1), kind: "note", shape: "wide", x: 100, y: 80, rot: -3, scale: 1.4, text: "Selamat datang di AKSARA! Ketuk papan untuk menempel karyamu.", name: "", color: "#F7E39B", paper: "garis", font: "tangan", ink: "hitam", highlight: "tanpa", sticker: "bintang", sp: "tr", sg: "normal", pin: "merah", pinPos: "tengah", stamp: "osis", shadow: "lembut", align: "kiri" }),
       S({ id: seedId(2), kind: "pita", shape: "lurus", x: 500, y: 120, rot: -1, scale: 1.45, text: "SENJA ITU MILIK KITA", name: "", color: "#F9E8EC", ink: "hitam", sticker: "bulan", sp: "tr", sg: "normal", stamp: "love", shadow: "lembut" }),
-      S({ id: seedId(3), kind: "polaroid", shape: "pola", ratio: "43", x: 1180, y: 80, rot: 2.5, scale: 1.3, text: "Senja kemarin", name: "", image: sun, filter: "biasa", frame: "krem", tape: "bening", tapePos: "atas", sticker: "hati", sp: "tr", sg: "normal", stamp: "tanpa", shadow: "lembut" }),
+      S({ id: seedId(3), kind: "polaroid", shape: "pola", ratio: "43", x: 1180, y: 80, rot: 2.5, scale: 1.3, text: "Senja kemarin", name: "", image: imgId(sun), filter: "biasa", frame: "krem", tape: "bening", tapePos: "atas", sticker: "hati", sp: "tr", sg: "normal", stamp: "tanpa", shadow: "lembut" }),
       S({ id: seedId(4), kind: "tiket", shape: "sobek", x: 1490, y: 120, rot: -4, text: "Malam Poesi", name: "", paper: "pink", ink: "hitam", highlight: "kuning", sticker: "nada", sp: "tr", sg: "normal", stamp: "rahasia2", shadow: "lembut" }),
       S({ id: seedId(5), kind: "perangko", shape: "gerigi", x: 150, y: 330, rot: 5, text: "Salam dari kelas 12", name: "", color: "#D7E4EF", ink: "biru", sticker: "segel", sp: "tr", sg: "normal", stamp: "tanpa", shadow: "lembut", align: "kiri" }),
       S({ id: seedId(6), kind: "note", shape: "sq", x: 850, y: 300, rot: 4, text: "Punya ide? Tempel di sini!", name: "", color: "#DCE7CB", paper: "kotak", font: "tegak", ink: "biru", highlight: "tanpa", sticker: "kilau", sp: "tr", sg: "normal", pin: "biru", pinPos: "kiri", stamp: "tanpa", shadow: "tegas", align: "tengah" }),
@@ -2500,6 +2571,27 @@ input[type=range]::-moz-range-thumb{width:22px;height:22px;border-radius:50%;bac
       S({ id: seedId(36), kind: "rantai", shape: "lurus", x: 1300, y: 15, rot: -1, text: "", name: "", sticker: "kilau", sp: "tr", sg: "besar", stamp: "tanpa", shadow: "lembut" })
     ];
   }
+  var ROW_LABELS = {shapes:"Bentuk",ratios:"Rasio",colors:"Warna kertas",papers:"Model kertas",fonts:"Gaya tulisan",inks:"Warna tinta",filters:"Filter foto",tapes:"Warna selotip",frames:"Bingkai foto",stamps:"Stempel karet",stickers:"Stiker",pins:"Warna peniti",pinpos:"Posisi peniti",aligns:"Teks rata",sps:"Posisi stiker",shadows:"Bayangan",sgs:"Ukuran stiker",highlights:"Stabilo",tapePos:"Posisi selotip"};
+  var ADV_ROWS = ["highlights","tapePos","pinpos","shadows","sgs"];
+  Object.keys(ROW_LABELS).forEach(function(id){
+    var box = document.getElementById(id);
+    if(!box) return;
+    var lb = document.createElement("p");
+    lb.className = "optLabel"; lb.id = "lb-" + id; lb.textContent = ROW_LABELS[id]; lb.hidden = true;
+    box.parentNode.insertBefore(lb, box);
+  });
+  (function(){
+    var adv = document.getElementById("advOpts");
+    ADV_ROWS.forEach(function(id){
+      var box = document.getElementById(id);
+      var lb = document.getElementById("lb-" + id);
+      if(box && box.parentNode !== adv){ if(lb) adv.appendChild(lb); adv.appendChild(box); }
+    });
+    document.getElementById("advToggle").addEventListener("click", function(){
+      adv.hidden = !adv.hidden;
+      this.textContent = adv.hidden ? "\u2699\uFE0F Opsi lanjutan" : "\u2715 Tutup opsi";
+    });
+  })();
   var SEED_V = 3, seedDone = 0;
   try{ seedDone = +localStorage.getItem("aksara_seed_v") || 0; }catch(e){}
   var firstVisit = !localStorage.getItem(KEY);
