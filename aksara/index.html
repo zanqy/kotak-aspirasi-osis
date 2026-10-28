@@ -112,6 +112,31 @@ body{background:radial-gradient(circle at 50% -10%,#F6F0E1,var(--paper) 65%);col
 /* ukuran stiker */
 .stk.sg-kecil{scale:.72}
 .stk.sg-besar{scale:1.5}
+.stk.sg-jumbo{scale:2.1}
+/* kertas buku tulis */
+.item.note.paper-buku .body{background:linear-gradient(90deg,transparent 0 30px,rgba(192,59,33,.35) 30px 31px,transparent 31px),repeating-linear-gradient(180deg,transparent 0 24px,rgba(59,110,180,.4) 24px 25px),linear-gradient(170deg,rgba(255,255,255,.4),rgba(255,255,255,0) 45%),#FDFDF8}
+/* umbul-umbul */
+.item.umbul{background:transparent;border:0;box-shadow:none;border-radius:0;overflow:visible;min-width:560px}
+.item.umbul svg{display:block;overflow:visible}
+/* balon */
+.item.balon{background:transparent;border:0;box-shadow:none;overflow:visible}
+.item.balon .bbody{position:relative;width:132px;height:162px;margin:0 auto;border-radius:50%/54% 54% 46% 46%;
+  background:radial-gradient(circle at 35% 30%,rgba(255,255,255,.8),rgba(255,255,255,0) 44%),var(--c,#F6D8DD);
+  display:grid;place-items:center;box-shadow:0 3px 5px rgba(24,20,16,.25)}
+.item.balon .bknot{width:0;height:0;margin:-2px auto 0;border-left:8px solid transparent;border-right:8px solid transparent;border-bottom:12px solid var(--c,#F6D8DD)}
+.item.balon .bstring{width:2px;height:54px;margin:0 auto;background:rgba(34,29,21,.4)}
+.item.balon .txt{font:700 .95rem/1.25 var(--fs);color:#2b241c;text-align:center;padding:0 18px;max-height:110px;word-break:break-word}
+/* badge ledakan */
+.item.badge{background:transparent;border:0;box-shadow:none;overflow:visible}
+.item.badge .bburst{width:158px;height:158px;background:var(--c,#F7E39B);
+  clip-path:polygon(50.0% 0.0%,60.4% 11.4%,75.0% 6.7%,78.3% 21.7%,93.3% 25.0%,88.6% 39.6%,100.0% 50.0%,88.6% 60.4%,93.3% 75.0%,78.3% 78.3%,75.0% 93.3%,60.4% 88.6%,50.0% 100.0%,39.6% 88.6%,25.0% 93.3%,21.7% 78.3%,6.7% 75.0%,11.4% 60.4%,0.0% 50.0%,11.4% 39.6%,6.7% 25.0%,21.7% 21.7%,25.0% 6.7%,39.6% 11.4%);
+  display:grid;place-items:center;filter:drop-shadow(0 2px 3px rgba(24,20,16,.3))}
+.item.badge .txt{font:800 1.05rem/1.2 var(--fd);color:#2b241c;text-align:center;text-transform:uppercase;max-width:96px;word-break:break-word}
+/* papan tulis mini */
+.item.tulis{background:#2E3330;border:7px solid #7D5230;border-radius:5px;padding:14px;min-width:190px;
+  box-shadow:0 2px 5px rgba(24,20,16,.3)}
+.item.tulis .txt{font:400 1.18rem/1.35 'Gochi Hand',cursive;color:#F5F2E8;max-height:150px;word-break:break-word}
+.item.tulis .tkapur{width:34px;height:7px;background:#F5F2E8;border-radius:3px;margin:10px auto 0;opacity:.9}
 /* stiker jangkar & matahari */
 .stk.jangkar{color:#2C5E9E;text-shadow:0 1px 0 rgba(255,255,255,.7)}
 .stk.matahari{color:#E8890C;text-shadow:0 1px 2px rgba(24,20,16,.25)}
@@ -478,7 +503,7 @@ input[type=range]::-moz-range-thumb{width:22px;height:22px;border-radius:50%;bac
     <h1>AKSARA<i>.</i></h1>
     <div class="ed">
       <span>EDISI <b>231</b></span>
-      <span>25 OKTOBER 2026</span>
+      <span id="edDate">25 OKTOBER 2026</span>
       <span>HARGA: <b>1 SENYUM</b></span>
     </div>
   </header>
@@ -486,7 +511,7 @@ input[type=range]::-moz-range-thumb{width:22px;height:22px;border-radius:50%;bac
   <div class="dataline">
     <span><b>CUACA</b> Cerah Berawan</span>
     <span><b>KURS</b> 1 Rindu = 2 Curhat</span>
-    <span><b>TERBIT</b> 05:12 WIB</span>
+    <span><b>TERBIT</b> <span id="edTime">05:12</span> WIB</span>
   </div>
 
   <article class="paper">
@@ -530,6 +555,10 @@ input[type=range]::-moz-range-thumb{width:22px;height:22px;border-radius:50%;bac
       <button class="kind" data-kind="amplop" aria-pressed="false"><i>✉</i><span>Amplop</span></button>
       <button class="kind" data-kind="tag" aria-pressed="false"><i>◈</i><span>Tag</span></button>
       <button class="kind" data-kind="struk" aria-pressed="false"><i>🧾</i><span>Struk</span></button>
+      <button class="kind" data-kind="umbul" aria-pressed="false"><i>⚑</i><span>Umbul</span></button>
+      <button class="kind" data-kind="balon" aria-pressed="false"><i>🎈</i><span>Balon</span></button>
+      <button class="kind" data-kind="badge" aria-pressed="false"><i>✸</i><span>Badge</span></button>
+      <button class="kind" data-kind="tulis" aria-pressed="false"><i>✎</i><span>Tulis</span></button>
     </div>
 
     <div class="shapes" id="shapes"></div>
@@ -630,7 +659,11 @@ input[type=range]::-moz-range-thumb{width:22px;height:22px;border-radius:50%;bac
     perangko: [["rect","Lurus"],["gerigi","Gerigi"]],
     amplop:   [["lurus","Tertutup"],["buka","Terbuka"]],
     tag:      [["rect","Kotak"],["lonjong","Lonjong"]],
-    struk:    [["lurus","Struk"]]
+    struk:    [["lurus","Struk"]],
+    umbul:    [["lurus","Umbul"]],
+    balon:    [["bulat","Bulat"]],
+    badge:    [["bintang","Bintang"]],
+    tulis:    [["papan","Papan"]]
   };
 
   var stage = document.getElementById("stage");
@@ -655,7 +688,7 @@ input[type=range]::-moz-range-thumb{width:22px;height:22px;border-radius:50%;bac
   var ALIGNS = [["kiri","Kiri"],["tengah","Tengah"],["kanan","Kanan"]];
   var SPS = [["tr","Kanan atas"],["tl","Kiri atas"]];
   var SHADOWS = [["lembut","Lembut"],["tegas","Tegas"],["panjang","Panjang"]];
-  var SGS = [["normal","Normal"],["kecil","Kecil"],["besar","Besar"]];
+  var SGS = [["normal","Normal"],["kecil","Kecil"],["besar","Besar"],["jumbo","Jumbo"]];
   var PINS = [["merah","Merah"],["kuning","Kuning"],["biru","Biru"],["hijau","Hijau"],["hitam","Hitam"]];
   var pendingHighlight = "tanpa", pendingTapePos = "atas";
   function tapeClass(){ return pendingTape && pendingTape !== "bening" ? " t-" + pendingTape : ""; }
@@ -663,7 +696,7 @@ input[type=range]::-moz-range-thumb{width:22px;height:22px;border-radius:50%;bac
   function inkClass(){ return (pendingInk && pendingInk !== "hitam" ? " ink-" + pendingInk : ""); }
   function frameClass(){ return pendingKind === "polaroid" && pendingFrame !== "putih" ? " frame-" + pendingFrame : ""; }
   function hlClass(){ return (pendingKind === "note" || pendingKind === "clip" || pendingKind === "tiket") && pendingHighlight !== "tanpa" ? " hl-" + pendingHighlight : ""; }
-  function alClass(){ return (pendingKind === "note" || pendingKind === "clip" || pendingKind === "tiket" || pendingKind === "perangko" || pendingKind === "struk") && pendingAlign !== "kiri" ? " al-" + pendingAlign : ""; }
+  function alClass(){ return (pendingKind === "note" || pendingKind === "clip" || pendingKind === "tiket" || pendingKind === "perangko" || pendingKind === "struk" || pendingKind === "tulis") && pendingAlign !== "kiri" ? " al-" + pendingAlign : ""; }
   function shClass(){ return pendingShadow && pendingShadow !== "lembut" ? " sh-" + pendingShadow : ""; }
   function stkClass(){ return (pendingSp === "tl" ? " sp-tl" : "") + (pendingSg && pendingSg !== "normal" ? " sg-" + pendingSg : ""); }
   function stkClsD(d){ return (d.sp === "tl" ? " sp-tl" : "") + (d.sg && d.sg !== "normal" ? " sg-" + d.sg : ""); }
@@ -680,7 +713,7 @@ input[type=range]::-moz-range-thumb{width:22px;height:22px;border-radius:50%;bac
   }
   var RATIOS = [["11","1:1"],["43","4:3"],["34","3:4"],["169","16:9"]];
   var FILTERS = [["biasa","Biasa"],["sepia","Sepia"],["senja","Senja"],["koran","Koran"],["bw","Hitam putih"],["pudar","Pudar"]];
-  var PAPERS = {note:[["polos","Polos"],["garis","Garis"],["kotak","Kotak"],["polka","Polka"],["strip","Garis miring"],["kado","Kado"],["daur","Daur ulang"],["koran","Koran"],["kraft","Kraft"]],clip:[["koran","Koran"],["hvs","Putih"],["daur","Daur ulang"],["kraft","Kraft"]],tiket:[["krem","Krem"],["pink","Pink"],["hijau","Hijau"]]};
+  var PAPERS = {note:[["polos","Polos"],["garis","Garis"],["kotak","Kotak"],["buku","Buku tulis"],["polka","Polka"],["strip","Garis miring"],["kado","Kado"],["daur","Daur ulang"],["koran","Koran"],["kraft","Kraft"]],clip:[["koran","Koran"],["hvs","Putih"],["daur","Daur ulang"],["kraft","Kraft"]],tiket:[["krem","Krem"],["pink","Pink"],["hijau","Hijau"]]};
   var TAPES = [["bening","Bening"],["merah","Merah"],["biru","Biru"],["hitam","Hitam"],["polka","Polka"],["strip","Strip"]];
   var FONTS = [["tangan","Tangan"],["tegak","Tegak"],["ketik","Mesin ketik"],["stencil","Stencil"],["spidol","Spidol"]];
   var INKS = [["hitam","Hitam"],["merah","Merah"],["biru","Biru"],["ungu","Ungu"],["hijau","Hijau"]];
@@ -709,6 +742,16 @@ input[type=range]::-moz-range-thumb{width:22px;height:22px;border-radius:50%;bac
     if(d.sp === "tl") el.classList.add("sp-tl");
     if(d.sg && d.sg !== "normal") el.classList.add("sg-" + d.sg);
     return el;
+  }
+  function umbulSVG(){
+    var cols = ["#F6D8DD","#F9E8EC","#DCE7CB","#D7E4EF","#F7E39B","#F1E0C4","#E4EDDC","#F9E3E7","#FFFDF7"];
+    var s = '<svg width="560" height="64" viewBox="0 0 560 64">';
+    s += '<path d="M0,10 Q280,42 560,8" stroke="#2b241c" stroke-width="2.5" fill="none"/>';
+    for(var i = 0; i < 9; i++){
+      var x = 18 + i * 58;
+      s += '<polygon points="' + x + ',13 ' + (x + 32) + ',13 ' + (x + 16) + ',52" fill="' + cols[i] + '" stroke="rgba(34,29,21,.35)" stroke-width="1"/>';
+    }
+    return s + "</svg>";
   }
 
   function load(){
@@ -785,14 +828,16 @@ input[type=range]::-moz-range-thumb{width:22px;height:22px;border-radius:50%;bac
     var base = data.kind === "polaroid" ? "pola" : data.kind === "clip" ? "clip" :
       data.kind === "tiket" ? "tiket" : data.kind === "pita" ? "pita" :
       data.kind === "perangko" ? "perangko" : data.kind === "amplop" ? "amplop" :
-      data.kind === "tag" ? "tag" : data.kind === "struk" ? "struk" : "note";
+      data.kind === "tag" ? "tag" : data.kind === "struk" ? "struk" :
+      data.kind === "umbul" ? "umbul" : data.kind === "balon" ? "balon" :
+      data.kind === "badge" ? "badge" : data.kind === "tulis" ? "tulis" : "note";
     el.className = "item " + base + (data.shape && data.shape !== base ? " " + data.shape : "") + (data.ratio ? " r" + data.ratio : "")
       + (data.paper && ((base === "note" && data.paper !== "polos") || (base === "clip" && data.paper !== "koran")) ? " paper-" + data.paper : "")
       + (data.paper && base === "tiket" && data.paper !== "krem" ? " tik-" + data.paper : "")
       + (data.font && data.font !== "tangan" && (base === "note" || base === "clip" || base === "tiket" || base === "pola") ? " fnt-" + data.font : "")
       + (data.ink && data.ink !== "hitam" ? " ink-" + data.ink : "")
       + (data.shape === "gerigi" && base === "perangko" ? " p-gerigi" : "")
-      + (data.align && data.align !== "kiri" && (base === "note" || base === "clip" || base === "tiket" || base === "perangko" || base === "struk") ? " al-" + data.align : "")
+      + (data.align && data.align !== "kiri" && (base === "note" || base === "clip" || base === "tiket" || base === "perangko" || base === "struk" || base === "tulis") ? " al-" + data.align : "")
       + (data.shadow && data.shadow !== "lembut" ? " sh-" + data.shadow : "")
       + (data.sp === "tl" ? " sp-tl" : "")
       + (data.frame && data.frame !== "putih" && base === "pola" ? " frame-" + data.frame : "")
@@ -891,6 +936,59 @@ input[type=range]::-moz-range-thumb{width:22px;height:22px;border-radius:50%;bac
         stm5.className = "stamp";
         stm5.textContent = STAMP_TEXT[data.stamp] || "";
         el.appendChild(stm5);
+      }
+      return el;
+    }
+    if(data.kind === "umbul"){
+      el.innerHTML = umbulSVG();
+      if(data.sticker && data.sticker !== "tanpa") el.appendChild(segelAwareSp(data.sticker, data));
+      if(data.stamp && data.stamp !== "tanpa"){
+        var stm7 = document.createElement("div");
+        stm7.className = "stamp";
+        stm7.textContent = STAMP_TEXT[data.stamp] || "";
+        el.appendChild(stm7);
+      }
+      return el;
+    }
+    if(data.kind === "balon"){
+      body.innerHTML = '<div class="txt"></div>';
+      body.className = "bbody";
+      body.querySelector(".txt").textContent = data.text || "";
+      el.appendChild(body);
+      el.insertAdjacentHTML("beforeend", '<div class="bknot"></div><div class="bstring"></div>');
+      if(data.sticker && data.sticker !== "tanpa") el.appendChild(segelAwareSp(data.sticker, data));
+      if(data.stamp && data.stamp !== "tanpa"){
+        var stm8 = document.createElement("div");
+        stm8.className = "stamp";
+        stm8.textContent = STAMP_TEXT[data.stamp] || "";
+        el.appendChild(stm8);
+      }
+      return el;
+    }
+    if(data.kind === "badge"){
+      body.innerHTML = '<div class="txt"></div>';
+      body.className = "bburst";
+      body.querySelector(".txt").textContent = data.text || "";
+      el.appendChild(body);
+      if(data.sticker && data.sticker !== "tanpa") el.appendChild(segelAwareSp(data.sticker, data));
+      if(data.stamp && data.stamp !== "tanpa"){
+        var stm9 = document.createElement("div");
+        stm9.className = "stamp";
+        stm9.textContent = STAMP_TEXT[data.stamp] || "";
+        el.appendChild(stm9);
+      }
+      return el;
+    }
+    if(data.kind === "tulis"){
+      body.innerHTML = '<div class="txt"></div><div class="tkapur"></div>';
+      body.querySelector(".txt").textContent = data.text || "";
+      el.appendChild(body);
+      if(data.sticker && data.sticker !== "tanpa") el.appendChild(segelAwareSp(data.sticker, data));
+      if(data.stamp && data.stamp !== "tanpa"){
+        var stm10 = document.createElement("div");
+        stm10.className = "stamp";
+        stm10.textContent = STAMP_TEXT[data.stamp] || "";
+        el.appendChild(stm10);
       }
       return el;
     }
@@ -1340,6 +1438,26 @@ input[type=range]::-moz-range-thumb{width:22px;height:22px;border-radius:50%;bac
 
   document.getElementById("rotRange").addEventListener("input", function(){ setRot(+this.value); });
 
+  function burst(bx, by){
+    try{
+      var sx = bx * view.s + view.x, sy = by * view.s + view.y;
+      var cols = ["#C03B21","#E8A013","#2C5E9E","#3E6B35","#B4536B"];
+      for(var i = 0; i < 12; i++){
+        (function(i){
+          var c = document.createElement("i");
+          c.style.cssText = "position:absolute;z-index:60;pointer-events:none;left:" + sx + "px;top:" + sy + "px;width:7px;height:9px;background:" + cols[i % cols.length] + ";border-radius:1px";
+          stage.appendChild(c);
+          var dx = (Math.random() - .5) * 190, dy = -40 - Math.random() * 110;
+          var an = c.animate([
+            { transform: "translate(0,0) rotate(0deg)", opacity: "1" },
+            { transform: "translate(" + dx + "px," + (dy + 160) + "px) rotate(" + (Math.random() * 540 - 270) + "deg)", opacity: "0" }
+          ], { duration: 650 + Math.random() * 450, easing: "cubic-bezier(.2,.7,.4,1)" });
+          an.onfinish = function(){ if(c.parentNode) c.parentNode.removeChild(c); };
+        })(i);
+      }
+    }catch(e){}
+  }
+
   function boardPoint(cx, cy){
     var r = stage.getBoundingClientRect();
     return { x: (cx - r.left - view.x) / view.s, y: (cy - r.top - view.y) / view.s };
@@ -1455,6 +1573,29 @@ input[type=range]::-moz-range-thumb{width:22px;height:22px;border-radius:50%;bac
         '<div class="shead">AKSARA MART</div><div class="txt">' + (escPrev(txt) || "Daftar belanja…") + '</div><div class="sfoot">★ TERIMA KASIH ★</div></div>';
       return;
     }
+    if(pendingKind === "umbul"){
+      box.classList.add("on");
+      box.innerHTML = '<div class="item umbul">' + stickerHTML(pendingSticker).replace('class="stk', 'class="stk' + stkClass()) + stampHTML() + umbulSVG() + "</div>";
+      return;
+    }
+    if(pendingKind === "balon"){
+      box.classList.add("on");
+      box.innerHTML = '<div class="item balon' + shClass() + '" style="--c:' + pendingColor + '">' + stickerHTML(pendingSticker).replace('class="stk', 'class="stk' + stkClass()) + stampHTML() +
+        '<div class="bbody"><div class="txt">' + (escPrev(txt) || "Hore!") + '</div></div><div class="bknot"></div><div class="bstring"></div></div>';
+      return;
+    }
+    if(pendingKind === "badge"){
+      box.classList.add("on");
+      box.innerHTML = '<div class="item badge' + shClass() + '" style="--c:' + pendingColor + '">' + stickerHTML(pendingSticker).replace('class="stk', 'class="stk' + stkClass()) + stampHTML() +
+        '<div class="bburst"><div class="txt">' + (escPrev(txt) || "WOW!") + "</div></div></div>";
+      return;
+    }
+    if(pendingKind === "tulis"){
+      box.classList.add("on");
+      box.innerHTML = '<div class="item tulis' + alClass() + shClass() + '">' + stickerHTML(pendingSticker).replace('class="stk', 'class="stk' + stkClass()) + stampHTML() +
+        '<div class="txt">' + (escPrev(txt) || "Catatan kapur…") + '</div><div class="tkapur"></div></div>';
+      return;
+    }
     if(pendingKind !== "polaroid"){ box.classList.remove("on"); box.innerHTML = ""; return; }
     box.classList.add("on");
     document.getElementById("preview").classList.remove("on"); /* diganti livePrev */
@@ -1470,7 +1611,7 @@ input[type=range]::-moz-range-thumb{width:22px;height:22px;border-radius:50%;bac
 
   function renderColors(){
     var box = document.getElementById("colors");
-    box.hidden = ["note","pita","perangko","amplop","tag"].indexOf(pendingKind) < 0;
+    box.hidden = ["note","pita","perangko","amplop","tag","balon","badge"].indexOf(pendingKind) < 0;
     if(box.hidden){ box.innerHTML = ""; return; }
     box.innerHTML = "";
     NOTE_COLORS.forEach(function(c){
@@ -1622,7 +1763,7 @@ input[type=range]::-moz-range-thumb{width:22px;height:22px;border-radius:50%;bac
       function(t){ return t[0] === "tengah" ? '<b><i style="display:block;width:4px;height:4px;border-radius:50%;background:#C03B21;margin:6px auto 0"></i></b>' : '<b><i style="display:block;width:4px;height:4px;border-radius:50%;background:#C03B21;margin:6px 2px 0"></i></b>'; });
   }
   function renderAligns(){
-    chipRow("aligns", ["note","clip","tiket","perangko","struk"].indexOf(pendingKind) >= 0 ? ALIGNS : null, "al",
+    chipRow("aligns", ["note","clip","tiket","perangko","struk","tulis"].indexOf(pendingKind) >= 0 ? ALIGNS : null, "al",
       function(){ return pendingAlign; }, function(v){ pendingAlign = v; },
       function(t){ return '<b style="justify-content:' + (t[0] === "kiri" ? "flex-start" : t[0] === "tengah" ? "center" : "flex-end") + '"><i style="display:block;width:12px;height:2px;background:rgba(34,29,21,.6)"></i></b>'; });
   }
@@ -1763,6 +1904,28 @@ input[type=range]::-moz-range-thumb{width:22px;height:22px;border-radius:50%;bac
       pendingSticker = rnd(STICKERS)[0];
       pendingStamp = rnd(STAMPS)[0];
     }
+    if(pendingKind === "balon"){
+      pendingColor = rnd(NOTE_COLORS);
+      pendingInk = rnd(INKS)[0];
+      pendingSticker = rnd(STICKERS)[0];
+      pendingStamp = rnd(STAMPS)[0];
+    }
+    if(pendingKind === "badge"){
+      pendingColor = rnd(NOTE_COLORS);
+      pendingInk = rnd(INKS)[0];
+      pendingSticker = rnd(STICKERS)[0];
+      pendingStamp = rnd(STAMPS)[0];
+    }
+    if(pendingKind === "tulis"){
+      pendingInk = rnd(INKS)[0];
+      pendingAlign = rnd(ALIGNS)[0];
+      pendingSticker = rnd(STICKERS)[0];
+      pendingStamp = rnd(STAMPS)[0];
+    }
+    if(pendingKind === "umbul"){
+      pendingSticker = rnd(STICKERS)[0];
+      pendingStamp = rnd(STAMPS)[0];
+    }
     if(pendingKind === "polaroid"){
       pendingSp = rnd(SPS)[0];
       pendingFont = rnd(FONTS)[0];
@@ -1821,7 +1984,11 @@ input[type=range]::-moz-range-thumb{width:22px;height:22px;border-radius:50%;bac
       pendingKind === "perangko" ? "Tulis pesan perangko..." :
       pendingKind === "amplop" ? "Tulis isi surat..." :
       pendingKind === "tag" ? "Tulis label..." :
-      pendingKind === "struk" ? "Tulis isi struk..." : "Tulis sesuatu...";
+      pendingKind === "struk" ? "Tulis isi struk..." :
+      pendingKind === "umbul" ? "Hiasan umbul (tanpa teks)" :
+      pendingKind === "balon" ? "Tulis singkat..." :
+      pendingKind === "badge" ? "Tulis kata seru..." :
+      pendingKind === "tulis" ? "Tulis di papan..." : "Tulis sesuatu...";
     updateLivePrev();
   }
 
@@ -1910,7 +2077,7 @@ input[type=range]::-moz-range-thumb{width:22px;height:22px;border-radius:50%;bac
   document.getElementById("place").onclick = function(){
     var text = document.getElementById("txt").value.trim();
     var name = document.getElementById("nama").value.trim();
-    if(pendingKind !== "polaroid" && !text){ say("Isi dulu tulisannya"); return; }
+    if(pendingKind !== "polaroid" && pendingKind !== "umbul" && !text){ say("Isi dulu tulisannya"); return; }
     if(pendingKind === "polaroid" && !pendingImage){ say("Pilih foto dulu"); return; }
 
     var data = {
@@ -1933,7 +2100,7 @@ input[type=range]::-moz-range-thumb{width:22px;height:22px;border-radius:50%;bac
       frame: pendingKind === "polaroid" ? pendingFrame : null,
       pin: pendingKind === "note" ? pendingPin : null,
       pinPos: pendingKind === "note" ? pendingPinPos : null,
-      align: ["note","clip","tiket","perangko","struk"].indexOf(pendingKind) >= 0 ? pendingAlign : null,
+      align: ["note","clip","tiket","perangko","struk","tulis"].indexOf(pendingKind) >= 0 ? pendingAlign : null,
       sp: pendingSp,
       sg: pendingSg,
       shadow: pendingShadow,
@@ -1951,6 +2118,7 @@ input[type=range]::-moz-range-thumb{width:22px;height:22px;border-radius:50%;bac
          { transform: node.style.transform, opacity: "1" }],
         { duration: 300, easing: "cubic-bezier(.2,1.3,.4,1)" });
       if(navigator.vibrate) navigator.vibrate(12);
+      if(pendingPoint) burst(pendingPoint.x, pendingPoint.y);
     }catch(e){}
 
     /* ukur dulu, baru dijepit supaya pas di dalam papan */
@@ -2040,9 +2208,32 @@ input[type=range]::-moz-range-thumb{width:22px;height:22px;border-radius:50%;bac
     ];
   }
 
+  try{
+    var nowD = new Date();
+    var dEl = document.getElementById("edDate");
+    if(dEl) dEl.textContent = nowD.toLocaleDateString("id-ID", { day: "numeric", month: "long", year: "numeric" }).toUpperCase();
+    var tEl = document.getElementById("edTime");
+    if(tEl) tEl.textContent = ("0" + nowD.getHours()).slice(-2) + ":" + ("0" + nowD.getMinutes()).slice(-2);
+  }catch(e){}
+  function seedDelta(){
+    var now = Date.now();
+    function S(o){ o.at = now; return o; }
+    return [
+      S({ id: seedId(26), kind: "umbul", shape: "lurus", x: 610, y: 8, rot: 0, text: "", name: "", sticker: "tanpa", sp: "tr", sg: "normal", stamp: "tanpa", shadow: "lembut" }),
+      S({ id: seedId(27), kind: "balon", shape: "bulat", x: 30, y: 300, rot: -4, text: "Hore!", name: "", color: "#F9E8EC", ink: "hitam", sticker: "bintang", sp: "tl", sg: "normal", stamp: "tanpa", shadow: "lembut" }),
+      S({ id: seedId(28), kind: "balon", shape: "bulat", x: 1620, y: 440, rot: 4, text: "OSIS!", name: "", color: "#D7E4EF", ink: "biru", sticker: "hati", sp: "tr", sg: "normal", stamp: "tanpa", shadow: "lembut" }),
+      S({ id: seedId(29), kind: "badge", shape: "bintang", x: 820, y: 660, rot: -6, text: "GRATIS!", name: "", color: "#F7E39B", ink: "merah", sticker: "kilau", sp: "tr", sg: "besar", stamp: "tanpa", shadow: "lembut" }),
+      S({ id: seedId(30), kind: "badge", shape: "bintang", x: 1450, y: 840, rot: 5, text: "KECE!", name: "", color: "#F6D8DD", ink: "ungu", sticker: "mahkota", sp: "tr", sg: "normal", stamp: "wow", shadow: "lembut" }),
+      S({ id: seedId(31), kind: "tulis", shape: "papan", x: 950, y: 150, rot: -1.5, text: "Ujian Senin!", name: "", ink: "hitam", align: "tengah", sticker: "tanpa", sp: "tr", sg: "normal", stamp: "tanpa", shadow: "lembut" })
+    ];
+  }
+  var SEED_V = 2, seedDone = 0;
+  try{ seedDone = +localStorage.getItem("aksara_seed_v") || 0; }catch(e){}
   var firstVisit = !localStorage.getItem(KEY);
   items = load();
-  if(firstVisit && !items.length){ items = seedBoard(); save(); }
+  if(firstVisit && !items.length){ items = seedBoard().concat(seedDelta()); save(); seedDone = SEED_V; }
+  else if(seedDone < SEED_V && items.length){ seedDelta().forEach(function(d){ items.push(d); }); save(); seedDone = SEED_V; }
+  try{ localStorage.setItem("aksara_seed_v", String(seedDone)); }catch(e){}
   renderAll();
   fit();
   window.addEventListener("resize", function(){ fit(); });
