@@ -911,7 +911,7 @@ input[type=range]::-moz-range-thumb{width:22px;height:22px;border-radius:50%;bac
       body.innerHTML = '<div class="ph"></div><div class="cap"></div>';
       var ph = body.querySelector(".ph");
       if(data.filter && data.filter !== "biasa") ph.classList.add("f-" + data.filter);
-      if(data.image){ ph.style.backgroundImage = "url(" + data.image + ")"; ph.textContent = ""; }
+      if(data.image){ ph.style.backgroundImage = 'url("' + data.image + '")'; ph.textContent = ""; }
       else { ph.textContent = "belum ada foto"; }
       body.querySelector(".cap").textContent = data.text || "";
       el.appendChild(body);
@@ -1462,7 +1462,7 @@ input[type=range]::-moz-range-thumb{width:22px;height:22px;border-radius:50%;bac
       + (pendingRatio ? " r" + pendingRatio : "") + frameClass() + fontClass() + inkClass() + shClass();
     box.innerHTML = '<div class="' + cls + '"' + tpAttr() + '>' + stickerHTML(pendingSticker).replace('class="stk', 'class="stk' + stkClass()) + stampHTML() + '<div class="tape' + tapeClass() + tapePosClass() + '"></div>' +
       '<div class="body"><div class="ph' + (pendingFilter && pendingFilter !== "biasa" ? " f-" + pendingFilter : "") + '"' +
-      (pendingImage ? ' style="background-image:url(' + pendingImage + ')"' : "") + ">" +
+      (pendingImage ? ' style="background-image:url(&quot;' + pendingImage + '&quot;)"' : "") + ">" +
       (pendingImage ? "" : "pilih foto dulu") + "</div>" +
       '<div class="cap">' + escPrev(document.getElementById("txt").value.trim()) + "</div>" +
       "</div></div>";
@@ -2006,7 +2006,43 @@ input[type=range]::-moz-range-thumb{width:22px;height:22px;border-radius:50%;bac
     } catch(e) {}
   })();
 
+  function seedId(n){ return "seed" + n; }
+  function seedBoard(){
+    var sun = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='300'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='0' y2='1'%3E%3Cstop offset='0' stop-color='%237B4B94'/%3E%3Cstop offset='.6' stop-color='%23E8632B'/%3E%3Cstop offset='1' stop-color='%23F2B134'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='400' height='300' fill='url(%23g)'/%3E%3Ccircle cx='200' cy='185' r='55' fill='%23FFE9A8'/%3E%3Crect y='230' width='400' height='70' fill='%233A2B3F'/%3E%3C/svg%3E";
+    var now = Date.now();
+    function S(o){ o.at = now; return o; }
+    return [
+      S({ id: seedId(1), kind: "note", shape: "wide", x: 100, y: 80, rot: -3, scale: 1.4, text: "Selamat datang di AKSARA! Ketuk papan untuk menempel karyamu.", name: "", color: "#F7E39B", paper: "garis", font: "tangan", ink: "hitam", highlight: "tanpa", sticker: "bintang", sp: "tr", sg: "normal", pin: "merah", pinPos: "tengah", stamp: "osis", shadow: "lembut", align: "kiri" }),
+      S({ id: seedId(2), kind: "pita", shape: "lurus", x: 500, y: 120, rot: -1, scale: 1.45, text: "SENJA ITU MILIK KITA", name: "", color: "#F9E8EC", ink: "hitam", sticker: "bulan", sp: "tr", sg: "normal", stamp: "love", shadow: "lembut" }),
+      S({ id: seedId(3), kind: "polaroid", shape: "pola", ratio: "43", x: 1180, y: 80, rot: 2.5, scale: 1.3, text: "Senja kemarin", name: "", image: sun, filter: "biasa", frame: "krem", tape: "bening", tapePos: "atas", sticker: "hati", sp: "tr", sg: "normal", stamp: "tanpa", shadow: "lembut" }),
+      S({ id: seedId(4), kind: "tiket", shape: "sobek", x: 1490, y: 120, rot: -4, text: "Malam Poesi", name: "", paper: "pink", ink: "hitam", highlight: "kuning", sticker: "nada", sp: "tr", sg: "normal", stamp: "rahasia2", shadow: "lembut" }),
+      S({ id: seedId(5), kind: "perangko", shape: "gerigi", x: 150, y: 330, rot: 5, text: "Salam dari kelas 12", name: "", color: "#D7E4EF", ink: "biru", sticker: "segel", sp: "tr", sg: "normal", stamp: "tanpa", shadow: "lembut", align: "kiri" }),
+      S({ id: seedId(6), kind: "note", shape: "sq", x: 850, y: 300, rot: 4, text: "Punya ide? Tempel di sini!", name: "", color: "#DCE7CB", paper: "kotak", font: "tegak", ink: "biru", highlight: "tanpa", sticker: "kilau", sp: "tr", sg: "normal", pin: "biru", pinPos: "kiri", stamp: "tanpa", shadow: "tegas", align: "tengah" }),
+      S({ id: seedId(7), kind: "clip", shape: "torn", x: 1300, y: 330, rot: -3, text: "Lomba poster dibuka! Daftar ke 11-2 sblm Jumat.", name: "OSIS", paper: "hvs", font: "stencil", ink: "merah", highlight: "tanpa", sticker: "panah", sp: "tr", sg: "besar", tape: "biru", tapePos: "kiri", stamp: "baru", shadow: "lembut", align: "kiri" }),
+      S({ id: seedId(8), kind: "struk", shape: "lurus", x: 560, y: 380, rot: 2, text: "Roti 2, Susu 1", name: "", ink: "hitam", sticker: "jangkar", sp: "tl", sg: "normal", stamp: "tanpa", shadow: "lembut", align: "kiri" }),
+      S({ id: seedId(9), kind: "clip", shape: "rect", x: 120, y: 560, rot: 1.5, text: "Jadwal piket minggu ini ditempel di sini. Yang ketinggalan, cek ke sekret!", name: "Sekretaris", paper: "koran", font: "ketik", ink: "hitam", highlight: "tanpa", sticker: "tanpa", sp: "tr", sg: "normal", tape: "merah", tapePos: "atas", stamp: "penting", shadow: "lembut", align: "kiri" }),
+      S({ id: seedId(10), kind: "pita", shape: "sayap", x: 700, y: 600, rot: 2, scale: 1.35, text: "AKSARA JAYA!", name: "", color: "#DCE7CB", ink: "hijau", sticker: "mahkota", sp: "tr", sg: "normal", stamp: "wow", shadow: "panjang" }),
+      S({ id: seedId(11), kind: "amplop", shape: "buka", x: 1150, y: 580, rot: 1.5, text: "Untukmu yang jauh", name: "", color: "#F6D8DD", font: "tangan", ink: "ungu", sticker: "tanpa", sp: "tr", sg: "normal", stamp: "semangat", shadow: "lembut" }),
+      S({ id: seedId(12), kind: "tag", shape: "lonjong", x: 1550, y: 600, rot: -2, text: "Hadiah", name: "", color: "#DCE7CB", font: "tangan", ink: "hijau", sticker: "daun", sp: "tr", sg: "normal", stamp: "tanpa", shadow: "lembut" }),
+      S({ id: seedId(13), kind: "tag", shape: "rect", x: 400, y: 700, rot: -4, text: "Untuk: wali kelas", name: "", color: "#F1E0C4", font: "tangan", ink: "hitam", sticker: "payung", sp: "tr", sg: "normal", stamp: "tanpa", shadow: "lembut" }),
+      S({ id: seedId(14), kind: "perangko", shape: "rect", x: 1250, y: 700, rot: 3, text: "Salam Pramuka", name: "", color: "#F9E8EC", ink: "hitam", sticker: "tanpa", sp: "tr", sg: "normal", stamp: "dibaca", shadow: "lembut", align: "kiri" }),
+      S({ id: seedId(15), kind: "tiket", shape: "lurus", x: 350, y: 960, rot: -2, text: "Pensi Akbar", name: "", paper: "krem", ink: "hitam", highlight: "tanpa", sticker: "kilau", sp: "tl", sg: "normal", stamp: "love", shadow: "lembut" }),
+      S({ id: seedId(16), kind: "amplop", shape: "lurus", x: 500, y: 1010, rot: -3, text: "Rahasia", name: "", color: "#F6D8DD", font: "ketik", ink: "hitam", sticker: "segel", sp: "tr", sg: "normal", stamp: "rahasia", shadow: "lembut" }),
+      S({ id: seedId(17), kind: "note", shape: "tall", x: 1100, y: 790, rot: 2, text: "Jangan lupa senyum!", name: "", color: "#F6D8DD", paper: "polka", font: "spidol", ink: "merah", highlight: "tanpa", sticker: "matahari", sp: "tl", sg: "normal", pin: "kuning", pinPos: "kiri", stamp: "senyum", shadow: "lembut", align: "tengah" }),
+      S({ id: seedId(18), kind: "clip", shape: "rect", x: 950, y: 870, rot: -1.5, text: "Quote hari ini: berani coba, berani gagal.", name: "Anonim", paper: "hvs", font: "tangan", ink: "hitam", highlight: "tanpa", sticker: "tanpa", sp: "tr", sg: "normal", tape: "bening", tapePos: "atas", stamp: "asli", shadow: "lembut", align: "kiri" }),
+      S({ id: seedId(19), kind: "note", shape: "wide", x: 900, y: 1010, rot: 1, text: "Curhat? Tulis, tempel, lega.", name: "", color: "#D9B98A", paper: "kraft", font: "tangan", ink: "hitam", highlight: "tanpa", sticker: "awan", sp: "tr", sg: "normal", pin: "hitam", pinPos: "tengah", stamp: "tanpa", shadow: "lembut", align: "kiri" }),
+      S({ id: seedId(20), kind: "pita", shape: "lurus", x: 1350, y: 1000, rot: 2, text: "SEMANGAT UJIAN", name: "", color: "#F7E39B", ink: "merah", sticker: "kilau", sp: "tr", sg: "normal", stamp: "semangat", shadow: "lembut" }),
+      S({ id: seedId(21), kind: "note", shape: "sq", x: 800, y: 480, rot: -2, text: "INFO!", name: "", color: "#F1E0C4", paper: "polos", font: "stencil", ink: "merah", highlight: "tanpa", sticker: "petir", sp: "tr", sg: "normal", pin: "hitam", pinPos: "tengah", stamp: "tanpa", shadow: "tegas", align: "tengah" }),
+      S({ id: seedId(22), kind: "clip", shape: "rect", x: 1050, y: 680, rot: 2, text: "Ekskul baru: paduan suara, daftar gih!", name: "Kesiswaan", paper: "koran", font: "tangan", ink: "hitam", highlight: "tanpa", sticker: "tanpa", sp: "tr", sg: "normal", tape: "bening", tapePos: "atas", stamp: "dibaca", shadow: "lembut", align: "kiri" }),
+      S({ id: seedId(23), kind: "tag", shape: "rect", x: 400, y: 720, rot: -4, text: "Buat: adik kelas", name: "", color: "#F9E8EC", font: "tangan", ink: "hitam", sticker: "awan", sp: "tr", sg: "normal", stamp: "tanpa", shadow: "lembut" }),
+      S({ id: seedId(24), kind: "note", shape: "round", x: 200, y: 950, rot: 3, text: "Tetap semangat!", name: "", color: "#F6D8DD", paper: "polos", font: "tangan", ink: "ungu", highlight: "tanpa", sticker: "bunga", sp: "tr", sg: "normal", pin: "merah", pinPos: "tengah", stamp: "tanpa", shadow: "lembut", align: "tengah" }),
+      S({ id: seedId(25), kind: "note", shape: "torn", x: 1250, y: 880, rot: -2, text: "Jangan lupa bawa tumbler!", name: "", color: "#D9B98A", paper: "kraft", font: "tangan", ink: "hitam", highlight: "tanpa", sticker: "salju", sp: "tr", sg: "normal", pin: "hijau", pinPos: "tengah", stamp: "tanpa", shadow: "lembut", align: "kiri" })
+    ];
+  }
+
+  var firstVisit = !localStorage.getItem(KEY);
   items = load();
+  if(firstVisit && !items.length){ items = seedBoard(); save(); }
   renderAll();
   fit();
   window.addEventListener("resize", function(){ fit(); });
