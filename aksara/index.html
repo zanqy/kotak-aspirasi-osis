@@ -379,17 +379,17 @@ body{background:radial-gradient(circle at 50% -10%,#F6F0E1,var(--paper) 65%);col
 @keyframes up{from{transform:translateY(28px);opacity:.6}to{transform:none;opacity:1}}
 .panel h3{font:600 1.06rem var(--fd);margin-bottom:2px}
 .panel .sub{font:italic 400 .84rem/1.5 var(--fs);color:rgba(34,29,21,.55);margin-bottom:13px}
-.kinds{display:grid;grid-template-columns:repeat(3,1fr);gap:9px;margin-bottom:13px}
+.kinds{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:10px}
 .kind{border:1px solid rgba(34,29,21,.22);background:rgba(255,255,255,.42);border-radius:10px;
-  padding:12px 6px;cursor:pointer;display:grid;justify-items:center;gap:5px;transition:background .16s,border-color .16s}
+  padding:10px 6px;cursor:pointer;display:grid;justify-items:center;gap:4px;transition:background .16s,border-color .16s}
 .kind[aria-pressed="true"]{background:var(--ink);border-color:var(--ink);color:var(--paper)}
 .kind span{font:500 9.5px var(--fm);letter-spacing:.1em;text-transform:uppercase}
 .kind i{font-size:1.15rem;font-style:normal;line-height:1}
 
 /* pemilih bentuk */
-.shapes{display:flex;gap:6px;flex-wrap:wrap;margin:0 0 13px}
+.shapes{display:flex;gap:6px;flex-wrap:wrap;margin:0 0 10px}
 .shape{border:1px solid rgba(34,29,21,.22);background:rgba(255,255,255,.42);border-radius:8px;
-  padding:7px 8px 5px;cursor:pointer;display:grid;justify-items:center;gap:4px;min-width:58px;
+  padding:6px 7px 4px;cursor:pointer;display:grid;justify-items:center;gap:3px;min-width:54px;
   transition:background .16s,border-color .16s}
 .shape[aria-pressed="true"]{border-color:var(--red);background:rgba(192,59,33,.09)}
 .shape b{display:block;width:22px;height:16px;border:1.6px solid rgba(34,29,21,.55);border-radius:2px}
@@ -441,8 +441,10 @@ input[type=range]::-moz-range-thumb{width:22px;height:22px;border-radius:50%;bac
 .preview.on{display:block}
 .preview img{width:100%;max-height:150px;object-fit:cover;border-radius:9px;border:1px solid rgba(34,29,21,.2)}
 /* pratinjau bingkai live: pakai kelas item asli supaya sama persis dengan hasil tempel */
-.livePrev{display:none;margin:2px 0 13px;justify-content:center}
-.livePrev.on{display:flex}
+.livePrev{display:none;margin:0;justify-content:center}
+.livePrev.on{display:flex;position:sticky;top:-17px;z-index:6;background:var(--paper);
+  padding:10px 0 12px;box-shadow:0 12px 14px -14px rgba(24,20,16,.5)}
+.preview{display:none !important}
 .livePrev .item{position:relative;left:auto !important;top:auto !important;
   transform:rotate(-2deg) !important;cursor:default;max-width:100%}
 .livePrev .item .body{box-shadow:0 8px 14px -8px rgba(24,20,16,.45)}
@@ -556,6 +558,7 @@ input[type=range]::-moz-range-thumb{width:22px;height:22px;border-radius:50%;bac
   <div class="panel">
     <h3 id="sheetTitle">Tempel di papan</h3>
     <p class="sub">Pilih benda, lalu tempel di titik yang kamu ketuk.</p>
+    <div class="livePrev" id="livePrev"></div>
 
     <div class="kinds">
       <button class="kind" data-kind="note" aria-pressed="true"><i>▭</i><span>Note</span></button>
@@ -598,8 +601,7 @@ input[type=range]::-moz-range-thumb{width:22px;height:22px;border-radius:50%;bac
     <div class="shapes" id="highlights" hidden></div>
     <div class="shapes" id="tapePos" hidden></div>
 
-    <div class="preview" id="preview"><img id="previewImg" alt="Pratinjau foto"></div>
-    <div class="livePrev" id="livePrev"></div>
+    <div class="preview" id="preview" hidden><img id="previewImg" alt="Pratinjau foto"></div>
 
     <div class="field" id="fotoField" hidden>
       <input type="file" id="foto" accept="image/*">
