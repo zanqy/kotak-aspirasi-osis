@@ -118,6 +118,11 @@ body{background:radial-gradient(circle at 50% -10%,#F6F0E1,var(--paper) 65%);col
 /* umbul-umbul */
 .item.umbul{background:transparent;border:0;box-shadow:none;border-radius:0;overflow:visible;min-width:560px}
 .item.umbul svg{display:block;overflow:visible}
+/* dekorasi gantung & pesta */
+.item.lampu,.item.lampion,.item.layang,.item.kipas,.item.rantai{background:transparent;border:0;box-shadow:none;border-radius:0;overflow:visible}
+.item.lampu svg,.item.lampion svg,.item.layang svg,.item.kipas svg,.item.rantai svg{display:block;overflow:visible}
+.item.lampu{min-width:560px}
+.item.rantai{min-width:400px}
 /* balon */
 .item.balon{background:transparent;border:0;box-shadow:none;overflow:visible}
 .item.balon .bbody{position:relative;width:132px;height:162px;margin:0 auto;border-radius:50%/54% 54% 46% 46%;
@@ -559,6 +564,11 @@ input[type=range]::-moz-range-thumb{width:22px;height:22px;border-radius:50%;bac
       <button class="kind" data-kind="balon" aria-pressed="false"><i>🎈</i><span>Balon</span></button>
       <button class="kind" data-kind="badge" aria-pressed="false"><i>✸</i><span>Badge</span></button>
       <button class="kind" data-kind="tulis" aria-pressed="false"><i>✎</i><span>Tulis</span></button>
+      <button class="kind" data-kind="lampu" aria-pressed="false"><i>✦</i><span>Lampu</span></button>
+      <button class="kind" data-kind="lampion" aria-pressed="false"><i>🏮</i><span>Lampion</span></button>
+      <button class="kind" data-kind="layang" aria-pressed="false"><i>🪁</i><span>Layang</span></button>
+      <button class="kind" data-kind="kipas" aria-pressed="false"><i>❀</i><span>Kipas</span></button>
+      <button class="kind" data-kind="rantai" aria-pressed="false"><i>⛓</i><span>Rantai</span></button>
     </div>
 
     <div class="shapes" id="shapes"></div>
@@ -660,7 +670,12 @@ input[type=range]::-moz-range-thumb{width:22px;height:22px;border-radius:50%;bac
     amplop:   [["lurus","Tertutup"],["buka","Terbuka"]],
     tag:      [["rect","Kotak"],["lonjong","Lonjong"]],
     struk:    [["lurus","Struk"]],
-    umbul:    [["lurus","Umbul"]],
+    umbul:    [["rumbai","Rumbai"],["bulat","Bulat"],["bintang","Bintang"]],
+    lampu:    [["lurus","Lampu"]],
+    lampion:  [["lurus","Lampion"]],
+    layang:   [["lurus","Layang"]],
+    kipas:    [["lurus","Kipas"]],
+    rantai:   [["lurus","Rantai"]],
     balon:    [["bulat","Bulat"]],
     badge:    [["bintang","Bintang"]],
     tulis:    [["papan","Papan"]]
@@ -743,13 +758,84 @@ input[type=range]::-moz-range-thumb{width:22px;height:22px;border-radius:50%;bac
     if(d.sg && d.sg !== "normal") el.classList.add("sg-" + d.sg);
     return el;
   }
-  function umbulSVG(){
+  function umbulSVG(shape){
     var cols = ["#F6D8DD","#F9E8EC","#DCE7CB","#D7E4EF","#F7E39B","#F1E0C4","#E4EDDC","#F9E3E7","#FFFDF7"];
     var s = '<svg width="560" height="64" viewBox="0 0 560 64">';
     s += '<path d="M0,10 Q280,42 560,8" stroke="#2b241c" stroke-width="2.5" fill="none"/>';
     for(var i = 0; i < 9; i++){
       var x = 18 + i * 58;
-      s += '<polygon points="' + x + ',13 ' + (x + 32) + ',13 ' + (x + 16) + ',52" fill="' + cols[i] + '" stroke="rgba(34,29,21,.35)" stroke-width="1"/>';
+      if(shape === "bulat"){
+        s += '<circle cx="' + (x + 16) + '" cy="32" r="14" fill="' + cols[i] + '" stroke="rgba(34,29,21,.35)" stroke-width="1"/>';
+      } else if(shape === "bintang"){
+        var p = "";
+        for(var k = 0; k < 10; k++){
+          var rr = k % 2 ? 6.5 : 15, aa = -Math.PI / 2 + k * Math.PI / 5;
+          p += ((x + 16) + rr * Math.cos(aa)).toFixed(1) + "," + (32 + rr * Math.sin(aa)).toFixed(1) + " ";
+        }
+        s += '<polygon points="' + p + '" fill="' + cols[i] + '" stroke="rgba(34,29,21,.35)" stroke-width="1"/>';
+      } else {
+        s += '<polygon points="' + x + ',13 ' + (x + 32) + ',13 ' + (x + 16) + ',52" fill="' + cols[i] + '" stroke="rgba(34,29,21,.35)" stroke-width="1"/>';
+      }
+    }
+    return s + "</svg>";
+  }
+  function lampuSVG(){
+    var cols = ["#E8632B","#F2B134","#7FC47A","#6EA3E0","#D94A35","#F2B134","#3FA7A0"];
+    var ys = [22, 30, 34, 36, 34, 30, 24];
+    var s = '<svg width="560" height="92" viewBox="0 0 560 92">';
+    s += '<path d="M0,8 Q280,44 560,6" stroke="#2b241c" stroke-width="2.5" fill="none"/>';
+    for(var i = 0; i < 7; i++){
+      var x = 40 + i * 80, y = ys[i];
+      s += '<line x1="' + x + '" y1="' + (y - 8) + '" x2="' + x + '" y2="' + (y - 20) + '" stroke="#2b241c" stroke-width="2"/>';
+      s += '<circle cx="' + x + '" cy="' + y + '" r="16" fill="' + cols[i] + '" opacity=".3"/>';
+      s += '<circle cx="' + x + '" cy="' + y + '" r="9" fill="' + cols[i] + '" stroke="rgba(34,29,21,.4)" stroke-width="1"/>';
+      s += '<rect x="' + (x - 4) + '" y="' + (y - 26) + '" width="8" height="6" fill="#2b241c"/>';
+    }
+    return s + "</svg>";
+  }
+  function lampionSVG(){
+    var s = '<svg width="120" height="180" viewBox="0 0 120 180">';
+    s += '<line x1="60" y1="0" x2="60" y2="22" stroke="#2b241c" stroke-width="2"/>';
+    s += '<rect x="45" y="22" width="30" height="10" rx="2" fill="#7D5230"/>';
+    s += '<ellipse cx="60" cy="92" rx="48" ry="60" fill="#E2574C"/>';
+    s += '<ellipse cx="60" cy="92" rx="48" ry="60" fill="url(#lp)" opacity=".25"/>';
+    s += '<ellipse cx="60" cy="92" rx="30" ry="60" fill="none" stroke="rgba(255,255,255,.45)" stroke-width="2"/>';
+    s += '<ellipse cx="60" cy="92" rx="12" ry="60" fill="none" stroke="rgba(255,255,255,.45)" stroke-width="2"/>';
+    s += '<rect x="45" y="148" width="30" height="10" rx="2" fill="#7D5230"/>';
+    s += '<line x1="52" y1="158" x2="52" y2="176" stroke="#C03B21" stroke-width="2"/>';
+    s += '<line x1="60" y1="158" x2="60" y2="178" stroke="#C03B21" stroke-width="2"/>';
+    s += '<line x1="68" y1="158" x2="68" y2="176" stroke="#C03B21" stroke-width="2"/>';
+    return s + "</svg>";
+  }
+  function layangSVG(){
+    var s = '<svg width="150" height="195" viewBox="0 0 150 195">';
+    s += '<line x1="75" y1="0" x2="75" y2="12" stroke="#2b241c" stroke-width="2"/>';
+    s += '<polygon points="75,12 140,82 75,152 10,82" fill="#3FA7A0" stroke="rgba(34,29,21,.4)" stroke-width="1.5"/>';
+    s += '<line x1="75" y1="12" x2="75" y2="152" stroke="rgba(255,255,255,.6)" stroke-width="2"/>';
+    s += '<line x1="10" y1="82" x2="140" y2="82" stroke="rgba(255,255,255,.6)" stroke-width="2"/>';
+    s += '<path d="M75,152 Q70,168 76,182" stroke="#2b241c" stroke-width="2" fill="none"/>';
+    s += '<polygon points="70,162 82,162 76,172" fill="#F2B134"/>';
+    s += '<polygon points="71,174 81,174 76,184" fill="#E8632B"/>';
+    return s + "</svg>";
+  }
+  function kipasSVG(){
+    var cols = ["#F9E8EC","#FFFDF7"];
+    var s = '<svg width="150" height="150" viewBox="0 0 150 150">';
+    for(var i = 0; i < 24; i++){
+      var a0 = i * Math.PI / 12, a1 = (i + 1) * Math.PI / 12;
+      s += '<polygon points="75,75 ' + (75 + 68 * Math.cos(a0)).toFixed(1) + ',' + (75 + 68 * Math.sin(a0)).toFixed(1) + ' ' + (75 + 68 * Math.cos(a1)).toFixed(1) + ',' + (75 + 68 * Math.sin(a1)).toFixed(1) + '" fill="' + cols[i % 2] + '" stroke="rgba(34,29,21,.25)" stroke-width=".7"/>';
+    }
+    s += '<circle cx="75" cy="75" r="15" fill="#C03B21" stroke="rgba(34,29,21,.4)" stroke-width="1.5"/>';
+    s += '<circle cx="75" cy="75" r="5" fill="#F5F2E8"/>';
+    return s + "</svg>";
+  }
+  function rantaiSVG(){
+    var cols = ["#F6D8DD","#DCE7CB","#D7E4EF","#F9E8EC","#F7E39B","#F1E0C4","#E4EDDC","#F9E3E7"];
+    var s = '<svg width="400" height="64" viewBox="0 0 400 64">';
+    for(var i = 0; i < 8; i++){
+      var x = 25 + i * 50;
+      s += '<ellipse cx="' + x + '" cy="32" rx="23" ry="17" fill="none" stroke="' + cols[i] + '" stroke-width="8"/>';
+      s += '<ellipse cx="' + x + '" cy="32" rx="23" ry="17" fill="none" stroke="rgba(34,29,21,.3)" stroke-width="1"/>';
     }
     return s + "</svg>";
   }
@@ -830,7 +916,10 @@ input[type=range]::-moz-range-thumb{width:22px;height:22px;border-radius:50%;bac
       data.kind === "perangko" ? "perangko" : data.kind === "amplop" ? "amplop" :
       data.kind === "tag" ? "tag" : data.kind === "struk" ? "struk" :
       data.kind === "umbul" ? "umbul" : data.kind === "balon" ? "balon" :
-      data.kind === "badge" ? "badge" : data.kind === "tulis" ? "tulis" : "note";
+      data.kind === "badge" ? "badge" : data.kind === "tulis" ? "tulis" :
+      data.kind === "lampu" ? "lampu" : data.kind === "lampion" ? "lampion" :
+      data.kind === "layang" ? "layang" : data.kind === "kipas" ? "kipas" :
+      data.kind === "rantai" ? "rantai" : "note";
     el.className = "item " + base + (data.shape && data.shape !== base ? " " + data.shape : "") + (data.ratio ? " r" + data.ratio : "")
       + (data.paper && ((base === "note" && data.paper !== "polos") || (base === "clip" && data.paper !== "koran")) ? " paper-" + data.paper : "")
       + (data.paper && base === "tiket" && data.paper !== "krem" ? " tik-" + data.paper : "")
@@ -939,8 +1028,19 @@ input[type=range]::-moz-range-thumb{width:22px;height:22px;border-radius:50%;bac
       }
       return el;
     }
+    if(data.kind === "lampu" || data.kind === "lampion" || data.kind === "layang" || data.kind === "kipas" || data.kind === "rantai"){
+      el.innerHTML = { lampu: lampuSVG(), lampion: lampionSVG(), layang: layangSVG(), kipas: kipasSVG(), rantai: rantaiSVG() }[data.kind];
+      if(data.sticker && data.sticker !== "tanpa") el.appendChild(segelAwareSp(data.sticker, data));
+      if(data.stamp && data.stamp !== "tanpa"){
+        var stmD = document.createElement("div");
+        stmD.className = "stamp";
+        stmD.textContent = STAMP_TEXT[data.stamp] || "";
+        el.appendChild(stmD);
+      }
+      return el;
+    }
     if(data.kind === "umbul"){
-      el.innerHTML = umbulSVG();
+      el.innerHTML = umbulSVG(data.shape);
       if(data.sticker && data.sticker !== "tanpa") el.appendChild(segelAwareSp(data.sticker, data));
       if(data.stamp && data.stamp !== "tanpa"){
         var stm7 = document.createElement("div");
@@ -1573,9 +1673,34 @@ input[type=range]::-moz-range-thumb{width:22px;height:22px;border-radius:50%;bac
         '<div class="shead">AKSARA MART</div><div class="txt">' + (escPrev(txt) || "Daftar belanja…") + '</div><div class="sfoot">★ TERIMA KASIH ★</div></div>';
       return;
     }
+    if(pendingKind === "lampu"){
+      box.classList.add("on");
+      box.innerHTML = '<div class="item lampu">' + stickerHTML(pendingSticker).replace('class="stk', 'class="stk' + stkClass()) + stampHTML() + lampuSVG() + "</div>";
+      return;
+    }
+    if(pendingKind === "lampion"){
+      box.classList.add("on");
+      box.innerHTML = '<div class="item lampion">' + stickerHTML(pendingSticker).replace('class="stk', 'class="stk' + stkClass()) + stampHTML() + lampionSVG() + "</div>";
+      return;
+    }
+    if(pendingKind === "layang"){
+      box.classList.add("on");
+      box.innerHTML = '<div class="item layang">' + stickerHTML(pendingSticker).replace('class="stk', 'class="stk' + stkClass()) + stampHTML() + layangSVG() + "</div>";
+      return;
+    }
+    if(pendingKind === "kipas"){
+      box.classList.add("on");
+      box.innerHTML = '<div class="item kipas">' + stickerHTML(pendingSticker).replace('class="stk', 'class="stk' + stkClass()) + stampHTML() + kipasSVG() + "</div>";
+      return;
+    }
+    if(pendingKind === "rantai"){
+      box.classList.add("on");
+      box.innerHTML = '<div class="item rantai">' + stickerHTML(pendingSticker).replace('class="stk', 'class="stk' + stkClass()) + stampHTML() + rantaiSVG() + "</div>";
+      return;
+    }
     if(pendingKind === "umbul"){
       box.classList.add("on");
-      box.innerHTML = '<div class="item umbul">' + stickerHTML(pendingSticker).replace('class="stk', 'class="stk' + stkClass()) + stampHTML() + umbulSVG() + "</div>";
+      box.innerHTML = '<div class="item umbul">' + stickerHTML(pendingSticker).replace('class="stk', 'class="stk' + stkClass()) + stampHTML() + umbulSVG(pendingShape) + "</div>";
       return;
     }
     if(pendingKind === "balon"){
@@ -1923,6 +2048,11 @@ input[type=range]::-moz-range-thumb{width:22px;height:22px;border-radius:50%;bac
       pendingStamp = rnd(STAMPS)[0];
     }
     if(pendingKind === "umbul"){
+      pendingShape = rnd(SHAPES.umbul)[0];
+      pendingSticker = rnd(STICKERS)[0];
+      pendingStamp = rnd(STAMPS)[0];
+    }
+    if(pendingKind === "lampu" || pendingKind === "lampion" || pendingKind === "layang" || pendingKind === "kipas" || pendingKind === "rantai"){
       pendingSticker = rnd(STICKERS)[0];
       pendingStamp = rnd(STAMPS)[0];
     }
@@ -2224,10 +2354,15 @@ input[type=range]::-moz-range-thumb{width:22px;height:22px;border-radius:50%;bac
       S({ id: seedId(28), kind: "balon", shape: "bulat", x: 1620, y: 440, rot: 4, text: "OSIS!", name: "", color: "#D7E4EF", ink: "biru", sticker: "hati", sp: "tr", sg: "normal", stamp: "tanpa", shadow: "lembut" }),
       S({ id: seedId(29), kind: "badge", shape: "bintang", x: 820, y: 660, rot: -6, text: "GRATIS!", name: "", color: "#F7E39B", ink: "merah", sticker: "kilau", sp: "tr", sg: "besar", stamp: "tanpa", shadow: "lembut" }),
       S({ id: seedId(30), kind: "badge", shape: "bintang", x: 1450, y: 840, rot: 5, text: "KECE!", name: "", color: "#F6D8DD", ink: "ungu", sticker: "mahkota", sp: "tr", sg: "normal", stamp: "wow", shadow: "lembut" }),
-      S({ id: seedId(31), kind: "tulis", shape: "papan", x: 950, y: 150, rot: -1.5, text: "Ujian Senin!", name: "", ink: "hitam", align: "tengah", sticker: "tanpa", sp: "tr", sg: "normal", stamp: "tanpa", shadow: "lembut" })
+      S({ id: seedId(31), kind: "tulis", shape: "papan", x: 950, y: 150, rot: -1.5, text: "Ujian Senin!", name: "", ink: "hitam", align: "tengah", sticker: "tanpa", sp: "tr", sg: "normal", stamp: "tanpa", shadow: "lembut" }),
+      S({ id: seedId(32), kind: "lampu", shape: "lurus", x: 300, y: 40, rot: 0, text: "", name: "", sticker: "tanpa", sp: "tr", sg: "normal", stamp: "tanpa", shadow: "lembut" }),
+      S({ id: seedId(33), kind: "lampion", shape: "lurus", x: 1600, y: 800, rot: 3, text: "", name: "", sticker: "bintang", sp: "tr", sg: "normal", stamp: "tanpa", shadow: "lembut" }),
+      S({ id: seedId(34), kind: "layang", shape: "lurus", x: 1470, y: 240, rot: -5, text: "", name: "", sticker: "awan", sp: "tl", sg: "normal", stamp: "tanpa", shadow: "lembut" }),
+      S({ id: seedId(35), kind: "kipas", shape: "lurus", x: 40, y: 1030, rot: 8, text: "", name: "", sticker: "tanpa", sp: "tr", sg: "normal", stamp: "wow", shadow: "lembut" }),
+      S({ id: seedId(36), kind: "rantai", shape: "lurus", x: 1300, y: 15, rot: -1, text: "", name: "", sticker: "kilau", sp: "tr", sg: "besar", stamp: "tanpa", shadow: "lembut" })
     ];
   }
-  var SEED_V = 2, seedDone = 0;
+  var SEED_V = 3, seedDone = 0;
   try{ seedDone = +localStorage.getItem("aksara_seed_v") || 0; }catch(e){}
   var firstVisit = !localStorage.getItem(KEY);
   items = load();
