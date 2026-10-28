@@ -547,7 +547,7 @@ input[type=range]::-moz-range-thumb{width:22px;height:22px;border-radius:50%;bac
 
 <div class="sheet" id="sheet">
   <div class="panel">
-    <h3>Tempel di papan</h3>
+    <h3 id="sheetTitle">Tempel di papan</h3>
     <p class="sub">Pilih benda, lalu tempel di titik yang kamu ketuk.</p>
 
     <div class="kinds">
@@ -636,6 +636,7 @@ input[type=range]::-moz-range-thumb{width:22px;height:22px;border-radius:50%;bac
   </div>
 
   <hr>
+  <button data-act="edit">✏️ Ubah isi & gaya</button>
   <button data-act="move">✥ Pindah posisi</button>
   <button data-act="front">↑ Kirim ke depan</button>
   <button data-act="back">↓ Kirim ke belakang</button>
@@ -699,6 +700,7 @@ input[type=range]::-moz-range-thumb{width:22px;height:22px;border-radius:50%;bac
   var pendingFont = "tangan", pendingInk = "hitam", pendingStamp = "tanpa", pendingFrame = "putih", pendingPin = "merah";
   var pendingPinPos = "tengah", pendingAlign = "kiri", pendingSp = "tr";
   var pendingShadow = "lembut", pendingSg = "normal";
+  var editingData = null;
   var PINS_POS = [["tengah","Tengah"],["kiri","Kiri"]];
   var ALIGNS = [["kiri","Kiri"],["tengah","Tengah"],["kanan","Kanan"]];
   var SPS = [["tr","Kanan atas"],["tl","Kiri atas"]];
@@ -1379,6 +1381,7 @@ input[type=range]::-moz-range-thumb{width:22px;height:22px;border-radius:50%;bac
       return;
     }
     if(act === "rotate"){ closeCtx(); openItemSheet(data, el); return; }
+    if(act === "edit"){ closeCtx(); setTimeout(function(){ openEdit(data); }, 40); return; }
     if(act === "move"){ closeCtx(); setTimeout(function(){ startMove(data, el); }, 40); return; }
     if(act === "front" || act === "back"){
       var list = [].slice.call(canvas.querySelectorAll(".item"));
@@ -2162,6 +2165,9 @@ input[type=range]::-moz-range-thumb{width:22px;height:22px;border-radius:50%;bac
 
   function openSheet(pt){
     pendingPoint = pt; pendingImage = null;
+    editingData = null;
+    document.getElementById("sheetTitle").textContent = "Tempel di papan";
+    document.getElementById("place").textContent = "Tempel di sini";
     pendingColor = NOTE_COLORS[Math.floor(Math.random() * NOTE_COLORS.length)];
     document.getElementById("preview").classList.remove("on");
     document.getElementById("foto").value = "";
@@ -2191,7 +2197,61 @@ input[type=range]::-moz-range-thumb{width:22px;height:22px;border-radius:50%;bac
     openedAt = Date.now();
     if(window.innerWidth > 700) setTimeout(function(){ document.getElementById("txt").focus(); }, 120);
   }
-  function closeSheet(){ sheet.classList.remove("open"); }
+  function closeSheet(){ sheet.classList.remove("open"); editingData = null; }
+  function openEdit(data){
+    editingData = data;
+    pendingPoint = null;
+    pendingKind = data.kind || "note";
+    pendingShape = data.shape || "sq";
+    pendingRatio = data.ratio || "11";
+    pendingColor = data.color || NOTE_COLORS[0];
+    pendingPaper = data.paper || (pendingKind === "clip" ? "koran" : pendingKind === "tiket" ? "krem" : "polos");
+    pendingFont = data.font || "tangan";
+    pendingInk = data.ink || "hitam";
+    pendingHighlight = data.highlight || "tanpa";
+    pendingFilter = data.filter || "biasa";
+    pendingTape = data.tape || "bening";
+    pendingTapePos = data.tapePos || "atas";
+    pendingFrame = data.frame || "putih";
+    pendingPin = data.pin || "merah";
+    pendingPinPos = data.pinPos || "tengah";
+    pendingAlign = data.align || "kiri";
+    pendingSp = data.sp || "tr";
+    pendingSg = data.sg || "normal";
+    pendingShadow = data.shadow || "lembut";
+    pendingStamp = data.stamp || "tanpa";
+    pendingSticker = data.sticker || "tanpa";
+    pendingImage = data.image || null;
+    kinds.forEach(function(o){ o.setAttribute("aria-pressed", o.dataset.kind === pendingKind ? "true" : "false"); });
+    document.getElementById("sheetTitle").textContent = "Ubah tempelan";
+    document.getElementById("place").textContent = "Simpan perubahan";
+    document.getElementById("preview").classList.remove("on");
+    document.getElementById("foto").value = "";
+    document.getElementById("txt").value = data.text || "";
+    document.getElementById("nama").value = data.name || "";
+    renderShapes();
+    renderRatios();
+    renderColors();
+    renderPapers();
+    renderFonts();
+    renderInks();
+    renderFilters();
+    renderTapes();
+    renderFrames();
+    renderHighlights();
+    renderTapePos();
+    renderPins();
+    renderPinPos();
+    renderAligns();
+    renderSps();
+    renderShadows();
+    renderSgs();
+    renderStamps();
+    renderStickers();
+    syncFields();
+    sheet.classList.add("open");
+    openedAt = Date.now();
+  }
 
   document.getElementById("cancel").onclick = closeSheet;
   document.getElementById("txt").addEventListener("input", function(){ updateLivePrev(); });
@@ -2209,6 +2269,40 @@ input[type=range]::-moz-range-thumb{width:22px;height:22px;border-radius:50%;bac
     var name = document.getElementById("nama").value.trim();
     if(pendingKind !== "polaroid" && pendingKind !== "umbul" && !text){ say("Isi dulu tulisannya"); return; }
     if(pendingKind === "polaroid" && !pendingImage){ say("Pilih foto dulu"); return; }
+
+    if(editingData){
+      var d = editingData;
+      d.kind = pendingKind;
+      d.shape = pendingShape;
+      d.ratio = pendingKind === "polaroid" ? pendingRatio : null;
+      d.text = text; d.name = name;
+      d.color = pendingColor;
+      d.filter = pendingKind === "polaroid" ? pendingFilter : null;
+      d.sticker = pendingSticker;
+      d.paper = (pendingKind === "note" || pendingKind === "clip" || pendingKind === "tiket") ? pendingPaper : null;
+      d.tape = (pendingKind === "clip" || pendingKind === "polaroid") ? pendingTape : null;
+      d.font = ["note","clip","tiket","polaroid","amplop","tag"].indexOf(pendingKind) >= 0 ? pendingFont : null;
+      d.ink = pendingInk;
+      d.stamp = pendingStamp;
+      d.frame = pendingKind === "polaroid" ? pendingFrame : null;
+      d.pin = pendingKind === "note" ? pendingPin : null;
+      d.pinPos = pendingKind === "note" ? pendingPinPos : null;
+      d.align = ["note","clip","tiket","perangko","struk","tulis"].indexOf(pendingKind) >= 0 ? pendingAlign : null;
+      d.sp = pendingSp;
+      d.sg = pendingSg;
+      d.shadow = pendingShadow;
+      d.highlight = ["note","clip","tiket"].indexOf(pendingKind) >= 0 ? pendingHighlight : null;
+      d.tapePos = (pendingKind === "clip" || pendingKind === "polaroid") ? pendingTapePos : null;
+      d.image = pendingKind === "polaroid" ? pendingImage : null;
+      var fresh = makeItem(d);
+      var oldEl = canvas.querySelector('[data-id="' + d.id + '"]');
+      if(oldEl && oldEl.parentNode) oldEl.parentNode.replaceChild(fresh, oldEl);
+      try{ if(navigator.vibrate) navigator.vibrate(12); }catch(e){}
+      save();
+      closeSheet();
+      say("Perubahan disimpan");
+      return;
+    }
 
     var data = {
       id: "p" + Date.now().toString(36) + Math.random().toString(36).slice(2, 6),
