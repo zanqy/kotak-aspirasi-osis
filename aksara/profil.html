@@ -28,8 +28,13 @@ body{background:var(--paper);color:var(--ink);font-family:var(--fs);-webkit-text
 .shell{position:relative;z-index:1;max-width:640px;margin:0 auto;padding:0 clamp(14px,5vw,26px) 60px}
 .mast{text-align:center;padding:20px 0 8px;border-bottom:3px double var(--ink)}
 .mast .kick{font:500 9.5px var(--fm);letter-spacing:.22em;color:rgba(34,29,21,.6)}
-.mast h1{font:800 clamp(2.4rem,9vw,3.2rem)/1 var(--fd);letter-spacing:-.01em}
+.mast h1{font:800 clamp(2.4rem,9vw,3.2rem)/1 var(--fd);letter-spacing:-.01em;text-align:center}
 .mast h1 i{color:var(--red);font-style:normal}
+.mast .flagrow{display:grid;grid-template-columns:72px 1fr 72px;gap:10px;align-items:stretch;margin-top:8px}
+.mast .ear{border:1.5px solid var(--ink);border-radius:4px;display:flex;flex-direction:column;
+  align-items:center;justify-content:center;text-align:center;padding:7px 4px;
+  font:500 8px var(--fm);letter-spacing:.12em;line-height:1.6;color:var(--ink)}
+.mast .ear b{font-size:1.02rem;letter-spacing:.02em}
 .ed{display:flex;justify-content:space-between;gap:8px;padding:7px 2px;font:500 10px var(--fm);
   letter-spacing:.12em;text-transform:uppercase;border-bottom:1px solid rgba(34,29,21,.25)}
 /* kartu identitas */
@@ -115,12 +120,15 @@ footer{text-align:center;font:500 10px var(--fm);letter-spacing:.14em;color:rgba
 <main class="shell">
   <header class="mast">
     <p class="kick">DITERBITKAN MPK · OSIS — WAJIB DIBACA, TIDAK WAJIB PERCAYA</p>
-    <h1>PROFIL<i>.</i></h1>
+    <div class="flagrow">
+      <div class="ear">EDISI<b>231</b></div>
+      <h1>PROFIL<i>.</i></h1>
+      <div class="ear"><span id="edDate">—</span></div>
+    </div>
   </header>
   <div class="ed">
-    <span>EDISI <b>231</b></span>
-    <span id="edDate">—</span>
     <span>HARGA: <b>1 SENYUM</b></span>
+    <span>HAL. <b>2/3</b></span>
   </div>
 
   <section class="idcard" id="idcard"></section>
