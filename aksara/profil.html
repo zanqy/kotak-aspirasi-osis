@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>AKSARA. — Profil Siswa</title>
+<title>AKSARA. — Profilku</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;600&family=Fraunces:ital,opsz,wght@0,9..144,400..800;1,9..144,400..700&family=IBM+Plex+Mono:wght@400;500&family=Spectral:ital,wght@0,400;0,500;1,400;1,500&display=swap" rel="stylesheet">
@@ -25,82 +25,65 @@ body{background:var(--paper);color:var(--ink);font-family:var(--fs);-webkit-text
 .navlink a{font:500 10px var(--fm);letter-spacing:.12em;text-transform:uppercase;color:var(--ink);
   text-decoration:none;padding:7px 12px;border-radius:99px}
 .navlink a.on{background:var(--ink);color:var(--paper)}
-.shell{position:relative;z-index:1;max-width:860px;margin:0 auto;padding:0 clamp(14px,5vw,26px) 60px}
+.shell{position:relative;z-index:1;max-width:640px;margin:0 auto;padding:0 clamp(14px,5vw,26px) 60px}
 .mast{text-align:center;padding:20px 0 8px;border-bottom:3px double var(--ink)}
 .mast .kick{font:500 9.5px var(--fm);letter-spacing:.22em;color:rgba(34,29,21,.6)}
-.mast h1{font:800 clamp(2.4rem,9vw,3.6rem)/1 var(--fd);letter-spacing:-.01em}
+.mast h1{font:800 clamp(2.4rem,9vw,3.2rem)/1 var(--fd);letter-spacing:-.01em}
 .mast h1 i{color:var(--red);font-style:normal}
 .ed{display:flex;justify-content:space-between;gap:8px;padding:7px 2px;font:500 10px var(--fm);
   letter-spacing:.12em;text-transform:uppercase;border-bottom:1px solid rgba(34,29,21,.25)}
-.toolbar{display:flex;gap:8px;margin:14px 0 10px}
-.toolbar input{flex:1;font:400 .95rem var(--fs);color:var(--ink);background:rgba(255,255,255,.5);
-  border:1px solid rgba(34,29,21,.22);border-radius:9px;padding:11px 13px;min-width:0}
-.toolbar input:focus{outline:none;border-color:var(--red)}
-.chips{display:flex;gap:8px;overflow-x:auto;padding-bottom:8px;margin-bottom:6px;scrollbar-width:thin}
-.chip{flex:0 0 auto;font:500 10px var(--fm);letter-spacing:.1em;text-transform:uppercase;
-  border:1px solid rgba(34,29,21,.25);background:rgba(255,255,255,.4);border-radius:99px;
-  padding:8px 15px;cursor:pointer;color:var(--ink)}
-.chip[aria-pressed="true"]{background:var(--ink);color:var(--paper);border-color:var(--ink)}
-.count{font:500 10px var(--fm);letter-spacing:.14em;text-transform:uppercase;color:rgba(34,29,21,.55);
-  margin:2px 2px 10px}
-/* sorotan */
-.spot{background:var(--ink);color:var(--paper);border-radius:14px;padding:16px;margin:4px 0 14px;
-  display:flex;gap:14px;align-items:center;cursor:pointer;border:1px solid var(--ink)}
-.spot .ava{width:66px;height:66px;font-size:1.5rem;margin:0;flex:0 0 auto}
-.spot .tag{font:700 9px var(--fm);letter-spacing:.2em;color:#F2B134;margin-bottom:5px}
-.spot h2{font:800 1.25rem var(--fd)}
-.spot .cls{font:500 10px var(--fm);letter-spacing:.1em;opacity:.7;margin:3px 0 6px;text-transform:uppercase}
-.spot .quote{font:italic 400 .9rem/1.5 var(--fs);opacity:.9}
-/* struktur */
-.sect{font:800 1.05rem var(--fd);margin:20px 0 2px}
+/* kartu identitas */
+.idcard{background:var(--news);border:1px solid rgba(34,29,21,.22);border-radius:14px;
+  padding:22px 18px;margin-top:14px;text-align:center;position:relative;overflow:hidden}
+.idcard::before{content:"";position:absolute;top:0;left:0;right:0;height:7px;
+  background:repeating-linear-gradient(90deg,var(--red) 0 14px,var(--paper) 14px 20px,#2b241c 20px 34px,var(--paper) 34px 40px)}
+.ava{width:84px;height:84px;border-radius:50%;margin:8px auto 10px;display:grid;place-items:center;
+  font:700 1.8rem var(--fd);color:#fff;text-shadow:0 1px 2px rgba(0,0,0,.3);
+  border:3px solid rgba(34,29,21,.3);box-shadow:0 3px 6px rgba(24,20,16,.25)}
+.idcard h2{font:800 1.5rem/1.2 var(--fd)}
+.idcard .cls{font:500 11px var(--fm);letter-spacing:.12em;text-transform:uppercase;color:rgba(34,29,21,.55);margin:5px 0}
+.role{display:inline-block;font:600 10px var(--fm);letter-spacing:.1em;text-transform:uppercase;
+  color:var(--red);border:1.5px solid rgba(192,59,33,.6);border-radius:99px;padding:4px 12px;margin-top:2px}
+.bio{font:italic 400 .98rem/1.65 var(--fs);color:rgba(34,29,21,.8);margin:12px 4px 0}
+/* statistik */
+.stats{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px}
+.stat{background:rgba(255,255,255,.45);border:1px solid rgba(34,29,21,.2);border-radius:12px;
+  padding:13px 10px;text-align:center}
+.stat b{display:block;font:800 1.6rem var(--fd)}
+.stat span{font:500 9.5px var(--fm);letter-spacing:.12em;text-transform:uppercase;color:rgba(34,29,21,.55)}
+/* karya terakhir */
+.sect{font:800 1.05rem var(--fd);margin:22px 0 2px}
 .sect-sub{font:italic 400 .84rem var(--fs);color:rgba(34,29,21,.55);margin-bottom:10px}
-.org{background:var(--news);border:1px solid rgba(34,29,21,.2);border-radius:12px;overflow:hidden;margin-bottom:6px}
-.org button{width:100%;display:flex;align-items:center;gap:11px;background:none;border:0;
-  border-bottom:1px dashed rgba(34,29,21,.2);padding:10px 13px;cursor:pointer;text-align:left;color:var(--ink)}
-.org button:last-child{border-bottom:0}
-.org .mini{width:36px;height:36px;border-radius:50%;display:grid;place-items:center;flex:0 0 auto;
-  font:700 .8rem var(--fd);color:#fff}
-.org .who{flex:1;min-width:0}
-.org .who b{display:block;font:700 .9rem var(--fd);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.org .who span{font:500 9.5px var(--fm);letter-spacing:.08em;text-transform:uppercase;color:rgba(34,29,21,.55)}
-.org .arr{color:rgba(34,29,21,.4)}
-.card .karya{font:500 9px var(--fm);letter-spacing:.08em;color:rgba(34,29,21,.5);margin-top:6px;text-transform:uppercase}
-.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px}
-.card{background:var(--news);border:1px solid rgba(34,29,21,.2);border-radius:12px;padding:14px 12px;
-  cursor:pointer;text-align:center;transition:transform .15s}
-.card:active{transform:scale(.97)}
-.ava{width:58px;height:58px;border-radius:50%;margin:0 auto 9px;display:grid;place-items:center;
-  font:700 1.3rem var(--fd);color:#fff;text-shadow:0 1px 2px rgba(0,0,0,.3);
-  border:2px solid rgba(34,29,21,.25);box-shadow:0 2px 4px rgba(24,20,16,.2)}
-.card h2{font:700 .98rem/1.25 var(--fd)}
-.card .cls{font:500 10px var(--fm);letter-spacing:.1em;color:rgba(34,29,21,.55);margin:3px 0 6px;text-transform:uppercase}
-.card .role{display:inline-block;font:600 9px var(--fm);letter-spacing:.1em;text-transform:uppercase;
-  color:var(--red);border:1.5px solid rgba(192,59,33,.6);border-radius:99px;padding:3px 9px}
-.card .quote{font:italic 400 .82rem/1.45 var(--fs);color:rgba(34,29,21,.7);margin-top:8px;
-  display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
-.empty{text-align:center;font:italic 400 .95rem var(--fs);color:rgba(34,29,21,.55);padding:34px 0}
-/* lembar detail */
+.work{background:var(--news);border:1px solid rgba(34,29,21,.2);border-radius:12px;padding:11px 14px;
+  margin-bottom:8px;display:flex;gap:11px;align-items:baseline}
+.work .k{flex:0 0 auto;font:700 9px var(--fm);letter-spacing:.1em;text-transform:uppercase;color:var(--red);
+  border:1.5px solid rgba(192,59,33,.55);border-radius:6px;padding:3px 7px}
+.work p{font:400 .92rem/1.5 var(--fs);word-break:break-word}
+.nil{text-align:center;font:italic 400 .92rem var(--fs);color:rgba(34,29,21,.55);padding:22px 0}
+.row{display:flex;gap:9px;margin-top:14px}
+.btn{background:var(--ink);color:var(--paper);border:0;border-radius:9px;padding:12px 20px;
+  font:600 .94rem var(--fd);cursor:pointer;text-decoration:none;text-align:center}
+.btn.grow{flex:1}
+.btn.ghost{background:transparent;color:var(--ink);border:1px solid rgba(34,29,21,.24);font:500 .92rem var(--fs)}
+/* lembar edit */
 .sheet{position:fixed;inset:0;z-index:100;display:none;align-items:flex-end;justify-content:center;
   background:rgba(24,20,16,.45)}
 .sheet.open{display:flex}
 .panel{width:min(520px,100%);background:var(--paper);border-radius:18px 18px 0 0;border-top:2px solid var(--ink);
   padding:18px clamp(16px,5vw,26px) calc(20px + env(safe-area-inset-bottom));max-height:88vh;overflow-y:auto;
-  animation:up .28s cubic-bezier(.2,.8,.3,1) both;text-align:center}
+  animation:up .28s cubic-bezier(.2,.8,.3,1) both}
 @keyframes up{from{transform:translateY(28px);opacity:.6}to{transform:none;opacity:1}}
-.panel .ava{width:76px;height:76px;font-size:1.7rem}
-.panel h2{font:800 1.4rem var(--fd)}
-.panel .cls{font:500 11px var(--fm);letter-spacing:.12em;text-transform:uppercase;color:rgba(34,29,21,.55);margin:4px 0}
-.bio{font:400 .95rem/1.65 var(--fs);margin:12px 0;text-align:left}
-.meta{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-bottom:6px}
-.meta span{font:500 10px var(--fm);letter-spacing:.08em;background:rgba(255,255,255,.5);
-  border:1px solid rgba(34,29,21,.2);border-radius:99px;padding:5px 11px}
-.quote-full{font:italic 400 1rem/1.6 var(--fs);border-top:1px dashed rgba(34,29,21,.3);
-  border-bottom:1px dashed rgba(34,29,21,.3);padding:10px 4px;margin:12px 0}
-.row{display:flex;gap:9px;margin-top:14px}
-.btn{background:var(--ink);color:var(--paper);border:0;border-radius:9px;padding:12px 20px;
-  font:600 .94rem var(--fd);cursor:pointer;text-decoration:none}
-.btn.grow{flex:1}
-.btn.ghost{background:transparent;color:var(--ink);border:1px solid rgba(34,29,21,.24);font:500 .92rem var(--fs)}
+.panel h3{font:600 1.06rem var(--fd);margin-bottom:12px}
+.field{margin-bottom:11px}
+.field label{display:block;font:500 10px var(--fm);letter-spacing:.14em;text-transform:uppercase;
+  color:rgba(34,29,21,.55);margin-bottom:5px}
+.field input,.field select,.field textarea{width:100%;font:400 1rem var(--fs);color:var(--ink);
+  background:rgba(255,255,255,.55);border:1px solid rgba(34,29,21,.22);border-radius:9px;padding:10px 12px}
+.field input:focus,.field select:focus,.field textarea:focus{outline:none;border-color:var(--red)}
+.field textarea{min-height:74px;resize:none}
+.swatches{display:flex;gap:9px}
+.sw{width:36px;height:36px;border-radius:50%;border:2px solid rgba(34,29,21,.3);cursor:pointer;padding:0}
+.sw[aria-pressed="true"]{box-shadow:0 0 0 2px var(--paper),0 0 0 4px var(--red)}
 .toast{position:fixed;left:50%;bottom:26px;transform:translateX(-50%);z-index:130;background:rgba(34,29,21,.93);
   color:var(--paper);padding:10px 18px;border-radius:99px;font:500 .86rem var(--fs);
   opacity:0;pointer-events:none;transition:opacity .26s}
@@ -132,160 +115,188 @@ footer{text-align:center;font:500 10px var(--fm);letter-spacing:.14em;color:rgba
     <span>HARGA: <b>1 SENYUM</b></span>
   </div>
 
-  <div class="toolbar">
-    <input id="q" type="search" placeholder="Cari nama, kelas, atau peran..." autocomplete="off">
-  </div>
-  <div class="chips" id="chips">
-    <button class="chip" data-grade="" aria-pressed="true">Semua</button>
-    <button class="chip" data-grade="X-" aria-pressed="false">X</button>
-    <button class="chip" data-grade="XI-" aria-pressed="false">XI</button>
-    <button class="chip" data-grade="XII-" aria-pressed="false">XII</button>
-  </div>
-  <div id="spot"></div>
-  <p class="count" id="count"></p>
-  <div class="grid" id="grid"></div>
-  <p class="empty" id="empty" hidden>Tidak ketemu. Coba kata kunci lain.</p>
+  <section class="idcard" id="idcard"></section>
 
-  <h2 class="sect">Struktur Pengurus</h2>
-  <p class="sect-sub">Kenali siapa di balik layar mading.</p>
-  <div class="org" id="org"></div>
+  <div class="stats">
+    <div class="stat"><b id="stTempel">0</b><span>Tempelan di papan</span></div>
+    <div class="stat"><b id="stKarya">0</b><span>Karyaku</span></div>
+  </div>
+
+  <div class="row">
+    <button class="btn ghost" id="editBtn">Ubah profil</button>
+    <a class="btn grow" href="index.html">Tempel di papan</a>
+  </div>
+
+  <h2 class="sect">Karya Terakhirku</h2>
+  <p class="sect-sub">Tempelan terbaru dari papan mading.</p>
+  <div id="works"></div>
 
   <footer>AKSARA · HAL. 2/3 · EDISI 231</footer>
 </main>
 
 <div class="sheet" id="sheet">
-  <div class="panel" id="panel"></div>
+  <div class="panel">
+    <h3>Ubah profil</h3>
+    <div class="field">
+      <label for="fNama">Nama</label>
+      <input id="fNama" maxlength="40" placeholder="Namamu...">
+    </div>
+    <div class="field">
+      <label for="fKelas">Kelas</label>
+      <input id="fKelas" maxlength="12" placeholder="cth: XI-4">
+    </div>
+    <div class="field">
+      <label for="fPeran">Peran</label>
+      <select id="fPeran">
+        <option>Anggota</option>
+        <option>Ketua OSIS</option>
+        <option>Wakil Ketua</option>
+        <option>Sekretaris</option>
+        <option>Bendahara</option>
+        <option>Redaktur</option>
+        <option>Koordinator Acara</option>
+      </select>
+    </div>
+    <div class="field">
+      <label>Warna avatar</label>
+      <div class="swatches" id="swatches"></div>
+    </div>
+    <div class="field">
+      <label for="fBio">Tentangku</label>
+      <textarea id="fBio" maxlength="220" placeholder="Ceritakan sedikit tentangmu..."></textarea>
+    </div>
+    <div class="row">
+      <button class="btn ghost" id="cancelBtn">Batal</button>
+      <button class="btn grow" id="saveBtn">Simpan</button>
+    </div>
+  </div>
 </div>
 <div class="toast" id="toast"></div>
 
 <script>
 (function(){
   "use strict";
-  var STUDENTS = [
-    { nama: "Nadia Prameswari", karya: 24, kelas: "XII-1", peran: "Ketua OSIS", warna: "#C03B21", minat: ["Menulis", "Fotografi"], quote: "Mading itu arsip rasa satu angkatan.", bio: "Nadia mengurusi redaksi AKSARA. Suka mengarsipkan momen lewat kamera analog dan puisi pendek. Kalau ada info acara, biasanya lewat dia dulu." },
-    { nama: "Bagas Ramadhan", karya: 17, kelas: "XI-4", peran: "Redaktur", warna: "#2C5E9E", minat: ["Desain", "Musik"], quote: "Tulisan miring, niat lurus.", bio: "Bagas yang menata letak tempelan digital. Pemain bas di ekstrakurik musik, kolektor kaset, dan tukang begadang kalau deadline mading." },
-    { nama: "Sinta Maharani", karya: 19, kelas: "X-2", peran: "Anggota", warna: "#3E6B35", minat: ["Puisi", "Melukis"], quote: "Kertas kosong itu undangan.", bio: "Sinta paling rajin menempel puisi di papan. Cat air dan stabilo warna pastel tidak pernah jauh dari tasnya." },
-    { nama: "Rizky Pratama", karya: 8, kelas: "XII-3", peran: "Anggota", warna: "#7B4B94", minat: ["Futsal", "Kliping"], quote: "Kalah menang, tempel terus.", bio: "Rizky adalah kurir kliping berita olahraga. Kalau ada info lomba antar kelas, cepat atau lambat pasti ditempel dia." },
-    { nama: "Ayu Lestari", karya: 13, kelas: "XI-1", peran: "Sekretaris", warna: "#B4536B", minat: ["Surat", "Arsip"], quote: "Balas suratnya jangan dibaca doang.", bio: "Ayu menjaga kotak surat dan arsip kiriman. Tulisannya rapi seperti ketikan, stempelnya selalu presisi." },
-    { nama: "Dimas Saputra", karya: 15, kelas: "X-5", peran: "Anggota", warna: "#8A6A10", minat: ["Komik", "Humor"], quote: "Serius itu capek, mending lucu.", bio: "Dimas memasok komik strip dan pengumuman kocak. Spesialis mengubah info membosankan jadi tempelan yang dibaca orang." },
-    { nama: "Putri Anjani", karya: 10, kelas: "XII-2", peran: "Bendahara", warna: "#2C5E9E", minat: ["Kalkulasi", "Kraft"], quote: "Kertas kraft, hati lembut.", bio: "Putri mengatur kas kertas dan selotip. Di balik pembukuan yang teliti, dia penulis surat perpisahan paling bikin mewek." },
-    { nama: "Fajar Nugroho", kelas: "XI-6", peran: "Anggota", warna: "#5B7DB1", minat: ["Fotografi", "Senja"], karya: 21, quote: "Golden hour tidak menunggu.", bio: "Fajar pemburu senja resmi mading. Hampir semua foto langit di papan adalah jepretannya sepulang sekolah." },
-    { nama: "Gilang Saputra", kelas: "XII-2", peran: "Wakil Ketua", warna: "#2E7D6F", minat: ["Koordinasi", "Kliping"], karya: 11, quote: "Rapat boleh singkat, karya jangan.", bio: "Gilang tangan kanannya Nadia. Kalau ada yang buntu di redaksi, biasanya dia yang turun tangan membereskan." },
-    { nama: "Maya Kusuma", kelas: "X-1", peran: "Anggota", warna: "#C2703D", minat: ["Cerpen", "Teh"], quote: "Satu cangkir, satu cerita.", bio: "Maya penulis cerpen termuda di redaksi. Cerita bersambungnya selalu ditunggu tiap edisi." },
-    { nama: "Rina Amelia", kelas: "XI-3", peran: "Koordinator Acara", warna: "#8A6A10", minat: ["Acara", "Poster"], karya: 9, quote: "Acara ramai, mading penuh.", bio: "Rina penghubung redaksi dengan semua kepanitiaan. Info pensi, lomba, dan bazar selalu mampir ke dia dulu." },
-    { nama: "Yoga Firmansyah", kelas: "X-4", peran: "Anggota", warna: "#4A6FA5", minat: ["Tipografi", "Stiker"], karya: 7, quote: "Huruf bagus, pesan nyampe.", bio: "Yoga tukang utak-atik huruf dan stiker. Judul-judul paling mencolok di papan biasanya hasil tangannya." }
-  ];
+  var KEY = "aksara_profil_v1";
+  var BOARD_KEY = "aksara_papan_v1";
+  var COLORS = ["#C03B21", "#2C5E9E", "#3E6B35", "#7B4B94", "#B4536B", "#8A6A10"];
+  var KIND_LABEL = { note: "Note", polaroid: "Foto", clip: "Kliping", tiket: "Tiket", pita: "Pita", perangko: "Perangko", amplop: "Amplop", tag: "Tag", struk: "Struk", umbul: "Umbul", balon: "Balon", badge: "Badge", tulis: "Tulis", lampu: "Lampu", lampion: "Lampion", layang: "Layang", kipas: "Kipas", rantai: "Rantai" };
 
-  function initial(nama){
-    return nama.split(" ").map(function(w){ return w[0]; }).slice(0, 2).join("").toUpperCase();
-  }
-
-  var grid = document.getElementById("grid");
-  var empty = document.getElementById("empty");
-  var count = document.getElementById("count");
+  var card = document.getElementById("idcard");
   var sheet = document.getElementById("sheet");
-  var panel = document.getElementById("panel");
   var toast = document.getElementById("toast");
   var sayT = null;
-  function say(msg){
-    toast.textContent = msg; toast.classList.add("show");
-    clearTimeout(sayT); sayT = setTimeout(function(){ toast.classList.remove("show"); }, 2200);
-  }
+  function say(m){ toast.textContent = m; toast.classList.add("show"); clearTimeout(sayT); sayT = setTimeout(function(){ toast.classList.remove("show"); }, 2200); }
 
   try{
-    var d = new Date();
-    document.getElementById("edDate").textContent = d.toLocaleDateString("id-ID", { day: "numeric", month: "long", year: "numeric" }).toUpperCase();
+    var dd = new Date();
+    document.getElementById("edDate").textContent = dd.toLocaleDateString("id-ID", { day: "numeric", month: "long", year: "numeric" }).toUpperCase();
   }catch(e){}
 
-  var gradeFilter = "";
-  var keyword = "";
-  function filtered(){
-    return STUDENTS.filter(function(s){
-      var okG = !gradeFilter || s.kelas.indexOf(gradeFilter) === 0;
-      var okK = !keyword || (s.nama + " " + s.kelas + " " + s.peran + " " + s.minat.join(" ")).toLowerCase().indexOf(keyword) > -1;
-      return okG && okK;
+  function load(){
+    try{
+      var d = JSON.parse(localStorage.getItem(KEY));
+      if(d && typeof d === "object") return d;
+    }catch(e){}
+    return null;
+  }
+  function initial(nama){
+    var p = (nama || "").trim().split(/\s+/).filter(Boolean);
+    if(!p.length) return "?";
+    return p.map(function(w){ return w[0]; }).slice(0, 2).join("").toUpperCase();
+  }
+  function boardItems(){
+    try{
+      var d = JSON.parse(localStorage.getItem(BOARD_KEY));
+      return Array.isArray(d) ? d : [];
+    }catch(e){ return []; }
+  }
+  function escapeHtml(s){
+    return String(s == null ? "" : s).replace(/[&<>"']/g, function(c){
+      return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c];
     });
   }
-  function stats(){
-    var g = { "X": 0, "XI": 0, "XII": 0 };
-    STUDENTS.forEach(function(s){
-      if(s.kelas.indexOf("XII-") === 0) g["XII"]++;
-      else if(s.kelas.indexOf("XI-") === 0) g["XI"]++;
-      else g["X"]++;
-    });
-    return STUDENTS.length + " SISWA · X:" + g["X"] + " XI:" + g["XI"] + " XII:" + g["XII"];
-  }
-  function renderSpot(){
-    var chief = STUDENTS.filter(function(s){ return s.peran === "Ketua OSIS"; })[0] || STUDENTS[0];
-    document.getElementById("spot").innerHTML =
-      '<div class="spot" id="spotCard"><div class="ava" style="background:' + chief.warna + '">' + initial(chief.nama) + "</div>" +
-      "<div><p class='tag'>SOROTAN REDAKSI</p><h2>" + chief.nama + "</h2>" +
-      '<p class="cls">' + chief.kelas + " · " + chief.peran + "</p>" +
-      '<p class="quote">“' + chief.quote + "”</p></div></div>";
-    document.getElementById("spotCard").addEventListener("click", function(){ openDetail(chief); });
-  }
-  function renderOrg(){
-    var order = ["Ketua OSIS", "Wakil Ketua", "Sekretaris", "Bendahara", "Koordinator Acara"];
-    var box = document.getElementById("org");
+
+  function render(){
+    var p = load();
+    if(!p){
+      card.innerHTML = '<div class="ava" style="background:#8A8578">?</div>' +
+        "<h2>Belum ada nama</h2>" +
+        '<p class="cls">Ketuk Ubah profil untuk mengisi identitasmu</p>';
+    } else {
+      card.innerHTML = '<div class="ava" style="background:' + p.warna + '">' + initial(p.nama) + "</div>" +
+        "<h2>" + escapeHtml(p.nama) + "</h2>" +
+        '<p class="cls">' + escapeHtml(p.kelas) + "</p>" +
+        '<span class="role">' + escapeHtml(p.peran) + "</span>" +
+        (p.bio ? '<p class="bio">“' + escapeHtml(p.bio) + "”</p>" : "");
+    }
+    var items = boardItems();
+    document.getElementById("stTempel").textContent = items.length;
+    document.getElementById("stKarya").textContent = items.length;
+    var box = document.getElementById("works");
     box.innerHTML = "";
-    order.forEach(function(r){
-      var s = STUDENTS.filter(function(x){ return x.peran === r; })[0];
-      if(!s) return;
+    if(!items.length){
+      box.innerHTML = '<p class="nil">Belum ada tempelan. Yuk tempel yang pertama di papan!</p>';
+      return;
+    }
+    items.slice(-3).reverse().forEach(function(d){
+      var w = document.createElement("div");
+      w.className = "work";
+      var t = (d.text || "").trim() || "(tanpa tulisan)";
+      if(t.length > 90) t = t.slice(0, 90) + "…";
+      w.innerHTML = '<span class="k">' + (KIND_LABEL[d.kind] || "Karya") + "</span><p>" + escapeHtml(t) + "</p>";
+      box.appendChild(w);
+    });
+  }
+
+  var curColor = COLORS[0];
+  function paintSwatches(){
+    var box = document.getElementById("swatches");
+    box.innerHTML = "";
+    COLORS.forEach(function(c){
       var b = document.createElement("button");
-      b.innerHTML = '<span class="mini" style="background:' + s.warna + '">' + initial(s.nama) + "</span>" +
-        '<span class="who"><b>' + s.nama + "</b><span>" + r + " · " + s.kelas + "</span></span>" +
-        '<span class="arr">›</span>';
-      b.addEventListener("click", function(){ openDetail(s); });
+      b.type = "button";
+      b.className = "sw";
+      b.style.background = c;
+      b.setAttribute("aria-pressed", c === curColor ? "true" : "false");
+      b.setAttribute("aria-label", c);
+      b.addEventListener("click", function(){
+        curColor = c;
+        [].forEach.call(box.children, function(o){
+          o.setAttribute("aria-pressed", o === b ? "true" : "false");
+        });
+      });
       box.appendChild(b);
     });
   }
-  function render(list){
-    grid.innerHTML = "";
-    empty.hidden = list.length > 0;
-    count.textContent = stats() + (list.length !== STUDENTS.length ? " · TAMPIL " + list.length : "");
-    list.forEach(function(s, i){
-      var c = document.createElement("div");
-      c.className = "card";
-      c.innerHTML = '<div class="ava" style="background:' + s.warna + '">' + initial(s.nama) + "</div>" +
-        "<h2>" + s.nama + "</h2>" +
-        '<p class="cls">' + s.kelas + "</p>" +
-        '<span class="role">' + s.peran + "</span>" +
-        '<p class="quote">“' + s.quote + "”</p>" +
-        '<p class="karya">◆ ' + (s.karya || 0) + " karya di papan</p>";
-      c.addEventListener("click", function(){ openDetail(s); });
-      grid.appendChild(c);
-    });
-  }
 
-  function openDetail(s){
-    panel.innerHTML = '<div class="ava" style="background:' + s.warna + '">' + initial(s.nama) + "</div>" +
-      "<h2>" + s.nama + "</h2>" +
-      '<p class="cls">' + s.kelas + " · " + s.peran + "</p>" +
-      '<div class="meta">' + s.minat.map(function(m){ return "<span>" + m + "</span>"; }).join("") + "</div>" +
-      '<p class="quote-full">“' + s.quote + "”</p>" +
-      '<p class="bio">' + s.bio + "</p>" +
-      '<div class="row">' +
-        '<button class="btn ghost" id="backBtn">Tutup</button>' +
-        '<a class="btn grow" href="index.html">Tempel surat di papan</a>' +
-      "</div>";
+  document.getElementById("editBtn").onclick = function(){
+    var p = load() || {};
+    document.getElementById("fNama").value = p.nama || "";
+    document.getElementById("fKelas").value = p.kelas || "";
+    document.getElementById("fPeran").value = p.peran || "Anggota";
+    document.getElementById("fBio").value = p.bio || "";
+    curColor = p.warna || COLORS[0];
+    paintSwatches();
     sheet.classList.add("open");
-    document.getElementById("backBtn").onclick = function(){ sheet.classList.remove("open"); };
-  }
-
+  };
+  document.getElementById("cancelBtn").onclick = function(){ sheet.classList.remove("open"); };
   sheet.addEventListener("click", function(e){ if(e.target === sheet) sheet.classList.remove("open"); });
-  document.getElementById("q").addEventListener("input", function(e){
-    keyword = e.target.value.trim().toLowerCase();
-    render(filtered());
-  });
-  document.querySelectorAll("#chips .chip").forEach(function(c){
-    c.addEventListener("click", function(){
-      gradeFilter = c.dataset.grade;
-      document.querySelectorAll("#chips .chip").forEach(function(o){
-        o.setAttribute("aria-pressed", o === c ? "true" : "false");
-      });
-      render(filtered());
-    });
-  });
+  document.getElementById("saveBtn").onclick = function(){
+    var nama = document.getElementById("fNama").value.trim();
+    if(!nama){ say("Isi dulu namamu"); return; }
+    try{
+      localStorage.setItem(KEY, JSON.stringify({
+        nama: nama,
+        kelas: document.getElementById("fKelas").value.trim() || "—",
+        peran: document.getElementById("fPeran").value,
+        warna: curColor,
+        bio: document.getElementById("fBio").value.trim()
+      }));
+    }catch(e){ say("Gagal menyimpan"); return; }
+    sheet.classList.remove("open");
+    render();
+    say("Profil disimpan");
+  };
   document.querySelectorAll("[data-soon]").forEach(function(el){
     el.addEventListener("click", function(e){
       e.preventDefault();
@@ -293,9 +304,7 @@ footer{text-align:center;font:500 10px var(--fm);letter-spacing:.14em;color:rgba
     });
   });
 
-  renderSpot();
-  renderOrg();
-  render(STUDENTS);
+  render();
 })();
 </script>
 </body>
