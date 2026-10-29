@@ -49,10 +49,12 @@ body{background:var(--paper);color:var(--ink);font-family:var(--fs);-webkit-text
 /* kertas surat */
 .letter{position:relative;margin-top:10px;padding:20px 18px 22px 18px;transform:rotate(-.5deg);
   background:
-    linear-gradient(90deg,transparent 0 36px,rgba(192,59,33,.45) 36px 37px,transparent 37px),
     repeating-linear-gradient(180deg,transparent 0 27px,rgba(43,36,28,.22) 27px 28px),
     linear-gradient(170deg,#FFFDF7,#FBF4E4);
+  background-position:0 16px,0 0;
   border-radius:2px;box-shadow:0 12px 22px -12px rgba(24,20,16,.45)}
+.letter::before{content:"";position:absolute;left:28px;top:64px;bottom:12px;width:1px;
+  background:rgba(192,59,33,.45);pointer-events:none}
 .lstamp{position:absolute;top:-14px;right:12px;width:48px;height:58px;background:#FDFBF4;
   border:2px dashed rgba(34,29,21,.5);border-radius:2px;display:grid;place-items:center;transform:rotate(4deg);
   box-shadow:0 2px 4px rgba(24,20,16,.2)}
@@ -64,9 +66,9 @@ body{background:var(--paper);color:var(--ink);font-family:var(--fs);-webkit-text
   font:700 1.25rem/28px var(--fh);color:#2b241c;padding:0 0 0 2px}
 .lrow input::placeholder{color:rgba(34,29,21,.3)}
 .lbody{width:100%;background:transparent;border:0;outline:0;resize:none;min-height:140px;
-  font:500 1.3rem/28px var(--fh);color:#2b241c;padding:2px 0 0 46px;margin-top:2px}
+  font:500 1.3rem/28px var(--fh);color:#2b241c;padding:2px 0 0 40px;margin-top:2px}
 .lbody::placeholder{color:rgba(34,29,21,.3)}
-.lfoot{display:flex;justify-content:space-between;align-items:center;margin-top:10px;padding-left:46px}
+.lfoot{display:flex;justify-content:space-between;align-items:center;margin-top:10px;padding-left:40px}
 .lfoot .dari{font:500 .85rem/1.4 var(--fm);color:rgba(34,29,21,.6)}
 .switchrow{display:flex;align-items:center;gap:10px;font:400 .9rem var(--fs)}
 .switch{position:relative;width:42px;height:24px;flex:0 0 auto;cursor:pointer}
