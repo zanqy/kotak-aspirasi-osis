@@ -34,17 +34,25 @@ body{background:var(--paper);color:var(--ink);font-family:var(--fs);-webkit-text
   letter-spacing:.12em;text-transform:uppercase;border-bottom:1px solid rgba(34,29,21,.25)}
 /* kartu identitas */
 .idcard{background:var(--news);border:1px solid rgba(34,29,21,.22);border-radius:14px;
-  padding:22px 18px;margin-top:14px;text-align:center;position:relative;overflow:hidden}
+  padding:22px 18px 18px;margin-top:14px;position:relative;overflow:hidden;
+  display:grid;grid-template-columns:104px 1fr;gap:15px;text-align:left;align-items:start}
 .idcard::before{content:"";position:absolute;top:0;left:0;right:0;height:7px;
   background:repeating-linear-gradient(90deg,var(--red) 0 14px,var(--paper) 14px 20px,#2b241c 20px 34px,var(--paper) 34px 40px)}
-.ava{width:84px;height:84px;border-radius:50%;margin:8px auto 10px;display:grid;place-items:center;
-  font:700 1.8rem var(--fd);color:#fff;text-shadow:0 1px 2px rgba(0,0,0,.3);
+.idcard::after{content:"AKSARA · KARTU PELAJAR";position:absolute;bottom:0;left:0;right:0;
+  font:700 8px var(--fm);letter-spacing:.24em;color:rgba(242,236,222,.92);text-align:center;
+  background:var(--ink);padding:6px 0 7px}
+.idcard .idbody{padding-bottom:22px;min-width:0}
+.ava{width:104px;height:126px;border-radius:10px;margin:0;display:grid;place-items:center;
+  font:700 2rem var(--fd);color:#fff;text-shadow:0 1px 2px rgba(0,0,0,.3);
   border:3px solid rgba(34,29,21,.3);box-shadow:0 3px 6px rgba(24,20,16,.25)}
-.idcard h2{font:800 1.5rem/1.2 var(--fd)}
+.idcard h2{font:800 1.35rem/1.2 var(--fd);word-break:break-word}
 .idcard .cls{font:500 11px var(--fm);letter-spacing:.12em;text-transform:uppercase;color:rgba(34,29,21,.55);margin:5px 0}
 .role{display:inline-block;font:600 10px var(--fm);letter-spacing:.1em;text-transform:uppercase;
   color:var(--red);border:1.5px solid rgba(192,59,33,.6);border-radius:99px;padding:4px 12px;margin-top:2px}
-.bio{font:italic 400 .98rem/1.65 var(--fs);color:rgba(34,29,21,.8);margin:12px 4px 0}
+.bio{font:italic 400 .92rem/1.6 var(--fs);color:rgba(34,29,21,.8);margin:10px 0 0}
+.idempty{grid-column:1/-1;text-align:center}
+.idempty .ava{margin:0 auto}
+@media(max-width:380px){ .idcard{grid-template-columns:88px 1fr} .ava{width:88px;height:108px} }
 /* statistik */
 .stats{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px}
 .stat{background:rgba(255,255,255,.45);border:1px solid rgba(34,29,21,.2);border-radius:12px;
@@ -219,15 +227,15 @@ footer{text-align:center;font:500 10px var(--fm);letter-spacing:.14em;color:rgba
   function render(){
     var p = load();
     if(!p){
-      card.innerHTML = '<div class="ava" style="background:#8A8578">?</div>' +
+      card.innerHTML = '<div class="idempty"><div class="ava" style="background:#8A8578">?</div>' +
         "<h2>Belum ada nama</h2>" +
-        '<p class="cls">Ketuk Ubah profil untuk mengisi identitasmu</p>';
+        '<p class="cls">Ketuk Ubah profil untuk mengisi identitasmu</p></div>';
     } else {
       card.innerHTML = '<div class="ava" style="background:' + p.warna + '">' + initial(p.nama) + "</div>" +
-        "<h2>" + escapeHtml(p.nama) + "</h2>" +
+        '<div class="idbody"><h2>' + escapeHtml(p.nama) + "</h2>" +
         '<p class="cls">' + escapeHtml(p.kelas) + "</p>" +
         '<span class="role">' + escapeHtml(p.peran) + "</span>" +
-        (p.bio ? '<p class="bio">“' + escapeHtml(p.bio) + "”</p>" : "");
+        (p.bio ? '<p class="bio">“' + escapeHtml(p.bio) + "”</p>" : "") + "</div>";
     }
     var items = boardItems();
     document.getElementById("stTempel").textContent = items.length;
