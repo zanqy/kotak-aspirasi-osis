@@ -64,21 +64,36 @@ body{background:var(--paper);color:var(--ink);font-family:var(--fs);-webkit-text
   padding:13px 10px;text-align:center}
 .stat b{display:block;font:800 1.6rem var(--fd)}
 .stat span{font:500 9.5px var(--fm);letter-spacing:.12em;text-transform:uppercase;color:rgba(34,29,21,.55)}
-/* karya terakhir */
+/* galeri */
+.gchips{display:flex;gap:8px;overflow-x:auto;padding-bottom:8px;margin-bottom:8px;scrollbar-width:thin}
+.gchip{flex:0 0 auto;font:500 10px var(--fm);letter-spacing:.1em;text-transform:uppercase;
+  border:1px solid rgba(34,29,21,.25);background:rgba(255,255,255,.4);border-radius:99px;
+  padding:7px 13px;cursor:pointer;color:var(--ink)}
+.gchip[aria-pressed="true"]{background:var(--ink);color:var(--paper);border-color:var(--ink)}
+.gchip b{font-weight:700}
+.ggrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(148px,1fr));gap:10px}
 .sect{font:800 1.05rem var(--fd);margin:22px 0 2px}
 .sect-sub{font:italic 400 .84rem var(--fs);color:rgba(34,29,21,.55);margin-bottom:10px}
-.work{background:var(--news);border:1px solid rgba(34,29,21,.2);border-radius:12px;padding:11px 14px;
-  margin-bottom:8px;display:flex;gap:11px;align-items:baseline}
-.work .k{flex:0 0 auto;font:700 9px var(--fm);letter-spacing:.1em;text-transform:uppercase;color:var(--red);
-  border:1.5px solid rgba(192,59,33,.55);border-radius:6px;padding:3px 7px}
-.work p{font:400 .92rem/1.5 var(--fs);word-break:break-word}
-.nil{text-align:center;font:italic 400 .92rem var(--fs);color:rgba(34,29,21,.55);padding:22px 0}
 .row{display:flex;gap:9px;margin-top:14px}
 .btn{background:var(--ink);color:var(--paper);border:0;border-radius:9px;padding:12px 20px;
   font:600 .94rem var(--fd);cursor:pointer;text-decoration:none;text-align:center}
 .btn.grow{flex:1}
 .btn.ghost{background:transparent;color:var(--ink);border:1px solid rgba(34,29,21,.24);font:500 .92rem var(--fs)}
-/* lembar edit */
+.nil{text-align:center;font:italic 400 .92rem var(--fs);color:rgba(34,29,21,.55);padding:22px 0}
+.gcard{background:var(--news);border:1px solid rgba(34,29,21,.2);border-radius:12px;padding:9px;
+  display:flex;flex-direction:column;gap:8px;cursor:pointer;transition:transform .15s}
+.gcard:active{transform:scale(.97)}
+.gthumb{width:100%;aspect-ratio:4/3;border-radius:9px;border:1px solid rgba(34,29,21,.18);
+  display:grid;place-items:center;overflow:hidden;padding:8px}
+.gthumb .gword{font:600 1.05rem/1.3 var(--fh);color:#2b241c;text-align:center;overflow:hidden;
+  display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;word-break:break-word}
+.gthumb .gimg{width:100%;height:100%;border-radius:6px;background-size:cover;background-position:center}
+.gmeta{display:flex;justify-content:space-between;gap:6px;font:500 8.5px var(--fm);
+  letter-spacing:.08em;text-transform:uppercase;color:rgba(34,29,21,.55)}
+.gmeta .t{color:var(--red);border-color:rgba(192,59,33,.4)}
+.gsnip{font:400 .84rem/1.45 var(--fs);color:rgba(34,29,21,.8);display:-webkit-box;
+  -webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;min-height:2.4em}
+.gmuted{color:rgba(34,29,21,.45)}
 .sheet{position:fixed;inset:0;z-index:100;display:none;align-items:flex-end;justify-content:center;
   background:rgba(24,20,16,.45)}
 .sheet.open{display:flex}
@@ -86,7 +101,10 @@ body{background:var(--paper);color:var(--ink);font-family:var(--fs);-webkit-text
   padding:18px clamp(16px,5vw,26px) calc(20px + env(safe-area-inset-bottom));max-height:88vh;overflow-y:auto;
   animation:up .28s cubic-bezier(.2,.8,.3,1) both}
 @keyframes up{from{transform:translateY(28px);opacity:.6}to{transform:none;opacity:1}}
-.panel h3{font:600 1.06rem var(--fd);margin-bottom:12px}
+.panel h3{font:600 1.06rem var(--fd);margin-bottom:4px}
+.panel .dmeta{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:12px}
+.panel .dmeta span{font:500 10px var(--fm);letter-spacing:.08em;background:rgba(255,255,255,.5);
+  border:1px solid rgba(34,29,21,.2);border-radius:99px;padding:5px 11px;text-transform:uppercase}
 .field{margin-bottom:11px}
 .field label{display:block;font:500 10px var(--fm);letter-spacing:.14em;text-transform:uppercase;
   color:rgba(34,29,21,.55);margin-bottom:5px}
@@ -143,13 +161,18 @@ footer{text-align:center;font:500 10px var(--fm);letter-spacing:.14em;color:rgba
     <a class="btn grow" href="index.html">Tempel di papan</a>
   </div>
 
-  <h2 class="sect">Karya Terakhirku</h2>
-  <p class="sect-sub">Tempelan terbaru dari papan mading.</p>
-  <div id="works"></div>
+  <h2 class="sect">Galeri Karyaku</h2>
+  <p class="sect-sub">Semua tempelan di papan — semuanya milikmu.</p>
+  <div class="gchips" id="gchips"></div>
+  <div class="ggrid" id="ggrid"></div>
+  <p class="nil" id="gnil" hidden>Belum ada tempelan. Yuk tempel yang pertama di papan!</p>
 
   <footer>AKSARA · HAL. 2/3 · EDISI 231</footer>
 </main>
 
+<div class="sheet" id="wsheet">
+  <div class="panel" id="wpanel"></div>
+</div>
 <div class="sheet" id="sheet">
   <div class="panel">
     <h3>Ubah profil</h3>
@@ -248,21 +271,91 @@ footer{text-align:center;font:500 10px var(--fm);letter-spacing:.14em;color:rgba
     var items = boardItems();
     document.getElementById("stTempel").textContent = items.length;
     document.getElementById("stKarya").textContent = items.length;
-    var box = document.getElementById("works");
-    box.innerHTML = "";
-    if(!items.length){
-      box.innerHTML = '<p class="nil">Belum ada tempelan. Yuk tempel yang pertama di papan!</p>';
-      return;
-    }
-    items.slice(-3).reverse().forEach(function(d){
-      var w = document.createElement("div");
-      w.className = "work";
-      var t = (d.text || "").trim() || "(tanpa tulisan)";
-      if(t.length > 90) t = t.slice(0, 90) + "…";
-      w.innerHTML = '<span class="k">' + (KIND_LABEL[d.kind] || "Karya") + "</span><p>" + escapeHtml(t) + "</p>";
-      box.appendChild(w);
+    renderGallery(items);
+  }
+
+  var kindFilter = "";
+  function fdate(at){
+    try{ return new Date(at).toLocaleDateString("id-ID", { day: "numeric", month: "short" }); }
+    catch(e){ return ""; }
+  }
+  function renderGallery(items){
+    var chips = document.getElementById("gchips");
+    var grid = document.getElementById("ggrid");
+    var nil = document.getElementById("gnil");
+    grid.innerHTML = "";
+    nil.hidden = items.length > 0;
+    chips.innerHTML = "";
+    var counts = {};
+    items.forEach(function(d){ counts[d.kind] = (counts[d.kind] || 0) + 1; });
+    var kinds = Object.keys(counts).sort(function(a, b){ return counts[b] - counts[a]; });
+    var mk = function(label, val, active){
+      var b = document.createElement("button");
+      b.type = "button";
+      b.className = "gchip";
+      b.dataset.k = val;
+      b.setAttribute("aria-pressed", active ? "true" : "false");
+      b.innerHTML = val ? label + " <b>" + counts[val] + "</b>" : label + " <b>" + items.length + "</b>";
+      b.addEventListener("click", function(){
+        kindFilter = val;
+        [].forEach.call(chips.children, function(o){
+          o.setAttribute("aria-pressed", o.dataset.k === kindFilter ? "true" : "false");
+        });
+        renderGallery(boardItems());
+      });
+      chips.appendChild(b);
+    };
+    mk("Semua", "", kindFilter === "");
+    kinds.forEach(function(k){ mk(KIND_LABEL[k] || k, k, kindFilter === k); });
+    var list = kindFilter ? items.filter(function(d){ return d.kind === kindFilter; }) : items;
+    list.slice().reverse().forEach(function(d){
+      var label = KIND_LABEL[d.kind] || "Karya";
+      var c = document.createElement("div");
+      c.className = "gcard";
+      var thumb = "";
+      var iu = null;
+      if(d.kind === "polaroid" && d.image){
+        iu = (d.image && d.image.indexOf("img:") === 0) ? null : d.image;
+        try{
+          var st = JSON.parse(localStorage.getItem("aksara_img_v1") || "{}");
+          if(d.image.indexOf("img:") === 0 && st[d.image.slice(4)]) iu = st[d.image.slice(4)];
+        }catch(e){}
+      }
+      if(iu){
+        thumb = '<div class="gthumb" style="padding:0"><div class="gimg" style="background-image:url(&quot;' + iu + '&quot;)"></div></div>';
+      } else {
+        var bg = d.color || "#F7F1E1";
+        var t = (d.text || "").trim() || label;
+        if(t.length > 34) t = t.slice(0, 34) + "…";
+        thumb = '<div class="gthumb" style="background:' + bg + '"><span class="gword">' + escapeHtml(t) + "</span></div>";
+      }
+      var snip = (d.text || "").trim();
+      var body = snip
+        ? '<p class="gsnip">' + escapeHtml(snip) + "</p>"
+        : '<p class="gsnip gmuted">(tanpa tulisan)</p>';
+      c.innerHTML = thumb +
+        '<div class="gmeta"><span class="t">' + label + "</span><span>" + fdate(d.at) + "</span></div>" +
+        body;
+      c.addEventListener("click", function(){ openWork(d, label, iu); });
+      grid.appendChild(c);
     });
   }
+  var wsheet = document.getElementById("wsheet");
+  var wpanel = document.getElementById("wpanel");
+  function openWork(d, label, iu){
+    var panel = wpanel;
+    var html = "<h3>" + label + "</h3>" +
+      '<div class="dmeta"><span>' + fdate(d.at) + "</span>" +
+      (d.name ? "<span>" + escapeHtml(d.name) + "</span>" : "") +
+      (d.stamp && d.stamp !== "tanpa" ? "<span>stempel: " + escapeHtml(d.stamp) + "</span>" : "") + "</div>";
+    if(iu) html += '<div style="margin-bottom:12px"><img src="' + iu + '" alt="karya" style="width:100%;max-height:220px;object-fit:cover;border-radius:9px;border:1px solid rgba(34,29,21,.2)"></div>';
+    if((d.text || "").trim()) html += '<p class="bio">' + escapeHtml(d.text) + "</p>";
+    html += '<div class="row"><button class="btn ghost" id="wBack">Tutup</button><a class="btn grow" href="index.html">Buka papan</a></div>';
+    panel.innerHTML = html;
+    document.getElementById("wBack").onclick = function(){ wsheet.classList.remove("open"); };
+    wsheet.classList.add("open");
+  }
+  wsheet.addEventListener("pointerdown", function(e){ if(e.target === wsheet) wsheet.classList.remove("open"); });
 
   var curColor = COLORS[0];
   function paintSwatches(){
