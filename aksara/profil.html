@@ -32,12 +32,39 @@ body{background:var(--paper);color:var(--ink);font-family:var(--fs);-webkit-text
 .mast h1 i{color:var(--red);font-style:normal}
 .ed{display:flex;justify-content:space-between;gap:8px;padding:7px 2px;font:500 10px var(--fm);
   letter-spacing:.12em;text-transform:uppercase;border-bottom:1px solid rgba(34,29,21,.25)}
-.toolbar{display:flex;gap:8px;margin:14px 0 12px}
+.toolbar{display:flex;gap:8px;margin:14px 0 10px}
 .toolbar input{flex:1;font:400 .95rem var(--fs);color:var(--ink);background:rgba(255,255,255,.5);
   border:1px solid rgba(34,29,21,.22);border-radius:9px;padding:11px 13px;min-width:0}
 .toolbar input:focus{outline:none;border-color:var(--red)}
+.chips{display:flex;gap:8px;overflow-x:auto;padding-bottom:8px;margin-bottom:6px;scrollbar-width:thin}
+.chip{flex:0 0 auto;font:500 10px var(--fm);letter-spacing:.1em;text-transform:uppercase;
+  border:1px solid rgba(34,29,21,.25);background:rgba(255,255,255,.4);border-radius:99px;
+  padding:8px 15px;cursor:pointer;color:var(--ink)}
+.chip[aria-pressed="true"]{background:var(--ink);color:var(--paper);border-color:var(--ink)}
 .count{font:500 10px var(--fm);letter-spacing:.14em;text-transform:uppercase;color:rgba(34,29,21,.55);
   margin:2px 2px 10px}
+/* sorotan */
+.spot{background:var(--ink);color:var(--paper);border-radius:14px;padding:16px;margin:4px 0 14px;
+  display:flex;gap:14px;align-items:center;cursor:pointer;border:1px solid var(--ink)}
+.spot .ava{width:66px;height:66px;font-size:1.5rem;margin:0;flex:0 0 auto}
+.spot .tag{font:700 9px var(--fm);letter-spacing:.2em;color:#F2B134;margin-bottom:5px}
+.spot h2{font:800 1.25rem var(--fd)}
+.spot .cls{font:500 10px var(--fm);letter-spacing:.1em;opacity:.7;margin:3px 0 6px;text-transform:uppercase}
+.spot .quote{font:italic 400 .9rem/1.5 var(--fs);opacity:.9}
+/* struktur */
+.sect{font:800 1.05rem var(--fd);margin:20px 0 2px}
+.sect-sub{font:italic 400 .84rem var(--fs);color:rgba(34,29,21,.55);margin-bottom:10px}
+.org{background:var(--news);border:1px solid rgba(34,29,21,.2);border-radius:12px;overflow:hidden;margin-bottom:6px}
+.org button{width:100%;display:flex;align-items:center;gap:11px;background:none;border:0;
+  border-bottom:1px dashed rgba(34,29,21,.2);padding:10px 13px;cursor:pointer;text-align:left;color:var(--ink)}
+.org button:last-child{border-bottom:0}
+.org .mini{width:36px;height:36px;border-radius:50%;display:grid;place-items:center;flex:0 0 auto;
+  font:700 .8rem var(--fd);color:#fff}
+.org .who{flex:1;min-width:0}
+.org .who b{display:block;font:700 .9rem var(--fd);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.org .who span{font:500 9.5px var(--fm);letter-spacing:.08em;text-transform:uppercase;color:rgba(34,29,21,.55)}
+.org .arr{color:rgba(34,29,21,.4)}
+.card .karya{font:500 9px var(--fm);letter-spacing:.08em;color:rgba(34,29,21,.5);margin-top:6px;text-transform:uppercase}
 .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px}
 .card{background:var(--news);border:1px solid rgba(34,29,21,.2);border-radius:12px;padding:14px 12px;
   cursor:pointer;text-align:center;transition:transform .15s}
@@ -108,9 +135,20 @@ footer{text-align:center;font:500 10px var(--fm);letter-spacing:.14em;color:rgba
   <div class="toolbar">
     <input id="q" type="search" placeholder="Cari nama, kelas, atau peran..." autocomplete="off">
   </div>
+  <div class="chips" id="chips">
+    <button class="chip" data-grade="" aria-pressed="true">Semua</button>
+    <button class="chip" data-grade="X-" aria-pressed="false">X</button>
+    <button class="chip" data-grade="XI-" aria-pressed="false">XI</button>
+    <button class="chip" data-grade="XII-" aria-pressed="false">XII</button>
+  </div>
+  <div id="spot"></div>
   <p class="count" id="count"></p>
   <div class="grid" id="grid"></div>
   <p class="empty" id="empty" hidden>Tidak ketemu. Coba kata kunci lain.</p>
+
+  <h2 class="sect">Struktur Pengurus</h2>
+  <p class="sect-sub">Kenali siapa di balik layar mading.</p>
+  <div class="org" id="org"></div>
 
   <footer>AKSARA · HAL. 2/3 · EDISI 231</footer>
 </main>
@@ -124,14 +162,18 @@ footer{text-align:center;font:500 10px var(--fm);letter-spacing:.14em;color:rgba
 (function(){
   "use strict";
   var STUDENTS = [
-    { nama: "Nadia Prameswari", kelas: "XII-1", peran: "Ketua OSIS", warna: "#C03B21", minat: ["Menulis", "Fotografi"], quote: "Mading itu arsip rasa satu angkatan.", bio: "Nadia mengurusi redaksi AKSARA. Suka mengarsipkan momen lewat kamera analog dan puisi pendek. Kalau ada info acara, biasanya lewat dia dulu." },
-    { nama: "Bagas Ramadhan", kelas: "XI-4", peran: "Redaktur", warna: "#2C5E9E", minat: ["Desain", "Musik"], quote: "Tulisan miring, niat lurus.", bio: "Bagas yang menata letak tempelan digital. Pemain bas di ekstrakurik musik, kolektor kaset, dan tukang begadang kalau deadline mading." },
-    { nama: "Sinta Maharani", kelas: "X-2", peran: "Anggota", warna: "#3E6B35", minat: ["Puisi", "Melukis"], quote: "Kertas kosong itu undangan.", bio: "Sinta paling rajin menempel puisi di papan. Cat air dan stabilo warna pastel tidak pernah jauh dari tasnya." },
-    { nama: "Rizky Pratama", kelas: "XII-3", peran: "Anggota", warna: "#7B4B94", minat: ["Futsal", "Kliping"], quote: "Kalah menang, tempel terus.", bio: "Rizky adalah kurir kliping berita olahraga. Kalau ada info lomba antar kelas, cepat atau lambat pasti ditempel dia." },
-    { nama: "Ayu Lestari", kelas: "XI-1", peran: "Sekretaris", warna: "#B4536B", minat: ["Surat", "Arsip"], quote: "Balas suratnya jangan dibaca doang.", bio: "Ayu menjaga kotak surat dan arsip kiriman. Tulisannya rapi seperti ketikan, stempelnya selalu presisi." },
-    { nama: "Dimas Saputra", kelas: "X-5", peran: "Anggota", warna: "#8A6A10", minat: ["Komik", "Humor"], quote: "Serius itu capek, mending lucu.", bio: "Dimas memasok komik strip dan pengumuman kocak. Spesialis mengubah info membosankan jadi tempelan yang dibaca orang." },
-    { nama: "Putri Anjani", kelas: "XII-2", peran: "Bendahara", warna: "#2C5E9E", minat: ["Kalkulasi", "Kraft"], quote: "Kertas kraft, hati lembut.", bio: "Putri mengatur kas kertas dan selotip. Di balik pembukuan yang teliti, dia penulis surat perpisahan paling bikin mewek." },
-    { nama: "Fajar Nugroho", kelas: "XI-6", peran: "Anggota", warna: "#5B7DB1", minat: ["Fotografi", "Senja"], quote: "Golden hour tidak menunggu.", bio: "Fajar pemburu senja resmi mading. Hampir semua foto langit di papan adalah jepretannya sepulang sekolah." }
+    { nama: "Nadia Prameswari", karya: 24, kelas: "XII-1", peran: "Ketua OSIS", warna: "#C03B21", minat: ["Menulis", "Fotografi"], quote: "Mading itu arsip rasa satu angkatan.", bio: "Nadia mengurusi redaksi AKSARA. Suka mengarsipkan momen lewat kamera analog dan puisi pendek. Kalau ada info acara, biasanya lewat dia dulu." },
+    { nama: "Bagas Ramadhan", karya: 17, kelas: "XI-4", peran: "Redaktur", warna: "#2C5E9E", minat: ["Desain", "Musik"], quote: "Tulisan miring, niat lurus.", bio: "Bagas yang menata letak tempelan digital. Pemain bas di ekstrakurik musik, kolektor kaset, dan tukang begadang kalau deadline mading." },
+    { nama: "Sinta Maharani", karya: 19, kelas: "X-2", peran: "Anggota", warna: "#3E6B35", minat: ["Puisi", "Melukis"], quote: "Kertas kosong itu undangan.", bio: "Sinta paling rajin menempel puisi di papan. Cat air dan stabilo warna pastel tidak pernah jauh dari tasnya." },
+    { nama: "Rizky Pratama", karya: 8, kelas: "XII-3", peran: "Anggota", warna: "#7B4B94", minat: ["Futsal", "Kliping"], quote: "Kalah menang, tempel terus.", bio: "Rizky adalah kurir kliping berita olahraga. Kalau ada info lomba antar kelas, cepat atau lambat pasti ditempel dia." },
+    { nama: "Ayu Lestari", karya: 13, kelas: "XI-1", peran: "Sekretaris", warna: "#B4536B", minat: ["Surat", "Arsip"], quote: "Balas suratnya jangan dibaca doang.", bio: "Ayu menjaga kotak surat dan arsip kiriman. Tulisannya rapi seperti ketikan, stempelnya selalu presisi." },
+    { nama: "Dimas Saputra", karya: 15, kelas: "X-5", peran: "Anggota", warna: "#8A6A10", minat: ["Komik", "Humor"], quote: "Serius itu capek, mending lucu.", bio: "Dimas memasok komik strip dan pengumuman kocak. Spesialis mengubah info membosankan jadi tempelan yang dibaca orang." },
+    { nama: "Putri Anjani", karya: 10, kelas: "XII-2", peran: "Bendahara", warna: "#2C5E9E", minat: ["Kalkulasi", "Kraft"], quote: "Kertas kraft, hati lembut.", bio: "Putri mengatur kas kertas dan selotip. Di balik pembukuan yang teliti, dia penulis surat perpisahan paling bikin mewek." },
+    { nama: "Fajar Nugroho", kelas: "XI-6", peran: "Anggota", warna: "#5B7DB1", minat: ["Fotografi", "Senja"], karya: 21, quote: "Golden hour tidak menunggu.", bio: "Fajar pemburu senja resmi mading. Hampir semua foto langit di papan adalah jepretannya sepulang sekolah." },
+    { nama: "Gilang Saputra", kelas: "XII-2", peran: "Wakil Ketua", warna: "#2E7D6F", minat: ["Koordinasi", "Kliping"], karya: 11, quote: "Rapat boleh singkat, karya jangan.", bio: "Gilang tangan kanannya Nadia. Kalau ada yang buntu di redaksi, biasanya dia yang turun tangan membereskan." },
+    { nama: "Maya Kusuma", kelas: "X-1", peran: "Anggota", warna: "#C2703D", minat: ["Cerpen", "Teh"], quote: "Satu cangkir, satu cerita.", bio: "Maya penulis cerpen termuda di redaksi. Cerita bersambungnya selalu ditunggu tiap edisi." },
+    { nama: "Rina Amelia", kelas: "XI-3", peran: "Koordinator Acara", warna: "#8A6A10", minat: ["Acara", "Poster"], karya: 9, quote: "Acara ramai, mading penuh.", bio: "Rina penghubung redaksi dengan semua kepanitiaan. Info pensi, lomba, dan bazar selalu mampir ke dia dulu." },
+    { nama: "Yoga Firmansyah", kelas: "X-4", peran: "Anggota", warna: "#4A6FA5", minat: ["Tipografi", "Stiker"], karya: 7, quote: "Huruf bagus, pesan nyampe.", bio: "Yoga tukang utak-atik huruf dan stiker. Judul-judul paling mencolok di papan biasanya hasil tangannya." }
   ];
 
   function initial(nama){
@@ -155,10 +197,52 @@ footer{text-align:center;font:500 10px var(--fm);letter-spacing:.14em;color:rgba
     document.getElementById("edDate").textContent = d.toLocaleDateString("id-ID", { day: "numeric", month: "long", year: "numeric" }).toUpperCase();
   }catch(e){}
 
+  var gradeFilter = "";
+  var keyword = "";
+  function filtered(){
+    return STUDENTS.filter(function(s){
+      var okG = !gradeFilter || s.kelas.indexOf(gradeFilter) === 0;
+      var okK = !keyword || (s.nama + " " + s.kelas + " " + s.peran + " " + s.minat.join(" ")).toLowerCase().indexOf(keyword) > -1;
+      return okG && okK;
+    });
+  }
+  function stats(){
+    var g = { "X": 0, "XI": 0, "XII": 0 };
+    STUDENTS.forEach(function(s){
+      if(s.kelas.indexOf("XII-") === 0) g["XII"]++;
+      else if(s.kelas.indexOf("XI-") === 0) g["XI"]++;
+      else g["X"]++;
+    });
+    return STUDENTS.length + " SISWA · X:" + g["X"] + " XI:" + g["XI"] + " XII:" + g["XII"];
+  }
+  function renderSpot(){
+    var chief = STUDENTS.filter(function(s){ return s.peran === "Ketua OSIS"; })[0] || STUDENTS[0];
+    document.getElementById("spot").innerHTML =
+      '<div class="spot" id="spotCard"><div class="ava" style="background:' + chief.warna + '">' + initial(chief.nama) + "</div>" +
+      "<div><p class='tag'>SOROTAN REDAKSI</p><h2>" + chief.nama + "</h2>" +
+      '<p class="cls">' + chief.kelas + " · " + chief.peran + "</p>" +
+      '<p class="quote">“' + chief.quote + "”</p></div></div>";
+    document.getElementById("spotCard").addEventListener("click", function(){ openDetail(chief); });
+  }
+  function renderOrg(){
+    var order = ["Ketua OSIS", "Wakil Ketua", "Sekretaris", "Bendahara", "Koordinator Acara"];
+    var box = document.getElementById("org");
+    box.innerHTML = "";
+    order.forEach(function(r){
+      var s = STUDENTS.filter(function(x){ return x.peran === r; })[0];
+      if(!s) return;
+      var b = document.createElement("button");
+      b.innerHTML = '<span class="mini" style="background:' + s.warna + '">' + initial(s.nama) + "</span>" +
+        '<span class="who"><b>' + s.nama + "</b><span>" + r + " · " + s.kelas + "</span></span>" +
+        '<span class="arr">›</span>';
+      b.addEventListener("click", function(){ openDetail(s); });
+      box.appendChild(b);
+    });
+  }
   function render(list){
     grid.innerHTML = "";
     empty.hidden = list.length > 0;
-    count.textContent = list.length + " SISWA TERDAFTAR";
+    count.textContent = stats() + (list.length !== STUDENTS.length ? " · TAMPIL " + list.length : "");
     list.forEach(function(s, i){
       var c = document.createElement("div");
       c.className = "card";
@@ -166,7 +250,8 @@ footer{text-align:center;font:500 10px var(--fm);letter-spacing:.14em;color:rgba
         "<h2>" + s.nama + "</h2>" +
         '<p class="cls">' + s.kelas + "</p>" +
         '<span class="role">' + s.peran + "</span>" +
-        '<p class="quote">“' + s.quote + "”</p>";
+        '<p class="quote">“' + s.quote + "”</p>" +
+        '<p class="karya">◆ ' + (s.karya || 0) + " karya di papan</p>";
       c.addEventListener("click", function(){ openDetail(s); });
       grid.appendChild(c);
     });
@@ -189,11 +274,17 @@ footer{text-align:center;font:500 10px var(--fm);letter-spacing:.14em;color:rgba
 
   sheet.addEventListener("click", function(e){ if(e.target === sheet) sheet.classList.remove("open"); });
   document.getElementById("q").addEventListener("input", function(e){
-    var k = e.target.value.trim().toLowerCase();
-    if(!k){ render(STUDENTS); return; }
-    render(STUDENTS.filter(function(s){
-      return (s.nama + " " + s.kelas + " " + s.peran + " " + s.minat.join(" ")).toLowerCase().indexOf(k) > -1;
-    }));
+    keyword = e.target.value.trim().toLowerCase();
+    render(filtered());
+  });
+  document.querySelectorAll("#chips .chip").forEach(function(c){
+    c.addEventListener("click", function(){
+      gradeFilter = c.dataset.grade;
+      document.querySelectorAll("#chips .chip").forEach(function(o){
+        o.setAttribute("aria-pressed", o === c ? "true" : "false");
+      });
+      render(filtered());
+    });
   });
   document.querySelectorAll("[data-soon]").forEach(function(el){
     el.addEventListener("click", function(e){
@@ -202,6 +293,8 @@ footer{text-align:center;font:500 10px var(--fm);letter-spacing:.14em;color:rgba
     });
   });
 
+  renderSpot();
+  renderOrg();
   render(STUDENTS);
 })();
 </script>
