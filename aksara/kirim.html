@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>AKSARA. — Kirim</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;600&family=Fraunces:ital,opsz,wght@0,9..144,400..800;1,9..144,400..700&family=IBM+Plex+Mono:wght@400;500&family=Spectral:ital,wght@0,400;0,500;1,400;1,500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --paper:#F2ECDE; --news:#F7F1E1; --ink:#221D15;
+  --red:#C03B21; --fd:'Fraunces',serif; --fs:'Spectral',serif; --fm:'IBM Plex Mono',monospace; --fh:'Caveat',cursive;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--paper);color:var(--ink);font-family:var(--fs);-webkit-text-size-adjust:100%}
+.grain{position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.07;
+  background-image:url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg==")}
+.topnav{position:sticky;top:0;z-index:20;display:flex;justify-content:space-between;align-items:center;
+  padding:10px clamp(14px,5vw,26px);background:rgba(242,236,222,.94);backdrop-filter:blur(6px);
+  border-bottom:1px solid rgba(34,29,21,.25)}
+.brand{font:800 1.25rem var(--fd);letter-spacing:.02em}
+.brand i{color:var(--red);font-style:normal}
+.navlink{display:flex;gap:4px}
+.navlink a{font:500 10px var(--fm);letter-spacing:.12em;text-transform:uppercase;color:var(--ink);
+  text-decoration:none;padding:7px 12px;border-radius:99px}
+.navlink a.on{background:var(--ink);color:var(--paper)}
+.shell{position:relative;z-index:1;max-width:640px;margin:0 auto;padding:0 clamp(14px,5vw,26px) 60px}
+.mast{text-align:center;padding:20px 0 8px;border-bottom:3px double var(--ink)}
+.mast .kick{font:500 9.5px var(--fm);letter-spacing:.22em;color:rgba(34,29,21,.6)}
+.mast h1{font:800 clamp(2.4rem,9vw,3.2rem)/1 var(--fd);letter-spacing:-.01em;text-align:center}
+.mast h1 i{color:var(--red);font-style:normal}
+.mast .flagrow{display:grid;grid-template-columns:72px 1fr 72px;gap:10px;align-items:stretch;margin-top:8px}
+.mast .ear{border:1.5px solid var(--ink);border-radius:4px;display:flex;flex-direction:column;
+  align-items:center;justify-content:center;text-align:center;padding:7px 4px;
+  font:500 8px var(--fm);letter-spacing:.12em;line-height:1.6;color:var(--ink)}
+.mast .ear b{font-size:1.02rem;letter-spacing:.02em}
+.ed{display:flex;justify-content:space-between;gap:8px;padding:7px 2px;font:500 10px var(--fm);
+  letter-spacing:.12em;text-transform:uppercase;border-bottom:1px solid rgba(34,29,21,.25)}
+.optLabel{font:600 9px var(--fm);letter-spacing:.14em;text-transform:uppercase;color:rgba(34,29,21,.5);margin:14px 0 6px}
+.chips{display:flex;gap:8px;overflow-x:auto;padding-bottom:8px;margin-bottom:2px;scrollbar-width:thin}
+.chip{flex:0 0 auto;font:500 10px var(--fm);letter-spacing:.1em;text-transform:uppercase;
+  border:1px solid rgba(34,29,21,.25);background:rgba(255,255,255,.4);border-radius:99px;
+  padding:8px 15px;cursor:pointer;color:var(--ink)}
+.chip[aria-pressed="true"]{background:var(--ink);color:var(--paper);border-color:var(--ink)}
+.field{margin-bottom:4px}
+.field input,.field textarea{width:100%;font:400 1rem var(--fs);color:var(--ink);
+  background:rgba(255,255,255,.55);border:1px solid rgba(34,29,21,.22);border-radius:9px;padding:11px 13px}
+.field input:focus,.field textarea:focus{outline:none;border-color:var(--red)}
+.field textarea{min-height:120px;resize:vertical}
+.hintline{font:italic 400 .82rem var(--fs);color:rgba(34,29,21,.55);margin:4px 0 0}
+.switchrow{display:flex;align-items:center;gap:10px;margin:12px 0 2px;font:400 .92rem var(--fs)}
+.switch{position:relative;width:44px;height:25px;flex:0 0 auto;cursor:pointer}
+.switch input{position:absolute;opacity:0;inset:0;cursor:pointer}
+.switch i{position:absolute;inset:0;border-radius:99px;background:rgba(34,29,21,.25);transition:background .18s}
+.switch i::after{content:"";position:absolute;top:3px;left:3px;width:19px;height:19px;border-radius:50%;
+  background:var(--paper);box-shadow:0 1px 3px rgba(0,0,0,.3);transition:left .18s}
+.switch input:checked + i{background:var(--ink)}
+.switch input:checked + i::after{left:22px}
+/* pratinjau amplop */
+.prevWrap{display:flex;justify-content:center;padding:16px 0 6px;position:sticky;top:0;z-index:5}
+.miniAmp{position:relative;width:min(300px,86vw);background:#F6D8DD;border-radius:4px;
+  box-shadow:0 6px 14px -6px rgba(24,20,16,.4);padding:40px 16px 14px;transform:rotate(-1.5deg)}
+.miniAmp .flap{position:absolute;top:0;left:0;right:0;height:34px;background:rgba(34,29,21,.13);
+  clip-path:polygon(0 0,100% 0,50% 100%)}
+.miniAmp .pstamp{position:absolute;top:6px;right:6px;width:24px;height:28px;background:#FDFBF4;
+  border:1.5px dashed rgba(34,29,21,.5)}
+.miniAmp .t{font:600 1.02rem/1.4 var(--fh);color:#2b241c;word-break:break-word;max-height:120px;overflow:hidden}
+.miniAmp .to{margin-top:8px;font:500 9px var(--fm);letter-spacing:.12em;text-transform:uppercase;color:rgba(34,29,21,.6)}
+.row{display:flex;gap:9px;margin-top:14px}
+.btn{background:var(--ink);color:var(--paper);border:0;border-radius:9px;padding:13px 20px;
+  font:600 .94rem var(--fd);cursor:pointer;text-decoration:none;text-align:center}
+.btn.grow{flex:1}
+.btn.ghost{background:transparent;color:var(--ink);border:1px solid rgba(34,29,21,.24);font:500 .92rem var(--fs)}
+.toast{position:fixed;left:50%;bottom:26px;transform:translateX(-50%);z-index:130;background:rgba(34,29,21,.93);
+  color:var(--paper);padding:10px 18px;border-radius:99px;font:500 .86rem var(--fs);white-space:nowrap;
+  opacity:0;pointer-events:none;transition:opacity .26s;max-width:94vw;overflow:hidden;text-overflow:ellipsis}
+.toast.show{opacity:1}
+.toast a{color:#F2B134}
+.sent{border:1.5px dashed rgba(34,29,21,.35);border-radius:12px;padding:14px;margin-top:14px;text-align:center}
+.sent p{font:italic 400 .92rem/1.6 var(--fs);margin-bottom:10px}
+footer{text-align:center;font:500 10px var(--fm);letter-spacing:.14em;color:rgba(34,29,21,.45);
+  padding:26px 0 8px;text-transform:uppercase}
+</style>
+</head>
+<body>
+<div class="grain" aria-hidden="true"></div>
+
+<nav class="topnav">
+  <span class="brand">AKSARA<i>.</i></span>
+  <div class="navlink">
+    <a href="index.html">Mading</a>
+    <a href="profil.html">Profil</a>
+    <a href="kirim.html" class="on">Kirim</a>
+  </div>
+</nav>
+
+<main class="shell">
+  <header class="mast">
+    <p class="kick">DITERBITKAN MPK · OSIS — WAJIB DIBACA, TIDAK WAJIB PERCAYA</p>
+    <div class="flagrow">
+      <div class="ear">EDISI<b>231</b></div>
+      <h1>KIRIM<i>.</i></h1>
+      <div class="ear"><span id="edDate">—</span></div>
+    </div>
+  </header>
+  <div class="ed">
+    <span>HARGA: <b>1 SENYUM</b></span>
+    <span>HAL. <b>3/3</b></span>
+  </div>
+
+  <div class="prevWrap">
+    <div class="miniAmp" id="miniAmp">
+      <div class="flap"></div>
+      <div class="pstamp"></div>
+      <div class="t" id="pvText">Tulisanmu muncul di sini…</div>
+      <div class="to" id="pvTo">Untuk: — · Dari: —</div>
+    </div>
+  </div>
+
+  <p class="optLabel">Jenis kiriman</p>
+  <div class="chips" id="kinds"></div>
+
+  <p class="optLabel">Untuk</p>
+  <div class="field"><input id="fTo" maxlength="40" placeholder="Nama penerima..."></div>
+
+  <div class="switchrow">
+    <label class="switch"><input type="checkbox" id="anon"><i></i></label>
+    <span>Kirim sebagai anonim</span>
+  </div>
+
+  <p class="optLabel">Dari</p>
+  <div class="field"><input id="fFrom" maxlength="40" placeholder="Namamu..."></div>
+
+  <p class="optLabel">Isi surat</p>
+  <div class="field"><textarea id="fIsi" maxlength="500" placeholder="Tulis suratmu di sini..."></textarea></div>
+  <p class="hintline" id="kindHint"></p>
+
+  <div class="row">
+    <a class="btn ghost" href="index.html">Lihat papan</a>
+    <button class="btn grow" id="sendBtn">Kirim ke papan</button>
+  </div>
+  <div class="sent" id="sentBox" hidden>
+    <p id="sentMsg"></p>
+    <div class="row" style="margin-top:0">
+      <a class="btn grow" href="index.html">Lihat di papan</a>
+      <button class="btn ghost" id="againBtn">Kirim lagi</button>
+    </div>
+  </div>
+
+  <footer>AKSARA · HAL. 3/3 · EDISI 231</footer>
+</main>
+<div class="toast" id="toast"></div>
+
+<script>
+(function(){
+  "use strict";
+  var BOARD_KEY = "aksara_papan_v1";
+  var LOG_KEY = "aksara_kiriman_v1";
+  var KINDS = [
+    { id: "surat", nama: "Surat", hint: "Surat biasa ke teman — namamu tercantum.", stamp: "tanpa", sticker: "segel" },
+    { id: "anonim", nama: "Anonim", hint: "Namamu disembunyikan. Misterius.", stamp: "rahasia", sticker: "awan" },
+    { id: "perpisahan", nama: "Perpisahan", hint: "Untuk kakak kelas / yang lulus. Yang manis-manis.", stamp: "love", sticker: "hati" },
+    { id: "apresiasi", nama: "Apresiasi", hint: "Pujian terbuka untuk siapa pun.", stamp: "semangat", sticker: "kilau" },
+    { id: "manfess", nama: "Manfess", hint: "Pengakuan rahasia. Anonim otomatis.", stamp: "rahasia2", sticker: "bulan" }
+  ];
+  var kind = "surat";
+
+  var toast = document.getElementById("toast");
+  var sayT = null;
+  function say(m){
+    toast.textContent = m; toast.classList.add("show");
+    clearTimeout(sayT); sayT = setTimeout(function(){ toast.classList.remove("show"); }, 2400);
+  }
+
+  try{
+    var dd = new Date();
+    document.getElementById("edDate").textContent = dd.toLocaleDateString("id-ID", { day: "numeric", month: "long", year: "numeric" }).toUpperCase();
+  }catch(e){}
+
+  function esc(s){
+    return String(s == null ? "" : s).replace(/[&<>"']/g, function(c){
+      return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c];
+    });
+  }
+
+  var box = document.getElementById("kinds");
+  KINDS.forEach(function(k){
+    var b = document.createElement("button");
+    b.type = "button";
+    b.className = "chip";
+    b.textContent = k.nama;
+    b.dataset.k = k.id;
+    b.setAttribute("aria-pressed", k.id === kind ? "true" : "false");
+    b.addEventListener("click", function(){
+      kind = k.id;
+      [].forEach.call(box.children, function(o){
+        o.setAttribute("aria-pressed", o.dataset.k === kind ? "true" : "false");
+      });
+      if(kind === "manfess" || kind === "anonim") document.getElementById("anon").checked = true;
+      syncPrev();
+    });
+    box.appendChild(b);
+  });
+
+  var fTo = document.getElementById("fTo");
+  var fFrom = document.getElementById("fFrom");
+  var fIsi = document.getElementById("fIsi");
+  var anon = document.getElementById("anon");
+  function cur(){ return KINDS.filter(function(k){ return k.id === kind; })[0]; }
+  function syncPrev(){
+    var k = cur();
+    document.getElementById("kindHint").textContent = k.hint;
+    var t = fIsi.value.trim() || "Tulisanmu muncul di sini…";
+    document.getElementById("pvText").textContent = t.length > 120 ? t.slice(0, 120) + "…" : t;
+    var to = fTo.value.trim() || "—";
+    var fr = anon.checked ? "Anonim" : (fFrom.value.trim() || "—");
+    document.getElementById("pvTo").textContent = "Untuk: " + to + " · Dari: " + fr;
+    fFrom.disabled = anon.checked;
+    fFrom.style.opacity = anon.checked ? ".45" : "1";
+  }
+  [fTo, fFrom, fIsi].forEach(function(el){ el.addEventListener("input", syncPrev); });
+  anon.addEventListener("change", syncPrev);
+  syncPrev();
+
+  function boardItems(){
+    try{
+      var d = JSON.parse(localStorage.getItem(BOARD_KEY));
+      return Array.isArray(d) ? d : [];
+    }catch(e){ return []; }
+  }
+
+  document.getElementById("sendBtn").onclick = function(){
+    var to = fTo.value.trim();
+    var isi = fIsi.value.trim();
+    if(!to){ say("Isi dulu nama penerima"); fTo.focus(); return; }
+    if(!isi){ say("Isi dulu suratnya"); fIsi.focus(); return; }
+    var k = cur();
+    var from = anon.checked ? "Anonim" : (fFrom.value.trim() || "Tanpa nama");
+    var items = boardItems();
+    var data = {
+      id: "p" + Date.now().toString(36) + Math.random().toString(36).slice(2, 6),
+      kind: "amplop",
+      shape: "buka",
+      x: 200 + Math.floor(Math.random() * 900),
+      y: 200 + Math.floor(Math.random() * 600),
+      rot: Math.round(Math.random() * 6 - 3),
+      text: isi,
+      name: "Untuk " + to + " · dari " + from,
+      color: "#F6D8DD",
+      font: "tangan",
+      ink: "ungu",
+      sticker: k.sticker,
+      sp: "tr",
+      sg: "normal",
+      stamp: k.stamp,
+      shadow: "lembut",
+      image: null,
+      at: Date.now()
+    };
+    items.push(data);
+    try{
+      localStorage.setItem(BOARD_KEY, JSON.stringify(items));
+      var log = [];
+      try{ log = JSON.parse(localStorage.getItem(LOG_KEY)) || []; }catch(e){}
+      log.push({ kind: kind, to: to, from: from, at: Date.now() });
+      localStorage.setItem(LOG_KEY, JSON.stringify(log));
+    }catch(e){ say("Penyimpanan penuh — coba surat lebih pendek"); return; }
+    document.getElementById("sentMsg").textContent = "Terkirim! Suratmu untuk " + to + " sudah nempel di papan.";
+    document.getElementById("sentBox").hidden = false;
+    document.getElementById("sentBox").scrollIntoView({ behavior: "smooth", block: "nearest" });
+    say("Surat terkirim");
+  };
+  document.getElementById("againBtn").onclick = function(){
+    fTo.value = ""; fIsi.value = "";
+    if(kind === "manfess" || kind === "anonim"){ anon.checked = true; }
+    else { anon.checked = false; }
+    document.getElementById("sentBox").hidden = true;
+    syncPrev();
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
+})();
+</script>
+</body>
+</html>
