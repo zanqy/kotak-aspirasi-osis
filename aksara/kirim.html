@@ -3,10 +3,10 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>AKSARA. — Kirim</title>
+<title>AKSARA. — Kirim Surat</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;600&family=Fraunces:ital,opsz,wght@0,9..144,400..800;1,9..144,400..700&family=IBM+Plex+Mono:wght@400;500&family=Spectral:ital,wght@0,400;0,500;1,400;1,500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;600;700&family=Fraunces:ital,opsz,wght@0,9..144,400..800;1,9..144,400..700&family=IBM+Plex+Mono:wght@400;500;700&family=Spectral:ital,wght@0,400;0,500;1,400;1,500&display=swap" rel="stylesheet">
 <style>
 :root{
   --paper:#F2ECDE; --news:#F7F1E1; --ink:#221D15;
@@ -26,59 +26,75 @@ body{background:var(--paper);color:var(--ink);font-family:var(--fs);-webkit-text
   text-decoration:none;padding:7px 12px;border-radius:99px}
 .navlink a.on{background:var(--ink);color:var(--paper)}
 .shell{position:relative;z-index:1;max-width:640px;margin:0 auto;padding:0 clamp(14px,5vw,26px) 60px}
-.mast{text-align:center;padding:20px 0 8px;border-bottom:3px double var(--ink)}
-.mast .kick{font:500 9.5px var(--fm);letter-spacing:.22em;color:rgba(34,29,21,.6)}
-.mast h1{font:800 clamp(2.4rem,9vw,3.2rem)/1 var(--fd);letter-spacing:-.01em;text-align:center}
-.mast h1 i{color:var(--red);font-style:normal}
-.mast .flagrow{display:grid;grid-template-columns:72px 1fr 72px;gap:10px;align-items:stretch;margin-top:8px}
-.mast .ear{border:1.5px solid var(--ink);border-radius:4px;display:flex;flex-direction:column;
-  align-items:center;justify-content:center;text-align:center;padding:7px 4px;
-  font:500 8px var(--fm);letter-spacing:.12em;line-height:1.6;color:var(--ink)}
-.mast .ear b{font-size:1.02rem;letter-spacing:.02em}
-.ed{display:flex;justify-content:space-between;gap:8px;padding:7px 2px;font:500 10px var(--fm);
-  letter-spacing:.12em;text-transform:uppercase;border-bottom:1px solid rgba(34,29,21,.25)}
-.optLabel{font:600 9px var(--fm);letter-spacing:.14em;text-transform:uppercase;color:rgba(34,29,21,.5);margin:14px 0 6px}
-.chips{display:flex;gap:8px;overflow-x:auto;padding-bottom:8px;margin-bottom:2px;scrollbar-width:thin}
-.chip{flex:0 0 auto;font:500 10px var(--fm);letter-spacing:.1em;text-transform:uppercase;
-  border:1px solid rgba(34,29,21,.25);background:rgba(255,255,255,.4);border-radius:99px;
-  padding:8px 15px;cursor:pointer;color:var(--ink)}
-.chip[aria-pressed="true"]{background:var(--ink);color:var(--paper);border-color:var(--ink)}
-.field{margin-bottom:4px}
-.field input,.field textarea{width:100%;font:400 1rem var(--fs);color:var(--ink);
-  background:rgba(255,255,255,.55);border:1px solid rgba(34,29,21,.22);border-radius:9px;padding:11px 13px}
-.field input:focus,.field textarea:focus{outline:none;border-color:var(--red)}
-.field textarea{min-height:120px;resize:vertical}
-.hintline{font:italic 400 .82rem var(--fs);color:rgba(34,29,21,.55);margin:4px 0 0}
-.switchrow{display:flex;align-items:center;gap:10px;margin:12px 0 2px;font:400 .92rem var(--fs)}
-.switch{position:relative;width:44px;height:25px;flex:0 0 auto;cursor:pointer}
+/* kepala kantor pos */
+.posthead{display:flex;gap:16px;align-items:center;padding:22px 2px 6px}
+.postmark{width:104px;height:104px;flex:0 0 auto;border:3px double var(--red);border-radius:50%;
+  color:var(--red);display:grid;place-items:center;text-align:center;transform:rotate(-11deg);
+  font:700 8.5px/1.7 var(--fm);letter-spacing:.12em;background:rgba(192,59,33,.05)}
+.postmark b{font-size:11px;letter-spacing:.18em}
+.posthead h1{font:700 clamp(2rem,8vw,2.7rem)/1.05 var(--fh)}
+.posthead p{font:500 10px var(--fm);letter-spacing:.14em;text-transform:uppercase;color:rgba(34,29,21,.55);margin-top:6px}
+/* deretan perangko jenis */
+.stamps{display:flex;gap:10px;overflow-x:auto;padding:14px 2px 12px;scrollbar-width:thin}
+.stampCard{flex:0 0 auto;width:98px;background:#FDFBF4;padding:5px;border:1.5px dashed rgba(34,29,21,.5);
+  border-radius:3px;cursor:pointer;text-align:center;transition:transform .16s;position:relative}
+.stampCard .face{padding:10px 4px 8px;border-radius:1px}
+.stampCard .face i{font-style:normal;font-size:26px;line-height:1;display:block}
+.stampCard .face span{display:block;font:700 8.5px var(--fm);letter-spacing:.08em;margin-top:6px;text-transform:uppercase}
+.stampCard[aria-pressed="true"]{transform:translateY(-4px) rotate(-1.5deg);box-shadow:0 10px 16px -8px rgba(24,20,16,.5)}
+.stampCard[aria-pressed="true"]::after{content:"✓";position:absolute;top:-9px;right:-9px;width:24px;height:24px;
+  border-radius:50%;background:var(--red);color:#fff;font:700 13px/24px var(--fm);text-align:center;
+  box-shadow:0 2px 5px rgba(24,20,16,.4)}
+.stampHint{font:italic 400 .84rem var(--fs);color:rgba(34,29,21,.6);margin:0 2px 4px;min-height:1.4em}
+/* kertas surat */
+.letter{position:relative;margin-top:10px;padding:20px 18px 22px 18px;transform:rotate(-.5deg);
+  background:
+    linear-gradient(90deg,transparent 0 36px,rgba(192,59,33,.45) 36px 37px,transparent 37px),
+    repeating-linear-gradient(180deg,transparent 0 27px,rgba(43,36,28,.22) 27px 28px),
+    linear-gradient(170deg,#FFFDF7,#FBF4E4);
+  border-radius:2px;box-shadow:0 12px 22px -12px rgba(24,20,16,.45)}
+.lstamp{position:absolute;top:12px;right:12px;width:58px;height:68px;background:#FDFBF4;
+  border:2px dashed rgba(34,29,21,.5);border-radius:2px;display:grid;place-items:center;transform:rotate(4deg);
+  box-shadow:0 2px 4px rgba(24,20,16,.2)}
+.lstamp i{font-style:normal;font-size:24px;line-height:1}
+.lstamp span{font:700 7px var(--fm);letter-spacing:.08em;color:rgba(34,29,21,.65);text-transform:uppercase}
+.lrow{display:flex;gap:8px;align-items:baseline;margin-bottom:2px}
+.lrow label{flex:0 0 auto;font:700 .95rem var(--fh);color:rgba(34,29,21,.65);min-width:52px}
+.lrow input{flex:1;min-width:0;background:transparent;border:0;outline:0;
+  font:700 1.25rem/28px var(--fh);color:#2b241c;padding:0 0 0 2px}
+.lrow input::placeholder{color:rgba(34,29,21,.3)}
+.lbody{width:100%;background:transparent;border:0;outline:0;resize:vertical;min-height:196px;
+  font:500 1.3rem/28px var(--fh);color:#2b241c;padding:2px 0 0 46px;margin-top:2px}
+.lbody::placeholder{color:rgba(34,29,21,.3)}
+.lfoot{display:flex;justify-content:space-between;align-items:center;margin-top:10px;padding-left:46px}
+.lfoot .dari{font:500 .85rem/1.4 var(--fm);color:rgba(34,29,21,.6)}
+.switchrow{display:flex;align-items:center;gap:10px;font:400 .9rem var(--fs)}
+.switch{position:relative;width:42px;height:24px;flex:0 0 auto;cursor:pointer}
 .switch input{position:absolute;opacity:0;inset:0;cursor:pointer}
 .switch i{position:absolute;inset:0;border-radius:99px;background:rgba(34,29,21,.25);transition:background .18s}
-.switch i::after{content:"";position:absolute;top:3px;left:3px;width:19px;height:19px;border-radius:50%;
+.switch i::after{content:"";position:absolute;top:3px;left:3px;width:18px;height:18px;border-radius:50%;
   background:var(--paper);box-shadow:0 1px 3px rgba(0,0,0,.3);transition:left .18s}
 .switch input:checked + i{background:var(--ink)}
-.switch input:checked + i::after{left:22px}
-/* pratinjau amplop */
-.prevWrap{display:flex;justify-content:center;padding:16px 0 6px;position:sticky;top:0;z-index:5}
-.miniAmp{position:relative;width:min(300px,86vw);background:#F6D8DD;border-radius:4px;
-  box-shadow:0 6px 14px -6px rgba(24,20,16,.4);padding:40px 16px 14px;transform:rotate(-1.5deg)}
-.miniAmp .flap{position:absolute;top:0;left:0;right:0;height:34px;background:rgba(34,29,21,.13);
-  clip-path:polygon(0 0,100% 0,50% 100%)}
-.miniAmp .pstamp{position:absolute;top:6px;right:6px;width:24px;height:28px;background:#FDFBF4;
-  border:1.5px dashed rgba(34,29,21,.5)}
-.miniAmp .t{font:600 1.02rem/1.4 var(--fh);color:#2b241c;word-break:break-word;max-height:120px;overflow:hidden}
-.miniAmp .to{margin-top:8px;font:500 9px var(--fm);letter-spacing:.12em;text-transform:uppercase;color:rgba(34,29,21,.6)}
-.row{display:flex;gap:9px;margin-top:14px}
+.switch input:checked + i::after{left:21px}
+/* cap terkirim */
+.sentMark{position:absolute;top:44%;left:50%;transform:translate(-50%,-50%) rotate(-14deg) scale(2.4);
+  border:3px solid var(--red);color:var(--red);border-radius:6px;font:800 1.5rem var(--fm);
+  letter-spacing:.22em;padding:8px 16px 8px 20px;opacity:0;pointer-events:none;background:rgba(253,251,244,.6)}
+.letter.stamped .sentMark{animation:cap .45s cubic-bezier(.2,1.6,.4,1) both}
+@keyframes cap{from{opacity:0;transform:translate(-50%,-50%) rotate(-14deg) scale(2.4)}
+  to{opacity:.92;transform:translate(-50%,-50%) rotate(-14deg) scale(1)}}
+.row{display:flex;gap:9px;margin-top:16px}
 .btn{background:var(--ink);color:var(--paper);border:0;border-radius:9px;padding:13px 20px;
   font:600 .94rem var(--fd);cursor:pointer;text-decoration:none;text-align:center}
 .btn.grow{flex:1}
 .btn.ghost{background:transparent;color:var(--ink);border:1px solid rgba(34,29,21,.24);font:500 .92rem var(--fs)}
+.btn.send{background:var(--red);font-size:1.02rem;letter-spacing:.02em}
+.sentBox{border:1.5px dashed rgba(34,29,21,.35);border-radius:12px;padding:14px;margin-top:14px;text-align:center}
+.sentBox p{font:italic 400 .92rem/1.6 var(--fs);margin-bottom:10px}
 .toast{position:fixed;left:50%;bottom:26px;transform:translateX(-50%);z-index:130;background:rgba(34,29,21,.93);
   color:var(--paper);padding:10px 18px;border-radius:99px;font:500 .86rem var(--fs);white-space:nowrap;
   opacity:0;pointer-events:none;transition:opacity .26s;max-width:94vw;overflow:hidden;text-overflow:ellipsis}
 .toast.show{opacity:1}
-.toast a{color:#F2B134}
-.sent{border:1.5px dashed rgba(34,29,21,.35);border-radius:12px;padding:14px;margin-top:14px;text-align:center}
-.sent p{font:italic 400 .92rem/1.6 var(--fs);margin-bottom:10px}
 footer{text-align:center;font:500 10px var(--fm);letter-spacing:.14em;color:rgba(34,29,21,.45);
   padding:26px 0 8px;text-transform:uppercase}
 </style>
@@ -96,59 +112,51 @@ footer{text-align:center;font:500 10px var(--fm);letter-spacing:.14em;color:rgba
 </nav>
 
 <main class="shell">
-  <header class="mast">
-    <p class="kick">DITERBITKAN MPK · OSIS — WAJIB DIBACA, TIDAK WAJIB PERCAYA</p>
-    <div class="flagrow">
-      <div class="ear">EDISI<b>231</b></div>
-      <h1>KIRIM<i>.</i></h1>
-      <div class="ear"><span id="edDate">—</span></div>
+  <header class="posthead">
+    <div class="postmark"><div>AKSARA<br><b>POST</b><br><span id="postDate">—</span></div></div>
+    <div>
+      <h1>Tulis suratmu…</h1>
+      <p>Pos kilat redaksi · sampai hari ini juga</p>
     </div>
   </header>
-  <div class="ed">
-    <span>HARGA: <b>1 SENYUM</b></span>
-    <span>HAL. <b>3/3</b></span>
-  </div>
 
-  <div class="prevWrap">
-    <div class="miniAmp" id="miniAmp">
-      <div class="flap"></div>
-      <div class="pstamp"></div>
-      <div class="t" id="pvText">Tulisanmu muncul di sini…</div>
-      <div class="to" id="pvTo">Untuk: — · Dari: —</div>
+  <div class="stamps" id="kinds"></div>
+  <p class="stampHint" id="kindHint"></p>
+
+  <article class="letter" id="letter">
+    <div class="lstamp" id="lstamp"><div><i id="lsIcon">✉</i><br><span id="lsName">Surat</span></div></div>
+    <div class="sentMark" id="sentMark">TERKIRIM</div>
+    <div class="lrow">
+      <label for="fTo">Kepada</label>
+      <input id="fTo" maxlength="40" placeholder="namanya…" autocomplete="off">
     </div>
-  </div>
-
-  <p class="optLabel">Jenis kiriman</p>
-  <div class="chips" id="kinds"></div>
-
-  <p class="optLabel">Untuk</p>
-  <div class="field"><input id="fTo" maxlength="40" placeholder="Nama penerima..."></div>
-
-  <div class="switchrow">
-    <label class="switch"><input type="checkbox" id="anon"><i></i></label>
-    <span>Kirim sebagai anonim</span>
-  </div>
-
-  <p class="optLabel">Dari</p>
-  <div class="field"><input id="fFrom" maxlength="40" placeholder="Namamu..."></div>
-
-  <p class="optLabel">Isi surat</p>
-  <div class="field"><textarea id="fIsi" maxlength="500" placeholder="Tulis suratmu di sini..."></textarea></div>
-  <p class="hintline" id="kindHint"></p>
+    <textarea class="lbody" id="fIsi" maxlength="500" placeholder="Tulis suratmu di sini…"></textarea>
+    <div class="lfoot">
+      <span class="dari" id="dariLine">Dari: —</span>
+      <span class="switchrow">
+        <label class="switch"><input type="checkbox" id="anon"><i></i></label>
+        <span>Anonim</span>
+      </span>
+    </div>
+    <div class="lrow" id="fromRow" style="margin-top:6px">
+      <label for="fFrom">Dari</label>
+      <input id="fFrom" maxlength="40" placeholder="namamu…" autocomplete="off">
+    </div>
+  </article>
 
   <div class="row">
     <a class="btn ghost" href="index.html">Lihat papan</a>
-    <button class="btn grow" id="sendBtn">Kirim ke papan</button>
+    <button class="btn grow send" id="sendBtn">Tempel Perangko &amp; Kirim</button>
   </div>
-  <div class="sent" id="sentBox" hidden>
+  <div class="sentBox" id="sentBox" hidden>
     <p id="sentMsg"></p>
     <div class="row" style="margin-top:0">
       <a class="btn grow" href="index.html">Lihat di papan</a>
-      <button class="btn ghost" id="againBtn">Kirim lagi</button>
+      <button class="btn ghost" id="againBtn">Tulis lagi</button>
     </div>
   </div>
 
-  <footer>AKSARA · HAL. 3/3 · EDISI 231</footer>
+  <footer>AKSARA · KANTOR POS REDAKSI</footer>
 </main>
 <div class="toast" id="toast"></div>
 
@@ -158,11 +166,11 @@ footer{text-align:center;font:500 10px var(--fm);letter-spacing:.14em;color:rgba
   var BOARD_KEY = "aksara_papan_v1";
   var LOG_KEY = "aksara_kiriman_v1";
   var KINDS = [
-    { id: "surat", nama: "Surat", hint: "Surat biasa ke teman — namamu tercantum.", stamp: "tanpa", sticker: "segel" },
-    { id: "anonim", nama: "Anonim", hint: "Namamu disembunyikan. Misterius.", stamp: "rahasia", sticker: "awan" },
-    { id: "perpisahan", nama: "Perpisahan", hint: "Untuk kakak kelas / yang lulus. Yang manis-manis.", stamp: "love", sticker: "hati" },
-    { id: "apresiasi", nama: "Apresiasi", hint: "Pujian terbuka untuk siapa pun.", stamp: "semangat", sticker: "kilau" },
-    { id: "manfess", nama: "Manfess", hint: "Pengakuan rahasia. Anonim otomatis.", stamp: "rahasia2", sticker: "bulan" }
+    { id: "surat", nama: "Surat", icon: "✉", warna: "#D7E4EF", hint: "Surat biasa ke teman — namamu tercantum.", stamp: "tanpa", sticker: "segel" },
+    { id: "anonim", nama: "Anonim", icon: "?", warna: "#2b241c", hint: "Namamu disembunyikan. Misterius.", stamp: "rahasia", sticker: "awan" },
+    { id: "perpisahan", nama: "Perpisahan", icon: "♥", warna: "#F9E8EC", hint: "Untuk kakak kelas / yang lulus. Yang manis-manis.", stamp: "love", sticker: "hati" },
+    { id: "apresiasi", nama: "Apresiasi", icon: "★", warna: "#F7E39B", hint: "Pujian terbuka untuk siapa pun.", stamp: "semangat", sticker: "kilau" },
+    { id: "manfess", nama: "Manfess", icon: "☾", warna: "#3A3348", hint: "Pengakuan rahasia. Anonim otomatis.", stamp: "rahasia2", sticker: "bulan" }
   ];
   var kind = "surat";
 
@@ -175,30 +183,24 @@ footer{text-align:center;font:500 10px var(--fm);letter-spacing:.14em;color:rgba
 
   try{
     var dd = new Date();
-    document.getElementById("edDate").textContent = dd.toLocaleDateString("id-ID", { day: "numeric", month: "long", year: "numeric" }).toUpperCase();
+    document.getElementById("postDate").textContent = dd.toLocaleDateString("id-ID", { day: "numeric", month: "short" }).toUpperCase();
   }catch(e){}
-
-  function esc(s){
-    return String(s == null ? "" : s).replace(/[&<>"']/g, function(c){
-      return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c];
-    });
-  }
 
   var box = document.getElementById("kinds");
   KINDS.forEach(function(k){
     var b = document.createElement("button");
     b.type = "button";
-    b.className = "chip";
-    b.textContent = k.nama;
+    b.className = "stampCard";
     b.dataset.k = k.id;
     b.setAttribute("aria-pressed", k.id === kind ? "true" : "false");
+    b.innerHTML = '<div class="face" style="background:' + k.warna + (k.id === "anonim" || k.id === "manfess" ? ";color:#F5F2E8" : "") + '"><i>' + k.icon + "</i><span>" + k.nama + "</span></div>";
     b.addEventListener("click", function(){
       kind = k.id;
       [].forEach.call(box.children, function(o){
         o.setAttribute("aria-pressed", o.dataset.k === kind ? "true" : "false");
       });
       if(kind === "manfess" || kind === "anonim") document.getElementById("anon").checked = true;
-      syncPrev();
+      syncKind();
     });
     box.appendChild(b);
   });
@@ -208,20 +210,19 @@ footer{text-align:center;font:500 10px var(--fm);letter-spacing:.14em;color:rgba
   var fIsi = document.getElementById("fIsi");
   var anon = document.getElementById("anon");
   function cur(){ return KINDS.filter(function(k){ return k.id === kind; })[0]; }
-  function syncPrev(){
+  function syncKind(){
     var k = cur();
     document.getElementById("kindHint").textContent = k.hint;
-    var t = fIsi.value.trim() || "Tulisanmu muncul di sini…";
-    document.getElementById("pvText").textContent = t.length > 120 ? t.slice(0, 120) + "…" : t;
-    var to = fTo.value.trim() || "—";
-    var fr = anon.checked ? "Anonim" : (fFrom.value.trim() || "—");
-    document.getElementById("pvTo").textContent = "Untuk: " + to + " · Dari: " + fr;
+    document.getElementById("lsIcon").textContent = k.icon;
+    document.getElementById("lsName").textContent = k.nama;
     fFrom.disabled = anon.checked;
-    fFrom.style.opacity = anon.checked ? ".45" : "1";
+    document.getElementById("fromRow").style.display = anon.checked ? "none" : "flex";
+    var fr = anon.checked ? "Anonim" : (fFrom.value.trim() || "—");
+    document.getElementById("dariLine").textContent = "Dari: " + fr;
   }
-  [fTo, fFrom, fIsi].forEach(function(el){ el.addEventListener("input", syncPrev); });
-  anon.addEventListener("change", syncPrev);
-  syncPrev();
+  [fTo, fFrom, fIsi].forEach(function(el){ el.addEventListener("input", syncKind); });
+  anon.addEventListener("change", syncKind);
+  syncKind();
 
   function boardItems(){
     try{
@@ -245,7 +246,7 @@ footer{text-align:center;font:500 10px var(--fm);letter-spacing:.14em;color:rgba
       x: 200 + Math.floor(Math.random() * 900),
       y: 200 + Math.floor(Math.random() * 600),
       rot: Math.round(Math.random() * 6 - 3),
-      text: isi,
+      text: isi + "\n— Untuk " + to,
       name: "Untuk " + to + " · dari " + from,
       color: "#F6D8DD",
       font: "tangan",
@@ -266,6 +267,7 @@ footer{text-align:center;font:500 10px var(--fm);letter-spacing:.14em;color:rgba
       log.push({ kind: kind, to: to, from: from, at: Date.now() });
       localStorage.setItem(LOG_KEY, JSON.stringify(log));
     }catch(e){ say("Penyimpanan penuh — coba surat lebih pendek"); return; }
+    document.getElementById("letter").classList.add("stamped");
     document.getElementById("sentMsg").textContent = "Terkirim! Suratmu untuk " + to + " sudah nempel di papan.";
     document.getElementById("sentBox").hidden = false;
     document.getElementById("sentBox").scrollIntoView({ behavior: "smooth", block: "nearest" });
@@ -275,8 +277,9 @@ footer{text-align:center;font:500 10px var(--fm);letter-spacing:.14em;color:rgba
     fTo.value = ""; fIsi.value = "";
     if(kind === "manfess" || kind === "anonim"){ anon.checked = true; }
     else { anon.checked = false; }
+    document.getElementById("letter").classList.remove("stamped");
     document.getElementById("sentBox").hidden = true;
-    syncPrev();
+    syncKind();
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
 })();
