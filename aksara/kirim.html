@@ -215,7 +215,7 @@ h1{color:#2a2119;text-shadow:none}
   <p class="foot">AKSARA · KANTOR POS REDAKSI</p>
 </section>
 </main>
-<div class="overlay" id="ov" aria-live="polite"><div class="card"><h3>Surat meluncur!</h3><p id="trk"></p><div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap"><button id="again">Tulis lagi</button><a href="index.html">Lihat di papan</a></div></div></div>
+<div class="overlay" id="ov" aria-live="polite"><div class="card"><h3>Surat meluncur!</h3><p id="trk"></p><div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap"><button id="again">Tulis lagi</button><a href="index.html">Ke Mading</a></div></div></div>
 
 <script>
 const T={
@@ -270,14 +270,8 @@ function save(){
   var rcv=to.value.trim()||"Seseorang",snd=anon?"???":(from.value.trim()||"Seseorang"),c=T[cur];
   posted.unshift({t:cur,to:rcv,from:snd});
   try{
-    var items=[];try{items=JSON.parse(localStorage.getItem("aksara_papan_v1"))||[]}catch(e){}
-    items.push({id:"p"+Date.now().toString(36)+Math.random().toString(36).slice(2,6),kind:"amplop",shape:"buka",
-      x:200+Math.floor(Math.random()*900),y:200+Math.floor(Math.random()*600),rot:Math.round(Math.random()*6-3),
-      text:msg.value.trim().slice(0,500)+"\n— Untuk "+rcv,name:"Untuk "+rcv+" · dari "+(anon?"Anonim":snd),
-      color:"#F6D8DD",font:"tangan",ink:"ungu",sticker:c.sk,sp:"tr",sg:"normal",stamp:c.st,shadow:"lembut",image:null,at:Date.now()});
-    localStorage.setItem("aksara_papan_v1",JSON.stringify(items));
-    var log=[];try{log=JSON.parse(localStorage.getItem("aksara_kiriman_v1"))||[]}catch(e){}
-    log.push({kind:cur,to:rcv,from:anon?"Anonim":snd,at:Date.now()});
+        var log=[];try{log=JSON.parse(localStorage.getItem("aksara_kiriman_v1"))||[]}catch(e){}
+    log.push({kind:cur,to:rcv,from:anon?"Anonim":snd,isi:msg.value.trim().slice(0,500),at:Date.now()});
     localStorage.setItem("aksara_kiriman_v1",JSON.stringify(log));
   }catch(e){}
 }
