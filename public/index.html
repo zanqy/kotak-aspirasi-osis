@@ -584,7 +584,7 @@ try{const dr=JSON.parse(localStorage.getItem(DKEY)||'null');
 const KEY='katakan_letters';
 function loadLetters(){try{return JSON.parse(localStorage.getItem(KEY)||'[]');}catch(e){return[];}}
 const formEl=$('#letterForm'),sendBtn=$('#sendBtn'),successEl=$('#cardSuccess'),cardEl=$('#cardEl');
-let lastTicket='',lastDate=null;
+let lastTicket='',lastDate=null,lastQuote='',lastCount=0;
 formEl.addEventListener('submit',e=>{e.preventDefault();
  const isi=fIsi.value.trim();
  let ok=true;if(isi.length<20){$('#errIsi').textContent='Tulis setidaknya 20 karakter — suaramu layak dibaca utuh.';ok=false;}
@@ -601,6 +601,7 @@ formEl.addEventListener('submit',e=>{e.preventDefault();
   $('#sQuote').textContent='\u201C'+isi.slice(0,140)+(isi.length>140?'\u2026':'')+'\u201D';
   $('#sMeta').textContent='Anonim';
   const arr=loadLetters();arr.push({isi,no,t:Date.now()});
+  lastQuote=isi.length>110?isi.slice(0,110)+'\u2026':isi;lastCount=arr.length;
   try{localStorage.setItem(KEY,JSON.stringify(arr));}catch(e2){}
   $('#sCount').textContent='aspirasi ke-'+arr.length+' yang tercatat di perangkat ini';
   clearDraft();formEl.classList.add('sent');successEl.classList.add('show');cardEl.classList.add('selesai');
@@ -614,40 +615,63 @@ formEl.addEventListener('submit',e=>{e.preventDefault();
   sendBtn.disabled=false;sendBtn.querySelector('span').textContent='Kirim Surat';
  });});
 /* ---------------- kartu tiket (unduh PNG via canvas) ---------------- */
-function gambarKartu(no,tgl){
-  const W=1080,H=1350,cv=document.createElement('canvas');cv.width=W;cv.height=H;
+function tulisKutip(x,teks,cx,y,lineH,maxW){
+  const kata=String(teks).split(/\s+/);
+  const garis=[];let cur='';
+  for(const k of kata){
+    const uji=cur?cur+' '+k:k;
+    if(x.measureText(uji).width>maxW&&cur){garis.push(cur);cur=k;}
+    else cur=uji;
+  }
+  if(cur)garis.push(cur);
+  const pakai=garis.slice(0,3);
+  pakai.forEach((b,i)=>x.fillText(b,cx,y+i*lineH));
+  return y+pakai.length*lineH;
+}
+function gambarKartu(no,tgl,quote,count){
+  const W=1080,H=1440,cv=document.createElement('canvas');cv.width=W;cv.height=H;
   const x=cv.getContext('2d');
   x.fillStyle='#FBF7EC';x.fillRect(0,0,W,H);
+  /* garis kertas samar seperti kolom tulis di web */
+  x.strokeStyle='rgba(34,29,21,.07)';x.lineWidth=2;
+  for(let gy=210;gy<H-150;gy+=56){x.beginPath();x.moveTo(112,gy);x.lineTo(W-112,gy);x.stroke();}
   x.strokeStyle='#C03B21';x.lineWidth=7;x.strokeRect(42,42,W-84,H-84);
   x.lineWidth=2;x.strokeRect(64,64,W-128,H-128);
   x.textAlign='center';x.textBaseline='middle';
   const ls=v=>{try{x.letterSpacing=v;}catch(_){}};
-  x.fillStyle='#C03B21';x.font='500 34px "IBM Plex Mono",monospace';ls('12px');
-  x.fillText('GERAKAN ASPIRASI SISWA',W/2,170);
-  x.fillStyle='#221D15';x.font='800 150px Fraunces,Georgia,serif';ls('0px');
-  x.fillText('KATAKAN.',W/2,300);
-  x.strokeStyle='rgba(34,29,21,.25)';x.lineWidth=2;
-  x.beginPath();x.moveTo(150,400);x.lineTo(W-150,400);x.stroke();
-  x.save();x.translate(W/2,560);x.rotate(-8*Math.PI/180);
+  x.fillStyle='#C03B21';x.font='500 32px "IBM Plex Mono",monospace';ls('12px');
+  x.fillText('GERAKAN ASPIRASI SISWA',W/2,140);
+  x.fillStyle='#221D15';x.font='800 148px Fraunces,Georgia,serif';ls('0px');
+  x.fillText('KATAKAN.',W/2,272);
+  x.strokeStyle='rgba(34,29,21,.3)';x.lineWidth=2;
+  x.beginPath();x.moveTo(150,378);x.lineTo(W-150,378);x.stroke();
+  /* cap — miringnya disamakan dengan layar web (-11°) */
+  x.save();x.translate(W/2,522);x.rotate(-11*Math.PI/180);
   x.strokeStyle='#C03B21';x.lineWidth=8;
   x.strokeRect(-290,-75,580,150);
   x.lineWidth=2;x.strokeRect(-276,-61,552,122);
   x.fillStyle='#C03B21';x.font='800 80px Fraunces,Georgia,serif';ls('10px');
   x.fillText('TERCATAT',0,6);x.restore();
-  x.fillStyle='#221D15';x.font='500 40px "IBM Plex Mono",monospace';ls('8px');
-  x.fillText('NOMOR TIKET',W/2,740);
-  x.font='500 112px "IBM Plex Mono",monospace';ls('4px');
-  x.fillText(no,W/2,852);
-  x.font='italic 400 40px Spectral,Georgia,serif';ls('0px');
+  /* kutipan + identitas — sama seperti layar sukses */
+  let y=668;
+  x.fillStyle='rgba(34,29,21,.78)';x.font='italic 400 38px Spectral,Georgia,serif';ls('0px');
+  if(quote)y=tulisKutip(x,'\u201C'+quote+'\u201D',W/2,y,48,860)+22;
+  x.fillStyle='rgba(34,29,21,.55)';x.font='500 28px "IBM Plex Mono",monospace';ls('6px');
+  x.fillText('ANONIM'+(count?' \u00B7 CATATAN KE-'+count:''),W/2,y);y+=72;
+  x.fillStyle='#221D15';x.font='500 36px "IBM Plex Mono",monospace';ls('8px');
+  x.fillText('NOMOR TIKET',W/2,y);y+=100;
+  x.font='500 104px "IBM Plex Mono",monospace';ls('4px');
+  x.fillText(no,W/2,y);y+=108;
+  x.font='italic 400 36px Spectral,Georgia,serif';ls('0px');
   x.fillStyle='rgba(34,29,21,.7)';
-  if(tgl)x.fillText('dikirim '+tgl.toLocaleDateString('id-ID',{day:'numeric',month:'long',year:'numeric'}),W/2,962);
-  x.font='500 33px "IBM Plex Mono",monospace';
+  if(tgl){x.fillText('dikirim '+tgl.toLocaleDateString('id-ID',{day:'numeric',month:'long',year:'numeric'}),W/2,y);y+=64;}
+  x.font='500 31px "IBM Plex Mono",monospace';
   x.fillStyle='rgba(34,29,21,.75)';
-  x.fillText('cek status di',W/2,1052);
-  x.fillStyle='#C03B21';x.font='500 34px "IBM Plex Mono",monospace';
-  x.fillText('kotak-aspirasi-osis.vercel.app/cek-aspirasi',W/2,1102);
-  x.fillStyle='rgba(34,29,21,.5)';x.font='500 30px "IBM Plex Mono",monospace';ls('6px');
-  x.fillText('MPK · OSIS · MMXXV',W/2,H-130);
+  x.fillText('cek status di',W/2,y);y+=50;
+  x.fillStyle='#C03B21';x.font='500 33px "IBM Plex Mono",monospace';
+  x.fillText('kotak-aspirasi-osis.vercel.app/cek-aspirasi',W/2,y);
+  x.fillStyle='rgba(34,29,21,.5)';x.font='500 28px "IBM Plex Mono",monospace';ls('6px');
+  x.fillText('MPK \u00B7 OSIS \u00B7 MMXXV',W/2,H-118);
   try{x.letterSpacing='0px';}catch(_){}
   return cv;
 }
@@ -663,10 +687,15 @@ $('#saveCardBtn').addEventListener('click',()=>{
     if(cv.toBlob)cv.toBlob(b=>{if(!b){selesai();return;}const u=URL.createObjectURL(b);simpan(u);setTimeout(()=>URL.revokeObjectURL(u),4000);},'image/png');
     else simpan(cv.toDataURL('image/png'));
   };
-  const jalan=()=>{try{unduh(gambarKartu(lastTicket,lastDate));}catch(_){selesai();}};
-  if(document.fonts&&document.fonts.ready){
+  const jalan=()=>{try{unduh(gambarKartu(lastTicket,lastDate,lastQuote,lastCount));}catch(_){selesai();}};
+  /* fonts.ready saja tidak cukup — bobot yang dipakai canvas belum tentu termuat,
+     jadi minta eksplisit tiap family yang dipakai di kartu */
+  const muat=()=>{try{return Promise.all(['800 148px Fraunces','italic 400 38px Spectral',
+    '500 104px "IBM Plex Mono"','500 32px "IBM Plex Mono"','500 28px "IBM Plex Mono"']
+    .map(f=>document.fonts.load(f)));}catch(_){return Promise.resolve();}};
+  if(document.fonts&&document.fonts.load){
     let s=false;const sekali=()=>{if(!s){s=true;jalan();}};
-    document.fonts.ready.then(sekali);setTimeout(sekali,1200);
+    muat().then(sekali);setTimeout(sekali,1800);
   }else jalan();
 });
 $('#copyCodeBtn').addEventListener('click',()=>{
