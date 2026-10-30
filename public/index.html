@@ -194,6 +194,8 @@ main.tampak .card{animation:rise .5s cubic-bezier(.2,.8,.3,1) both}
   .field textarea{min-height:64px}
   .send{padding:10px;margin-top:8px}
   .card-note{margin-top:8px;font-size:9px}
+  .savebtn{margin-top:10px;padding:9px 22px}
+  .s-minor{margin-top:8px}
 }
 
 /* cek status */
@@ -234,6 +236,14 @@ main.tampak .card{animation:rise .5s cubic-bezier(.2,.8,.3,1) both}
   text-transform:uppercase;color:var(--ink);border-bottom:1px solid var(--ink);padding:6px 2px;
   transition:color .2s,border-color .2s;font-family:var(--fm)}
 .ghostbtn:hover{color:var(--red);border-color:var(--red)}
+.savebtn{margin-top:16px;background:var(--ink);color:var(--paper);border:0;border-radius:8px;
+  padding:11px 26px;font:600 .95rem var(--fd);letter-spacing:.04em;cursor:pointer;
+  transition:transform .16s,box-shadow .16s}
+.savebtn:hover{transform:translate(-2px,-2px);box-shadow:4px 4px 0 var(--red)}
+.savebtn:active{transform:none;box-shadow:none}
+.savebtn:disabled{opacity:.6;cursor:wait}
+.s-minor{margin-top:12px;display:flex;gap:22px;justify-content:center}
+.ghostbtn.tight{margin-top:0}
 
 /* jalur kedua — amplop kecil di pojok kartu */
 /* baris ajakan: in-flow, rata kanan - bukan absolut yang menggantung */
@@ -444,7 +454,11 @@ footer a:hover{color:var(--red);border-color:var(--red)}
       <p class="s-quote fx" id="sQuote"></p>
       <p class="s-meta fx" id="sMeta"></p>
       <p class="s-count fx" id="sCount"></p>
-      <button type="button" class="ghostbtn fx" id="againBtn">tulis surat lain</button>
+      <button type="button" class="savebtn" id="saveCardBtn">simpan kartu</button>
+      <div class="s-minor">
+        <button type="button" class="ghostbtn tight" id="copyCodeBtn">salin kode</button>
+        <button type="button" class="ghostbtn tight" id="againBtn">tulis surat lain</button>
+      </div>
     </div>
   </section>
 
@@ -570,6 +584,7 @@ try{const dr=JSON.parse(localStorage.getItem(DKEY)||'null');
 const KEY='katakan_letters';
 function loadLetters(){try{return JSON.parse(localStorage.getItem(KEY)||'[]');}catch(e){return[];}}
 const formEl=$('#letterForm'),sendBtn=$('#sendBtn'),successEl=$('#cardSuccess'),cardEl=$('#cardEl');
+let lastTicket='',lastDate=null;
 formEl.addEventListener('submit',e=>{e.preventDefault();
  const isi=fIsi.value.trim();
  let ok=true;if(isi.length<20){$('#errIsi').textContent='Tulis setidaknya 20 karakter — suaramu layak dibaca utuh.';ok=false;}
@@ -581,6 +596,7 @@ formEl.addEventListener('submit',e=>{e.preventDefault();
  .then(res=>{if(!res.ok)throw new Error('server');return res.json();})
  .then(data=>{
   const no=data.kode_tiket||'No. —';
+  lastTicket=no;lastDate=new Date();
   $('#sealNo').textContent=no;
   $('#sQuote').textContent='\u201C'+isi.slice(0,140)+(isi.length>140?'\u2026':'')+'\u201D';
   $('#sMeta').textContent='Anonim';
@@ -597,9 +613,75 @@ formEl.addEventListener('submit',e=>{e.preventDefault();
   cardEl.classList.remove('shake');void cardEl.offsetWidth;cardEl.classList.add('shake');
   sendBtn.disabled=false;sendBtn.querySelector('span').textContent='Kirim Surat';
  });});
+/* ---------------- kartu tiket (unduh PNG via canvas) ---------------- */
+function gambarKartu(no,tgl){
+  const W=1080,H=1350,cv=document.createElement('canvas');cv.width=W;cv.height=H;
+  const x=cv.getContext('2d');
+  x.fillStyle='#FBF7EC';x.fillRect(0,0,W,H);
+  x.strokeStyle='#C03B21';x.lineWidth=7;x.strokeRect(42,42,W-84,H-84);
+  x.lineWidth=2;x.strokeRect(64,64,W-128,H-128);
+  x.textAlign='center';x.textBaseline='middle';
+  const ls=v=>{try{x.letterSpacing=v;}catch(_){}};
+  x.fillStyle='#C03B21';x.font='500 34px "IBM Plex Mono",monospace';ls('12px');
+  x.fillText('GERAKAN ASPIRASI SISWA',W/2,170);
+  x.fillStyle='#221D15';x.font='800 150px Fraunces,Georgia,serif';ls('0px');
+  x.fillText('KATAKAN.',W/2,300);
+  x.strokeStyle='rgba(34,29,21,.25)';x.lineWidth=2;
+  x.beginPath();x.moveTo(150,400);x.lineTo(W-150,400);x.stroke();
+  x.save();x.translate(W/2,560);x.rotate(-8*Math.PI/180);
+  x.strokeStyle='#C03B21';x.lineWidth=8;
+  x.strokeRect(-290,-75,580,150);
+  x.lineWidth=2;x.strokeRect(-276,-61,552,122);
+  x.fillStyle='#C03B21';x.font='800 80px Fraunces,Georgia,serif';ls('10px');
+  x.fillText('TERCATAT',0,6);x.restore();
+  x.fillStyle='#221D15';x.font='500 40px "IBM Plex Mono",monospace';ls('8px');
+  x.fillText('NOMOR TIKET',W/2,740);
+  x.font='500 112px "IBM Plex Mono",monospace';ls('4px');
+  x.fillText(no,W/2,852);
+  x.font='italic 400 40px Spectral,Georgia,serif';ls('0px');
+  x.fillStyle='rgba(34,29,21,.7)';
+  if(tgl)x.fillText('dikirim '+tgl.toLocaleDateString('id-ID',{day:'numeric',month:'long',year:'numeric'}),W/2,962);
+  x.font='500 33px "IBM Plex Mono",monospace';
+  x.fillStyle='rgba(34,29,21,.75)';
+  x.fillText('cek status di',W/2,1052);
+  x.fillStyle='#C03B21';x.font='500 34px "IBM Plex Mono",monospace';
+  x.fillText('kotak-aspirasi-osis.vercel.app/cek-aspirasi',W/2,1102);
+  x.fillStyle='rgba(34,29,21,.5)';x.font='500 30px "IBM Plex Mono",monospace';ls('6px');
+  x.fillText('MPK · OSIS · MMXXV',W/2,H-130);
+  try{x.letterSpacing='0px';}catch(_){}
+  return cv;
+}
+$('#saveCardBtn').addEventListener('click',()=>{
+  if(!lastTicket||lastTicket==='No. —')return;
+  const btn=$('#saveCardBtn');btn.disabled=true;
+  const label=btn.textContent;btn.textContent='menyiapkan kartu…';
+  const selesai=()=>{btn.disabled=false;btn.textContent=label;};
+  const unduh=cv=>{
+    const nama='kartu-'+String(lastTicket).replace(/[^A-Za-z0-9-]/g,'')+'.png';
+    const simpan=url=>{const a=document.createElement('a');a.href=url;a.download=nama;
+      document.body.appendChild(a);a.click();a.remove();selesai();};
+    if(cv.toBlob)cv.toBlob(b=>{if(!b){selesai();return;}const u=URL.createObjectURL(b);simpan(u);setTimeout(()=>URL.revokeObjectURL(u),4000);},'image/png');
+    else simpan(cv.toDataURL('image/png'));
+  };
+  const jalan=()=>{try{unduh(gambarKartu(lastTicket,lastDate));}catch(_){selesai();}};
+  if(document.fonts&&document.fonts.ready){
+    let s=false;const sekali=()=>{if(!s){s=true;jalan();}};
+    document.fonts.ready.then(sekali);setTimeout(sekali,1200);
+  }else jalan();
+});
+$('#copyCodeBtn').addEventListener('click',()=>{
+  if(!lastTicket)return;
+  const b=$('#copyCodeBtn');
+  const ok=()=>{b.textContent='tersalin';setTimeout(()=>{b.textContent='salin kode';},1600);};
+  const cadangan=()=>{const ta=document.createElement('textarea');ta.value=lastTicket;
+    ta.style.cssText='position:fixed;opacity:0';document.body.appendChild(ta);ta.select();
+    try{document.execCommand('copy');ok();}catch(_){}ta.remove();};
+  if(navigator.clipboard&&navigator.clipboard.writeText)navigator.clipboard.writeText(lastTicket).then(ok).catch(cadangan);
+  else cadangan();
+});
 $('#againBtn').addEventListener('click',()=>{successEl.classList.remove('show');cardEl.classList.remove('selesai');
  formEl.classList.remove('sent');formEl.reset();isiCount.textContent='0 / 600';
- $('#errIsi').textContent='';clearDraft();});
+ $('#errIsi').textContent='';$('#copyCodeBtn').textContent='salin kode';clearDraft();});
 
 /* ---------------- amplop kecil → jalur kedua ---------------- */
 const envPeek=$('#envPeek'),envAsk=$('#envAsk'),soonModal=$('#soonModal');
