@@ -615,6 +615,14 @@ formEl.addEventListener('submit',e=>{e.preventDefault();
   sendBtn.disabled=false;sendBtn.querySelector('span').textContent='Kirim Surat';
  });});
 /* ---------------- kartu tiket (unduh PNG via canvas) ---------------- */
+function butir(x,rx,ry,rw,rh,n,al){
+  for(let i=0;i<n;i++){
+    const g=Math.random();
+    x.fillStyle=g>.5?'rgba(34,29,21,'+(al*Math.random())+')':'rgba(255,255,255,'+(al*1.4*Math.random())+')';
+    const s=1+Math.random()*2;
+    x.fillRect(rx+Math.random()*rw,ry+Math.random()*rh,s,s);
+  }
+}
 function tulisKutip(x,teks,cx,y,lineH,maxW){
   const kata=String(teks).split(/\s+/);
   const garis=[];let cur='';
@@ -631,7 +639,19 @@ function tulisKutip(x,teks,cx,y,lineH,maxW){
 function gambarKartu(no,tgl,quote,count){
   const W=1080,H=1440,cv=document.createElement('canvas');cv.width=W;cv.height=H;
   const x=cv.getContext('2d');
-  x.fillStyle='#FBF7EC';x.fillRect(0,0,W,H);
+  /* papan alas + kertas melayang: bayangan lembut = kedalaman */
+  x.fillStyle='#DCD0B0';x.fillRect(0,0,W,H);
+  butir(x,0,0,W,H,1500,.05);
+  x.save();
+  x.shadowColor='rgba(56,38,18,.4)';x.shadowBlur=55;x.shadowOffsetY=24;
+  x.fillStyle='#FBF7EC';
+  x.fillRect(28,28,W-56,H-56);
+  x.restore();
+  /* teduh di tepi atas kertas */
+  const teduh=x.createLinearGradient(0,28,0,120);
+  teduh.addColorStop(0,'rgba(34,29,21,.08)');teduh.addColorStop(1,'rgba(34,29,21,0)');
+  x.fillStyle=teduh;x.fillRect(28,28,W-56,92);
+  butir(x,28,28,W-56,H-56,2000,.035);
   /* garis kertas samar seperti kolom tulis di web */
   x.strokeStyle='rgba(34,29,21,.07)';x.lineWidth=2;
   for(let gy=210;gy<H-150;gy+=56){x.beginPath();x.moveTo(112,gy);x.lineTo(W-112,gy);x.stroke();}
@@ -645,13 +665,26 @@ function gambarKartu(no,tgl,quote,count){
   x.fillText('KATAKAN.',W/2,272);
   x.strokeStyle='rgba(34,29,21,.3)';x.lineWidth=2;
   x.beginPath();x.moveTo(150,378);x.lineTo(W-150,378);x.stroke();
-  /* cap — miringnya disamakan dengan layar web (-11°) */
+  /* cap stempel karet: digambar di kanvas lepas lalu dilubangi acak */
+  const sc=document.createElement('canvas');sc.width=640;sc.height=210;
+  const sx=sc.getContext('2d');
+  sx.strokeStyle='#C03B21';sx.lineWidth=8;sx.strokeRect(25,25,590,160);
+  sx.lineWidth=2;sx.strokeRect(39,39,562,132);
+  sx.fillStyle='#C03B21';sx.font='800 80px Fraunces,Georgia,serif';
+  sx.textAlign='center';sx.textBaseline='middle';
+  try{sx.letterSpacing='10px';}catch(_){}
+  sx.fillText('TERCATAT',320,111);
+  sx.globalCompositeOperation='destination-out';
+  for(let i=0;i<700;i++){
+    sx.fillStyle='rgba(0,0,0,'+(.25+Math.random()*.55)+')';
+    const s=1+Math.random()*3.2;
+    sx.fillRect(Math.random()*640,Math.random()*210,s,s*(.6+Math.random()));
+  }
+  sx.globalCompositeOperation='source-over';
   x.save();x.translate(W/2,522);x.rotate(-11*Math.PI/180);
-  x.strokeStyle='#C03B21';x.lineWidth=8;
-  x.strokeRect(-290,-75,580,150);
-  x.lineWidth=2;x.strokeRect(-276,-61,552,122);
-  x.fillStyle='#C03B21';x.font='800 80px Fraunces,Georgia,serif';ls('10px');
-  x.fillText('TERCATAT',0,6);x.restore();
+  x.shadowColor='rgba(192,59,33,.3)';x.shadowBlur=10;x.shadowOffsetX=3;x.shadowOffsetY=5;
+  x.drawImage(sc,-320,-105);
+  x.restore();
   /* kutipan + identitas — sama seperti layar sukses */
   let y=668;
   x.fillStyle='rgba(34,29,21,.78)';x.font='italic 400 38px Spectral,Georgia,serif';ls('0px');
@@ -661,6 +694,9 @@ function gambarKartu(no,tgl,quote,count){
   x.fillStyle='#221D15';x.font='500 36px "IBM Plex Mono",monospace';ls('8px');
   x.fillText('NOMOR TIKET',W/2,y);y+=100;
   x.font='500 104px "IBM Plex Mono",monospace';ls('4px');
+  x.fillStyle='rgba(255,253,245,.85)';
+  x.fillText(no,W/2,y+3);
+  x.fillStyle='#221D15';
   x.fillText(no,W/2,y);y+=108;
   x.font='italic 400 36px Spectral,Georgia,serif';ls('0px');
   x.fillStyle='rgba(34,29,21,.7)';
@@ -672,6 +708,10 @@ function gambarKartu(no,tgl,quote,count){
   x.fillText('kotak-aspirasi-osis.vercel.app/cek-aspirasi',W/2,y);
   x.fillStyle='rgba(34,29,21,.5)';x.font='500 28px "IBM Plex Mono",monospace';ls('6px');
   x.fillText('MPK \u00B7 OSIS \u00B7 MMXXV',W/2,H-118);
+  /* vignet: cahaya jatuh di tengah, tepi meredup */
+  const vg=x.createRadialGradient(W/2,H/2,Math.min(W,H)*.35,W/2,H/2,Math.max(W,H)*.72);
+  vg.addColorStop(0,'rgba(34,29,21,0)');vg.addColorStop(1,'rgba(34,29,21,.13)');
+  x.fillStyle=vg;x.fillRect(0,0,W,H);
   try{x.letterSpacing='0px';}catch(_){}
   return cv;
 }
