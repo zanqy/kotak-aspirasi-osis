@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>AKSARA. — Mading Hidup Sekolah</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Caveat:wght@600;700&family=Fraunces:ital,opsz,wght@0,9..144,400..800&family=IBM+Plex+Mono:wght@400;500;700&family=Spectral:ital,wght@0,400;1,400&display=swap" rel="stylesheet">
+<style>
+:root{--paper:#F2ECDE;--ink:#221D15;--red:#C03B21;
+  --fd:'Fraunces',serif;--fs:'Spectral',serif;--fm:'IBM Plex Mono',monospace;--fh:'Caveat',cursive}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--paper);color:var(--ink);font-family:var(--fs);-webkit-text-size-adjust:100%;overflow-x:hidden}
+.grain{position:fixed;inset:0;z-index:3;pointer-events:none;opacity:.07;
+  background-image:url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg==")}
+.collage{position:fixed;inset:0;z-index:0;overflow:hidden;pointer-events:none}
+.bit{position:absolute;border-radius:2px;box-shadow:0 10px 18px -6px rgba(24,20,16,.5);
+  padding:12px;font:600 1rem/1.35 var(--fh);color:#2b241c;width:150px}
+.bit::before{content:"";position:absolute;top:-8px;left:50%;margin-left:-17px;width:34px;height:10px;
+  background:rgba(240,226,170,.92);transform:rotate(-2deg);box-shadow:0 1px 2px rgba(24,20,16,.2)}
+.bit.clip{font:400 .68rem/1.5 var(--fs)}
+.bit .who{display:block;font:500 8px var(--fm);letter-spacing:.1em;margin-top:4px;opacity:.6}
+.bit.ph{padding:5px;background:#FDFBF4}
+.bit.ph img{display:block;width:100%;border-radius:1px}
+.bit.ph span{display:block;font:600 .8rem var(--fh);padding:4px 2px 1px}
+.scrim{position:fixed;inset:0;z-index:1;pointer-events:none;
+  background:linear-gradient(180deg,rgba(242,236,222,.42) 0%,rgba(242,236,222,.38) 30%,
+  rgba(242,236,222,.62) 52%,rgba(242,236,222,.9) 74%,rgba(242,236,222,.96) 100%)}
+.shell{position:relative;z-index:2;max-width:520px;margin:0 auto;min-height:100dvh;
+  display:flex;flex-direction:column;justify-content:flex-end;padding:24px clamp(20px,6vw,32px)}
+.kick{font:500 10px var(--fm);letter-spacing:.24em;text-transform:uppercase;color:var(--red)}
+h1{font:800 clamp(3.6rem,20vw,5.6rem)/0.95 var(--fd);letter-spacing:-.02em;margin:6px 0 2px}
+h1 i{color:var(--red);font-style:normal}
+.tag{font:italic 400 .98rem/1.6 var(--fs);color:rgba(34,29,21,.72);max-width:36ch}
+.about{display:grid;gap:8px;margin:16px 0 4px}
+.about div{display:flex;gap:10px;align-items:baseline;font:400 .9rem/1.55 var(--fs)}
+.about b{font:700 .95rem var(--fd);flex:0 0 auto}
+.doors{display:grid;gap:10px;margin:18px 0 6px}
+.door{display:flex;align-items:center;gap:13px;background:var(--ink);color:var(--paper);
+  border-radius:14px;padding:16px;text-decoration:none;box-shadow:0 10px 20px -12px rgba(24,20,16,.4)}
+.door:active{transform:scale(.98)}
+.door.ghost{background:rgba(253,251,244,.88);color:var(--ink);border:1px solid rgba(34,29,21,.22);backdrop-filter:blur(3px)}
+.door .tx{flex:1;min-width:0}
+.door .tx b{font:800 1.1rem var(--fd);display:block}
+.door .tx span{font:400 .83rem var(--fs);opacity:.62}
+.door .cnt{font:500 9.5px var(--fm);letter-spacing:.08em;opacity:.65;text-align:right;flex:0 0 auto}
+.ed{display:flex;justify-content:space-between;margin-top:14px;font:500 10px var(--fm);
+  letter-spacing:.14em;text-transform:uppercase;color:rgba(34,29,21,.55)}
+</style>
+</head>
+<body>
+<div class="collage" id="collage" aria-hidden="true"></div>
+<div class="scrim" aria-hidden="true"></div>
+<div class="grain" aria-hidden="true"></div>
+<main class="shell">
+  <p class="kick">Mading hidup · mading umum</p>
+  <h1>AKSARA<i>.</i></h1>
+  <p class="tag">Papan tulis bebas anak sekolah — ditempel tangan, dibaca semua orang.</p>
+  <div class="about">
+    <div><b>01.</b><span>Intip mading umum, tanpa daftar.</span></div>
+    <div><b>02.</b><span>Masuk untuk nempel, kirim surat, dan punya mading pribadi.</span></div>
+    <div><b>03.</b><span>Anonim boleh. Yang penting sopan.</span></div>
+  </div>
+  <nav class="doors">
+    <a class="door" href="index.html">
+      <span class="tx"><b>Intip Mading →</b><span>Lihat-lihat dulu, gratis</span></span>
+      <span class="cnt" id="mCount">—</span>
+    </a>
+    <a class="door ghost" href="masuk.html">
+      <span class="tx"><b>Masuk / Daftar →</b><span>Cuma nama + kelas</span></span>
+      <span class="cnt">30 detik</span>
+    </a>
+  </nav>
+  <div class="ed"><span>Edisi 231</span><span id="edDate">—</span><span>1 senyum</span></div>
+</main>
+<script>
+(function(){
+  "use strict";
+  function load(k, fb){ try{ var d = JSON.parse(localStorage.getItem(k)); return d == null ? fb : d; }catch(e){ return fb; } }
+  // Mading Umum = kunci baru, fallback ke papan lama supaya tempelan lama tetap tampil
+  var items = load("aksara_papan_umum_v1", null);
+  if(!Array.isArray(items) || !items.length) items = load("aksara_papan_v1", []);
+  if(!Array.isArray(items)) items = [];
+  var imgs = load("aksara_img_v1", {});
+  document.getElementById("mCount").textContent = items.length + " tempelan";
+  try{
+    document.getElementById("edDate").textContent =
+      new Date().toLocaleDateString("id-ID",{day:"numeric",month:"short",year:"numeric"});
+  }catch(e){}
+
+  var col = document.getElementById("collage");
+  function hash(s){ var h = 0; for(var i = 0; i < s.length; i++){ h = (h * 31 + s.charCodeAt(i)) | 0; } return Math.abs(h); }
+  function imgUrl(d){
+    if(!d || !d.image) return null;
+    if(typeof d.image === "string" && d.image.slice(0, 4) === "img:") return imgs[d.image.slice(4)] || null;
+    return d.image;
+  }
+  if(!items.length) return;
+  var W = Math.max(document.documentElement.clientWidth, 320);
+  var H = Math.max(document.documentElement.clientHeight, 560);
+  items.slice(0, 14).forEach(function(d, i){
+    if(!d) return;
+    var el = document.createElement("div");
+    var h = hash(String(d.id || i));
+    var url = imgUrl(d);
+    if(d.kind === "polaroid" && url){
+      el.className = "bit ph";
+      var im = document.createElement("img"); im.src = url; im.alt = "";
+      el.appendChild(im);
+      if(d.text){ var s = document.createElement("span"); s.textContent = String(d.text).slice(0, 30); el.appendChild(s); }
+    } else {
+      el.className = "bit" + (d.kind === "clip" ? " clip" : "");
+      el.style.background = d.color || "#FFF3B0";
+      el.textContent = String(d.text || d.kind || "").slice(0, 60) || "★";
+      if(d.name){ var w = document.createElement("span"); w.className = "who"; w.textContent = String(d.name).slice(0, 26); el.appendChild(w); }
+    }
+    el.style.left = (5 + (h % 62)) + "%";
+    el.style.top = (8 + ((h >> 3) % Math.max(Math.round(H * 0.42), 180))) + "px";
+    el.style.transform = "rotate(" + ((h % 25) - 12) + "deg) scale(" + (0.95 + (h % 30) / 100) + ")";
+    col.appendChild(el);
+  });
+})();
+</script>
+</body>
+</html>

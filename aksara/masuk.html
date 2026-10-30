@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>AKSARA. — Masuk</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Caveat:wght@600;700&family=Fraunces:ital,opsz,wght@0,9..144,400..800&family=IBM+Plex+Mono:wght@400;500&family=Spectral:ital,wght@0,400;1,400&display=swap" rel="stylesheet">
+<style>
+:root{--paper:#F2ECDE;--ink:#221D15;--red:#C03B21;
+  --fd:'Fraunces',serif;--fs:'Spectral',serif;--fm:'IBM Plex Mono',monospace;--fh:'Caveat',cursive}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--paper);color:var(--ink);font-family:var(--fs);-webkit-text-size-adjust:100%}
+.grain{position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.07;
+  background-image:url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg==")}
+.shell{position:relative;z-index:1;max-width:520px;margin:0 auto;min-height:100dvh;
+  display:flex;flex-direction:column;justify-content:center;padding:32px clamp(20px,6vw,32px)}
+.kick{font:500 10px var(--fm);letter-spacing:.24em;text-transform:uppercase;color:var(--red)}
+h1{font:700 clamp(2.4rem,10vw,3.2rem)/1.05 var(--fh);margin:8px 0 4px}
+.sub{font:italic 400 .95rem/1.6 var(--fs);color:rgba(34,29,21,.65)}
+.card{margin-top:22px;background:#FDFBF4;border:1px solid rgba(34,29,21,.2);border-radius:14px;
+  padding:22px 18px;box-shadow:0 14px 26px -14px rgba(24,20,16,.4);transform:rotate(-.5deg)}
+label{display:block;font:500 10px var(--fm);letter-spacing:.16em;text-transform:uppercase;
+  color:rgba(34,29,21,.55);margin:14px 0 6px}
+label:first-child{margin-top:0}
+input{width:100%;font:600 1.2rem var(--fh);color:#2b241c;background:transparent;
+  border:0;border-bottom:1.5px solid rgba(34,29,21,.3);outline:0;padding:4px 2px}
+input:focus{border-color:var(--red)}
+.row{display:flex;gap:10px;margin-top:22px}
+.btn{flex:1;background:var(--ink);color:var(--paper);border:0;border-radius:10px;padding:14px;
+  font:700 1rem var(--fd);cursor:pointer;text-decoration:none;text-align:center}
+.btn.ghost{flex:0 0 auto;background:transparent;color:var(--ink);border:1.5px solid rgba(34,29,21,.3);
+  font:500 .95rem var(--fs)}
+.note{margin-top:14px;font:italic 400 .85rem/1.6 var(--fs);color:rgba(34,29,21,.55);text-align:center}
+</style>
+</head>
+<body>
+<div class="grain" aria-hidden="true"></div>
+<main class="shell">
+  <p class="kick">Kartu anggota · 30 detik</p>
+  <h1>Siapa nih?</h1>
+  <p class="sub">Cuma nama + kelas. Disimpan di HP-mu sendiri — belum ada server, belum ada yang ngintip.</p>
+  <div class="card">
+    <label for="fNama">Nama</label>
+    <input id="fNama" maxlength="40" placeholder="Namamu..." autocomplete="off">
+    <label for="fKelas">Kelas</label>
+    <input id="fKelas" maxlength="20" placeholder="mis. XI-1..." autocomplete="off">
+    <div class="row">
+      <a class="btn ghost" href="publik.html">Nanti</a>
+      <button class="btn" id="goBtn">Masuk →</button>
+    </div>
+  </div>
+  <p class="note">Sesudah masuk, kamu bisa nempel, kirim surat bernama, dan punya mading pribadi.</p>
+</main>
+<script>
+(function(){
+  "use strict";
+  var KEY = "aksara_profil_v1";
+  function load(){
+    try{ var d = JSON.parse(localStorage.getItem(KEY)); return d && typeof d === "object" ? d : {}; }
+    catch(e){ return {}; }
+  }
+  var p = load();
+  if(p.nama) document.getElementById("fNama").value = p.nama;
+  if(p.kelas) document.getElementById("fKelas").value = p.kelas;
+  document.getElementById("goBtn").onclick = function(){
+    var nama = document.getElementById("fNama").value.trim();
+    var kelas = document.getElementById("fKelas").value.trim();
+    if(!nama){ document.getElementById("fNama").focus(); return; }
+    p.nama = nama; p.kelas = kelas; p.loginAt = Date.now();
+    try{ localStorage.setItem(KEY, JSON.stringify(p)); }catch(e){}
+    location.href = "index.html";
+  };
+})();
+</script>
+</body>
+</html>
