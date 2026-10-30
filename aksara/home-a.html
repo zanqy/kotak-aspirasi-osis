@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>AKSARA. — Sampul</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Caveat:wght@600&family=Fraunces:ital,opsz,wght@0,9..144,400..800;1,9..144,400..700&family=IBM+Plex+Mono:wght@400;500;700&family=Spectral:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
+<style>
+:root{--paper:#F2ECDE;--ink:#221D15;--red:#C03B21;
+  --fd:'Fraunces',serif;--fs:'Spectral',serif;--fm:'IBM Plex Mono',monospace;--fh:'Caveat',cursive}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--paper);color:var(--ink);font-family:var(--fs);-webkit-text-size-adjust:100%}
+.grain{position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.07;
+  background-image:url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg==")}
+.topnav{position:sticky;top:0;z-index:20;display:flex;justify-content:space-between;align-items:center;
+  padding:10px clamp(14px,5vw,26px);background:rgba(242,236,222,.94);backdrop-filter:blur(6px);
+  border-bottom:1px solid rgba(34,29,21,.25)}
+.brand{font:800 1.25rem var(--fd)}.brand i{color:var(--red);font-style:normal}
+.navlink{display:flex;gap:4px}
+.navlink a{font:500 10px var(--fm);letter-spacing:.12em;text-transform:uppercase;color:var(--ink);
+  text-decoration:none;padding:7px 12px;border-radius:99px}
+.shell{position:relative;z-index:1;max-width:640px;margin:0 auto;padding:0 clamp(14px,5vw,26px) 40px}
+.nameplate{text-align:center;padding:26px 0 10px;border-bottom:3px double var(--ink)}
+.nameplate .kick{font:500 9px var(--fm);letter-spacing:.24em;color:rgba(34,29,21,.6)}
+.nameplate h1{font:800 clamp(3.4rem,17vw,5.2rem)/1 var(--fd);letter-spacing:-.015em}
+.nameplate h1 i{color:var(--red);font-style:normal}
+.dateline{display:flex;justify-content:space-between;gap:8px;padding:8px 2px;font:500 10px var(--fm);
+  letter-spacing:.14em;text-transform:uppercase;border-bottom:1px solid rgba(34,29,21,.25)}
+.headline{padding:20px 0 6px;text-align:center}
+.headline .kicker{font:700 10px var(--fm);letter-spacing:.22em;color:var(--red);text-transform:uppercase}
+.headline h2{font:800 clamp(1.7rem,7.5vw,2.4rem)/1.15 var(--fd);margin:8px 0}
+.headline h2 .it{font-style:italic;font-weight:500}
+.headline p{font:italic 400 .95rem/1.6 var(--fs);color:rgba(34,29,21,.7);max-width:46ch;margin:0 auto}
+.door{display:block;color:inherit;text-decoration:none;padding:18px 2px;border-top:1px solid rgba(34,29,21,.3)}
+.door:last-of-type{border-bottom:1px solid rgba(34,29,21,.3)}
+.door .num{font:700 10px var(--fm);letter-spacing:.2em;color:var(--red)}
+.door h3{font:800 1.45rem/1.2 var(--fd);margin:6px 0}
+.door h3 .go{color:var(--red)}
+.door p{font:400 .92rem/1.6 var(--fs);color:rgba(34,29,21,.68)}
+.door .meta{display:flex;justify-content:space-between;margin-top:8px;font:500 9.5px var(--fm);
+  letter-spacing:.14em;text-transform:uppercase;color:rgba(34,29,21,.5)}
+.door:active{background:rgba(192,59,33,.06)}
+.ednote{margin-top:18px;border:1.5px dashed rgba(34,29,21,.35);border-radius:10px;padding:14px;
+  font:italic 400 .9rem/1.6 var(--fs);text-align:center}
+footer{text-align:center;font:500 10px var(--fm);letter-spacing:.16em;color:rgba(34,29,21,.45);
+  padding:24px 0 8px;text-transform:uppercase}
+</style>
+</head>
+<body>
+<div class="grain" aria-hidden="true"></div>
+<nav class="topnav">
+  <span class="brand">AKSARA<i>.</i></span>
+  <div class="navlink"><a href="index.html">Mading</a><a href="profil.html">Profil</a><a href="kirim.html">Kirim</a></div>
+</nav>
+<main class="shell">
+  <header class="nameplate">
+    <p class="kick">Harian pelajar · terbit setiap hari · wajib dibaca</p>
+    <h1>AKSARA<i>.</i></h1>
+  </header>
+  <div class="dateline"><span>Edisi <b id="edNo">231</b></span><span id="edDate">—</span><span>Harga: <b>1 senyum</b></span></div>
+
+  <section class="headline">
+    <p class="kicker">Kabar redaksi hari ini</p>
+    <h2>Papan <span class="it">penuh lagi:</span> <span id="nTempel">36</span> tempelan baru nempel</h2>
+    <p>Dari sticky note, kliping koran, sampai layangan — semuanya ditempel tangan anak sekolah ini. Masuk dan lihat sendiri.</p>
+  </section>
+
+  <a class="door" href="index.html">
+    <span class="num">01 · Rubrik utama</span>
+    <h3>Buka Mading <span class="go">→</span></h3>
+    <p>Geser, zoom, dan intip satu-satu tempelan di papan. Ketuk untuk pasang punyamu.</p>
+    <div class="meta"><span>1400 × 1400 penuh</span><span id="mCount">— tempelan</span></div>
+  </a>
+  <a class="door" href="profil.html">
+    <span class="num">02 · Sosok</span>
+    <h3>Kartu Pelajar <span class="go">→</span></h3>
+    <p>Siapa di balik tempelan-tempelan itu? Lihat kartu dan galeri karyamu.</p>
+    <div class="meta"><span>Identitas + karya</span><span>Hal. 2/3</span></div>
+  </a>
+  <a class="door" href="kirim.html">
+    <span class="num">03 · Kantor pos</span>
+    <h3>Kirim Surat <span class="go">→</span></h3>
+    <p>Surat, anonim, perpisahan, apresiasi, sampai manfess — pos kilat redaksi.</p>
+    <div class="meta"><span id="kCount">— surat terkirim</span><span>Sampai hari ini juga</span></div>
+  </a>
+
+  <p class="ednote">“Kalau ada yang belum pas di mading ini, tempel saja suratmu — redaksi baca semua.” — Redaksi</p>
+  <footer>AKSARA · Harian pelajar · Edisi <span id="edNo2">231</span></footer>
+</main>
+<script>
+(function(){
+  "use strict";
+  try{
+    var dd = new Date();
+    document.getElementById("edDate").textContent =
+      dd.toLocaleDateString("id-ID",{weekday:"long",day:"numeric",month:"long",year:"numeric"});
+  }catch(e){}
+  function n(key){ try{ var d = JSON.parse(localStorage.getItem(key)); return Array.isArray(d)?d.length:0; }catch(e){ return 0; } }
+  var t = n("aksara_papan_v1"), k = n("aksara_kiriman_v1");
+  if(t === 0){
+    document.querySelector(".headline h2").innerHTML =
+      'Papan masih <span class="it">kosong:</span> jadilah yang pertama nempel';
+  } else {
+    document.getElementById("nTempel").textContent = t;
+  }
+  document.getElementById("mCount").textContent = t + " tempelan";
+  document.getElementById("kCount").textContent = k + " surat terkirim";
+})();
+</script>
+</body>
+</html>

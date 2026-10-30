@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>AKSARA.</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400..800;1,9..144,400..700&family=IBM+Plex+Mono:wght@400;500&family=Spectral:ital,wght@0,400;1,400&display=swap" rel="stylesheet">
+<style>
+:root{--paper:#F2ECDE;--ink:#221D15;--red:#C03B21;
+  --fd:'Fraunces',serif;--fs:'Spectral',serif;--fm:'IBM Plex Mono',monospace}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--paper);color:var(--ink);font-family:var(--fs);-webkit-text-size-adjust:100%}
+.grain{position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.07;
+  background-image:url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg==")}
+.shell{position:relative;z-index:1;max-width:520px;margin:0 auto;min-height:100dvh;
+  display:flex;flex-direction:column;justify-content:center;padding:32px clamp(20px,6vw,32px)}
+.kick{font:500 10px var(--fm);letter-spacing:.26em;text-transform:uppercase;color:rgba(34,29,21,.55)}
+h1{font:800 clamp(4rem,22vw,6.5rem)/0.95 var(--fd);letter-spacing:-.02em;margin:10px 0 4px}
+h1 i{color:var(--red);font-style:normal}
+.tag{font:italic 400 1.02rem/1.6 var(--fs);color:rgba(34,29,21,.7);max-width:34ch}
+.doors{display:grid;gap:12px;margin:28px 0 8px}
+.door{display:flex;align-items:center;gap:14px;background:var(--ink);color:var(--paper);
+  border-radius:14px;padding:18px;text-decoration:none}
+.door:active{transform:scale(.98)}
+.door .no{font:700 10px var(--fm);letter-spacing:.16em;border:1.5px solid rgba(242,236,222,.4);
+  border-radius:99px;padding:6px 10px;flex:0 0 auto}
+.door .tx{flex:1;min-width:0}
+.door .tx b{font:800 1.15rem var(--fd);display:block}
+.door .tx span{font:400 .85rem var(--fs);opacity:.65}
+.door .cnt{font:500 10px var(--fm);letter-spacing:.1em;opacity:.7;text-align:right;flex:0 0 auto}
+.door.red{background:var(--red)}
+.door.paper{background:transparent;color:var(--ink);border:1.5px solid rgba(34,29,21,.3)}
+.door.paper .no{border-color:rgba(34,29,21,.3)}
+.ed{display:flex;justify-content:space-between;margin-top:18px;font:500 10px var(--fm);
+  letter-spacing:.14em;text-transform:uppercase;color:rgba(34,29,21,.5)}
+</style>
+</head>
+<body>
+<div class="grain" aria-hidden="true"></div>
+<main class="shell">
+  <p class="kick">Harian pelajar</p>
+  <h1>AKSARA<i>.</i></h1>
+  <p class="tag">Mading, profil, dan surat-surat — satu redaksi, ditempel tangan sendiri.</p>
+  <nav class="doors">
+    <a class="door" href="index.html">
+      <span class="no">01</span>
+      <span class="tx"><b>Buka Mading →</b><span>Lihat &amp; tempel di papan</span></span>
+      <span class="cnt" id="mCount">—</span>
+    </a>
+    <a class="door paper" href="profil.html">
+      <span class="no">02</span>
+      <span class="tx"><b>Profilku →</b><span>Kartu + galeri karyamu</span></span>
+      <span class="cnt">HAL. 2/3</span>
+    </a>
+    <a class="door red" href="kirim.html">
+      <span class="no">03</span>
+      <span class="tx"><b>Kirim Surat →</b><span>Pos kilat redaksi</span></span>
+      <span class="cnt" id="kCount">—</span>
+    </a>
+  </nav>
+  <div class="ed"><span>Edisi 231</span><span id="edDate">—</span><span>1 senyum</span></div>
+</main>
+<script>
+(function(){
+  "use strict";
+  try{
+    document.getElementById("edDate").textContent =
+      new Date().toLocaleDateString("id-ID",{day:"numeric",month:"short",year:"numeric"});
+  }catch(e){}
+  function n(key){ try{ var d = JSON.parse(localStorage.getItem(key)); return Array.isArray(d)?d.length:0; }catch(e){ return 0; } }
+  document.getElementById("mCount").textContent = n("aksara_papan_v1") + " tempelan";
+  document.getElementById("kCount").textContent = n("aksara_kiriman_v1") + " terkirim";
+})();
+</script>
+</body>
+</html>
