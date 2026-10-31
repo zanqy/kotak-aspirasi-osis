@@ -1614,20 +1614,34 @@ input[type=range]::-moz-range-thumb{width:22px;height:22px;border-radius:50%;bac
   document.getElementById("zIn").onclick = function(){ zoomAt(stage.clientWidth/2, stage.clientHeight/2, 1.35); };
   document.getElementById("zOut").onclick = function(){ zoomAt(stage.clientWidth/2, stage.clientHeight/2, 1/1.35); };
   document.getElementById("zFit").onclick = showAll;
-  var clearArmed = false, clearTimer = null;
-  document.getElementById("zClear").onclick = function(){
+  // Modal konfirmasi (bukan 2-tap, supaya tidak kepencet)
+  var clearOverlay = null;
+  function openClearConfirm(){
     if(!items.length){ say("Papan sudah kosong"); return; }
-    if(!clearArmed){
-      clearArmed = true;
-      say("Ketuk lagi untuk mengosongkan papan");
-      clearTimeout(clearTimer);
-      clearTimer = setTimeout(function(){ clearArmed = false; }, 4000);
-      return;
-    }
-    clearArmed = false; clearTimeout(clearTimer);
-    items = []; save(); renderAll();
-    say("Papan dikosongkan");
-  };
+    if(clearOverlay) return;
+    clearOverlay = document.createElement("div");
+    clearOverlay.style.cssText = "position:fixed;inset:0;z-index:200;display:grid;place-items:center;padding:24px;background:rgba(34,29,21,.55);backdrop-filter:blur(2px)";
+    clearOverlay.innerHTML = '<div style="background:#FDFBF4;border-radius:14px;padding:22px 20px;max-width:320px;text-align:center;box-shadow:0 30px 50px -20px #000;transform:rotate(-1deg)">' +
+      '<p style="font:700 1.2rem \'Fraunces\',serif;margin-bottom:6px">Kosongkan papan?</p>' +
+      '<p style="font:italic 400 .9rem/1.5 \'Spectral\',serif;color:rgba(34,29,21,.65);margin-bottom:16px">' +
+      items.length + ' tempelan akan hilang permanen.</p>' +
+      '<div style="display:flex;gap:10px">' +
+      '<button id="clearCancel" style="flex:1;background:transparent;color:#221D15;border:1.5px solid rgba(34,29,21,.3);border-radius:9px;padding:12px;font:600 .95rem \'Fraunces\',serif;cursor:pointer">Batal</button>' +
+      '<button id="clearOk" style="flex:1;background:#C03B21;color:#fff;border:0;border-radius:9px;padding:12px;font:600 .95rem \'Fraunces\',serif;cursor:pointer">Ya, kosongkan</button>' +
+      '</div></div>';
+    document.body.appendChild(clearOverlay);
+    document.getElementById("clearCancel").onclick = closeClearConfirm;
+    clearOverlay.addEventListener("click", function(e){ if(e.target === clearOverlay) closeClearConfirm(); });
+    document.getElementById("clearOk").onclick = function(){
+      items = []; save(); renderAll();
+      closeClearConfirm();
+      say("Papan dikosongkan");
+    };
+  }
+  function closeClearConfirm(){
+    if(clearOverlay){ clearOverlay.remove(); clearOverlay = null; }
+  }
+  document.getElementById("zClear").onclick = openClearConfirm;
 
   /* ---------- atur tempelan: putar & hapus ---------- */
   /* panel putar sekarang menyatu di menu kontekstual */
