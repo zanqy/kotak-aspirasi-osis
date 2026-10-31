@@ -65,11 +65,16 @@ keping diberi label asal: UMUM/KELAS/PRIBADI).
 
 ## 5. Dua home (publik vs member)
 
-- **Home publik** (belum login) = `publik.html` — etalase, intip mading umum,
-  ajakan masuk. Tidak bisa nempel/kirim.
-- **Home member** (udah login) = belum dibuat. Isinya: sapaan nama, pintasan
-  ke tiga mading, info surat masuk, tempelan terbaruku.
-- Login = simulasi (nama + kelas, disimpan di HP). Backend nanti.
+- **Home publik** (belum login) = pratinjau kolase mading umum dari Firestore
+  + ajakan masuk. Tidak bisa nempel/kirim.
+- **Home member** (udah login) = sapaan nama, status verifikasi, pintasan ke
+  mading umum / pribadi / kirim / profil.
+- **Login = akun Google** (Firebase Auth, provider google.com).
+- **NISN = verifikasi akun, BUKAN kredensial login.** Diisi sekali di
+  `/aksara/verifikasi` setelah masuk Google: nama + NISN (10 angka, unik per
+  akun) + kelas. `verified: true` dibutuhkan untuk menempel & kirim surat.
+- Field Firestore `students/{uid}`: nama, email, fotoUrl, nisn, kelas, role,
+  verified, bio.
 
 ## 6. Profil
 
@@ -93,7 +98,7 @@ keping diberi label asal: UMUM/KELAS/PRIBADI).
 2. **Migrasi data papan** — papan sekarang jadi Mading Umum resmi.
 3. **Mading Kelas** — buat + join kelas.
 4. **Mading Pribadi** — mading "kamarku".
-5. **Login beneran** (Firebase auth NIS) — ganti simulasi.
+5. ~~Login beneran~~ → **selesai**: Google + verifikasi NISN.
 6. **Moderasi** — hapus/laporkan tempelan & surat.
 7. **Backend** — Firebase, storage foto, sinkron antar device.
 
