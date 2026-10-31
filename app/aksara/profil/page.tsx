@@ -3,9 +3,10 @@
 
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { getClientAuth, getClientDb } from "@/lib/firebase-client";
-import { onAuthStateChanged, signOut } from "firebase/auth";
+import { getClientDb } from "@/lib/firebase-client";
+import { signOut, getAuth } from "firebase/auth";
 import { doc, getDoc } from "firebase/firestore";
+import { useAksaraAuth } from "@/lib/aksara/useAksaraAuth";
 
 type Student = {
   nama: string;
@@ -18,7 +19,7 @@ type Student = {
 
 export default function ProfilPage() {
   const router = useRouter();
-  const [user, setUser] = useState<any>(null);
+  const { user, authLoading, authError } = useAksaraAuth();
   const [student, setStudent] = useState<Student | null>(null);
   const [loading, setLoading] = useState(true);
   const [editing, setEditing] = useState(false);
@@ -27,26 +28,25 @@ export default function ProfilPage() {
   const [editBio, setEditBio] = useState("");
 
   useEffect(() => {
-    const auth = getClientAuth();
-    const unsub = onAuthStateChanged(auth, async (u) => {
-      if (!u) {
-        router.push("/aksara/masuk");
-        return;
-      }
-      setUser(u);
-      const db = getClientDb();
-      const snap = await getDoc(doc(db, "students", u.uid));
-      if (snap.exists()) {
-        const data = snap.data() as Student;
-        setStudent(data);
-        setEditNama(data.nama || "");
-        setEditKelas(data.kelas || "");
-        setEditBio(data.bio || "");
-      }
-      setLoading(false);
-    });
-    return () => unsub();
-  }, [router]);
+    if (!authLoading && !user) router.push("/aksara/masuk");
+  }, [authLoading, user, router]);
+
+  useEffect(() => {
+    if (!user || authLoading) return;
+    const db = getClientDb();
+    getDoc(doc(db, "students", user.uid))
+      .then((snap) => {
+        if (snap.exists()) {
+          const data = snap.data() as Student;
+          setStudent(data);
+          setEditNama(data.nama || "");
+          setEditKelas(data.kelas || "");
+          setEditBio(data.bio || "");
+        }
+        setLoading(false);
+      })
+      .catch(() => setLoading(false));
+  }, [user, authLoading]);
 
   async function handleSave() {
     if (!user) return;
@@ -63,8 +63,13 @@ export default function ProfilPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-[#F2ECDE] flex items-center justify-center">
+      <div className="min-h-screen bg-[#F2ECDE] flex flex-col items-center justify-center gap-2 px-6 text-center">
         <p className="font-[var(--font-caveat)] text-xl">Memuat profil...</p>
+        {authError && (
+          <p className="font-[var(--font-spectral)] italic text-[0.85rem] text-[#221D15]/60">
+            Koneksi ke server lambat / terblokir. Coba matikan VPN / adblock lalu refresh.
+          </p>
+        )}
       </div>
     );
   }
@@ -176,7 +181,7 @@ export default function ProfilPage() {
         {/* Logout */}
         <div className="mt-8 flex justify-center">
           <button
-            onClick={() => signOut(getClientAuth())}
+            onClick={() => signOut(getAuth())}
             className="text-[10px] tracking-[0.12em] uppercase font-[var(--font-ibm-plex-mono)] font-medium text-[#C03B21] border border-[#C03B21]/30 rounded-full px-4 py-1.5 bg-transparent cursor-pointer"
           >
             Keluar

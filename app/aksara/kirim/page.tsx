@@ -3,15 +3,14 @@
 
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { getClientAuth, getClientDb } from "@/lib/firebase-client";
-import { onAuthStateChanged } from "firebase/auth";
+import { getClientDb } from "@/lib/firebase-client";
+import { useAksaraAuth } from "@/lib/aksara/useAksaraAuth";
 import { collection, addDoc, serverTimestamp } from "firebase/firestore";
 import Link from "next/link";
 
 export default function KirimPage() {
   const router = useRouter();
-  const [user, setUser] = useState<any>(null);
-  const [authLoading, setAuthLoading] = useState(true);
+  const { user, authLoading, authError } = useAksaraAuth();
   const [to, setTo] = useState("");
   const [from, setFrom] = useState("");
   const [msg, setMsg] = useState("");
@@ -21,17 +20,8 @@ export default function KirimPage() {
   const [resi, setResi] = useState("");
 
   useEffect(() => {
-    const auth = getClientAuth();
-    const unsub = onAuthStateChanged(auth, (u) => {
-      if (!u) {
-        router.push("/aksara/masuk");
-        return;
-      }
-      setUser(u);
-      setAuthLoading(false);
-    });
-    return () => unsub();
-  }, [router]);
+    if (!authLoading && !user) router.push("/aksara/masuk");
+  }, [authLoading, user, router]);
 
   async function handleSend(e: React.FormEvent) {
     e.preventDefault();
@@ -44,7 +34,7 @@ export default function KirimPage() {
       await addDoc(collection(db, "letters"), {
         to: rcv,
         from: snd,
-        fromUid: anon ? null : user.uid,
+        fromUid: anon ? null : user?.uid,
         isi: msg.trim(),
         anonim: anon,
         createdAt: serverTimestamp(),
@@ -69,8 +59,13 @@ export default function KirimPage() {
 
   if (authLoading) {
     return (
-      <div className="min-h-screen bg-[#F2ECDE] flex items-center justify-center">
+      <div className="min-h-screen bg-[#F2ECDE] flex flex-col items-center justify-center gap-2 px-6 text-center">
         <p className="font-[var(--font-caveat)] text-xl">Memuat...</p>
+        {authError && (
+          <p className="font-[var(--font-spectral)] italic text-[0.85rem] text-[#221D15]/60">
+            Koneksi ke server lambat / terblokir. Coba matikan VPN / adblock lalu refresh.
+          </p>
+        )}
       </div>
     );
   }

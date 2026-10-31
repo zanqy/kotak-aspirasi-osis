@@ -3,8 +3,7 @@
 
 import { useState, useEffect, useCallback } from "react";
 import { useRouter, useParams } from "next/navigation";
-import { getClientAuth } from "@/lib/firebase-client";
-import { onAuthStateChanged } from "firebase/auth";
+import { useAksaraAuth } from "@/lib/aksara/useAksaraAuth";
 import Board from "@/components/aksara/Board";
 import ItemSheet from "@/components/aksara/ItemSheet";
 import ContextMenu from "@/components/aksara/ContextMenu";
@@ -23,8 +22,7 @@ export default function BoardPage() {
 
   const [items, setItems] = useState<BoardItem[]>([]);
   const [loaded, setLoaded] = useState(false);
-  const [user, setUser] = useState<any>(null);
-  const [authLoading, setAuthLoading] = useState(true);
+  const { user, authLoading, authError } = useAksaraAuth();
   const [sheetOpen, setSheetOpen] = useState(false);
   const [editingItem, setEditingItem] = useState<BoardItem | null>(null);
   const [ctxOpen, setCtxOpen] = useState(false);
@@ -35,17 +33,8 @@ export default function BoardPage() {
   const boardName = boardId === "umum" ? "Mading Umum" : boardId === "pribadi" ? "Mading Pribadiku" : `Mading ${boardId}`;
 
   useEffect(() => {
-    const auth = getClientAuth();
-    const unsub = onAuthStateChanged(auth, (u) => {
-      if (!u) {
-        router.push("/aksara/masuk");
-        return;
-      }
-      setUser(u);
-      setAuthLoading(false);
-    });
-    return () => unsub();
-  }, [router]);
+    if (!authLoading && !user) router.push("/aksara/masuk");
+  }, [authLoading, user, router]);
 
   useEffect(() => {
     if (!user) return;
@@ -139,8 +128,13 @@ export default function BoardPage() {
 
   if (authLoading || !loaded) {
     return (
-      <div className="min-h-screen bg-[#E9DDC4] flex items-center justify-center">
+      <div className="min-h-screen bg-[#E9DDC4] flex flex-col items-center justify-center gap-2 px-6 text-center">
         <p className="font-[var(--font-caveat)] text-xl">Memuat papan...</p>
+        {authError && (
+          <p className="font-[var(--font-spectral)] italic text-[0.85rem] text-[#221D15]/60">
+            Koneksi ke server lambat / terblokir. Coba matikan VPN / adblock lalu refresh.
+          </p>
+        )}
       </div>
     );
   }

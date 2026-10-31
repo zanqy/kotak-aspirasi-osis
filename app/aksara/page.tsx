@@ -3,9 +3,9 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { getClientAuth, getClientDb } from "@/lib/firebase-client";
-import { onAuthStateChanged } from "firebase/auth";
+import { getClientDb } from "@/lib/firebase-client";
 import { doc, getDoc } from "firebase/firestore";
+import { useAksaraAuth } from "@/lib/aksara/useAksaraAuth";
 
 type Item = {
   id?: string;
@@ -23,26 +23,21 @@ type Student = {
 };
 
 export default function AksaraHome() {
-  const [user, setUser] = useState<any>(null);
+  const { user, authLoading, authError } = useAksaraAuth();
   const [student, setStudent] = useState<Student | null>(null);
-  const [authLoading, setAuthLoading] = useState(true);
   const [count, setCount] = useState(0);
   const [loaded, setLoaded] = useState(false);
   const [bits, setBits] = useState<Item[]>([]);
 
   useEffect(() => {
-    const auth = getClientAuth();
-    const unsub = onAuthStateChanged(auth, async (u) => {
-      if (u) {
-        setUser(u);
-        const db = getClientDb();
-        const snap = await getDoc(doc(db, "students", u.uid));
+    if (!user || authLoading) return;
+    const db = getClientDb();
+    getDoc(doc(db, "students", user.uid))
+      .then((snap) => {
         if (snap.exists()) setStudent(snap.data() as Student);
-      }
-      setAuthLoading(false);
-    });
-    return () => unsub();
-  }, []);
+      })
+      .catch(() => {});
+  }, [user, authLoading]);
 
   useEffect(() => {
     try {
@@ -65,8 +60,13 @@ export default function AksaraHome() {
 
   if (authLoading) {
     return (
-      <div className="min-h-screen bg-[#F2ECDE] flex items-center justify-center">
+      <div className="min-h-screen bg-[#F2ECDE] flex flex-col items-center justify-center gap-2 px-6 text-center">
         <p className="font-[var(--font-caveat)] text-xl">Memuat...</p>
+        {authError && (
+          <p className="font-[var(--font-spectral)] italic text-[0.85rem] text-[#221D15]/60">
+            Koneksi ke server lambat / terblokir. Coba matikan VPN / adblock lalu refresh.
+          </p>
+        )}
       </div>
     );
   }
