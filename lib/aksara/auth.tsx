@@ -48,6 +48,9 @@ type AuthContextValue = {
   student: Student | null;
   status: AuthStatus;
   error: string | null;
+  /** nama sudah diisi (dipakai untuk onboarding ringan setelah Google) */
+  hasName: boolean;
+  /** NISN terisi + terverifikasi — disiapkan untuk nanti, belum dipakai sebagai gate */
   verified: boolean;
   signInGoogle: () => Promise<void>;
   logout: () => Promise<void>;
@@ -240,6 +243,7 @@ export function AksaraAuthProvider({ children }: { children: React.ReactNode }) 
       student,
       status,
       error,
+      hasName: Boolean(student?.nama && student.nama.trim().length > 0),
       verified: Boolean(student?.verified && student?.nisn),
       signInGoogle,
       logout,

@@ -7,19 +7,22 @@ import { useAuth } from "@/lib/aksara/auth";
 
 /**
  * Gerbang tunggal untuk halaman yang butuh login.
- * - loading  -> tampilkan pesan loading (maks 8 dtk, tak pernah menggantung)
- * - anon     -> lempar ke /aksara/masuk?next=<halaman ini>
- * - belum verifikasi NISN -> lempar ke /aksara/verifikasi
+ * - loading     -> tampilkan pesan loading (maks 8 dtk, tak pernah menggantung)
+ * - anon        -> lempar ke /aksara/masuk?next=<halaman ini>
+ * - belum ada nama -> lempar ke /aksara/kenalan (cuma tanya nama)
+ *
+ * NISN TIDAK dipakai sebagai syarat masuk — login cukup akun Google.
+ * Verifikasi NISN disiapkan belakangan, setelah data dari sekolah ada.
  */
 export default function AuthGate({
   children,
-  requireVerified = true,
+  requireName = true,
 }: {
   children: React.ReactNode;
-  requireVerified?: boolean;
+  requireName?: boolean;
 }) {
   const router = useRouter();
-  const { status, user, verified, error } = useAuth();
+  const { status, user, hasName, error } = useAuth();
 
   useEffect(() => {
     if (status === "loading") return;
@@ -28,10 +31,11 @@ export default function AuthGate({
       router.replace(`/aksara/masuk?next=${encodeURIComponent(here)}`);
       return;
     }
-    if (requireVerified && !verified) {
-      router.replace("/aksara/verifikasi");
+    if (requireName && !hasName) {
+      const here = typeof window !== "undefined" ? window.location.pathname : "/aksara";
+      router.replace(`/aksara/kenalan?next=${encodeURIComponent(here)}`);
     }
-  }, [status, user, verified, requireVerified, router]);
+  }, [status, user, hasName, requireName, router]);
 
   if (status === "loading") {
     return (
@@ -60,15 +64,15 @@ export default function AuthGate({
     );
   }
 
-  if (requireVerified && !verified) {
+  if (requireName && !hasName) {
     return (
       <div className="min-h-screen flex flex-col items-center justify-center gap-3 px-6 text-center bg-[#F2ECDE]">
-        <p className="font-[var(--font-caveat)] text-xl">Verifikasi NISN dulu…</p>
+        <p className="font-[var(--font-caveat)] text-xl">Namamu siapa dulu…</p>
         <a
-          href="/aksara/verifikasi"
+          href="/aksara/kenalan"
           className="font-[var(--font-fraunces)] font-bold text-[#F2ECDE] bg-[#221D15] rounded-full px-5 py-2 no-underline"
         >
-          Verifikasi
+          Isi nama
         </a>
       </div>
     );

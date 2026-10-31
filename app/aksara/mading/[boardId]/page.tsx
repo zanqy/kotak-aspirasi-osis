@@ -18,7 +18,7 @@ import {
 export default function BoardPage() {
   const params = useParams();
   const slug = (params?.boardId as string) || "umum";
-  const { user, student, status, verified } = useAuth();
+  const { user, student, status, hasName } = useAuth();
 
   // board pribadi harus unik per user — dulu semua orang berbagi satu papan "pribadi"
   const boardId = slug === "pribadi" && user ? `pribadi_${user.uid}` : slug;
@@ -42,7 +42,7 @@ export default function BoardPage() {
           ? `Mading ${student?.kelas || "Kelas"}`
           : `Mading ${slug}`;
 
-  const canEdit = Boolean(user && verified);
+  const canEdit = Boolean(user && hasName);
   const canView = isPublicBoard || Boolean(user);
 
   useEffect(() => {
@@ -181,19 +181,12 @@ export default function BoardPage() {
             >
               + Tempel
             </button>
-          ) : !user ? (
+          ) : (
             <a
               href="/aksara/masuk"
               className="bg-[#221D15] text-[#F2ECDE] border-0 rounded-full px-4 py-1.5 font-[var(--font-fraunces)] font-bold text-[0.8rem] no-underline"
             >
               Masuk untuk nempel
-            </a>
-          ) : (
-            <a
-              href="/aksara/verifikasi"
-              className="bg-[#C03B21] text-[#F2ECDE] border-0 rounded-full px-4 py-1.5 font-[var(--font-fraunces)] font-bold text-[0.8rem] no-underline"
-            >
-              Verifikasi buat nempel
             </a>
           )}
         </div>

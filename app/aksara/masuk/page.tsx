@@ -9,16 +9,16 @@ function MasukInner() {
   const router = useRouter();
   const params = useSearchParams();
   const next = params.get("next") || "/aksara";
-  const { user, status, verified, signInGoogle } = useAuth();
+  const { user, status, hasName, signInGoogle } = useAuth();
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
   // sudah login → langsung ke tujuan
   useEffect(() => {
     if (status === "ready" && user) {
-      router.replace(verified ? next : "/aksara/verifikasi");
+      router.replace(hasName ? next : `/aksara/kenalan?next=${encodeURIComponent(next)}`);
     }
-  }, [status, user, verified, next, router]);
+  }, [status, user, hasName, next, router]);
 
   async function handleGoogle() {
     setError("");
@@ -54,7 +54,7 @@ function MasukInner() {
         Siapa nih?
       </h1>
       <p className="font-[var(--font-spectral)] italic text-[0.95rem] leading-relaxed text-[#221D15]/65 mt-1">
-        Masuk pakai akun Google sekolah. NISN dicek setelah masuk.
+        Cukup akun Google. Setelah masuk, kami tanya namamu sekali.
       </p>
 
       <div className="mt-6 bg-[#FDFBF4] border border-[#221D15]/20 rounded-[14px] p-5 shadow-[0_14px_26px_-14px_rgba(24,20,16,0.4)] -rotate-[0.5deg]">
@@ -79,8 +79,8 @@ function MasukInner() {
         )}
 
         <p className="mt-4 text-[0.8rem] font-[var(--font-spectral)] text-[#221D15]/55 leading-relaxed">
-          Akun Google cuma dipakai untuk mengenali kamu. Setelah masuk, isi NISN + kelas
-          sekali untuk verifikasi siswa.
+          Akun Google cuma dipakai untuk mengenali kamu — bukan buat posting apa pun
+          tanpa kamu. NISN belum diminta.
         </p>
       </div>
 

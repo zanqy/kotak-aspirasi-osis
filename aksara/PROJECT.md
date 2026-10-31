@@ -69,10 +69,13 @@ keping diberi label asal: UMUM/KELAS/PRIBADI).
   + ajakan masuk. Tidak bisa nempel/kirim.
 - **Home member** (udah login) = sapaan nama, status verifikasi, pintasan ke
   mading umum / pribadi / kirim / profil.
-- **Login = akun Google** (Firebase Auth, provider google.com).
-- **NISN = verifikasi akun, BUKAN kredensial login.** Diisi sekali di
-  `/aksara/verifikasi` setelah masuk Google: nama + NISN (10 angka, unik per
-  akun) + kelas. `verified: true` dibutuhkan untuk menempel & kirim surat.
+- **Login = akun Google saja** (Firebase Auth, provider google.com). Tidak ada
+  email/password, tidak ada NISN sebagai kredensial.
+- **Setelah masuk, yang ditanya cuma nama** di `/aksara/kenalan` (dipakai untuk
+  tandatangan tempelan & surat). Tidak ada syarat lain untuk menempel/kirim.
+- **NISN + kelas DITUNDA.** Field `nisn`, `kelas`, `verified` tetap ada di data
+  model tapi belum dipakai sebagai gate — menunggu data dari sekolah.
+  `/aksara/verifikasi` sekarang cuma redirect ke `/aksara/kenalan`.
 - Field Firestore `students/{uid}`: nama, email, fotoUrl, nisn, kelas, role,
   verified, bio.
 

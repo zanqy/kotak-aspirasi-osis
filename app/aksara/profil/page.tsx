@@ -36,7 +36,6 @@ function ProfilInner() {
   const role = student?.role || "siswa";
   const bio = student?.bio || "Belum ada bio.";
   const nisn = student?.nisn;
-  const verified = Boolean(student?.verified && nisn);
   const initial = nama.charAt(0).toUpperCase();
 
   return (
@@ -62,17 +61,14 @@ function ProfilInner() {
             <span className="font-[var(--font-ibm-plex-mono)] text-[8.5px] font-bold bg-[#221D15] text-[#F2ECDE] rounded-full px-2.5 py-1 tracking-[0.1em]">
               {role.toUpperCase()}
             </span>
-            {verified ? (
+            {nisn ? (
               <span className="font-[var(--font-ibm-plex-mono)] text-[8.5px] font-bold bg-[#3C6B33] text-[#F2ECDE] rounded-full px-2.5 py-1 tracking-[0.1em]">
                 NISN {nisn}
               </span>
             ) : (
-              <Link
-                href="/aksara/verifikasi"
-                className="font-[var(--font-ibm-plex-mono)] text-[8.5px] font-bold bg-[#C03B21] text-[#F2ECDE] rounded-full px-2.5 py-1 tracking-[0.1em] no-underline"
-              >
-                BELUM VERIFIKASI
-              </Link>
+              <span className="font-[var(--font-ibm-plex-mono)] text-[8.5px] font-bold bg-[#221D15]/10 text-[#221D15]/60 rounded-full px-2.5 py-1 tracking-[0.1em]">
+                AKUN GOOGLE
+              </span>
             )}
           </div>
           <p className="font-[var(--font-spectral)] italic text-[0.85rem] text-[#221D15]/65 mt-2 leading-snug">
@@ -118,7 +114,8 @@ function ProfilInner() {
             className="w-full font-[var(--font-caveat)] text-[1.1rem] text-[#2b241c] bg-transparent border border-[#221D15]/20 rounded-[8px] p-2 outline-none focus:border-[#C03B21] resize-none"
           />
           <p className="mt-2 text-[0.75rem] font-[var(--font-spectral)] text-[#221D15]/50">
-            NISN dikunci setelah verifikasi. Kalau salah, hubungi OSIS.
+            Kelas & bio boleh diubah kapan saja. NISN nanti diisi setelah datanya ada
+            dari sekolah.
           </p>
           <button
             onClick={handleSave}
@@ -158,7 +155,7 @@ function ProfilInner() {
 
 export default function ProfilPage() {
   return (
-    <AuthGate requireVerified={false}>
+    <AuthGate>
       <ProfilInner />
     </AuthGate>
   );

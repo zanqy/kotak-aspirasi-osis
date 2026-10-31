@@ -23,7 +23,7 @@ function hash(s: string) {
 }
 
 export default function AksaraHome() {
-  const { user, student, status, verified } = useAuth();
+  const { user, student, status, hasName } = useAuth();
   const [items, setItems] = useState<Item[]>([]);
   const [count, setCount] = useState<number | null>(null);
 
@@ -70,22 +70,26 @@ export default function AksaraHome() {
           Halo, {nama}<span className="text-[#C03B21]">.</span>
         </h1>
         <p className="font-[var(--font-spectral)] italic text-[0.95rem] text-[#221D15]/65 mt-1">
-          {verified ? `${student?.kelas} · NISN ${student?.nisn}` : "Akun belum diverifikasi"}
+          {hasName
+            ? student?.kelas
+              ? `${student.kelas} · anggota AKSARA`
+              : "Anggota AKSARA"
+            : "Nama panggilanmu belum diisi"}
         </p>
 
-        {!verified && (
+        {!hasName && (
           <div className="mt-4 rounded-[12px] border border-[#C03B21]/35 bg-[#C03B21]/5 px-4 py-3">
             <p className="font-[var(--font-fraunces)] font-bold text-[0.95rem]">
               Satu langkah lagi
             </p>
             <p className="font-[var(--font-spectral)] text-[0.85rem] leading-relaxed text-[#221D15]/70 mt-1">
-              Isi NISN + kelas supaya kamu bisa nempel dan kirim surat.
+              Isi nama panggilanmu supaya bisa nempel dan kirim surat.
             </p>
             <Link
-              href="/aksara/verifikasi"
+              href="/aksara/kenalan"
               className="inline-block mt-2.5 bg-[#C03B21] text-[#F2ECDE] rounded-full px-4 py-1.5 font-[var(--font-fraunces)] font-bold text-[0.85rem] no-underline"
             >
-              Verifikasi sekarang →
+              Isi nama →
             </Link>
           </div>
         )}
@@ -239,7 +243,7 @@ export default function AksaraHome() {
         <div className="grid gap-2 mt-4">
           {[
             "Intip mading umum, tanpa akun.",
-            "Masuk pakai Google, isi NISN sekali buat verifikasi.",
+            "Masuk pakai Google, kami tanya nama sekali.",
             "Anonim boleh. Yang penting sopan.",
           ].map((t, i) => (
             <div key={i} className="flex gap-2.5 items-baseline text-[0.9rem] leading-relaxed">
@@ -276,7 +280,7 @@ export default function AksaraHome() {
                 Masuk dengan Google →
               </b>
               <span className="font-[var(--font-spectral)] text-[0.83rem] opacity-60">
-                30 detik, verifikasi NISN sekali
+                30 detik, cukup akun Google
               </span>
             </span>
           </Link>

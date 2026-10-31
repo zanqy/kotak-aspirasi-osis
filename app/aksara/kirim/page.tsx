@@ -218,7 +218,7 @@ function KirimInner() {
 
 export default function KirimPage() {
   return (
-    <AuthGate requireVerified>
+    <AuthGate>
       <KirimInner />
     </AuthGate>
   );
