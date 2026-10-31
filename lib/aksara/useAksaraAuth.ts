@@ -42,7 +42,7 @@ export function useAksaraAuth(timeoutMs = 8000) {
           finish();
         }
       );
-    } catch (e) {
+    } catch {
       clearTimeout(t);
       setAuthError("init-failed");
       setUser(null);
