@@ -9,7 +9,7 @@ Ini bukan spesifikasi final — coret/ubah sesuka hati.
 
 AKSARA. adalah platform digital sekolah yang **berdiri beriringan** dengan
 KATAKAN. (kotak aspirasi OSIS), tapi punya identitas sendiri: **mading umum,
-profil siswa, surat bernama/anonim, surat perpisahan, apresiasi, manfess**.
+profil siswa, dan surat-menyurat antar siswa (bernama/anonim)**.
 
 - KATAKAN. = kotak aspirasi (sudah ada, jangan disentuh).
 - AKSARA. = mading digital + surat-menyurat antar siswa.
@@ -28,7 +28,7 @@ Vibe: koran pelajar — kertas krem `#F2ECDE`, tinta `#221D15`, aksen merah
   - `contoh.html` — versi papan terisi (demo)
   - `papan.html` — kanvas standalone (lama, tersisih)
   - `profil.html` — kartu pelajar + galeri karya
-  - `kirim.html` — meja pos (surat/anonim/perpisahan/apresiasi/manfess)
+  - `kirim.html` — meja pos (surat, toggle anonim)
   - `publik.html` — home publik (belum login)
   - `masuk.html` — pintu masuk (nama + kelas)
   - `home-a/b/c/d.html` — 4 konsep home percobaan
@@ -43,6 +43,8 @@ Vibe: koran pelajar — kertas krem `#F2ECDE`, tinta `#221D15`, aksen merah
   stempel, stiker, selotip, bingkai, highlight, pin, bayangan, align, rotasi,
   skala, cermin, edit isi & gaya, undo hapus, duplikat.
 - Data: `aksara_papan_v1` (array item; foto via `img:` ref ke `aksara_img_v1`).
+- Tombol kosongkan papan pakai modal konfirmasi (bukan 2-tap), supaya tidak
+  kepencet.
 
 ## 4. Rencana mading ke depan (MULTI-PAPAN)
 
@@ -77,8 +79,10 @@ keping diberi label asal: UMUM/KELAS/PRIBADI).
 
 ## 7. Kirim Surat
 
-- 5 jenis: Surat, Anonim, Perpisahan, Apresiasi, Manfess.
-- Meja pos: kartu perangko, tulis langsung di kertas bergaris, cap TERKIRIM.
+- Tidak ada kategori — surat ya surat, bebas mau isinya apa.
+- Toggle anonim (nama disembunyikan jika dicentang).
+- Meja pos: cap AKSARA POST, tulis langsung di kertas bergaris, animasi amplop
+  terbang, kartu "Surat meluncur!" + resi.
 - Surat **tidak** ditempel ke papan — hanya tercatat di `aksara_kiriman_v1`
   (isi + penerima + pengirim + waktu).
 - Nanti: diteruskan ke penerima beneran (butuh backend).
