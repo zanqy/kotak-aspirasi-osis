@@ -20,7 +20,9 @@ export default function VerifikasiPage() {
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    if (status === "ready" && !user) router.replace("/aksara/masuk?next=/aksara/verifikasi");
+    if (status !== "loading" && !user) {
+      router.replace("/aksara/masuk?next=/aksara/verifikasi");
+    }
   }, [status, user, router]);
 
   useEffect(() => {
@@ -81,6 +83,14 @@ export default function VerifikasiPage() {
     return (
       <div className="min-h-screen flex items-center justify-center bg-[#F2ECDE]">
         <p className="font-[var(--font-caveat)] text-xl">Memuat…</p>
+      </div>
+    );
+  }
+
+  if (!user) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-[#F2ECDE]">
+        <p className="font-[var(--font-caveat)] text-xl">Mengalihkan ke halaman masuk…</p>
       </div>
     );
   }

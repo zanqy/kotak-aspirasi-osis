@@ -45,12 +45,6 @@ export default function BoardPage() {
   const canEdit = Boolean(user && verified);
   const canView = isPublicBoard || Boolean(user);
 
-  // papan pribadi butuh login
-  useEffect(() => {
-    if (status === "loading") return;
-    if (!isPublicBoard && !user) return;
-  }, [status, user, isPublicBoard]);
-
   useEffect(() => {
     if (status === "loading") return;
     if (!canView) return;
