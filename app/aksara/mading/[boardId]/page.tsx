@@ -133,7 +133,7 @@ export default function BoardPage() {
     }
   }, [undoItem, user, boardId]);
 
-  if (status === "loading" || !loaded) {
+  if (status === "loading" || (canView && !loaded)) {
     return (
       <div className="min-h-screen bg-[#E9DDC4] flex flex-col items-center justify-center gap-2 px-6 text-center">
         <p className="font-[var(--font-caveat)] text-xl">Memuat papan…</p>
@@ -146,7 +146,7 @@ export default function BoardPage() {
       <div className="min-h-screen bg-[#E9DDC4] flex flex-col items-center justify-center gap-3 px-6 text-center">
         <p className="font-[var(--font-caveat)] text-2xl">Papan ini perlu masuk dulu</p>
         <a
-          href="/aksara/masuk"
+          href={`/aksara/masuk?next=${encodeURIComponent(`/aksara/mading/${slug}`)}`}
           className="bg-[#221D15] text-[#F2ECDE] rounded-full px-5 py-2 font-[var(--font-fraunces)] font-bold no-underline"
         >
           Masuk
