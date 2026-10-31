@@ -1,42 +1,27 @@
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
+import { useRouter } from "next/navigation";
+import { getClientAuth } from "@/lib/firebase-client";
+import { onAuthStateChanged } from "firebase/auth";
 import Board from "@/components/aksara/Board";
 import ItemSheet from "@/components/aksara/ItemSheet";
 import ContextMenu from "@/components/aksara/ContextMenu";
+import {
+  subscribeItems,
+  addItem,
+  updateItem,
+  deleteItem,
+  type BoardItem,
+} from "@/lib/aksara/board";
 
-type BoardItem = {
-  id: string;
-  kind: string;
-  x: number;
-  y: number;
-  rot: number;
-  scale?: number;
-  text?: string;
-  name?: string;
-  color?: string;
-  shape?: string;
-  paper?: string;
-  font?: string;
-  ink?: string;
-  sticker?: string;
-  stamp?: string;
-  shadow?: string;
-  align?: string;
-  ratio?: string;
-  image?: string;
-  pin?: string;
-  pinPos?: string;
-  tape?: string;
-  tapePos?: string;
-  filter?: string;
-  frame?: string;
-  highlight?: string;
-};
+const BOARD_ID = "umum";
 
 export default function MadingPage() {
   const [items, setItems] = useState<BoardItem[]>([]);
   const [loaded, setLoaded] = useState(false);
+  const [user, setUser] = useState<any>(null);
+  const [authLoading, setAuthLoading] = useState(true);
   const [sheetOpen, setSheetOpen] = useState(false);
   const [editingItem, setEditingItem] = useState<BoardItem | null>(null);
   const [ctxOpen, setCtxOpen] = useState(false);
@@ -44,24 +29,33 @@ export default function MadingPage() {
   const [ctxAnchor, setCtxAnchor] = useState<{ x: number; y: number } | null>(null);
   const [undoItem, setUndoItem] = useState<BoardItem | null>(null);
 
-  useEffect(() => {
-    try {
-      const raw = localStorage.getItem("aksara_papan_v1");
-      const data = raw ? JSON.parse(raw) : [];
-      setItems(Array.isArray(data) ? data : []);
-    } catch {
-      setItems([]);
-    }
-    setLoaded(true);
-  }, []);
+  const router = useRouter();
 
-  const saveItems = useCallback((newItems: BoardItem[]) => {
+  // Auth check
+  useEffect(() => {
+    const auth = getClientAuth();
+    const unsub = onAuthStateChanged(auth, (u) => {
+      if (!u) {
+        router.push("/aksara/masuk");
+        return;
+      }
+      setUser(u);
+    });
+    return () => unsub();
+  }, [router]);
+
+  // Firestore real-time subscription
+  useEffect(() => {
+    if (!user) return;
+    const unsub = subscribeItems(BOARD_ID, (data) => {
+      setItems(data);
+      setLoaded(true);
+    });
+    return () => unsub();
+  }, [user]);
+
+  const saveItems = useCallback(async (newItems: BoardItem[]) => {
     setItems(newItems);
-    try {
-      localStorage.setItem("aksara_papan_v1", JSON.stringify(newItems));
-    } catch (e) {
-      console.error("save failed", e);
-    }
   }, []);
 
   function handleItemTap(item: BoardItem) {
@@ -84,19 +78,20 @@ export default function MadingPage() {
     setCtxItem(null);
   }
 
-  function handleCtxDelete() {
-    if (!ctxItem) return;
+  async function handleCtxDelete() {
+    if (!ctxItem?.id) return;
     setUndoItem(ctxItem);
-    saveItems(items.filter((it) => it.id !== ctxItem.id));
+    await deleteItem(BOARD_ID, ctxItem.id);
     setCtxOpen(false);
     setCtxItem(null);
     setTimeout(() => setUndoItem(null), 6000);
   }
 
-  function handleCtxDuplicate() {
-    if (!ctxItem) return;
-    const dup = { ...ctxItem, id: `p${Date.now().toString(36)}${Math.random().toString(36).slice(2, 6)}`, x: ctxItem.x + 30, y: ctxItem.y + 30 };
-    saveItems([...items, dup]);
+  async function handleCtxDuplicate() {
+    if (!ctxItem || !user) return;
+    const dup = { ...ctxItem, x: ctxItem.x + 30, y: ctxItem.y + 30 };
+    delete (dup as any).id;
+    await addItem(BOARD_ID, dup, user.uid);
     setCtxOpen(false);
     setCtxItem(null);
   }
@@ -117,9 +112,11 @@ export default function MadingPage() {
     setCtxItem(null);
   }
 
-  function handleUndo() {
-    if (undoItem) {
-      saveItems([...items, undoItem]);
+  async function handleUndo() {
+    if (undoItem && user) {
+      const item = { ...undoItem };
+      delete (item as any).id;
+      await addItem(BOARD_ID, item, user.uid);
       setUndoItem(null);
     }
   }
@@ -129,12 +126,12 @@ export default function MadingPage() {
     setSheetOpen(true);
   }
 
-  function handleSaveItem(item: BoardItem) {
-    if (editingItem) {
-      const newItems = items.map((it) => (it.id === item.id ? item : it));
-      saveItems(newItems);
+  async function handleSaveItem(item: BoardItem) {
+    if (!user) return;
+    if (editingItem && editingItem.id) {
+      await updateItem(BOARD_ID, editingItem.id, item);
     } else {
-      saveItems([...items, item]);
+      await addItem(BOARD_ID, item, user.uid);
     }
     setSheetOpen(false);
     setEditingItem(null);
@@ -145,7 +142,7 @@ export default function MadingPage() {
     setEditingItem(null);
   }
 
-  if (!loaded) {
+  if (authLoading || !loaded) {
     return (
       <div className="min-h-screen bg-[#E9DDC4] flex items-center justify-center">
         <p className="font-[var(--font-caveat)] text-xl">Memuat papan...</p>
