@@ -16,6 +16,21 @@ export default function DaftarPage() {
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  function friendlyError(code: string) {
+    if (code.includes("network-request-failed"))
+      return "Koneksi ke Google terblokir — matikan VPN / adblock, lalu coba lagi.";
+    if (code.includes("operation-not-allowed"))
+      return "Login belum diaktifkan. Hubungi admin.";
+    if (code.includes("email-already-in-use"))
+      return "NIS ini sudah terdaftar. Langsung Masuk saja.";
+    if (code.includes("invalid-credential") || code.includes("wrong-password") || code.includes("user-not-found"))
+      return "NIS atau password salah.";
+    if (code.includes("weak-password"))
+      return "Password minimal 6 karakter.";
+    if (code.includes("too-many-requests"))
+      return "Kebanyakan mencoba. Tunggu sebentar lalu ulangi.";
+    return "Gagal. Coba lagi sebentar.";
+  }
 
   async function handleRegister(e: React.FormEvent) {
     e.preventDefault();
@@ -37,7 +52,7 @@ export default function DaftarPage() {
       });
       router.push("/aksara");
     } catch (err: any) {
-      setError(err?.message || "Daftar gagal");
+      setError(friendlyError(String((err as any)?.code || err)));
     } finally {
       setLoading(false);
     }
