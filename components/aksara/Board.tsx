@@ -1,6 +1,7 @@
 "use client";
 
 import { useRef, useState, useCallback, useEffect } from "react";
+import ItemCard from "@/components/aksara/ItemCard";
 
 const BOARD_W = 1400;
 const BOARD_H = 1400;
@@ -229,9 +230,7 @@ export default function Board({ items, onItemTap, onItemLongPress }: BoardProps)
             }}
             onPointerDown={(e) => handleItemPointerDown(item, e)}
           >
-            <div className="bg-[#FFF3B0] rounded-sm shadow-[0_3px_6px_rgba(24,20,16,0.3)] px-3 py-2 min-w-[80px] max-w-[200px] font-[var(--font-caveat)] font-semibold text-[1rem] text-[#2b241c]">
-              {item.text || "★"}
-            </div>
+            <ItemCard item={item} />
           </div>
         ))}
       </div>
