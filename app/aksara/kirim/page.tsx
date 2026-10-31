@@ -1,16 +1,15 @@
 "use client";
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
-import { useState, useEffect } from "react";
-import { useRouter } from "next/navigation";
+import { useState } from "react";
 import { getClientDb } from "@/lib/firebase-client";
-import { useAksaraAuth } from "@/lib/aksara/useAksaraAuth";
+import { useAuth } from "@/lib/aksara/auth";
 import { collection, addDoc, serverTimestamp } from "firebase/firestore";
 import Link from "next/link";
+import AuthGate from "@/components/aksara/AuthGate";
 
-export default function KirimPage() {
-  const router = useRouter();
-  const { user, authLoading, authError } = useAksaraAuth();
+function KirimInner() {
+  const { user, student } = useAuth();
   const [to, setTo] = useState("");
   const [from, setFrom] = useState("");
   const [msg, setMsg] = useState("");
@@ -19,10 +18,6 @@ export default function KirimPage() {
   const [sent, setSent] = useState(false);
   const [resi, setResi] = useState("");
 
-  useEffect(() => {
-    if (!authLoading && !user) router.push("/aksara/masuk");
-  }, [authLoading, user, router]);
-
   async function handleSend(e: React.FormEvent) {
     e.preventDefault();
     if (!msg.trim() || !to.trim()) return;
@@ -30,7 +25,7 @@ export default function KirimPage() {
     try {
       const db = getClientDb();
       const rcv = to.trim();
-      const snd = anon ? "Anonim" : (from.trim() || "Tanpa nama");
+      const snd = anon ? "Anonim" : (from.trim() || student?.nama || "Tanpa nama");
       await addDoc(collection(db, "letters"), {
         to: rcv,
         from: snd,
@@ -57,38 +52,8 @@ export default function KirimPage() {
     setResi("");
   }
 
-  if (authLoading) {
-    return (
-      <div className="min-h-screen bg-[#F2ECDE] flex flex-col items-center justify-center gap-2 px-6 text-center">
-        <p className="font-[var(--font-caveat)] text-xl">Memuat...</p>
-        {authError && (
-          <p className="font-[var(--font-spectral)] italic text-[0.85rem] text-[#221D15]/60">
-            Koneksi ke server lambat / terblokir. Coba matikan VPN / adblock lalu refresh.
-          </p>
-        )}
-      </div>
-    );
-  }
-
   return (
-    <div className="min-h-screen bg-[#F2ECDE]">
-      <header className="sticky top-0 z-20 flex justify-between items-center px-4 py-2.5 bg-[#F2ECDE]/94 backdrop-blur-sm border-b border-[#221D15]/25">
-        <span className="font-[var(--font-fraunces)] font-extrabold text-[1.25rem]">
-          AKSARA<span className="text-[#C03B21]">.</span>
-        </span>
-        <nav className="flex gap-1">
-          <a href="/aksara" className="text-[10px] tracking-[0.12em] uppercase font-[var(--font-ibm-plex-mono)] font-medium text-[#221D15] no-underline px-3 py-1.5 rounded-full">
-            Mading
-          </a>
-          <a href="/aksara/profil" className="text-[10px] tracking-[0.12em] uppercase font-[var(--font-ibm-plex-mono)] font-medium text-[#221D15] no-underline px-3 py-1.5 rounded-full">
-            Profil
-          </a>
-          <a href="/aksara/kirim" className="text-[10px] tracking-[0.12em] uppercase font-[var(--font-ibm-plex-mono)] font-medium text-[#221D15] no-underline px-3 py-1.5 rounded-full bg-[#221D15] text-[#F2ECDE]">
-            Kirim
-          </a>
-        </nav>
-      </header>
-
+    <div>
       <main className="max-w-[520px] mx-auto px-4 py-6">
         {/* Cap pos */}
         <div className="flex items-center gap-4 mb-4">
@@ -248,5 +213,13 @@ export default function KirimPage() {
         </p>
       </main>
     </div>
+  );
+}
+
+export default function KirimPage() {
+  return (
+    <AuthGate requireVerified>
+      <KirimInner />
+    </AuthGate>
   );
 }

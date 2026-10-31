@@ -69,16 +69,25 @@ export async function deleteItem(boardId: string, itemId: string) {
 
 export function subscribeItems(
   boardId: string,
-  callback: (items: BoardItem[]) => void
+  callback: (items: BoardItem[]) => void,
+  onError?: (err: unknown) => void
 ) {
   const q = query(itemsCollection(boardId), orderBy("at", "asc"));
-  return onSnapshot(q, (snap) => {
-    const items: BoardItem[] = snap.docs.map((d) => ({
-      id: d.id,
-      ...(d.data() as unknown as BoardItem),
-    }));
-    callback(items);
-  });
+  return onSnapshot(
+    q,
+    (snap) => {
+      const items: BoardItem[] = snap.docs.map((d) => ({
+        id: d.id,
+        ...(d.data() as unknown as BoardItem),
+      }));
+      callback(items);
+    },
+    (err) => {
+      // jangan biarkan papan menggantung di "Memuat…" kalau rules/network menolak
+      callback([]);
+      if (onError) onError(err);
+    }
+  );
 }
 
 export async function getItems(boardId: string): Promise<BoardItem[]> {
