@@ -23,10 +23,13 @@ type BoardProps = {
   items: BoardItem[];
   onItemTap?: (item: BoardItem) => void;
   onItemLongPress?: (item: BoardItem, el: HTMLElement) => void;
+  onBoardTap?: (x: number, y: number) => void;
+  onClear?: () => void;
+  canEdit?: boolean;
   folioLabel?: string;
 };
 
-export default function Board({ items, onItemTap, onItemLongPress, folioLabel }: BoardProps) {
+export default function Board({ items, onItemTap, onItemLongPress, onBoardTap, onClear, canEdit, folioLabel }: BoardProps) {
   const rootRef = useRef<HTMLDivElement>(null);
   const stageRef = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLDivElement>(null);
@@ -130,6 +133,8 @@ export default function Board({ items, onItemTap, onItemLongPress, folioLabel }:
     }
   }, []);
 
+  const ordered = [...items].sort((a, b) => (a.z ?? 0) - (b.z ?? 0));
+
   // ---------- render tempelan (DOM asli dari renderer v1) ----------
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -137,7 +142,7 @@ export default function Board({ items, onItemTap, onItemLongPress, folioLabel }:
     canvas.innerHTML = "";
     setCount(items.length);
 
-    items.forEach((it) => {
+    ordered.forEach((it) => {
       let el: HTMLElement;
       try {
         el = buildItem(it as any);
@@ -195,11 +200,13 @@ export default function Board({ items, onItemTap, onItemLongPress, folioLabel }:
     };
   }, [fit]);
 
-  // ---------- pan ----------
+  // ---------- pan + ketuk papan kosong ----------
+  const downAt = useRef<{ x: number; y: number } | null>(null);
   const onPointerDown = useCallback((e: React.PointerEvent) => {
     const t = e.target as HTMLElement;
     if (t.closest(".item")) return;
     drag.current = { active: true, x: e.clientX, y: e.clientY };
+    downAt.current = { x: e.clientX, y: e.clientY };
     stageRef.current?.classList.add("grabbing");
     (e.currentTarget as HTMLElement).setPointerCapture?.(e.pointerId);
   }, []);
@@ -219,10 +226,24 @@ export default function Board({ items, onItemTap, onItemLongPress, folioLabel }:
     [clampView, applyView]
   );
 
-  const onPointerUp = useCallback(() => {
+  const onPointerUp = useCallback((e: React.PointerEvent) => {
+    const wasDrag = drag.current.active;
     drag.current.active = false;
     stageRef.current?.classList.remove("grabbing");
-  }, []);
+    const d = downAt.current;
+    downAt.current = null;
+    if (!wasDrag || !d || !onBoardTap) return;
+    const moved = Math.hypot(e.clientX - d.x, e.clientY - d.y);
+    const t = e.target as HTMLElement;
+    if (moved > 6 || (t.closest && t.closest(".item"))) return;
+    const stage = stageRef.current;
+    if (!stage) return;
+    const r = stage.getBoundingClientRect();
+    const v = view.current;
+    const bx = Math.round((e.clientX - r.left - v.x) / v.s);
+    const by = Math.round((e.clientY - r.top - v.y) / v.s);
+    onBoardTap(bx, by);
+  }, [onBoardTap]);
 
   // ---------- zoom roda ----------
   const onWheel = useCallback(
@@ -309,7 +330,7 @@ export default function Board({ items, onItemTap, onItemLongPress, folioLabel }:
             <b>AKSARA</b> · HAL. 1/1
           </span>
           <span>{count} tempelan</span>
-          <span>{count > 0 ? "ketuk tempelan untuk mengubah" : ""}</span>
+          <span>ketuk tempelan untuk memutar</span>
           <span>{folioLabel || "EDISI 231"}</span>
           <div className="tools">
             <button
@@ -337,6 +358,11 @@ export default function Board({ items, onItemTap, onItemLongPress, folioLabel }:
             <button type="button" className="tool small" aria-label="Paskan" onClick={showAll}>
               fit
             </button>
+            {canEdit && onClear && (
+              <button type="button" className="tool" aria-label="Kosongkan papan" onClick={onClear}>
+                ×
+              </button>
+            )}
           </div>
         </div>
       </article>

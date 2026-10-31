@@ -420,9 +420,18 @@ function imgUrl(ref: string | null) {
 
 function attachDrag(_el: HTMLElement, _data: any){}
 
+// Opsi yang dipakai lembar tempel — disalin dari aksara/index.html (baris 733-739).
+const SPS = [["tr", "Kanan atas"], ["tl", "Kiri atas"]];
+const SGS = [["normal", "Normal"], ["kecil", "Kecil"], ["besar", "Besar"], ["jumbo", "Jumbo"]];
+const PINS = [["merah", "Merah"], ["kuning", "Kuning"], ["biru", "Biru"], ["hijau", "Hijau"], ["hitam", "Hitam"]];
+const PINS_POS = [["tengah", "Tengah"], ["kiri", "Kiri"]];
+const ALIGNS = [["kiri", "Kiri"], ["tengah", "Tengah"], ["kanan", "Kanan"]];
+const SHADOWS = [["lembut", "Lembut"], ["tegas", "Tegas"], ["panjang", "Panjang"]];
+
 export const V1 = {
   NOTE_COLORS, SHAPES, STAMP_TEXT, STAMPS, STICKERS, STICKER_GLYPH,
   RATIOS, FILTERS, PAPERS, TAPES, FONTS, INKS, FRAMES, HIGHLIGHTS, TAPE_POS,
+  SPS, SGS, PINS, PINS_POS, ALIGNS, SHADOWS,
 };
 
 export function buildItem(data: AnyRec): HTMLElement {
