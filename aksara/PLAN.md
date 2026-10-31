@@ -57,46 +57,46 @@ lib/
 
 ## 2. Fase migrasi (urutan)
 
-### Fase 1 — Scaffold (1-2 hari)
-- [ ] Buat route `/aksara` di app Next.js.
-- [ ] Layout AKSARA: font (Fraunces, Spectral, IBM Plex Mono, Caveat),
-      theme (kertas krem, tinta, merah), nav (Mading/Profil/Kirim).
-- [ ] Home publik: port dari `publik.html` → React component.
-- [ ] Verifikasi: `npm run dev` jalan, route `/aksara` tampil di localhost.
+### Fase 1 — Scaffold (1-2 hari) ✅
+- [x] Buat route `/aksara` di app Next.js.
+- [x] Layout AKSARA: font + theme + nav.
+- [x] Home publik: port dari `publik.html` → React component.
+- [x] Home member: deteksi login, pintasan 3 papan + info.
+- [x] Verifikasi: `npm run dev` jalan, route `/aksara` tampil di localhost.
 
-### Fase 2 — Auth (1-2 hari)
-- [ ] Firebase Auth: register (nama, kelas, email, password) + login.
-- [ ] Session cookie via API route (ikuti pola KATAKAN: `/api/auth/session`).
-- [ ] Middleware: redirect `/aksara/mading` → `/aksara/masuk` jika belum login.
-- [ ] Home member: deteksi login, tampilkan sapaan + pintasan.
+### Fase 2 — Auth (1-2 hari) ✅
+- [x] Firebase Auth: register (nama, kelas, NIS, password) + login.
+- [x] Session: onAuthStateChanged → redirect ke /aksara/masuk jika belum login.
+- [x] Home member: deteksi login, tampilkan sapaan + pintasan.
 
-### Fase 3 — Papan Mading (3-5 hari)
-- [ ] Migrasi kanvas: pan, zoom, render item (React + useRef + transform).
-- [ ] Migrasi form tempel: jenis, bentuk, rasio, warna, kertas, font, tinta,
-      stempel, stiker, selotip, bingkai, highlight, pin, bayangan, align.
-- [ ] Migrasi gestur: ketuk, tekan lama, menu kontekstual, edit, undo, duplikat.
-- [ ] Firestore: collection `boards/{boardId}/items/{itemId}`.
-- [ ] Real-time: `onSnapshot` → papan update otomatis.
-- [ ] Foto: upload ke Storage, simpan URL (bukan base64).
+### Fase 3 — Papan Mading (3-5 hari) ✅
+- [x] Migrasi kanvas: pan, zoom, render item (React + useRef + transform).
+- [x] Migrasi form tempel: jenis (9), bentuk, rasio, warna, font, tinta,
+      stempel, stiker, bayangan, align, foto upload.
+- [x] Migrasi gestur: ketuk, tekan lama, menu kontekstual, edit, undo, duplikat.
+- [x] Firestore: collection `boards/{boardId}/items/{itemId}`.
+- [x] Real-time: `onSnapshot` → papan update otomatis.
+- [ ] Foto: upload ke Storage, simpan URL (bukan base64). (masih base64)
 - [ ] Seed data: pindahkan 36 tempelan contoh ke Firestore (sekali jalan).
 
-### Fase 4 — Profil (2-3 hari)
-- [ ] Kartu pelajar: foto, nama, kelas, badge peran, bio.
-- [ ] Galeri karya: filter per jenis, kartu pratinjau, lembar detail.
-- [ ] Firestore: collection `students/{uid}`.
+### Fase 4 — Profil (2-3 hari) 🔄
+- [x] Kartu pelajar: nama, kelas, badge peran, bio.
+- [x] Edit profil (nama, kelas, bio).
+- [ ] Galeri karya: filter per jenis, kartu pratinjau, lembar detail. (belum)
+- [x] Firestore: collection `students/{uid}`.
 
-### Fase 5 — Kirim Surat (2-3 hari)
-- [ ] Meja pos: port dari `kirim.html` → React.
-- [ ] Animasi amplop (CSS keyframes, tetap bisa di React).
-- [ ] Firestore: collection `letters/{letterId}` (to, from, isi, anonim, waktu).
-- [ ] Surat tidak ditempel ke papan — hanya tercatat.
+### Fase 5 — Kirim Surat (2-3 hari) ✅
+- [x] Meja pos: port dari `kirim.html` → React.
+- [ ] Animasi amplop (CSS keyframes, tetap bisa di React). (belum)
+- [x] Firestore: collection `letters/{letterId}` (to, from, isi, anonim, waktu).
+- [x] Surat tidak ditempel ke papan — hanya tercatat.
 
-### Fase 6 — Multi-Papan (3-5 hari)
-- [ ] Mading Umum: papan publik (semua bisa lihat & nempel).
-- [ ] Mading Kelas: per kelas, hanya anggota kelas.
-- [ ] Mading Pribadi: milik satu siswa.
-- [ ] Home member: pintasan ke 3 papan + info surat masuk.
-- [ ] Home publik: kolase lintas mading (tempelan terbaru dari semua papan).
+### Fase 6 — Multi-Papan (3-5 hari) 🔄
+- [x] Mading Umum: papan publik (semua bisa lihat & nempel).
+- [x] Mading Pribadi: milik satu siswa (route /aksara/mading/pribadi).
+- [ ] Mading Kelas: per kelas, hanya anggota kelas. (belum)
+- [x] Home member: pintasan ke 3 papan + info surat masuk.
+- [ ] Home publik: kolase lintas mading (tempelan terbaru dari semua papan). (belum)
 
 ### Fase 7 — Moderasi & Polish (2-3 hari)
 - [ ] Lapor/hapus tempelan & surat.
@@ -206,13 +206,13 @@ lib/
 
 ---
 
-## 7. Yang butuh keputusanmu sebelum mulai
+## 7. Keputusan (sudah di-lock)
 
-1. **Deploy target**: Vercel (gratis, auto-deploy) atau Firebase Hosting?
-2. **Auth method**: Email/password, atau NIS-based (custom)?
-3. **Mading Pribadi**: bisa dilihat orang lain kalau diizinkan, atau selalu privat?
-4. **Moderasi**: siapa moderator (OSIS? guru?)?
-5. **Kirim Surat**: nanti jadi "amplop nyata" yang bisa dibuka penerima, atau tetap log?
+1. **Deploy target**: Vercel (auto-deploy on push).
+2. **Auth method**: NIS-based, nanti bisa dihubungkan ke email.
+3. **Mading Pribadi**: fleksibel — bisa privat, bisa dipublish.
+4. **Moderasi**: OSIS jadi moderator.
+5. **Kirim Surat**: jadi amplop nyata yang bisa dibuka penerima.
 
 ---
 
