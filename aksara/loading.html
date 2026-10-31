@@ -92,37 +92,37 @@ main{max-width:520px;margin:0 auto;padding:10px 14px 60px;display:grid;gap:18px}
 /* ============ 3. MESIN CETAK (final) ============ */
 .pressScene{position:relative;width:280px;height:218px;overflow:hidden}
 .pressFade{position:absolute;inset:0}
-@keyframes fadeio{0%{opacity:0}5%{opacity:1}88%{opacity:1}96%,100%{opacity:0}}
-.pressFade{animation:fadeio 3.6s linear infinite}
+@keyframes fadeio{0%{opacity:0}3%{opacity:1}90%{opacity:1}97%,100%{opacity:0}}
+.pressFade{animation:fadeio 2.4s linear infinite}
 .typeRow{display:flex;gap:4px;justify-content:center;margin-top:8px}
 .typeRow b{font:900 22px var(--fd);background:linear-gradient(180deg,#57493c,#221D15 70%);color:var(--paper);
   width:30px;height:40px;display:grid;place-items:center;border-radius:4px;
   box-shadow:inset 0 -6px 0 rgba(0,0,0,.4),0 3px 0 rgba(0,0,0,.25);
-  animation:typedrop 3.6s ease-in-out infinite}
+  animation:typedrop 2.4s cubic-bezier(.2,.9,.3,1.2) infinite}
 .typeRow b.dot{background:linear-gradient(180deg,#d94a35,#8e1f10)}
-.typeRow b:nth-child(1){animation-delay:.3s}.typeRow b:nth-child(2){animation-delay:.6s}
-.typeRow b:nth-child(3){animation-delay:.9s}.typeRow b:nth-child(4){animation-delay:1.2s}
-.typeRow b:nth-child(5){animation-delay:1.5s}.typeRow b:nth-child(6){animation-delay:1.8s}
-@keyframes typedrop{0%{transform:translateY(0)}3%{transform:translateY(13px)}8%,100%{transform:translateY(0)}}
+.typeRow b:nth-child(1){animation-delay:.15s}.typeRow b:nth-child(2){animation-delay:.35s}
+.typeRow b:nth-child(3){animation-delay:.55s}.typeRow b:nth-child(4){animation-delay:.8s}
+.typeRow b:nth-child(5){animation-delay:1.05s}.typeRow b:nth-child(6){animation-delay:1.35s}
+@keyframes typedrop{0%{transform:translateY(0)}5%{transform:translateY(15px)}9%{transform:translateY(-2px)}13%,100%{transform:translateY(0)}}
 .burst{position:absolute;inset:0;pointer-events:none}
 .burst i{position:absolute;top:58px;width:6px;height:6px;border-radius:50%;opacity:0;
-  animation:burst 3.6s linear infinite}
-@keyframes burst{0%{opacity:0;transform:translate(0,0) scale(.5)}2%{opacity:1}
-  8%{opacity:0;transform:translate(var(--dx),15px) scale(1.1)}100%{opacity:0}}
+  animation:burst 2.4s linear infinite}
+@keyframes burst{0%{opacity:0;transform:translate(0,0) scale(.5)}3%{opacity:1}
+  11%{opacity:0;transform:translate(var(--dx),15px) scale(1.1)}100%{opacity:0}}
 .paperFeed{width:212px;background:#FDFBF4;border-radius:2px;margin:10px auto 0;padding:10px 12px 12px;
   box-shadow:0 8px 14px -8px rgba(24,20,16,.45);text-align:center;
-  animation:feed 3.6s ease-in-out infinite}
+  animation:feed 2.4s ease-in-out infinite}
 @keyframes feed{0%{transform:translateY(-5px)}70%,100%{transform:translateY(5px)}}
 .inkLine{display:flex;justify-content:center;gap:2px;font:900 26px var(--fd);color:var(--ink)}
-.inkLine span{display:inline-block;opacity:0;animation:inkw 3.6s ease infinite}
-.inkLine span:nth-child(1){animation-delay:.45s}.inkLine span:nth-child(2){animation-delay:.75s}
-.inkLine span:nth-child(3){animation-delay:1.05s}.inkLine span:nth-child(4){animation-delay:1.35s}
-.inkLine span:nth-child(5){animation-delay:1.65s}.inkLine span:nth-child(6){animation-delay:1.95s;color:var(--red)}
-@keyframes inkw{0%{opacity:0;transform:translateY(4px) scale(.9)}4%{opacity:1;transform:none}100%{opacity:1}}
+.inkLine span{display:inline-block;opacity:0;animation:inkw 2.4s ease infinite}
+.inkLine span:nth-child(1){animation-delay:.27s}.inkLine span:nth-child(2){animation-delay:.47s}
+.inkLine span:nth-child(3){animation-delay:.67s}.inkLine span:nth-child(4){animation-delay:.92s}
+.inkLine span:nth-child(5){animation-delay:1.17s}.inkLine span:nth-child(6){animation-delay:1.47s;color:var(--red)}
+@keyframes inkw{0%{opacity:0;transform:translateY(4px) scale(.9)}6%{opacity:1;transform:none}100%{opacity:1}}
 .edisi{margin-top:6px;font:700 10px var(--fm);letter-spacing:.24em;color:var(--red);
   border:1.5px solid rgba(192,59,33,.7);border-radius:4px;display:inline-block;padding:2px 8px;
-  opacity:0;transform:rotate(-6deg);animation:edisiin 3.6s ease infinite;animation-delay:2.3s}
-@keyframes edisiin{0%{opacity:0;transform:scale(1.5) rotate(-6deg)}5%{opacity:1;transform:scale(1) rotate(-6deg)}100%{opacity:1}}
+  opacity:0;transform:rotate(-6deg);animation:edisiin 2.4s ease infinite;animation-delay:1.7s}
+@keyframes edisiin{0%{opacity:0;transform:scale(1.5) rotate(-6deg)}7%{opacity:1;transform:scale(1) rotate(-6deg)}100%{opacity:1}}
 .roller{margin-top:14px;width:190px;height:20px;border-radius:99px;position:relative;
   background:repeating-linear-gradient(90deg,var(--ink) 0 10px,#4a4036 10px 20px);
   animation:roll 1s linear infinite;box-shadow:0 4px 6px -2px rgba(24,20,16,.5)}
@@ -170,12 +170,12 @@ footer{max-width:520px;margin:0 auto;padding:0 18px 40px;font:italic 400 .85rem 
         <div class="pressFade">
           <div class="typeRow"><b>A</b><b>K</b><b>S</b><b>A</b><b>R</b><b class="dot">.</b></div>
           <div class="burst">
-            <i style="--dx:-16px;left:55px;background:var(--red);animation-delay:.3s"></i>
-            <i style="--dx:-9px;left:89px;background:var(--ink);animation-delay:.6s"></i>
-            <i style="--dx:-3px;left:123px;background:var(--red);animation-delay:.9s"></i>
-            <i style="--dx:3px;left:157px;background:var(--ink);animation-delay:1.2s"></i>
-            <i style="--dx:9px;left:191px;background:var(--red);animation-delay:1.5s"></i>
-            <i style="--dx:16px;left:225px;background:var(--ink);animation-delay:1.8s"></i>
+            <i style="--dx:-16px;left:55px;background:var(--red);animation-delay:.15s"></i>
+            <i style="--dx:-9px;left:89px;background:var(--ink);animation-delay:.35s"></i>
+            <i style="--dx:-3px;left:123px;background:var(--red);animation-delay:.55s"></i>
+            <i style="--dx:3px;left:157px;background:var(--ink);animation-delay:.8s"></i>
+            <i style="--dx:9px;left:191px;background:var(--red);animation-delay:1.05s"></i>
+            <i style="--dx:16px;left:225px;background:var(--ink);animation-delay:1.35s"></i>
           </div>
           <div class="paperFeed">
             <div class="inkLine"><span>A</span><span>K</span><span>S</span><span>A</span><span>R</span><span>.</span></div>
