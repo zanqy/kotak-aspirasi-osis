@@ -1,4 +1,5 @@
 "use client";
+/* eslint-disable @typescript-eslint/no-explicit-any */
 
 import { useState, useEffect, useCallback } from "react";
 import { useRouter, useParams } from "next/navigation";
@@ -194,7 +195,6 @@ export default function BoardPage() {
 
       <ContextMenu
         open={ctxOpen}
-        item={ctxItem}
         anchor={ctxAnchor}
         onEdit={handleCtxEdit}
         onMove={() => { setCtxOpen(false); setCtxItem(null); }}

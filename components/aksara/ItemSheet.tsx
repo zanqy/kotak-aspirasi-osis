@@ -1,4 +1,5 @@
 "use client";
+/* eslint-disable @typescript-eslint/no-explicit-any */
 
 import { useState } from "react";
 import ItemCard from "@/components/aksara/ItemCard";
@@ -56,7 +57,7 @@ export default function ItemSheet({ initial, onSave, onCancel }: ItemSheetProps)
   const [font, setFont] = useState(initial?.font || "tangan");
   const [sticker, setSticker] = useState(initial?.sticker || "tanpa");
   const [stamp, setStamp] = useState(initial?.stamp || "tanpa");
-  const [paper, setPaper] = useState(initial?.paper || "polos");
+  const [paper] = useState(initial?.paper || "polos");
   const [shadow, setShadow] = useState(initial?.shadow || "lembut");
   const [align, setAlign] = useState(initial?.align || "kiri");
   const [ratio, setRatio] = useState(initial?.ratio || "r11");

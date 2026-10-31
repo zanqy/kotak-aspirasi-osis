@@ -1,27 +1,13 @@
 "use client";
-
-import { CSSProperties } from "react";
+/* eslint-disable @typescript-eslint/no-explicit-any */
 
 type ItemCardProps = {
-  item: any;
+  item: Record<string, any>;
   onTap?: () => void;
-};
-
-const PAPER_COLORS: Record<string, string> = {
-  polos: "transparent",
-  garis: "transparent",
-  kotak: "transparent",
-  polka: "transparent",
-  strip: "transparent",
-  kraft: "#D9B98A",
-  daur: "#E8DCC4",
-  koran: "#F1E0C4",
 };
 
 export default function ItemCard({ item }: ItemCardProps) {
   const kind = item.kind || "note";
-  const rot = item.rot || 0;
-  const scale = item.scale || 1;
   const color = item.color || "#FFF3B0";
   const paper = item.paper || "polos";
   const font = item.font || "tangan";
@@ -29,7 +15,6 @@ export default function ItemCard({ item }: ItemCardProps) {
   const sticker = item.sticker || "tanpa";
   const stamp = item.stamp || "tanpa";
   const shadow = item.shadow || "lembut";
-  const align = item.align || "kiri";
   const shape = item.shape || "sq";
   const text = item.text || "";
   const name = item.name || "";

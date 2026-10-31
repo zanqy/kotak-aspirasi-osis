@@ -34,8 +34,6 @@ export default function Board({ items, onItemTap, onItemLongPress }: BoardProps)
   const longPressTimer = useRef<NodeJS.Timeout | null>(null);
   const moved = useRef(false);
 
-  const [ready, setReady] = useState(false);
-
   // Fit view on mount
   useEffect(() => {
     function fit() {
@@ -45,7 +43,6 @@ export default function Board({ items, onItemTap, onItemLongPress }: BoardProps)
       if (w === 0 || h === 0) return;
       const s = Math.min(w / BOARD_W, h / BOARD_H) * 0.94;
       setView({ x: (w - BOARD_W * s) / 2, y: (h - BOARD_H * s) / 2, s });
-      setReady(true);
     }
     fit();
     const t = setTimeout(fit, 200);

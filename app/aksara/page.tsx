@@ -1,7 +1,7 @@
 "use client";
+/* eslint-disable @typescript-eslint/no-explicit-any */
 
 import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { getClientAuth, getClientDb } from "@/lib/firebase-client";
 import { onAuthStateChanged } from "firebase/auth";
@@ -23,7 +23,6 @@ type Student = {
 };
 
 export default function AksaraHome() {
-  const router = useRouter();
   const [user, setUser] = useState<any>(null);
   const [student, setStudent] = useState<Student | null>(null);
   const [authLoading, setAuthLoading] = useState(true);

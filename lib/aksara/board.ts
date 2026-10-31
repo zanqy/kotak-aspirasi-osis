@@ -1,5 +1,6 @@
 // lib/aksara/board.ts
 // Board service — Firestore CRUD + real-time sync
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import {
   collection,
   doc,
@@ -42,7 +43,7 @@ export type BoardItem = {
   frame?: string;
   highlight?: string;
   createdBy?: string;
-  at?: any;
+  at?: unknown;
 };
 
 export function itemsCollection(boardId: string) {
@@ -58,7 +59,7 @@ export async function addItem(boardId: string, item: BoardItem, uid: string) {
 
 export async function updateItem(boardId: string, itemId: string, data: Partial<BoardItem>) {
   const ref = doc(getClientDb(), "boards", boardId, "items", itemId);
-  await updateDoc(ref, data as any);
+  await updateDoc(ref, data as Record<string, unknown>);
 }
 
 export async function deleteItem(boardId: string, itemId: string) {
@@ -74,7 +75,7 @@ export function subscribeItems(
   return onSnapshot(q, (snap) => {
     const items: BoardItem[] = snap.docs.map((d) => ({
       id: d.id,
-      ...(d.data() as any),
+      ...(d.data() as unknown as BoardItem),
     }));
     callback(items);
   });
@@ -83,5 +84,5 @@ export function subscribeItems(
 export async function getItems(boardId: string): Promise<BoardItem[]> {
   const q = query(itemsCollection(boardId), orderBy("at", "asc"));
   const snap = await getDocs(q);
-  return snap.docs.map((d) => ({ id: d.id, ...(d.data() as any) }));
+  return snap.docs.map((d) => ({ id: d.id, ...(d.data() as unknown as BoardItem) }));
 }

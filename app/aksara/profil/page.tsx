@@ -1,11 +1,11 @@
 "use client";
+/* eslint-disable @typescript-eslint/no-explicit-any */
 
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { getClientAuth, getClientDb } from "@/lib/firebase-client";
 import { onAuthStateChanged, signOut } from "firebase/auth";
 import { doc, getDoc } from "firebase/firestore";
-import Link from "next/link";
 
 type Student = {
   nama: string;
