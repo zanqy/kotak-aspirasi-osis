@@ -34,13 +34,29 @@ export default function Board({ items, onItemTap, onItemLongPress }: BoardProps)
   const longPressTimer = useRef<NodeJS.Timeout | null>(null);
   const moved = useRef(false);
 
+  const [ready, setReady] = useState(false);
+
   // Fit view on mount
   useEffect(() => {
-    if (!stageRef.current) return;
-    const w = stageRef.current.clientWidth;
-    const h = stageRef.current.clientHeight;
-    const s = Math.min(w / BOARD_W, h / BOARD_H) * 0.94;
-    setView({ x: (w - BOARD_W * s) / 2, y: (h - BOARD_H * s) / 2, s });
+    function fit() {
+      if (!stageRef.current) return;
+      const w = stageRef.current.clientWidth;
+      const h = stageRef.current.clientHeight;
+      if (w === 0 || h === 0) return;
+      const s = Math.min(w / BOARD_W, h / BOARD_H) * 0.94;
+      setView({ x: (w - BOARD_W * s) / 2, y: (h - BOARD_H * s) / 2, s });
+      setReady(true);
+    }
+    fit();
+    const t = setTimeout(fit, 200);
+    const t2 = setTimeout(fit, 500);
+    const ro = new ResizeObserver(fit);
+    if (stageRef.current) ro.observe(stageRef.current);
+    return () => {
+      clearTimeout(t);
+      clearTimeout(t2);
+      ro.disconnect();
+    };
   }, []);
 
   const clampView = useCallback(() => {
