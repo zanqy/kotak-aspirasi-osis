@@ -27,7 +27,8 @@ adanya. React hanya memegang data, auth, dan state.
   filter foto + selotip + bingkai + stempel + stiker + pin + perataan + bayangan +
   ukuran stiker + highlight + posisi selotip + rasio + Kejutan + Opsi lanjutan.
 - Pratinjau live dirakit dari `buildItem()` — kelas 100% sama dengan hasil tempel.
-- Ketuk papan kosong → sheet terbuka dengan titik tempel = titik ketuk (asli).
+- Ketuk papan kosong → kamera geser (bukan buka lembar). Nambah tempelan HANYA lewat
+  tombol + Tempel sesuatu — sesuai permintaan, biar kepencet dikit tidak mengganggu.
 - Rasio foto otomatis dari aspek gambar (asli).
 
 ### Tahap 3 — Gestur & menu ✅ (live)

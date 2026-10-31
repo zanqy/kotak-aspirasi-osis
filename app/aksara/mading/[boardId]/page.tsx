@@ -246,32 +246,27 @@ export default function BoardPage() {
     setPeeked(false);
   }, []);
 
-  // ---------- ketuk papan kosong ----------
+  // ---------- ketuk papan: hanya untuk mode pindah ----------
+  // Nambah tempelan HANYA lewat tombol + Tempel sesuatu (ketuk biasa = geser kamera).
   const handleBoardTap = useCallback(
     (x: number, y: number) => {
-      if (!canEdit) return;
-      if (moveMode && ctxItem) {
-        movePos.current = { x, y };
-        const el = elOf(ctxItem.id || "");
-        if (el) {
-          el.style.left = `${x}px`;
-          el.style.top = `${y}px`;
-        }
-        const g = (window as any).__aksaraGhost as HTMLElement | null;
-        if (g) {
-          const s = canvasScale() * (ctxItem.scale || 1);
-          const r = el?.getBoundingClientRect();
-          if (r && el) {
-            g.style.left = `${r.left + r.width / 2 - el.offsetWidth / 2}px`;
-            g.style.top = `${r.top + r.height / 2 - el.offsetHeight / 2}px`;
-            g.style.transform = `rotate(${ctxRot}deg) scale(${s})`;
-          }
-        }
-        return;
+      if (!canEdit || !moveMode || !ctxItem) return;
+      movePos.current = { x, y };
+      const el = elOf(ctxItem.id || "");
+      if (el) {
+        el.style.left = `${x}px`;
+        el.style.top = `${y}px`;
       }
-      setEditingItem(null);
-      setPastePoint({ x, y });
-      setSheetOpen(true);
+      const g = (window as any).__aksaraGhost as HTMLElement | null;
+      if (g) {
+        const s = canvasScale() * (ctxItem.scale || 1);
+        const r = el?.getBoundingClientRect();
+        if (r && el) {
+          g.style.left = `${r.left + r.width / 2 - el.offsetWidth / 2}px`;
+          g.style.top = `${r.top + r.height / 2 - el.offsetHeight / 2}px`;
+          g.style.transform = `rotate(${ctxRot}deg) scale(${s})`;
+        }
+      }
     },
     [canEdit, moveMode, ctxItem, ctxRot]
   );

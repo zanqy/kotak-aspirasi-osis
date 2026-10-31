@@ -319,7 +319,7 @@ export default function Board({ items, onItemTap, onItemLongPress, onBoardTap, o
             <div className="boardHint" id="boardHint">
               <p className="bhLabel">Papan</p>
               <p className="bhText">
-                Ketuk di mana saja untuk menempel note, kliping, atau foto.
+                Tekan + Tempel sesuatu di bawah untuk menempel karyamu.
               </p>
             </div>
           )}
