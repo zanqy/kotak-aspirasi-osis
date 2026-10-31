@@ -27,7 +27,7 @@ export default function AksaraNav() {
       <Link href="/aksara" className="font-[var(--font-fraunces)] font-extrabold text-[1.15rem] no-underline text-[#221D15] shrink-0">
         AKSARA<span className="text-[#C03B21]">.</span>
       </Link>
-      <nav className="flex gap-1 items-center overflow-x-auto">
+      <nav className="flex flex-1 min-w-0 gap-1 items-center justify-end overflow-x-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
         {LINKS.map((l) => {
           const active = l.match(pathname);
           return (
@@ -46,14 +46,14 @@ export default function AksaraNav() {
           <button
             onClick={handleLogout}
             title={student?.nama || user.email || ""}
-            className="text-[10px] tracking-[0.12em] uppercase font-[var(--font-ibm-plex-mono)] font-medium px-2.5 py-1.5 rounded-full border border-[#221D15]/25 text-[#221D15] bg-transparent cursor-pointer whitespace-nowrap"
+            className="shrink-0 text-[10px] tracking-[0.12em] uppercase font-[var(--font-ibm-plex-mono)] font-medium px-2.5 py-1.5 rounded-full border border-[#221D15]/25 text-[#221D15] bg-transparent cursor-pointer whitespace-nowrap"
           >
             Keluar
           </button>
         ) : (
           <Link
             href="/aksara/masuk"
-            className="text-[10px] tracking-[0.12em] uppercase font-[var(--font-ibm-plex-mono)] font-medium px-2.5 py-1.5 rounded-full bg-[#C03B21] text-[#F2ECDE] no-underline whitespace-nowrap"
+            className="shrink-0 text-[10px] tracking-[0.12em] uppercase font-[var(--font-ibm-plex-mono)] font-medium px-2.5 py-1.5 rounded-full bg-[#C03B21] text-[#F2ECDE] no-underline whitespace-nowrap"
           >
             Masuk
           </Link>

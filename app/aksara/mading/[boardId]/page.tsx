@@ -155,41 +155,68 @@ export default function BoardPage() {
     );
   }
 
-  return (
-    <div className="flex flex-col" style={{ height: "calc(100vh - 3.2rem)" }}>
-      <div className="flex-1 relative">
-        <Board items={items} onItemTap={handleItemTap} onItemLongPress={handleItemLongPress} />
-      </div>
+  const today = new Date().toLocaleDateString("id-ID", {
+    day: "numeric",
+    month: "long",
+    year: "numeric",
+  });
 
-      <div className="sticky bottom-0 z-20 flex justify-between items-center gap-2 px-4 py-2 bg-[#F2ECDE]/95 backdrop-blur-sm border-t border-[#221D15]/25 font-[var(--font-ibm-plex-mono)] text-[10px] tracking-[0.12em] uppercase text-[#221D15]/55">
-        <span className="truncate">
-          {boardName} · {items.length} tempelan
-        </span>
-        <div className="flex gap-2 shrink-0">
+  return (
+    <>
+      <div className="aksara-v1">
+        <main className="shell">
+        <header className="mast">
+          <p className="orn">Diterbitkan MPK · OSIS — Wajib Dibaca, Tidak Wajib Percaya</p>
+          <h1>
+            AKSARA<i>.</i>
+          </h1>
+          <div className="ed">
+            <span>
+              EDISI <b>231</b>
+            </span>
+            <span>{today.toUpperCase()}</span>
+            <span>
+              HARGA: <b>1 SENYUM</b>
+            </span>
+          </div>
+        </header>
+
+        <div className="dataline">
+          <span>
+            <b>PAPAN</b> {boardName}
+          </span>
+          <span>
+            <b>ISI</b> {items.length} tempelan
+          </span>
+          <span>
+            <b>STATUS</b> {canEdit ? "Boleh nempel" : "Hanya baca"}
+          </span>
+        </div>
+
+        <Board
+          items={items as never}
+          onItemTap={handleItemTap as never}
+          onItemLongPress={handleItemLongPress as never}
+          folioLabel={`${boardName.toUpperCase()}`}
+        />
+
+        <div className="madingBar">
           {undoItem && (
-            <button
-              onClick={handleUndo}
-              className="bg-[#C03B21] text-[#F2ECDE] border-0 rounded-full px-3.5 py-1.5 font-[var(--font-fraunces)] font-bold text-[0.8rem] cursor-pointer"
-            >
-              ↶ Batalkan
+            <button type="button" className="mBtn mBtnGhost" onClick={handleUndo}>
+              ↶ Batalkan hapus
             </button>
           )}
           {canEdit ? (
-            <button
-              onClick={handleAddItem}
-              className="bg-[#221D15] text-[#F2ECDE] border-0 rounded-full px-4 py-1.5 font-[var(--font-fraunces)] font-bold text-[0.8rem] cursor-pointer"
-            >
-              + Tempel
+            <button type="button" className="mBtn" onClick={handleAddItem}>
+              ＋ Tempel sesuatu
             </button>
           ) : (
-            <a
-              href="/aksara/masuk"
-              className="bg-[#221D15] text-[#F2ECDE] border-0 rounded-full px-4 py-1.5 font-[var(--font-fraunces)] font-bold text-[0.8rem] no-underline"
-            >
+            <a className="mBtn" href="/aksara/masuk">
               Masuk untuk nempel
             </a>
           )}
         </div>
+        </main>
       </div>
 
       {sheetOpen && (
@@ -228,6 +255,6 @@ export default function BoardPage() {
         }}
         onPeek={() => setCtxOpen(false)}
       />
-    </div>
+    </>
   );
 }

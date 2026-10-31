@@ -1,260 +1,345 @@
 "use client";
+/* eslint-disable @typescript-eslint/no-explicit-any */
 
-import { useRef, useState, useCallback, useEffect } from "react";
-import ItemCard from "@/components/aksara/ItemCard";
+import { useRef, useEffect, useCallback, useState } from "react";
+import { buildItem } from "@/lib/aksara/v1-render";
 
-const BOARD_W = 1400;
-const BOARD_H = 1400;
+const BOARD_W = 1800;
+const BOARD_H = 1200;
+const MAX_SCALE = 4;
+const MIN_SCALE = 0.25;
 
 type BoardItem = {
   id?: string;
   kind: string;
   x: number;
   y: number;
-  rot: number;
+  rot?: number;
   scale?: number;
-  text?: string;
-  name?: string;
-  color?: string;
+  [k: string]: any;
 };
 
 type BoardProps = {
   items: BoardItem[];
   onItemTap?: (item: BoardItem) => void;
   onItemLongPress?: (item: BoardItem, el: HTMLElement) => void;
+  folioLabel?: string;
 };
 
-export default function Board({ items, onItemTap, onItemLongPress }: BoardProps) {
+export default function Board({ items, onItemTap, onItemLongPress, folioLabel }: BoardProps) {
+  const rootRef = useRef<HTMLDivElement>(null);
   const stageRef = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLDivElement>(null);
-  const [view, setView] = useState({ x: 0, y: 0, s: 0.5 });
-  const dragging = useRef(false);
-  const lastPos = useRef({ x: 0, y: 0 });
-  const lastTap = useRef(0);
-  const longPressTimer = useRef<NodeJS.Timeout | null>(null);
+  const view = useRef({ x: 0, y: 0, s: 0.5 });
+  const lastBgScale = useRef(0);
+  const [count, setCount] = useState(items.length);
+  const [ready, setReady] = useState(false);
+
+  // ---------- gesture state ----------
+  const drag = useRef({ active: false, x: 0, y: 0 });
+  const pinch = useRef<{ id: number; x: number; y: number }[]>([]);
+  const longTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const moved = useRef(false);
 
-  // Fit view on mount
-  useEffect(() => {
-    function fit() {
-      if (!stageRef.current) return;
-      const w = stageRef.current.clientWidth;
-      const h = stageRef.current.clientHeight;
-      if (w === 0 || h === 0) return;
-      const s = Math.min(w / BOARD_W, h / BOARD_H) * 0.94;
-      setView({ x: (w - BOARD_W * s) / 2, y: (h - BOARD_H * s) / 2, s });
+  // ---------- view maths ----------
+  const measure = useCallback(() => {
+    const el = stageRef.current;
+    if (!el) return { w: 0, h: 0 };
+    return { w: el.clientWidth, h: el.clientHeight };
+  }, []);
+
+  const applyView = useCallback(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const v = view.current;
+    canvas.style.transform = `translate(${v.x}px,${v.y}px) scale(${v.s})`;
+    if (v.s !== lastBgScale.current) {
+      canvas.style.setProperty("--gs", `${128 / v.s}px`);
+      lastBgScale.current = v.s;
     }
-    fit();
-    const t = setTimeout(fit, 200);
-    const t2 = setTimeout(fit, 500);
-    const ro = new ResizeObserver(fit);
-    if (stageRef.current) ro.observe(stageRef.current);
-    return () => {
-      clearTimeout(t);
-      clearTimeout(t2);
-      ro.disconnect();
-    };
   }, []);
 
   const clampView = useCallback(() => {
-    if (!stageRef.current) return;
-    const w = stageRef.current.clientWidth;
-    const h = stageRef.current.clientHeight;
-    setView((v) => {
-      const minX = w - BOARD_W * v.s;
-      const minY = h - BOARD_H * v.s;
-      return {
-        ...v,
-        x: Math.min(0, Math.max(minX, v.x)),
-        y: Math.min(0, Math.max(minY, v.y)),
-      };
-    });
-  }, []);
+    const { w, h } = measure();
+    if (!w || !h) return;
+    const v = view.current;
+    const bw = BOARD_W * v.s;
+    const bh = BOARD_H * v.s;
+    v.x = bw <= w ? (w - bw) / 2 : Math.min(0, Math.max(w - bw, v.x));
+    v.y = bh <= h ? (h - bh) / 2 : Math.min(0, Math.max(h - bh, v.y));
+  }, [measure]);
 
-  useEffect(() => {
-    clampView();
-  }, [view.s, clampView]);
+  /** tampilan awal: papan mengisi bingkai penuh (bisa digeser) */
+  const fit = useCallback(() => {
+    const { w, h } = measure();
+    if (!w || !h) return;
+    const s = Math.max(w / BOARD_W, h / BOARD_H);
+    const v = view.current;
+    v.s = Math.min(MAX_SCALE, Math.max(MIN_SCALE, s));
+    v.x = (w - BOARD_W * v.s) / 2;
+    v.y = (h - BOARD_H * v.s) / 2;
+    applyView();
+    setReady(true);
+  }, [measure, applyView]);
 
-  // Pan handlers
-  const handlePointerDown = useCallback(
-    (e: React.PointerEvent) => {
-      if (e.target !== stageRef.current && !(e.target as HTMLElement).classList?.contains("canvas")) return;
-      dragging.current = true;
-      moved.current = false;
-      lastPos.current = { x: e.clientX, y: e.clientY };
-      (e.target as HTMLElement).setPointerCapture?.(e.pointerId);
+  const showAll = useCallback(() => {
+    const { w, h } = measure();
+    if (!w || !h) return;
+    const s = Math.min(w / BOARD_W, h / BOARD_H) * 0.94;
+    const v = view.current;
+    v.s = Math.min(MAX_SCALE, Math.max(MIN_SCALE, s));
+    v.x = (w - BOARD_W * v.s) / 2;
+    v.y = (h - BOARD_H * v.s) / 2;
+    applyView();
+  }, [measure, applyView]);
+
+  const zoomAt = useCallback(
+    (cx: number, cy: number, factor: number) => {
+      const v = view.current;
+      const ns = Math.min(MAX_SCALE, Math.max(MIN_SCALE, v.s * factor));
+      const ratio = ns / v.s;
+      v.x = cx - (cx - v.x) * ratio;
+      v.y = cy - (cy - v.y) * ratio;
+      v.s = ns;
+      clampView();
+      applyView();
     },
-    []
+    [clampView, applyView]
   );
 
-  const handlePointerMove = useCallback((e: React.PointerEvent) => {
-    if (!dragging.current) return;
-    const dx = e.clientX - lastPos.current.x;
-    const dy = e.clientY - lastPos.current.y;
-    if (Math.abs(dx) > 3 || Math.abs(dy) > 3) moved.current = true;
-    lastPos.current = { x: e.clientX, y: e.clientY };
-    setView((v) => ({ ...v, x: v.x + dx, y: v.y + dy }));
+  // ---------- grain (tekstur kertas, digambar sekali) ----------
+  useEffect(() => {
+    try {
+      const dpr = Math.min(3, window.devicePixelRatio || 1);
+      const n = Math.round(128 * dpr);
+      const c = document.createElement("canvas");
+      c.width = c.height = n;
+      const ctx = c.getContext("2d");
+      if (!ctx) return;
+      const img = ctx.createImageData(n, n);
+      const d = img.data;
+      for (let i = 0; i < d.length; i += 4) {
+        const val = 105 + Math.random() * 60;
+        d[i] = d[i + 1] = d[i + 2] = val;
+        d[i + 3] = 4 + Math.random() * 14;
+      }
+      ctx.putImageData(img, 0, 0);
+      rootRef.current?.style.setProperty("--grain", `url("${c.toDataURL("image/png")}")`);
+    } catch {
+      /* tanpa tekstur pun tetap jalan */
+    }
   }, []);
 
-  const handlePointerUp = useCallback(() => {
-    dragging.current = false;
-  }, []);
+  // ---------- render tempelan (DOM asli dari renderer v1) ----------
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    canvas.innerHTML = "";
+    setCount(items.length);
 
-  // Wheel zoom
-  const handleWheel = useCallback((e: React.WheelEvent) => {
-    e.preventDefault();
-    const factor = e.deltaY < 0 ? 1.15 : 1 / 1.15;
-    const stage = stageRef.current;
-    if (!stage) return;
-    const rect = stage.getBoundingClientRect();
-    const cx = e.clientX - rect.left;
-    const cy = e.clientY - rect.top;
-    setView((v) => {
-      const newS = Math.min(6, Math.max(0.3, v.s * factor));
-      const ratio = newS / v.s;
-      return {
-        x: cx - (cx - v.x) * ratio,
-        y: cy - (cy - v.y) * ratio,
-        s: newS,
-      };
+    items.forEach((it) => {
+      let el: HTMLElement;
+      try {
+        el = buildItem(it as any);
+      } catch (err) {
+        console.error("buildItem gagal", (it as any).kind, err);
+        return;
+      }
+      el.addEventListener("pointerdown", (e: PointerEvent) => {
+        e.stopPropagation();
+        moved.current = false;
+        const startX = e.clientX;
+        const startY = e.clientY;
+
+        if (longTimer.current) clearTimeout(longTimer.current);
+        longTimer.current = setTimeout(() => {
+          if (!moved.current) onItemLongPress?.(it, el);
+        }, 450);
+
+        const onMove = (ev: PointerEvent) => {
+          if (Math.hypot(ev.clientX - startX, ev.clientY - startY) > 6) {
+            moved.current = true;
+            if (longTimer.current) {
+              clearTimeout(longTimer.current);
+              longTimer.current = null;
+            }
+          }
+        };
+        const onUp = () => {
+          if (longTimer.current) {
+            clearTimeout(longTimer.current);
+            longTimer.current = null;
+          }
+          if (!moved.current) onItemTap?.(it);
+          window.removeEventListener("pointermove", onMove);
+          window.removeEventListener("pointerup", onUp);
+        };
+        window.addEventListener("pointermove", onMove);
+        window.addEventListener("pointerup", onUp);
+      });
+      canvas.appendChild(el);
     });
+  }, [items, onItemTap, onItemLongPress]);
+
+  // ---------- fit saat ukuran berubah ----------
+  useEffect(() => {
+    const t1 = setTimeout(fit, 30);
+    const t2 = setTimeout(fit, 300);
+    const el = stageRef.current;
+    const ro = el ? new ResizeObserver(() => fit()) : null;
+    if (el && ro) ro.observe(el);
+    return () => {
+      clearTimeout(t1);
+      clearTimeout(t2);
+      ro?.disconnect();
+    };
+  }, [fit]);
+
+  // ---------- pan ----------
+  const onPointerDown = useCallback((e: React.PointerEvent) => {
+    const t = e.target as HTMLElement;
+    if (t.closest(".item")) return;
+    drag.current = { active: true, x: e.clientX, y: e.clientY };
+    stageRef.current?.classList.add("grabbing");
+    (e.currentTarget as HTMLElement).setPointerCapture?.(e.pointerId);
   }, []);
 
-  // Pinch zoom
-  const touches = useRef<{ id: number; x: number; y: number }[]>([]);
-  const handleTouchStart = useCallback((e: React.TouchEvent) => {
+  const onPointerMove = useCallback(
+    (e: React.PointerEvent) => {
+      if (!drag.current.active) return;
+      const dx = e.clientX - drag.current.x;
+      const dy = e.clientY - drag.current.y;
+      drag.current.x = e.clientX;
+      drag.current.y = e.clientY;
+      view.current.x += dx;
+      view.current.y += dy;
+      clampView();
+      applyView();
+    },
+    [clampView, applyView]
+  );
+
+  const onPointerUp = useCallback(() => {
+    drag.current.active = false;
+    stageRef.current?.classList.remove("grabbing");
+  }, []);
+
+  // ---------- zoom roda ----------
+  const onWheel = useCallback(
+    (e: React.WheelEvent) => {
+      e.preventDefault();
+      const stage = stageRef.current;
+      if (!stage) return;
+      const r = stage.getBoundingClientRect();
+      zoomAt(e.clientX - r.left, e.clientY - r.top, e.deltaY < 0 ? 1.12 : 1 / 1.12);
+    },
+    [zoomAt]
+  );
+
+  // ---------- pinch ----------
+  const onTouchStart = useCallback((e: React.TouchEvent) => {
     if (e.touches.length === 2) {
-      touches.current = [
+      pinch.current = [
         { id: e.touches[0].identifier, x: e.touches[0].clientX, y: e.touches[0].clientY },
         { id: e.touches[1].identifier, x: e.touches[1].clientX, y: e.touches[1].clientY },
       ];
     }
   }, []);
 
-  const handleTouchMove = useCallback((e: React.TouchEvent) => {
-    if (e.touches.length === 2 && touches.current.length === 2) {
-      e.preventDefault();
-      const t0 = e.touches[0];
-      const t1 = e.touches[1];
-      const prevDist = Math.hypot(
-        touches.current[0].x - touches.current[1].x,
-        touches.current[0].y - touches.current[1].y
-      );
-      const curDist = Math.hypot(t0.clientX - t1.clientX, t0.clientY - t1.clientY);
-      const factor = curDist / prevDist;
+  const onTouchMove = useCallback(
+    (e: React.TouchEvent) => {
+      if (e.touches.length !== 2 || pinch.current.length !== 2) return;
       const stage = stageRef.current;
       if (!stage) return;
-      const rect = stage.getBoundingClientRect();
-      const cx = (t0.clientX + t1.clientX) / 2 - rect.left;
-      const cy = (t0.clientY + t1.clientY) / 2 - rect.top;
-      setView((v) => {
-        const newS = Math.min(6, Math.max(0.3, v.s * factor));
-        const ratio = newS / v.s;
-        return {
-          x: cx - (cx - v.x) * ratio,
-          y: cy - (cy - v.y) * ratio,
-          s: newS,
-        };
-      });
-      touches.current = [
-        { id: t0.identifier, x: t0.clientX, y: t0.clientY },
-        { id: t1.identifier, x: t1.clientX, y: t1.clientY },
+      const r = stage.getBoundingClientRect();
+      const prev = pinch.current;
+      const curDist = Math.hypot(
+        e.touches[0].clientX - e.touches[1].clientX,
+        e.touches[0].clientY - e.touches[1].clientY
+      );
+      const prevDist = Math.hypot(prev[0].x - prev[1].x, prev[0].y - prev[1].y);
+      if (prevDist > 0) {
+        const cx = (e.touches[0].clientX + e.touches[1].clientX) / 2 - r.left;
+        const cy = (e.touches[0].clientY + e.touches[1].clientY) / 2 - r.top;
+        zoomAt(cx, cy, curDist / prevDist);
+      }
+      pinch.current = [
+        { id: e.touches[0].identifier, x: e.touches[0].clientX, y: e.touches[0].clientY },
+        { id: e.touches[1].identifier, x: e.touches[1].clientX, y: e.touches[1].clientY },
       ];
-    }
-  }, []);
-
-  const handleTouchEnd = useCallback(() => {
-    touches.current = [];
-  }, []);
-
-  // Item tap / long-press
-  const handleItemPointerDown = useCallback(
-    (item: BoardItem, e: React.PointerEvent) => {
-      e.stopPropagation();
-      moved.current = false;
-      const startX = e.clientX;
-      const startY = e.clientY;
-      longPressTimer.current = setTimeout(() => {
-        if (!moved.current) {
-          onItemLongPress?.(item, e.currentTarget as HTMLElement);
-        }
-      }, 450);
-      const onMove = (ev: PointerEvent) => {
-        if (Math.hypot(ev.clientX - startX, ev.clientY - startY) > 6) {
-          moved.current = true;
-          if (longPressTimer.current) {
-            clearTimeout(longPressTimer.current);
-            longPressTimer.current = null;
-          }
-        }
-      };
-      const onUp = () => {
-        if (longPressTimer.current) {
-          clearTimeout(longPressTimer.current);
-          longPressTimer.current = null;
-        }
-        if (!moved.current) {
-          const now = Date.now();
-          if (now - lastTap.current < 300) {
-            // double tap - could zoom
-          }
-          lastTap.current = now;
-          onItemTap?.(item);
-        }
-        window.removeEventListener("pointermove", onMove);
-        window.removeEventListener("pointerup", onUp);
-      };
-      window.addEventListener("pointermove", onMove);
-      window.addEventListener("pointerup", onUp);
     },
-    [onItemTap, onItemLongPress]
+    [zoomAt]
   );
 
+  const onTouchEnd = useCallback(() => {
+    pinch.current = [];
+  }, []);
+
   return (
-    <div
-      ref={stageRef}
-      className="relative w-full h-full overflow-hidden bg-[#E9DDC4] cursor-grab active:cursor-grabbing touch-none"
-      onPointerDown={handlePointerDown}
-      onPointerMove={handlePointerMove}
-      onPointerUp={handlePointerUp}
-      onWheel={handleWheel}
-      onTouchStart={handleTouchStart}
-      onTouchMove={handleTouchMove}
-      onTouchEnd={handleTouchEnd}
-    >
-      <div
-        ref={canvasRef}
-        className="canvas absolute top-0 left-0 origin-top-left"
-        style={{
-          width: BOARD_W,
-          height: BOARD_H,
-          transform: `translate(${view.x}px, ${view.y}px) scale(${view.s})`,
-        }}
-      >
-        {items.map((item, i) => (
+    <div ref={rootRef} className="boardOuter" style={{ opacity: ready ? 1 : 0 }}>
+      <article className="paper">
+        <div className="boardWrap">
           <div
-            key={item.id || i}
-            className="absolute select-none"
-            style={{
-              left: item.x,
-              top: item.y,
-              transform: `rotate(${item.rot || 0}deg) scale(${item.scale || 1})`,
-              transformOrigin: "center center",
-            }}
-            onPointerDown={(e) => handleItemPointerDown(item, e)}
+            ref={stageRef}
+            className="stage"
+            onPointerDown={onPointerDown}
+            onPointerMove={onPointerMove}
+            onPointerUp={onPointerUp}
+            onPointerCancel={onPointerUp}
+            onWheel={onWheel}
+            onTouchStart={onTouchStart}
+            onTouchMove={onTouchMove}
+            onTouchEnd={onTouchEnd}
           >
-            <ItemCard item={item} />
+            <div ref={canvasRef} className="canvas" />
           </div>
-        ))}
-      </div>
-      {/* Grain overlay */}
-      <div
-        className="absolute inset-0 pointer-events-none opacity-[0.07]"
-        style={{
-          backgroundImage: 'url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg==")',
-          backgroundSize: "128px 128px",
-        }}
-      />
+
+          {count === 0 && (
+            <div className="boardHint" id="boardHint">
+              <p className="bhLabel">Papan</p>
+              <p className="bhText">
+                Ketuk di mana saja untuk menempel note, kliping, atau foto.
+              </p>
+            </div>
+          )}
+        </div>
+
+        <div className="folio">
+          <span>
+            <b>AKSARA</b> · HAL. 1/1
+          </span>
+          <span>{count} tempelan</span>
+          <span>{count > 0 ? "ketuk tempelan untuk mengubah" : ""}</span>
+          <span>{folioLabel || "EDISI 231"}</span>
+          <div className="tools">
+            <button
+              type="button"
+              className="tool"
+              aria-label="Perbesar"
+              onClick={() => {
+                const { w, h } = measure();
+                zoomAt(w / 2, h / 2, 1.25);
+              }}
+            >
+              ＋
+            </button>
+            <button
+              type="button"
+              className="tool"
+              aria-label="Perkecil"
+              onClick={() => {
+                const { w, h } = measure();
+                zoomAt(w / 2, h / 2, 1 / 1.25);
+              }}
+            >
+              −
+            </button>
+            <button type="button" className="tool small" aria-label="Paskan" onClick={showAll}>
+              fit
+            </button>
+          </div>
+        </div>
+      </article>
     </div>
   );
 }

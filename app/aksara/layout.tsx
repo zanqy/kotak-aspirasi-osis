@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Fraunces, Spectral, IBM_Plex_Mono, Caveat } from "next/font/google";
 import { AksaraAuthProvider } from "@/lib/aksara/auth";
 import AksaraNav from "@/components/aksara/AksaraNav";
+import "./legacy-board.css";
 
 const fraunces = Fraunces({
   subsets: ["latin"],
@@ -46,6 +47,10 @@ export default function AksaraLayout({
     <div
       className={`${fraunces.variable} ${spectral.variable} ${ibmPlexMono.variable} ${caveat.variable} min-h-screen bg-[#F2ECDE] text-[#221D15] font-[var(--font-spectral)]`}
     >
+      <link
+        rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Gochi+Hand&display=swap"
+      />
       <AksaraAuthProvider>
         <AksaraNav />
         {children}

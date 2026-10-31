@@ -1,0 +1,487 @@
+/* Port 1:1 dari aksara/index.html — CSS asli, di-scope ke .aksara-v1 */
+.aksara-v1{
+  --paper:#F2ECDE; --news:#F7F1E1; --paper-2:#EDE4CF;
+  --ink:#221D15; --ink-soft:#33291F; --ink-60:rgba(34,29,21,.62); --ink-40:rgba(34,29,21,.42);
+  --red:#C03B21; --line:rgba(34,29,21,.24); --hair:rgba(34,29,21,.14);
+  --fd:var(--font-fraunces),serif; --fs:var(--font-spectral),serif; --fm:var(--font-ibm-plex-mono),monospace; --fh:var(--font-caveat),cursive;
+}
+.aksara-v1 *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+.aksara-v1{background:var(--paper);-webkit-text-size-adjust:100%}
+.aksara-v1{background:radial-gradient(circle at 50% -10%,#F6F0E1,var(--paper) 65%);color:var(--ink);
+  font-family:var(--fs);min-height:100dvh;overflow-x:clip;line-height:1.6}
+.aksara-v1 .grain{position:fixed;inset:0;pointer-events:none;z-index:90;
+  background-image:var(--grain);background-size:128px 128px}
+.aksara-v1 /* ---------- topnav ---------- */
+.topnav{position:sticky;top:0;z-index:60;display:flex;align-items:center;gap:12px;
+  padding:10px clamp(14px,4vw,28px);border-bottom:1px solid var(--hair);
+  background:rgba(242,236,222,.92);backdrop-filter:blur(10px)}
+.aksara-v1 .brand{font:700 1.02rem var(--fd);letter-spacing:-.01em;white-space:nowrap}
+.aksara-v1 .brand i{font-style:italic;color:var(--red)}
+.aksara-v1 .navlink{margin-left:auto;display:flex;gap:4px;overflow-x:auto;scrollbar-width:none}
+.aksara-v1 .navlink::-webkit-scrollbar{display:none}
+.aksara-v1 .navlink a{font:500 10px var(--fm);letter-spacing:.14em;text-transform:uppercase;color:var(--ink-60);
+  text-decoration:none;padding:7px 10px;border-radius:99px;white-space:nowrap;transition:background .2s,color .2s}
+.aksara-v1 .navlink a:hover{color:var(--ink);background:rgba(34,29,21,.06)}
+.aksara-v1 .navlink a.on{color:var(--paper);background:var(--ink)}
+.aksara-v1 /* ---------- shell ---------- */
+.shell{max-width:1040px;margin:0 auto;padding:0 clamp(12px,3.4vw,24px) 46px}
+.aksara-v1 /* ---------- masthead ---------- */
+.mast{margin-top:clamp(14px,3vw,26px);border-bottom:1px solid var(--ink);padding-bottom:10px;position:relative}
+.aksara-v1 .mast::after{content:"";position:absolute;left:0;right:0;bottom:-4px;height:2px;background:var(--ink)}
+.aksara-v1 .mast .orn{font:500 9.5px var(--fm);letter-spacing:.18em;text-transform:uppercase;color:var(--ink-60);
+  margin-bottom:6px;text-wrap:balance}
+.aksara-v1 .mast h1{font:800 clamp(2.4rem,11vw,4.2rem)/.9 var(--fd);letter-spacing:-.035em}
+.aksara-v1 .mast h1 i{font-style:italic;font-weight:500;color:var(--red)}
+.aksara-v1 .mast .flagrow{display:grid;grid-template-columns:72px 1fr 72px;gap:10px;align-items:stretch;margin-top:8px}
+.aksara-v1 .mast .ear{border:1.5px solid var(--ink);border-radius:4px;display:flex;flex-direction:column;
+  align-items:center;justify-content:center;text-align:center;padding:7px 4px;
+  font:500 8px var(--fm);letter-spacing:.12em;line-height:1.6;color:var(--ink)}
+.aksara-v1 .mast .ear b{font-size:1.02rem;letter-spacing:.02em}
+.aksara-v1 .mast .ed{margin-top:8px;display:flex;flex-wrap:wrap;gap:6px 16px;
+  font:500 10px var(--fm);letter-spacing:.12em;text-transform:uppercase;color:var(--ink-60)}
+.aksara-v1 .mast .ed b{color:var(--ink);font-weight:500}
+.aksara-v1 /* ---------- dateline ---------- */
+.dataline{display:flex;flex-wrap:wrap;gap:4px 18px;padding:9px 0;border-bottom:1px solid var(--line);
+  font:500 10px var(--fm);letter-spacing:.1em;text-transform:uppercase;color:var(--ink-60)}
+.aksara-v1 .dataline b{color:var(--ink);font-weight:500}
+.aksara-v1 /* ---------- paper ---------- */
+.paper{position:relative;margin-top:18px;background:var(--news);border:1px solid rgba(34,29,21,.28);
+  padding:clamp(12px,2.6vw,22px);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.65),0 30px 50px -40px rgba(24,20,16,.6);
+  background-image:var(--grain);background-size:128px 128px}
+.aksara-v1 .paper::after{content:"";position:absolute;right:0;bottom:0;width:40px;height:40px;pointer-events:none;z-index:3;
+  background:linear-gradient(315deg,rgba(34,29,21,.14) 0 20%,rgba(247,241,225,.98) 21% 100%);
+  clip-path:polygon(100% 0,0 100%,100% 100%)}
+.aksara-v1 /* ---------- papan kanvas ---------- */
+.boardWrap{position:relative;overflow:hidden;height:clamp(320px,46vh,520px);background:transparent}
+@media(min-width:860px){.aksara-v1 .boardWrap{height:clamp(520px,64vh,720px)}}
+.aksara-v1 .stage{position:absolute;inset:0;overflow:hidden;touch-action:none;cursor:grab}
+.aksara-v1 .stage.grabbing{cursor:grabbing}
+.aksara-v1 .canvas{position:absolute;top:0;left:0;width:1800px;height:1200px;transform-origin:0 0;
+  background:#E9DDC4;--gs:128px;
+  box-shadow:0 0 0 1px rgba(34,29,21,.3),0 18px 34px -22px rgba(24,20,16,.55)}
+.aksara-v1 .canvas::before{content:"";position:absolute;inset:0;pointer-events:none;
+  background-image:var(--grain);background-size:var(--gs) var(--gs)}
+.aksara-v1 /* ---------- tempelan ---------- */
+.item{position:absolute;touch-action:none;cursor:grab;user-select:none}
+.aksara-v1 .item.dragging{cursor:grabbing;z-index:20}
+.aksara-v1 .item .body{box-shadow:0 6px 10px -6px rgba(24,20,16,.45)}
+.aksara-v1 .item.dragging .body{box-shadow:0 16px 22px -12px rgba(24,20,16,.55)}
+.aksara-v1 .item .body{position:relative;z-index:1;overflow:hidden;backface-visibility:hidden}
+.aksara-v1 .item.note .body{width:196px;min-height:196px;padding:20px 18px 26px;
+  display:flex;align-items:center;justify-content:center;text-align:center;
+  background:linear-gradient(170deg,rgba(255,255,255,.5),rgba(255,255,255,0) 40%),var(--c,#F7E39B);
+  box-shadow:inset 0 -14px 20px -16px rgba(120,92,52,.55),inset 0 0 0 1px rgba(255,255,255,.28)}
+.aksara-v1 .item.note .body::before{content:"";position:absolute;right:0;bottom:0;width:26px;height:26px;pointer-events:none;
+  background:linear-gradient(315deg,rgba(120,92,52,.24) 0 46%,rgba(255,255,255,.5) 47% 100%);
+  clip-path:polygon(100% 0,0 100%,100% 100%)}
+.aksara-v1 .item.note .txt{font:600 1.42rem/1.24 var(--fh);color:#2b241c;word-break:break-word;max-height:150px;overflow:hidden}
+.aksara-v1 /* bentuk note */
+.item.note.wide .body{width:250px;min-height:160px}
+.aksara-v1 .item.note.tall .body{width:158px;min-height:250px}
+.aksara-v1 .item.note.round .body{width:200px;height:200px;min-height:0;border-radius:50%;padding:34px 30px}
+.aksara-v1 .item.note.round .txt{font-size:1.2rem;max-height:120px}
+.aksara-v1 .item.note.torn .body{border-radius:2px;
+  clip-path:polygon(0 0,100% 0,100% 93%,96% 97%,92% 93%,88% 98%,84% 93%,80% 98%,76% 93%,72% 98%,68% 93%,64% 98%,60% 93%,56% 98%,52% 93%,48% 98%,44% 93%,40% 98%,36% 93%,32% 98%,28% 93%,24% 98%,20% 93%,16% 98%,12% 93%,8% 98%,4% 93%,0 97%)}
+.aksara-v1 /* gaya tulisan */
+.item.note.fnt-tegak .txt{font:600 1.16rem/1.3 var(--fs)}
+.aksara-v1 .item.note.fnt-ketik .txt{font:500 .96rem/1.42 var(--fm);letter-spacing:.01em}
+.aksara-v1 .item.note.fnt-stencil .txt{font:800 1.02rem/1.3 var(--fd);text-transform:uppercase;letter-spacing:.03em}
+.aksara-v1 .item.note.fnt-spidol .txt{font:400 1.28rem/1.25 'Gochi Hand',cursive}
+.aksara-v1 .item.clip.fnt-tegak .txt{font:600 .98rem/1.32 var(--fs)}
+.aksara-v1 .item.clip.fnt-ketik .txt{font:500 .9rem/1.45 var(--fm)}
+.aksara-v1 .item.clip.fnt-stencil .txt{font:800 .94rem/1.3 var(--fd);text-transform:uppercase}
+.aksara-v1 .item.clip.fnt-spidol .txt{font:400 1.1rem/1.3 'Gochi Hand',cursive}
+.aksara-v1 .item.pola.fnt-spidol .cap{font:400 1.1rem/1.3 'Gochi Hand',cursive}
+.aksara-v1 /* bayangan */
+.item.sh-tegas{box-shadow:7px 7px 0 rgba(24,20,16,.85) !important}
+.aksara-v1 .item.sh-panjang{box-shadow:13px 13px 0 rgba(24,20,16,.22) !important}
+.aksara-v1 /* ukuran stiker */
+.stk.sg-kecil{scale:.72}
+.aksara-v1 .stk.sg-besar{scale:1.5}
+.aksara-v1 .stk.sg-jumbo{scale:2.1}
+.aksara-v1 /* kertas buku tulis */
+.item.note.paper-buku .body{background:linear-gradient(90deg,transparent 0 30px,rgba(192,59,33,.35) 30px 31px,transparent 31px),repeating-linear-gradient(180deg,transparent 0 24px,rgba(59,110,180,.4) 24px 25px),linear-gradient(170deg,rgba(255,255,255,.4),rgba(255,255,255,0) 45%),#FDFDF8}
+.aksara-v1 /* umbul-umbul */
+.item.umbul{background:transparent;border:0;box-shadow:none;border-radius:0;overflow:visible;min-width:560px}
+.aksara-v1 .item.umbul svg{display:block;overflow:visible}
+.aksara-v1 /* dekorasi gantung & pesta */
+.item.lampu,.aksara-v1 .item.lampion,.aksara-v1 .item.layang,.aksara-v1 .item.kipas,.aksara-v1 .item.rantai{background:transparent;border:0;box-shadow:none;border-radius:0;overflow:visible}
+.aksara-v1 .item.lampu svg,.aksara-v1 .item.lampion svg,.aksara-v1 .item.layang svg,.aksara-v1 .item.kipas svg,.aksara-v1 .item.rantai svg{display:block;overflow:visible}
+.aksara-v1 .item.lampu{min-width:560px}
+.aksara-v1 .item.rantai{min-width:400px}
+.aksara-v1 /* balon */
+.item.balon{background:transparent;border:0;box-shadow:none;overflow:visible}
+.aksara-v1 .item.balon .bbody{position:relative;width:132px;height:162px;margin:0 auto;border-radius:50%/54% 54% 46% 46%;
+  background:radial-gradient(circle at 35% 30%,rgba(255,255,255,.8),rgba(255,255,255,0) 44%),var(--c,#F6D8DD);
+  display:grid;place-items:center;box-shadow:0 3px 5px rgba(24,20,16,.25)}
+.aksara-v1 .item.balon .bknot{width:0;height:0;margin:-2px auto 0;border-left:8px solid transparent;border-right:8px solid transparent;border-bottom:12px solid var(--c,#F6D8DD)}
+.aksara-v1 .item.balon .bstring{width:2px;height:54px;margin:0 auto;background:rgba(34,29,21,.4)}
+.aksara-v1 .item.balon .txt{font:700 .95rem/1.25 var(--fs);color:#2b241c;text-align:center;padding:0 18px;max-height:110px;word-break:break-word}
+.aksara-v1 /* badge ledakan */
+.item.badge{background:transparent;border:0;box-shadow:none;overflow:visible}
+.aksara-v1 .item.badge .bburst{width:158px;height:158px;background:var(--c,#F7E39B);
+  clip-path:polygon(50.0% 0.0%,60.4% 11.4%,75.0% 6.7%,78.3% 21.7%,93.3% 25.0%,88.6% 39.6%,100.0% 50.0%,88.6% 60.4%,93.3% 75.0%,78.3% 78.3%,75.0% 93.3%,60.4% 88.6%,50.0% 100.0%,39.6% 88.6%,25.0% 93.3%,21.7% 78.3%,6.7% 75.0%,11.4% 60.4%,0.0% 50.0%,11.4% 39.6%,6.7% 25.0%,21.7% 21.7%,25.0% 6.7%,39.6% 11.4%);
+  display:grid;place-items:center;filter:drop-shadow(0 2px 3px rgba(24,20,16,.3))}
+.aksara-v1 .item.badge .txt{font:800 1.05rem/1.2 var(--fd);color:#2b241c;text-align:center;text-transform:uppercase;max-width:96px;word-break:break-word}
+.aksara-v1 /* papan tulis mini */
+.item.tulis{background:#2E3330;border:7px solid #7D5230;border-radius:5px;padding:14px;min-width:190px;
+  box-shadow:0 2px 5px rgba(24,20,16,.3)}
+.aksara-v1 .item.tulis .txt{font:400 1.18rem/1.35 'Gochi Hand',cursive;color:#F5F2E8;max-height:150px;word-break:break-word}
+.aksara-v1 .item.tulis .tkapur{width:34px;height:7px;background:#F5F2E8;border-radius:3px;margin:10px auto 0;opacity:.9}
+.aksara-v1 /* stiker jangkar & matahari */
+.stk.jangkar{color:#2C5E9E;text-shadow:0 1px 0 rgba(255,255,255,.7)}
+.aksara-v1 .stk.matahari{color:#E8890C;text-shadow:0 1px 2px rgba(24,20,16,.25)}
+.aksara-v1 /* kertas koran untuk note */
+.item.note.paper-koran .body{background:repeating-linear-gradient(180deg,transparent 0 8px,rgba(34,29,21,.09) 8px 9px),linear-gradient(170deg,rgba(255,255,255,.35),rgba(255,255,255,0) 45%),#EFE7D6}
+.aksara-v1 /* struk belanja */
+.item.struk{background:#FFFDF9;padding:12px 12px 16px;min-width:168px;max-width:230px;
+  box-shadow:0 2px 4px rgba(24,20,16,.18);
+  clip-path:polygon(0 0,100% 0,100% calc(100% - 7px),96% 100%,92% calc(100% - 7px),88% 100%,84% calc(100% - 7px),80% 100%,76% calc(100% - 7px),72% 100%,68% calc(100% - 7px),64% 100%,60% calc(100% - 7px),56% 100%,52% calc(100% - 7px),48% 100%,44% calc(100% - 7px),40% 100%,36% calc(100% - 7px),32% 100%,28% calc(100% - 7px),24% 100%,20% calc(100% - 7px),16% 100%,12% calc(100% - 7px),8% 100%,4% calc(100% - 7px),0 100%)}
+.aksara-v1 .item.struk .shead{font:700 10px var(--fm);letter-spacing:.18em;text-align:center;color:#2b241c;
+  border-bottom:1.5px dashed rgba(34,29,21,.4);padding-bottom:6px;margin-bottom:6px}
+.aksara-v1 .item.struk .txt{font:500 .85rem/1.55 var(--fm);color:#2b241c;max-height:170px;word-break:break-word}
+.aksara-v1 .item.struk .sfoot{border-top:1.5px dashed rgba(34,29,21,.4);margin-top:6px;padding-top:6px;text-align:center;
+  font:700 9px var(--fm);letter-spacing:.22em;color:#2b241c}
+.aksara-v1 /* warna tinta */
+.item.ink-merah .txt{color:#C03B21}
+.aksara-v1 .item.ink-biru .txt{color:#2C5E9E}
+.aksara-v1 .item.ink-ungu .txt{color:#7B4B94}
+.aksara-v1 .item.ink-hijau .txt{color:#3E6B35}
+.aksara-v1 /* stempel karet */
+.stamp{position:absolute;z-index:5;left:50%;bottom:14px;transform:translateX(-50%) rotate(-6deg);
+  font:700 10px/1 var(--fm);letter-spacing:.18em;text-transform:uppercase;color:#C03B21;
+  border:2px solid rgba(192,59,33,.8);border-radius:4px;padding:5px 8px 4px;opacity:.85;pointer-events:none;
+  text-shadow:0 0 1px rgba(192,59,33,.4)}
+.aksara-v1 /* bingkai foto */
+.item.pola.frame-krem .body{background:#F3E9D2}
+.aksara-v1 .item.pola.frame-pink .body{background:#F9E8EC}
+.aksara-v1 .item.pola.frame-hitam .body{background:#2B241C}
+.aksara-v1 .item.pola.frame-hitam .cap{color:#F2ECDE}
+.aksara-v1 /* kertas polka & strip */
+.item.note.paper-polka .body{background:radial-gradient(circle at 7px 7px,rgba(43,36,28,.14) 1.7px,transparent 2.4px) 0 0/14px 14px,linear-gradient(170deg,rgba(255,255,255,.45),rgba(255,255,255,0) 45%),var(--c,#F7E39B)}
+.aksara-v1 .item.note.paper-strip .body{background:repeating-linear-gradient(45deg,transparent 0 9px,rgba(43,36,28,.08) 9px 18px),linear-gradient(170deg,rgba(255,255,255,.45),rgba(255,255,255,0) 45%),var(--c,#F7E39B)}
+.aksara-v1 /* selotip polka & strip */
+.tape.t-polka{background:radial-gradient(circle at 5px 5px,rgba(255,255,255,.7) 1.4px,transparent 2px) 0 0/10px 10px,rgba(192,59,33,.42)}
+.aksara-v1 .tape.t-strip{background:repeating-linear-gradient(45deg,rgba(255,255,255,.5) 0 7px,rgba(192,59,33,.45) 7px 14px)}
+.aksara-v1 /* stiker tambahan */
+.stk.bunga{color:#B4536B;text-shadow:0 1px 0 rgba(255,255,255,.7)}
+.aksara-v1 .stk.kupu{color:#5B7DB1;text-shadow:0 1px 0 rgba(255,255,255,.7)}
+.aksara-v1 .stk.awan{color:#8A8578;text-shadow:0 1px 0 rgba(255,255,255,.8)}
+.aksara-v1 .stk.kilau{color:#E8A013;text-shadow:0 1px 2px rgba(24,20,16,.3)}
+.aksara-v1 .stk.mahkota{color:#E8A013;text-shadow:0 1px 2px rgba(24,20,16,.3)}
+.aksara-v1 .stk.salju{color:#7FA8C9;text-shadow:0 1px 1px rgba(255,255,255,.8)}
+.aksara-v1 /* stabilo teks */
+.item.hl-kuning .txt{background:linear-gradient(180deg,transparent 42%,rgba(236,193,66,.55) 42%)}
+.aksara-v1 .item.hl-pink .txt{background:linear-gradient(180deg,transparent 42%,rgba(232,130,160,.5) 42%)}
+.aksara-v1 .item.hl-biru .txt{background:linear-gradient(180deg,transparent 42%,rgba(120,160,215,.5) 42%)}
+.aksara-v1 .item.hl-hijau .txt{background:linear-gradient(180deg,transparent 42%,rgba(120,190,110,.5) 42%)}
+.aksara-v1 /* posisi selotip */
+.tape.tp-kanan{left:auto;right:-15px;top:50%;margin:0;transform:translateY(-50%) rotate(84deg)}
+.aksara-v1 .tape.tp-bawah{top:auto;bottom:-9px;left:50%;margin:0;transform:translateX(-50%) rotate(3deg)}
+.aksara-v1 .tape.tp-kiri{left:-15px;top:50%;margin:0;transform:translateY(-50%) rotate(-84deg)}
+.aksara-v1 /* tiket masuk */
+.item.tiket{background:#FBF6E8;border-radius:3px;box-shadow:0 2px 4px rgba(24,20,16,.16)}
+.aksara-v1 .item.tiket .tstub{position:absolute;left:0;top:0;bottom:0;width:30px;background:rgba(34,29,21,.07);
+  border-right:1.5px dashed rgba(34,29,21,.45);display:flex;align-items:center;justify-content:center}
+.aksara-v1 .item.tiket .tstub span{writing-mode:vertical-rl;transform:rotate(180deg);
+  font:700 8px var(--fm);letter-spacing:.22em;color:rgba(34,29,21,.55)}
+.aksara-v1 .item.tiket .tbody{padding:11px 12px 11px 44px}
+.aksara-v1 .item.tiket .txt{font:700 .98rem/1.28 var(--fm);color:#2b241c;max-height:78px;overflow:hidden}
+.aksara-v1 .item.tiket .tno{font:500 7.5px var(--fm);letter-spacing:.15em;color:rgba(34,29,21,.5);
+  margin-top:5px;text-transform:uppercase}
+.aksara-v1 .item.tiket.tik-pink{background:#F9E3E7}
+.aksara-v1 .item.tiket.tik-hijau{background:#E4EDDC}
+.aksara-v1 .item.tiket.tik-sobek{clip-path:polygon(0 0,100% 0,100% 90%,97% 96%,94% 90%,91% 97%,88% 90%,85% 97%,82% 90%,79% 97%,76% 90%,73% 97%,70% 90%,67% 97%,64% 90%,61% 97%,58% 90%,55% 97%,52% 90%,49% 97%,46% 90%,43% 97%,40% 90%,37% 97%,34% 90%,31% 97%,28% 90%,25% 97%,22% 90%,19% 97%,16% 90%,13% 97%,10% 90%,7% 97%,4% 90%,0 96%)}
+.aksara-v1 /* pita banner */
+.item.pita{background:var(--c,#F6D8DD);border-radius:2px;padding:10px 20px;min-width:150px;
+  box-shadow:0 2px 3px rgba(24,20,16,.2)}
+.aksara-v1 .item.pita::before,.aksara-v1 .item.pita::after{content:"";position:absolute;top:9px;width:24px;height:calc(100% - 18px);
+  background:var(--c,#F6D8DD);z-index:-1;box-shadow:0 2px 2px rgba(24,20,16,.18)}
+.aksara-v1 .item.pita::before{left:-16px;clip-path:polygon(0 0,100% 0,100% 100%,0 100%,11px 50%)}
+.aksara-v1 .item.pita::after{right:-16px;clip-path:polygon(0 0,100% 0,calc(100% - 11px) 50%,100% 100%,0 100%)}
+.aksara-v1 .item.pita.pita-sayap::before{clip-path:polygon(0 0,100% 0,100% 100%,0 100%,100% 50%)}
+.aksara-v1 .item.pita.pita-sayap::after{clip-path:polygon(0 0,100% 0,0 100%,0 0,0 50%)}
+.aksara-v1 .item.pita .txt{font:600 1.34rem/1.15 var(--fh);color:#2b241c;text-align:center;max-height:100px;word-break:break-word}
+.aksara-v1 /* kertas kado */
+.item.note.paper-kado .body{background:repeating-linear-gradient(45deg,rgba(192,59,33,.14) 0 8px,transparent 8px 16px,rgba(232,160,19,.12) 16px 24px,transparent 24px 32px),linear-gradient(170deg,rgba(255,255,255,.45),rgba(255,255,255,0) 45%),var(--c,#F7E39B)}
+.aksara-v1 /* stiker tambahan */
+.stk.nada{color:#7B4B94;text-shadow:0 1px 0 rgba(255,255,255,.7)}
+.aksara-v1 .stk.payung{color:#2C5E9E;text-shadow:0 1px 0 rgba(255,255,255,.7)}
+.aksara-v1 .stk.bulan{color:#E8A013;text-shadow:0 1px 2px rgba(24,20,16,.3)}
+.aksara-v1 /* kombinasi aman: stiker & stempel menyingkir kalau selotip di sisi sama */
+.item[data-tp="kanan"] .stk{right:auto;left:-8px}
+.aksara-v1 .item[data-tp="kiri"] .stk{left:auto;right:-2px}
+.aksara-v1 .item[data-tp="bawah"] .stamp{bottom:34px}
+.aksara-v1 .item[data-tp="kanan"] .stamp{left:44%}
+.aksara-v1 .item[data-tp="kiri"] .stamp{left:56%}
+.aksara-v1 /* tiket & pita pendek: stempel di tepi agar tidak menimpa teks */
+.item.tiket .stamp{left:auto;right:-9px;bottom:9px;transform:rotate(-8deg);
+  background:rgba(251,246,232,.85);border-radius:3px}
+.aksara-v1 .item.tiket.tik-pink .stamp{background:rgba(249,227,231,.88)}
+.aksara-v1 .item.tiket.tik-hijau .stamp{background:rgba(228,237,220,.88)}
+.aksara-v1 .item.pita .stamp{left:auto;right:-14px;bottom:-13px;transform:rotate(-9deg);
+  background:rgba(242,236,222,.9);border-radius:3px}
+.aksara-v1 /* foto cermin */
+.item.pola.flipx .ph{transform:scaleX(-1)}
+.aksara-v1 .item.note.paper-garis .body{background:repeating-linear-gradient(180deg,transparent 0 25px,rgba(43,36,28,.16) 25px 26px),linear-gradient(170deg,rgba(255,255,255,.5),rgba(255,255,255,0) 40%),var(--c,#F7E39B)}
+.aksara-v1 .item.note.paper-kotak .body{background:repeating-linear-gradient(180deg,transparent 0 21px,rgba(43,36,28,.13) 21px 22px),repeating-linear-gradient(90deg,transparent 0 21px,rgba(43,36,28,.13) 21px 22px),linear-gradient(170deg,rgba(255,255,255,.5),rgba(255,255,255,0) 40%),var(--c,#F7E39B)}
+.aksara-v1 .item.note.paper-kraft .body{background:linear-gradient(170deg,rgba(255,255,255,.28),rgba(255,255,255,0) 45%),#D9B98A;box-shadow:inset 0 -14px 20px -16px rgba(120,92,52,.6),inset 0 0 0 1px rgba(255,255,255,.25)}
+.aksara-v1 /* model kertas kliping */
+.item.clip.paper-hvs .body{background:#FDFDF8}
+.aksara-v1 .item.clip.paper-kraft .body{background:#E7CDA0;border-color:rgba(34,29,21,.3)}
+.aksara-v1 /* warna selotip */
+.tape.t-merah{background:linear-gradient(180deg,rgba(255,255,255,.55),rgba(255,255,255,.02)),rgba(192,59,33,.5)}
+.aksara-v1 .tape.t-biru{background:linear-gradient(180deg,rgba(255,255,255,.55),rgba(255,255,255,.02)),rgba(59,110,180,.5)}
+.aksara-v1 .tape.t-hitam{background:linear-gradient(180deg,rgba(255,255,255,.4),rgba(255,255,255,.02)),rgba(34,29,21,.42)}
+.aksara-v1 .item.clip .body{width:266px;padding:16px 18px 20px;background:#FBF6E8;
+  border:1px solid rgba(34,29,21,.2);box-shadow:inset 0 0 26px rgba(120,92,52,.12)}
+.aksara-v1 /* bentuk kliping */
+.item.clip.strip .body{width:190px;padding:14px 15px 18px}
+.aksara-v1 .item.clip.torn .body{border:0;
+  clip-path:polygon(0 0,100% 0,100% 94%,96% 98%,92% 94%,88% 99%,84% 94%,80% 99%,76% 94%,72% 99%,68% 94%,64% 99%,60% 94%,56% 99%,52% 94%,48% 99%,44% 94%,40% 99%,36% 94%,32% 99%,28% 94%,24% 99%,20% 94%,16% 99%,12% 94%,8% 99%,4% 94%,0 98%)}
+.aksara-v1 .item.clip .txt{font:400 .93rem/1.6 var(--fs);color:#2b241c;max-height:190px;overflow:hidden}
+.aksara-v1 .item.clip .who{margin-top:8px;font:500 8.5px var(--fm);letter-spacing:.14em;text-transform:uppercase;color:rgba(43,36,28,.5)}
+.aksara-v1 .item.pola .body{width:212px;padding:12px 12px 0;background:#FCF9F0;border:1px solid rgba(34,29,21,.16)}
+.aksara-v1 .item.pola .ph{width:100%;height:auto;aspect-ratio:1/1;background:#CDC0A6 center/cover no-repeat;display:grid;place-items:center;
+  font:500 8.5px var(--fm);letter-spacing:.14em;text-transform:uppercase;color:rgba(43,36,28,.55)}
+.aksara-v1 .item.pola .cap{font:500 1.16rem/1.2 var(--fh);color:#2b241c;padding:9px 4px 13px;text-align:center;word-break:break-word}
+.aksara-v1 /* rasio foto */
+.item.pola.r43 .ph{aspect-ratio:4/3}
+.aksara-v1 .item.pola.r34 .ph{aspect-ratio:3/4}
+.aksara-v1 .item.pola.r169 .ph{aspect-ratio:16/9}
+.aksara-v1 /* bentuk foto */
+.item.pola.flat .body{width:206px;padding:8px 8px 0}
+.aksara-v1 .item.pola.flat .ph{aspect-ratio:1/1}
+.aksara-v1 .item.pola.round .ph{aspect-ratio:1/1;border-radius:50%}
+.aksara-v1 .item.pola.round .body{width:200px}
+.aksara-v1 .item.pola.arch .ph{border-radius:100px 100px 4px 4px;aspect-ratio:3/4}
+.aksara-v1 .item.pola.arch .body{width:186px}
+.aksara-v1 .tape{position:absolute;z-index:3;left:50%;top:-9px;width:66px;height:17px;transform:translateX(-50%) rotate(var(--tr,-3deg));
+  background:linear-gradient(180deg,rgba(255,255,255,.6),rgba(255,255,255,.02)),rgba(206,178,126,.5);
+  border-left:1px dashed rgba(34,29,21,.14);border-right:1px dashed rgba(34,29,21,.14);pointer-events:none}
+.aksara-v1 .pin{position:absolute;z-index:3;left:50%;top:-7px;width:11px;height:11px;margin-left:-5.5px;border-radius:50%;
+  background:radial-gradient(circle at 32% 30%,#E4634A,#8E2814);box-shadow:0 2px 4px rgba(24,20,16,.4);pointer-events:none}
+.aksara-v1 .pin.pin-kuning{background:radial-gradient(circle at 32% 30%,#F2C230,#8A6A10)}
+.aksara-v1 .pin.pin-biru{background:radial-gradient(circle at 32% 30%,#6EA3E0,#1E4276)}
+.aksara-v1 .pin.pin-hitam{background:radial-gradient(circle at 32% 30%,#6B6259,#14110D)}
+.aksara-v1 .pin.pin-hijau{background:radial-gradient(circle at 32% 30%,#7FC47A,#2A5E28)}
+.aksara-v1 .pin.pp-kiri{left:24px;margin-left:0}
+.aksara-v1 /* posisi stiker */
+.stk.sp-tl{right:auto;left:-8px}
+.aksara-v1 .stk.segel.sp-tl{left:-6px;right:auto}
+.aksara-v1 .item.note[data-pinpos="kiri"] .sp-tl{left:auto;right:-2px}
+.aksara-v1 /* teks rata */
+.al-tengah .txt{text-align:center}
+.aksara-v1 .al-kanan .txt{text-align:right}
+.aksara-v1 /* kertas daur ulang */
+.item.note.paper-daur .body{background:radial-gradient(circle at 15% 25%,rgba(120,90,60,.2) 1.2px,transparent 1.9px) 0 0/17px 17px,radial-gradient(circle at 70% 60%,rgba(120,90,60,.16) 1px,transparent 1.7px) 6px 9px/21px 21px,linear-gradient(170deg,rgba(255,255,255,.4),rgba(255,255,255,0) 45%),var(--c,#F7E39B)}
+.aksara-v1 .item.clip.paper-daur .body{background:radial-gradient(circle at 15% 25%,rgba(120,90,60,.2) 1.2px,transparent 1.9px) 0 0/17px 17px,radial-gradient(circle at 70% 60%,rgba(120,90,60,.16) 1px,transparent 1.7px) 6px 9px/21px 21px,#FBF6E8}
+.aksara-v1 /* bingkai kayu + filter baru */
+.item.pola.frame-kayu .body{background:linear-gradient(135deg,#8A5A33,#6E4425 40%,#7D5230 60%,#5E3A1F)}
+.aksara-v1 .item.pola.frame-kayu .cap{color:#F5E8D2}
+.aksara-v1 .item.pola .ph.f-senja{filter:sepia(.45) saturate(1.35) hue-rotate(-12deg) brightness(1.02)}
+.aksara-v1 .item.pola .ph.f-koran{filter:grayscale(1) contrast(1.15) brightness(1.03)}
+.aksara-v1 /* stiker daun & panah */
+.stk.daun{color:#3E6B35;text-shadow:0 1px 0 rgba(255,255,255,.7)}
+.aksara-v1 .stk.panah{color:#C03B21;text-shadow:0 1px 0 rgba(255,255,255,.7)}
+.aksara-v1 /* amplop surat */
+.item.amplop{background:var(--c,#F6D8DD);border-radius:3px;padding:42px 12px 12px;min-width:196px;
+  box-shadow:0 2px 4px rgba(24,20,16,.2)}
+.aksara-v1 .item.amplop .aflap{position:absolute;top:0;left:0;right:0;height:38px;background:rgba(34,29,21,.13);
+  clip-path:polygon(0 0,100% 0,50% 100%);z-index:1}
+.aksara-v1 .item.amplop .txt{font:600 1rem/1.32 var(--fs);color:#2b241c;max-height:96px;word-break:break-word}
+.aksara-v1 .item.amplop .apost{position:absolute;top:6px;right:6px;width:24px;height:28px;background:#FDFBF4;
+  border:1.5px dashed rgba(34,29,21,.5);z-index:2}
+.aksara-v1 .item.amplop.buka .aletter{position:absolute;top:-13px;left:16px;right:16px;height:26px;background:#FFFDF7;
+  border:1px solid rgba(34,29,21,.22);box-shadow:0 -2px 3px rgba(24,20,16,.12);z-index:0}
+.aksara-v1 .item.amplop .stamp{bottom:8px}
+.aksara-v1 /* tag gantung */
+.item.tag{background:var(--c,#F6D8DD);border-radius:8px;padding:18px 12px 10px;min-width:120px;
+  box-shadow:0 2px 4px rgba(24,20,16,.2)}
+.aksara-v1 .item.tag.lonjong{border-radius:34px}
+.aksara-v1 .item.tag .tstring{position:absolute;top:-17px;left:50%;width:2px;height:21px;background:rgba(34,29,21,.5);
+  transform:rotate(7deg);transform-origin:bottom center}
+.aksara-v1 .item.tag .thole{position:absolute;top:5px;left:50%;width:9px;height:9px;margin-left:-4.5px;border-radius:50%;
+  background:#E9DDC4;box-shadow:inset 0 1px 2px rgba(24,20,16,.5)}
+.aksara-v1 .item.tag .txt{font:600 1.02rem/1.3 var(--fs);color:#2b241c;text-align:center;max-height:100px;word-break:break-word}
+.aksara-v1 /* segel lilin */
+.stk.segel{width:34px;height:34px;border-radius:50%;top:-14px;right:-6px;transform:rotate(-10deg);
+  background:radial-gradient(circle at 35% 30%,#D94A35,#8E1F10);
+  box-shadow:0 2px 4px rgba(24,20,16,.35),inset 0 0 0 3px rgba(255,255,255,.14),inset 0 0 0 5px rgba(142,31,16,.55);
+  display:grid;place-items:center;color:rgba(255,235,220,.9);font-size:15px}
+.aksara-v1 .stk.segel i{font-style:normal;transform:translateY(-1px)}
+.aksara-v1 /* caption foto ikut gaya & tinta */
+.item.pola.fnt-tegak .cap{font:600 1.02rem/1.25 var(--fs)}
+.aksara-v1 .item.pola.fnt-ketik .cap{font:500 .85rem/1.35 var(--fm)}
+.aksara-v1 .item.pola.fnt-stencil .cap{font:800 .9rem/1.3 var(--fd);text-transform:uppercase;letter-spacing:.03em}
+.aksara-v1 .item.pola.ink-merah .cap{color:#C03B21}
+.aksara-v1 .item.pola.ink-biru .cap{color:#2C5E9E}
+.aksara-v1 .item.pola.ink-ungu .cap{color:#7B4B94}
+.aksara-v1 .item.pola.ink-hijau .cap{color:#3E6B35}
+.aksara-v1 .item.pola.frame-hitam.ink-merah .cap{color:#E4634A}
+.aksara-v1 .item.pola.frame-hitam.ink-biru .cap{color:#8FB4E4}
+.aksara-v1 .item.pola.frame-hitam.ink-ungu .cap{color:#C9A0DC}
+.aksara-v1 .item.pola.frame-hitam.ink-hijau .cap{color:#9CCB98}
+.aksara-v1 /* perangko */
+.item.perangko{background:#FDFBF4;padding:10px;border-radius:2px;box-shadow:0 2px 4px rgba(24,20,16,.18)}
+.aksara-v1 .item.perangko.gerigi{border:2px dashed rgba(34,29,21,.45)}
+.aksara-v1 .item.perangko .pbody{background:var(--c,#F7E39B);border:2px solid rgba(255,255,255,.9);
+  outline:1px solid rgba(34,29,21,.2);padding:9px 10px 8px}
+.aksara-v1 .item.perangko .txt{font:700 1rem/1.3 var(--fm);color:#2b241c;max-height:100px;word-break:break-word}
+.aksara-v1 .item.perangko .pnom{font:700 8px var(--fm);letter-spacing:.18em;color:rgba(34,29,21,.55);
+  margin-top:5px;text-transform:uppercase;display:flex;justify-content:space-between}
+.aksara-v1 /* ---------- hint & tools di dalam papan ---------- */
+.boardHint{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);z-index:5;text-align:center;
+  pointer-events:none;padding:0 18px;width:100%}
+.aksara-v1 .boardHint .bhLabel{font:500 10px var(--fm);letter-spacing:.3em;text-transform:uppercase;color:var(--red);margin-bottom:10px}
+.aksara-v1 .boardHint p.bhText{font:italic 400 clamp(.94rem,2.7vw,1.04rem)/1.6 var(--fs);color:rgba(34,29,21,.55);max-width:30ch;margin:0 auto}
+.aksara-v1 .boardHint.hide{display:none}
+.aksara-v1 .tools{display:flex;gap:5px;margin-left:auto;align-self:center}
+.aksara-v1 .tool{width:28px;height:28px;border-radius:7px;border:1px solid rgba(34,29,21,.22);
+  background:rgba(255,255,255,.5);color:var(--ink);font:500 .84rem/1 var(--fm);cursor:pointer;
+  display:grid;place-items:center}
+.aksara-v1 .tool:active{transform:scale(.94)}
+.aksara-v1 .tool.small{width:32px;font-size:.62rem;letter-spacing:.04em}
+.aksara-v1 /* ---------- folio ---------- */
+.folio{display:flex;flex-wrap:wrap;gap:6px 16px;justify-content:space-between;margin-top:12px;
+  border-top:1px solid var(--line);padding-top:9px;padding-right:26px;font:400 9.5px var(--fm);letter-spacing:.12em;
+  text-transform:uppercase;color:rgba(34,29,21,.55)}
+.aksara-v1 .folio b{color:var(--ink)}
+.aksara-v1 /* ---------- sheet pemilih ---------- */
+.sheet{position:fixed;inset:0;z-index:100;display:none;align-items:flex-end;justify-content:center;
+  background:rgba(24,20,16,.45);backdrop-filter:blur(2px)}
+.aksara-v1 .sheet.open{display:flex}
+.aksara-v1 .panel{width:min(520px,100%);background:var(--paper);border-radius:18px 18px 0 0;
+  border-top:2px solid var(--ink);padding:16px clamp(16px,5vw,26px) calc(18px + env(safe-area-inset-bottom));
+  animation:up .28s cubic-bezier(.2,.8,.3,1) both;max-height:92vh;overflow-y:auto}
+@keyframes up{from{transform:translateY(28px);opacity:.6}to{transform:none;opacity:1}}
+.aksara-v1 .panel h3{font:600 1.06rem var(--fd);margin-bottom:2px}
+.aksara-v1 .panel .sub{font:italic 400 .84rem/1.5 var(--fs);color:rgba(34,29,21,.55);margin-bottom:13px}
+.aksara-v1 .kinds{display:flex;gap:8px;overflow-x:auto;padding-bottom:8px;margin-bottom:6px;scrollbar-width:thin}
+.aksara-v1 .kind{min-width:74px;flex:0 0 auto;border:1px solid rgba(34,29,21,.22);background:rgba(255,255,255,.42);border-radius:10px;
+  padding:10px 6px;cursor:pointer;display:grid;justify-items:center;gap:4px;transition:background .16s,border-color .16s}
+.aksara-v1 .kind[aria-pressed="true"]{background:var(--ink);border-color:var(--ink);color:var(--paper)}
+.aksara-v1 .kind span{font:500 9.5px var(--fm);letter-spacing:.1em;text-transform:uppercase}
+.aksara-v1 .kind i{font-size:1.15rem;font-style:normal;line-height:1}
+.aksara-v1 /* pemilih bentuk */
+.shapes{display:flex;gap:6px;flex-wrap:wrap;margin:0 0 10px}
+.aksara-v1 .shape{border:1px solid rgba(34,29,21,.22);background:rgba(255,255,255,.42);border-radius:8px;
+  padding:6px 7px 4px;cursor:pointer;display:grid;justify-items:center;gap:3px;min-width:54px;
+  transition:background .16s,border-color .16s}
+.aksara-v1 .shape[aria-pressed="true"]{border-color:var(--red);background:rgba(192,59,33,.09)}
+.aksara-v1 .shape b{display:block;width:22px;height:16px;border:1.6px solid rgba(34,29,21,.55);border-radius:2px}
+.aksara-v1 .shape[data-shape="round"] b{border-radius:50%;width:18px;height:18px}
+.aksara-v1 .shape[data-shape="tall"] b{width:13px;height:21px}
+.aksara-v1 .shape[data-shape="wide"] b{width:27px;height:13px}
+.aksara-v1 .shape[data-shape="strip"] b{width:12px;height:22px}
+.aksara-v1 .shape[data-shape="arch"] b{border-radius:11px 11px 2px 2px;width:19px;height:22px}
+.aksara-v1 .shape[data-shape="flat"] b{border-radius:1px;width:22px;height:22px}
+.aksara-v1 .shape[data-shape="torn"] b{border:0;height:18px;
+  background:linear-gradient(180deg,rgba(34,29,21,.55),rgba(34,29,21,.55)) top/100% 1.6px no-repeat,
+             linear-gradient(180deg,rgba(34,29,21,.55),rgba(34,29,21,.55)) bottom/100% 1.6px no-repeat,
+             linear-gradient(90deg,rgba(34,29,21,.55),rgba(34,29,21,.55)) left/1.6px 100% no-repeat,
+             linear-gradient(90deg,rgba(34,29,21,.55),rgba(34,29,21,.55)) right/1.6px 70% no-repeat;
+  clip-path:polygon(0 0,100% 0,100% 78%,92% 100%,84% 78%,76% 100%,68% 78%,60% 100%,52% 78%,44% 100%,36% 78%,28% 100%,20% 78%,12% 100%,4% 78%,0 92%)}
+.aksara-v1 .shape span{font:500 8.5px var(--fm);letter-spacing:.06em;text-transform:uppercase;color:rgba(34,29,21,.7)}
+.aksara-v1 .shape[aria-pressed="true"] span{color:var(--red)}
+.aksara-v1 .shape.swatch b{border-radius:50%;width:22px;height:22px;border:1.6px solid rgba(34,29,21,.4)}
+.aksara-v1 .shape .pick{width:22px;height:22px;border-radius:50%;border:1.6px dashed rgba(34,29,21,.5);display:grid;place-items:center;font-size:13px;color:rgba(34,29,21,.6);overflow:hidden;position:relative}
+.aksara-v1 .shape .pick input{position:absolute;inset:-6px;width:40px;height:40px;opacity:0;cursor:pointer}
+.aksara-v1 /* stiker tempel */
+.stk{position:absolute;z-index:4;top:-13px;right:0;font-size:28px;line-height:1;pointer-events:none;transform:rotate(10deg)}
+.aksara-v1 .stk.bintang{color:#E8A013;text-shadow:0 1px 0 rgba(255,255,255,.7),0 2px 3px rgba(24,20,16,.35)}
+.aksara-v1 .stk.hati{color:#C03B21;text-shadow:0 1px 0 rgba(255,255,255,.7),0 2px 3px rgba(24,20,16,.3)}
+.aksara-v1 .stk.petir{color:#E8A013;text-shadow:0 1px 0 rgba(255,255,255,.7),0 2px 3px rgba(24,20,16,.35)}
+.aksara-v1 .stk.cap{width:46px;height:46px;border:3px solid rgba(192,59,33,.85);border-radius:50%;top:-15px;right:-8px;transform:rotate(-12deg);box-shadow:inset 0 0 0 1px rgba(255,255,255,.35)}
+.aksara-v1 /* filter foto ala cetakan lama */
+.item.pola .ph.f-sepia{filter:sepia(.65) contrast(.96) brightness(.99)}
+.aksara-v1 .item.pola .ph.f-bw{filter:grayscale(1) contrast(1.06)}
+.aksara-v1 .item.pola .ph.f-pudar{filter:sepia(.28) brightness(1.07) contrast(.88)}
+.aksara-v1 .field{margin-bottom:10px}
+.aksara-v1 .field textarea,.aksara-v1 .field input[type=text]{width:100%;font:400 1rem/1.55 var(--fs);color:var(--ink);
+  background:rgba(255,255,255,.55);border:1px solid rgba(34,29,21,.22);border-radius:9px;padding:10px 12px}
+.aksara-v1 .field textarea{min-height:78px;resize:none}
+.aksara-v1 .field textarea:focus,.aksara-v1 .field input:focus{outline:none;border-color:var(--red)}
+.aksara-v1 .row{display:flex;gap:9px}
+.aksara-v1 .btn{background:var(--ink);color:var(--paper);border:0;border-radius:9px;padding:12px 20px;
+  font:600 .94rem var(--fd);cursor:pointer}
+.aksara-v1 .btn.ghost{background:transparent;color:var(--ink);border:1px solid rgba(34,29,21,.24);font:500 .92rem var(--fs)}
+.aksara-v1 .btn.grow{flex:1}
+.aksara-v1 input[type=range]{-webkit-appearance:none;appearance:none;width:100%;height:6px;border-radius:99px;
+  background:rgba(34,29,21,.18);outline:none;margin:8px 0 2px}
+.aksara-v1 input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:24px;height:24px;border-radius:50%;
+  background:var(--ink);border:2px solid var(--paper);box-shadow:0 2px 6px rgba(24,20,16,.4);cursor:pointer}
+.aksara-v1 input[type=range]::-moz-range-thumb{width:22px;height:22px;border-radius:50%;background:var(--ink);
+  border:2px solid var(--paper);cursor:pointer}
+.aksara-v1 .field label span{float:right;color:var(--red);letter-spacing:0}
+.aksara-v1 .preview{display:none;margin-bottom:10px}
+.aksara-v1 .preview.on{display:block}
+.aksara-v1 .preview img{width:100%;max-height:150px;object-fit:cover;border-radius:9px;border:1px solid rgba(34,29,21,.2)}
+.aksara-v1 /* pratinjau bingkai live: pakai kelas item asli supaya sama persis dengan hasil tempel */
+.livePrev{display:none;margin:0;justify-content:center}
+.aksara-v1 .livePrev.on{display:flex;position:sticky;top:-17px;z-index:6;background:var(--paper);
+  padding:10px 0 12px;box-shadow:0 12px 14px -14px rgba(24,20,16,.5)}
+.aksara-v1 .preview{display:none !important}
+.aksara-v1 .livePrev .item{position:relative;left:auto !important;top:auto !important;
+  transform:rotate(-2deg) !important;cursor:default;max-width:100%}
+.aksara-v1 .livePrev .item .body{box-shadow:0 8px 14px -8px rgba(24,20,16,.45)}
+.aksara-v1 .livePrev .cap:empty::before{content:"Caption…";opacity:.45}
+.aksara-v1 .ctx{position:fixed;inset:0;z-index:95;display:none}
+.aksara-v1 .ctx.open{display:block;background:rgba(24,20,16,.26);backdrop-filter:blur(5px)}
+.aksara-v1 .ctxGhost{position:fixed;z-index:96;pointer-events:none;transform-origin:0 0}
+.aksara-v1 .ctxMenu{position:fixed;z-index:120;display:none;min-width:238px;max-width:min(320px,calc(100vw - 20px));
+  background:rgba(247,241,225,.99);border:1px solid rgba(34,29,21,.22);border-radius:14px;padding:6px;
+  box-shadow:0 26px 44px -24px rgba(24,20,16,.75)}
+.aksara-v1 .ctxMenu.open{display:block}
+.aksara-v1 .cmTitle{font:600 .68rem var(--fm);letter-spacing:.14em;text-transform:uppercase;color:rgba(34,29,21,.42);
+  padding:2px 8px 4px}
+.aksara-v1 .cmRot{padding:0 8px 4px}
+.aksara-v1 .cmRot label{display:block;font:500 .78rem var(--fm);letter-spacing:.1em;text-transform:uppercase;
+  color:rgba(34,29,21,.6);margin-bottom:2px}
+.aksara-v1 .cmRot label span{float:right;color:var(--red);letter-spacing:0}
+.aksara-v1 .cmRow{display:flex;gap:5px;margin-top:5px}
+.aksara-v1 .cmRow button{flex:1;padding:6px 4px !important;justify-content:center;font:500 .8rem var(--fs) !important;
+  border:1px solid rgba(34,29,21,.2) !important;border-radius:8px}
+.aksara-v1 .ctxMenu.bottom{left:10px !important;right:10px;top:auto !important;bottom:calc(12px + env(safe-area-inset-bottom));
+  min-width:0;max-width:none}
+.aksara-v1 .ctxMenu button{display:flex;align-items:center;gap:10px;width:100%;background:none;border:0;
+  padding:8px 10px;border-radius:8px;font:500 .95rem var(--fs);color:var(--ink);cursor:pointer;text-align:left}
+.aksara-v1 .ctxMenu button:hover,.aksara-v1 .ctxMenu button:active{background:rgba(34,29,21,.07)}
+.aksara-v1 .ctxMenu button.danger{color:var(--red)}
+.aksara-v1 .optLabel{font:600 9px var(--fm);letter-spacing:.14em;text-transform:uppercase;color:rgba(34,29,21,.5);margin:0 0 5px}
+.aksara-v1 .optLabel[hidden]{display:none}
+.aksara-v1 .advToggle{width:100%;background:transparent;border:1px dashed rgba(34,29,21,.3);border-radius:9px;
+  padding:9px;font:500 .85rem var(--fs);color:rgba(34,29,21,.65);margin:0 0 10px;cursor:pointer}
+.aksara-v1 #advOpts[hidden]{display:none}
+.aksara-v1 .toast button{background:rgba(255,255,255,.18);border:1px solid rgba(255,255,255,.45);color:var(--paper);
+  border-radius:99px;padding:4px 12px;margin-left:10px;font:600 .8rem var(--fs);cursor:pointer}
+.aksara-v1 .ctxMenu hr{border:0;border-top:1px solid rgba(34,29,21,.14);margin:3px 6px}
+.aksara-v1 .item.move-mode{outline:2px dashed var(--red);outline-offset:5px}
+.aksara-v1 #cmMore[hidden]{display:none}
+.aksara-v1 #cmMore button{margin-top:4px}
+.aksara-v1 .ctxMenu.peeked{display:none}
+.aksara-v1 #menuShow{position:fixed;left:50%;bottom:calc(14px + env(safe-area-inset-bottom));transform:translateX(-50%);z-index:130;
+  background:var(--ink);color:var(--paper);border:0;border-radius:99px;padding:10px 18px;
+  font:500 .85rem var(--fs);box-shadow:0 10px 24px rgba(0,0,0,.35);cursor:pointer}
+.aksara-v1 #menuShow[hidden]{display:none}
+.aksara-v1 .moveBar{position:fixed;left:10px;right:10px;bottom:calc(12px + env(safe-area-inset-bottom));z-index:120;
+  display:none;background:rgba(247,241,225,.98);border:1px solid rgba(34,29,21,.22);border-radius:14px;
+  padding:10px 12px;box-shadow:0 26px 44px -24px rgba(24,20,16,.75)}
+.aksara-v1 .moveBar.open{display:block}
+.aksara-v1 .moveHint{display:block;font:italic 400 .86rem/1.5 var(--fs);color:rgba(34,29,21,.65);margin-bottom:8px;text-align:center}
+.aksara-v1 .moveActions{display:flex;gap:8px}
+.aksara-v1 .moveActions .btn{flex:1;padding:11px 10px;font-size:.92rem}
+.aksara-v1 .toast{position:fixed;left:50%;bottom:26px;transform:translate(-50%,14px);z-index:120;
+  background:rgba(34,29,21,.93);color:var(--paper);padding:10px 18px;border-radius:99px;
+  font:500 .86rem var(--fs);opacity:0;pointer-events:none;transition:opacity .26s,transform .26s}
+.aksara-v1 .toast.show{opacity:1;transform:translate(-50%,0)}
+@media(max-width:480px){.aksara-v1 .mast h1{font-size:2.5rem}.aksara-v1 .mast .orn{font-size:8.5px}.aksara-v1 .dataline{font-size:9px}}
+/* ---------- bar aksi di bawah papan ---------- */
+.aksara-v1 .madingBar{display:flex;gap:8px;justify-content:flex-end;flex-wrap:wrap;margin:10px 0 28px}
+.aksara-v1 .mBtn{font:600 .84rem var(--fd);background:var(--ink);color:var(--paper);
+  border:0;border-radius:99px;padding:9px 18px;cursor:pointer;text-decoration:none;
+  box-shadow:0 8px 14px -10px rgba(24,20,16,.7);transition:transform .16s}
+.aksara-v1 .mBtn:active{transform:scale(.97)}
+.aksara-v1 .mBtnGhost{background:transparent;color:var(--red);box-shadow:none;
+  border:1.5px dashed rgba(192,59,33,.5)}
