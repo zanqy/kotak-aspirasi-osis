@@ -177,18 +177,10 @@ h1{color:#2a2119;text-shadow:none}
     <div><h1>Tulis suratmu...</h1><p class="sub">Pos kilat redaksi · sampai hari ini juga</p></div>
   </div>
   <div class="verse"><div class="orn">❦</div><p id="verse"></p></div>
-  <div class="types" role="group" aria-label="Jenis surat">
-    <button class="type" data-t="surat" aria-pressed="true" style="--c:#2c5d8a"><i></i>SURAT</button>
-    <button class="type" data-t="anonim" aria-pressed="false" style="--c:#2a2119"><i></i>ANONIM</button>
-    <button class="type" data-t="perpisahan" aria-pressed="false" style="--c:#b03a6a"><i></i>PERPISAHAN</button>
-    <button class="type" data-t="apresiasi" aria-pressed="false" style="--c:#b8860b"><i></i>APRESIASI</button>
-    <button class="type" data-t="manfess" aria-pressed="false" style="--c:#3a3348"><i></i>MANFESS</button>
-  </div>
-  <p class="hint" id="hint"></p>
 
   <div class="stage" id="stage">
     <div class="sheet" id="sheet"><div class="paper">
-      <div class="row head"><span>❦ AKSARA POST · <span id="lbl" style="letter-spacing:2px;font-style:normal;font-size:9.5px">SURAT</span></span><span id="dt"></span></div>
+      <div class="row head"><span>❦ AKSARA POST</span><span id="dt"></span></div>
       <div class="row"><label for="to">Teruntuk</label><input id="to" maxlength="40" placeholder="nama penerima..." autocomplete="off"></div>
       <textarea id="msg" maxlength="600" placeholder="Tulis suratmu di sini..."></textarea>
       <div class="row sal">Salam hangat,</div>
@@ -218,30 +210,14 @@ h1{color:#2a2119;text-shadow:none}
 <div class="overlay" id="ov" aria-live="polite"><div class="card"><h3>Surat meluncur!</h3><p id="trk"></p><button id="again">Tulis lagi</button></div></div>
 
 <script>
-const T={
- surat:{h:"Surat biasa ke teman. Namamu tercantum.",c:"#2c5d8a",l:"SURAT",i:"✉",f:"#d6e5f3",bg:"#d6e5f3",fg:"#1f4466",st:"tanpa",sk:"segel"},
- anonim:{h:"Tanpa nama. Kami janji tutup mulut.",c:"#2a2119",l:"ANONIM",i:"?",f:"#9a8b76",bg:"#2a2119",fg:"#f4ead2",a:1,st:"rahasia",sk:"awan"},
- perpisahan:{h:"Untuk yang pergi, atau yang harus dilepas.",c:"#b03a6a",l:"PERPISAHAN",i:"♥",f:"#f4cfdd",bg:"#f8e3ec",fg:"#8c2a53",st:"love",sk:"hati"},
- apresiasi:{h:"Ucapan terima kasih atau pujian yang tulus.",c:"#b8860b",l:"APRESIASI",i:"★",f:"#f3dd96",bg:"#f6e2a0",fg:"#6b4d00",st:"semangat",sk:"kilau"},
- manfess:{h:"Pengakuan rahasia. Anonim otomatis.",c:"#3a3348",l:"MANFESS",i:"☾",f:"#8f86a8",bg:"#3a3348",fg:"#f4ead2",a:1,st:"rahasia2",sk:"bulan"}};
 const $=s=>document.querySelector(s),stage=$("#stage"),env=$("#env"),msg=$("#msg"),to=$("#to"),from=$("#from");
-let cur="surat",anon=false,auto=0,posted=[];const wait=(f,ms)=>setTimeout(f,ms);
+let anon=false,auto=0,posted=[];const wait=(f,ms)=>setTimeout(f,ms);
 $("#dt").textContent=new Date().toLocaleDateString("id-ID",{day:"numeric",month:"long",year:"numeric"});
 try{var _d=new Date(),_m=["JAN","FEB","MAR","APR","MEI","JUN","JUL","AGU","SEP","OKT","NOV","DES"],_mm=_m[_d.getMonth()];
 document.getElementById("stD").textContent=_d.getDate();document.getElementById("stM").textContent=_mm;
 document.getElementById("pmD").textContent=_d.getDate()+" "+_mm+" "+String(_d.getFullYear()).slice(2);}catch(e){}
 
-function setType(t){
-  cur=t;const c=T[t];
-  document.querySelectorAll(".type").forEach(b=>b.setAttribute("aria-pressed",b.dataset.t===t));
-  $("#hint").textContent=c.h;$("#lbl").textContent=c.l;
-  $("#fBg").setAttribute("fill",c.c);$("#fIc").textContent=c.i;
-  document.documentElement.style.setProperty("--accent",c.c);
-  stage.style.setProperty("--c",c.c);stage.style.setProperty("--flap",c.f);
-  if(c.a){setAnon(true);auto=1}else if(auto){setAnon(false);auto=0}
-}
 function setAnon(v){anon=v;$("#sw").setAttribute("aria-checked",v);from.disabled=v;from.placeholder=v?"tanpa nama":"namamu...";from.style.opacity=v?.35:1}
-document.querySelectorAll(".type").forEach(b=>b.onclick=()=>setType(b.dataset.t));
 $("#sw").onclick=()=>{auto=0;setAnon(!anon)};
 msg.oninput=()=>$("#cnt").textContent=msg.value.length+" / 600";
 
@@ -263,15 +239,15 @@ $("#again").onclick=()=>{
   $("#ov").classList.remove("on");
   wait(()=>{
     stage.className="stage";env.className="env";$("#flap").classList.remove("shut");
-    msg.value=to.value=from.value="";$("#cnt").textContent="0 / 600";setAnon(false);auto=0;setType("surat");
+    msg.value=to.value=from.value="";$("#cnt").textContent="0 / 600";setAnon(false);auto=0;
   },400);
 };
 function save(){
-  var rcv=to.value.trim()||"Seseorang",snd=anon?"???":(from.value.trim()||"Seseorang"),c=T[cur];
-  posted.unshift({t:cur,to:rcv,from:snd});
+  var rcv=to.value.trim()||"Seseorang",snd=anon?"???":(from.value.trim()||"Seseorang");
+  posted.unshift({to:rcv,from:snd});
   try{
         var log=[];try{log=JSON.parse(localStorage.getItem("aksara_kiriman_v1"))||[]}catch(e){}
-    log.push({kind:cur,to:rcv,from:anon?"Anonim":snd,isi:msg.value.trim().slice(0,500),at:Date.now()});
+    log.push({to:rcv,from:anon?"Anonim":snd,isi:msg.value.trim().slice(0,500),at:Date.now()});
     localStorage.setItem("aksara_kiriman_v1",JSON.stringify(log));
   }catch(e){}
 }
@@ -280,7 +256,6 @@ const V=["Ada kata yang hanya berani pulang lewat tulisan.","Surat adalah rindu 
 let vi=0;const ve=$("#verse");ve.textContent=V[0];
 setInterval(()=>{ve.style.opacity=0;wait(()=>{vi=(vi+1)%V.length;ve.textContent=V[vi];ve.style.opacity=1},700)},6500);
 const mo=$("#motes");for(let i=0;i<16;i++){const m=document.createElement("i");m.className="mote";const s=2+Math.random()*3;m.style.cssText=`left:${Math.random()*100}%;width:${s}px;height:${s}px;animation-duration:${14+Math.random()*14}s;animation-delay:-${Math.random()*20}s`;mo.appendChild(m)}
-setType("surat");
 </script>
 </body>
 </html>
