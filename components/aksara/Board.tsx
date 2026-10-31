@@ -7,7 +7,7 @@ const BOARD_W = 1400;
 const BOARD_H = 1400;
 
 type BoardItem = {
-  id: string;
+  id?: string;
   kind: string;
   x: number;
   y: number;
@@ -234,9 +234,9 @@ export default function Board({ items, onItemTap, onItemLongPress }: BoardProps)
           transform: `translate(${view.x}px, ${view.y}px) scale(${view.s})`,
         }}
       >
-        {items.map((item) => (
+        {items.map((item, i) => (
           <div
-            key={item.id}
+            key={item.id || i}
             className="absolute select-none"
             style={{
               left: item.x,
