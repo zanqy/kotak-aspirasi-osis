@@ -116,15 +116,23 @@ main{max-width:520px;margin:0 auto;padding:10px 14px 60px;display:grid;gap:18px}
   animation:feed 2.4s ease-in-out infinite}
 @keyframes feed{0%{transform:translateY(-5px)}50%{transform:translateY(5px)}100%{transform:translateY(-5px)}}
 .inkLine{display:flex;justify-content:center;gap:2px;font:900 26px var(--fd);color:var(--ink)}
-.inkLine span{display:inline-block;opacity:0;animation:inkw 2.4s ease-out infinite}
-.inkLine span:nth-child(1){animation-delay:.25s}.inkLine span:nth-child(2){animation-delay:.45s}
-.inkLine span:nth-child(3){animation-delay:.65s}.inkLine span:nth-child(4){animation-delay:.9s}
-.inkLine span:nth-child(5){animation-delay:1.15s}.inkLine span:nth-child(6){animation-delay:1.45s;color:var(--red)}
-@keyframes inkw{0%{opacity:0;transform:translateY(4px) scale(.9)}3%{opacity:1;transform:none}88%{opacity:1}95%,100%{opacity:0;transform:none}}
+.inkLine span{display:inline-block;opacity:0}
+.inkLine span:nth-child(1){animation:ink1 4.8s ease-out infinite}
+.inkLine span:nth-child(2){animation:ink2 4.8s ease-out infinite}
+.inkLine span:nth-child(3){animation:ink3 4.8s ease-out infinite}
+.inkLine span:nth-child(4){animation:ink4 4.8s ease-out infinite}
+.inkLine span:nth-child(5){animation:ink5 4.8s ease-out infinite}
+.inkLine span:nth-child(6){animation:ink6 4.8s ease-out infinite;color:var(--red)}
+@keyframes ink1{0%{opacity:0;transform:translateY(4px) scale(.9)}4.6%{opacity:0;transform:translateY(4px) scale(.9)}5.6%{opacity:1;transform:none}55.6%{opacity:1}57.6%{opacity:0;transform:none}100%{opacity:0;transform:translateY(4px) scale(.9)}}
+@keyframes ink2{0%{opacity:0;transform:translateY(4px) scale(.9)}8.8%{opacity:0;transform:translateY(4px) scale(.9)}9.8%{opacity:1;transform:none}59.8%{opacity:1}61.8%{opacity:0;transform:none}100%{opacity:0;transform:translateY(4px) scale(.9)}}
+@keyframes ink3{0%{opacity:0;transform:translateY(4px) scale(.9)}13%{opacity:0;transform:translateY(4px) scale(.9)}14%{opacity:1;transform:none}64%{opacity:1}66%{opacity:0;transform:none}100%{opacity:0;transform:translateY(4px) scale(.9)}}
+@keyframes ink4{0%{opacity:0;transform:translateY(4px) scale(.9)}18.2%{opacity:0;transform:translateY(4px) scale(.9)}19.2%{opacity:1;transform:none}69.2%{opacity:1}71.2%{opacity:0;transform:none}100%{opacity:0;transform:translateY(4px) scale(.9)}}
+@keyframes ink5{0%{opacity:0;transform:translateY(4px) scale(.9)}23.4%{opacity:0;transform:translateY(4px) scale(.9)}24.4%{opacity:1;transform:none}74.4%{opacity:1}76.4%{opacity:0;transform:none}100%{opacity:0;transform:translateY(4px) scale(.9)}}
+@keyframes ink6{0%{opacity:0;transform:translateY(4px) scale(.9)}29.6%{opacity:0;transform:translateY(4px) scale(.9)}30.6%{opacity:1;transform:none}80.6%{opacity:1}82.6%{opacity:0;transform:none}100%{opacity:0;transform:translateY(4px) scale(.9)}}
 .edisi{margin-top:6px;font:700 10px var(--fm);letter-spacing:.24em;color:var(--red);
   border:1.5px solid rgba(192,59,33,.7);border-radius:4px;display:inline-block;padding:2px 8px;
-  opacity:0;transform:rotate(-6deg);animation:edisiin 2.4s ease infinite;animation-delay:1.75s}
-@keyframes edisiin{0%{opacity:0;transform:scale(1.6) rotate(-6deg)}4%{opacity:1;transform:scale(1) rotate(-6deg)}86%{opacity:1}93%,100%{opacity:0;transform:scale(1) rotate(-6deg)}}
+  opacity:0;transform:rotate(-6deg);animation:edisiin 4.8s ease infinite}
+@keyframes edisiin{0%,32%{opacity:0;transform:scale(1.6) rotate(-6deg)}34%{opacity:1;transform:scale(1) rotate(-6deg)}55%{opacity:1}57%,100%{opacity:0;transform:scale(1) rotate(-6deg)}}
 .roller{margin-top:14px;width:190px;height:20px;border-radius:99px;position:relative;
   background:repeating-linear-gradient(90deg,var(--ink) 0 10px,#4a4036 10px 20px);
   animation:roll 1s linear infinite;box-shadow:0 4px 6px -2px rgba(24,20,16,.5)}
@@ -188,7 +196,7 @@ footer{max-width:520px;margin:0 auto;padding:0 18px 40px;font:italic 400 .85rem 
         <div class="pressHint" style="left:0;right:0;text-align:center">mencetak edisi 231…</div>
       </div>
     </div>
-    <p class="note"><b>Cara kerja:</b> huruf besi mengetuk turun berurutan (duk-duk-duk), tiap ketukan meletupkan tinta, kertas keluar dengan hasil cetak AKSARA. + cap EDISI 231. Pas loading selesai, kertas penuh terangkat ke papan.</p>
+    <p class="note"><b>Cara kerja:</b> kertas mulai kosong — balok A turun, DUK, huruf A muncul. Satu-satu sampai AKSARA. + cap EDISI 231. Lalu balok A turun lagi dan huruf A terhapus, nyusul yang lain, sampai kertas kosong lagi — loop dari awal.</p>
   </section>
 </main>
 <footer>AKSARA. · edisi 231 — pilih nomormu, nanti dipasang di halaman mading.</footer>
