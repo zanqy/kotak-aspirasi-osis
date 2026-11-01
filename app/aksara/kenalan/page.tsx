@@ -5,6 +5,7 @@ import { useEffect, useState, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { useAuth } from "@/lib/aksara/auth";
+import PressLoader from "@/components/aksara/PressLoader";
 
 function KenalanInner() {
   const router = useRouter();
@@ -45,8 +46,11 @@ function KenalanInner() {
 
   if (status === "loading") {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-[#F2ECDE]">
-        <p className="font-[var(--font-caveat)] text-xl">Memuat…</p>
+<div
+        className="bg-[#E9DDC4] grid place-items-center px-6 py-8"
+        style={{ minHeight: "calc(100dvh - 3.2rem)" }}
+      >
+        <PressLoader label="Memuat…" />
       </div>
     );
   }
@@ -146,9 +150,12 @@ export default function KenalanPage() {
   return (
     <Suspense
       fallback={
-        <div className="min-h-screen flex items-center justify-center bg-[#F2ECDE]">
-          <p className="font-[var(--font-caveat)] text-xl">Memuat…</p>
-        </div>
+        <div
+        className="bg-[#E9DDC4] grid place-items-center px-6 py-8"
+        style={{ minHeight: "calc(100dvh - 3.2rem)" }}
+      >
+        <PressLoader label="Menyiapkan…" />
+      </div>
       }
     >
       <KenalanInner />

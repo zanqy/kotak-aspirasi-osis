@@ -4,6 +4,7 @@
 import { Suspense, useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useAuth } from "@/lib/aksara/auth";
+import PressLoader from "@/components/aksara/PressLoader";
 
 function MasukInner() {
   const router = useRouter();
@@ -98,9 +99,12 @@ export default function MasukPage() {
   return (
     <Suspense
       fallback={
-        <div className="min-h-screen flex items-center justify-center bg-[#F2ECDE]">
-          <p className="font-[var(--font-caveat)] text-xl">Memuat…</p>
-        </div>
+        <div
+        className="bg-[#E9DDC4] grid place-items-center px-6 py-8"
+        style={{ minHeight: "calc(100dvh - 3.2rem)" }}
+      >
+        <PressLoader label="Menyiapkan…" />
+      </div>
       }
     >
       <MasukInner />

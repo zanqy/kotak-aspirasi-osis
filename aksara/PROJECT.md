@@ -112,6 +112,12 @@ keping diberi label asal: UMUM/KELAS/PRIBADI).
 - `index.html` papan = user-LOCKED (jangan diubah tanpa izin).
 - Jangan buka/salin/commit file Firebase Admin SDK di `~/Downloads/`.
 - Link live pakai cache-buster `?v=N`.
+- **Loading = mesin cetak koran, WAJIB di semua halaman AKSARA.**
+  Setiap momen loading (auth, papan, home, masuk, kenalan, gate) HARUS memakai
+  `PressLoader` (`components/aksara/PressLoader.tsx`) — animasi huruf besi
+  mengetuk berurutan, tinta muncul pas hantaman, cap EDISI 231 terakhir.
+  Referensi yang disetujui: `aksara/loading.html` demo 03. Tidak boleh ada
+  teks "Memuat…" polos tanpa mesin cetak.
 
 ## 10. Yang masih jadi tanda tanya (butuh keputusanmu)
 
