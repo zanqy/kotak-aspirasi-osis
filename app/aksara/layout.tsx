@@ -3,6 +3,7 @@ import { Fraunces, Spectral, IBM_Plex_Mono, Caveat } from "next/font/google";
 import { AksaraAuthProvider } from "@/lib/aksara/auth";
 import AksaraNav from "@/components/aksara/AksaraNav";
 import "./legacy-board.css";
+import "./kirim-legacy.css";
 
 const fraunces = Fraunces({
   subsets: ["latin"],
@@ -49,7 +50,7 @@ export default function AksaraLayout({
     >
       <link
         rel="stylesheet"
-        href="https://fonts.googleapis.com/css2?family=Gochi+Hand&display=swap"
+        href="https://fonts.googleapis.com/css2?family=Gochi+Hand&family=La+Belle+Aurore&family=Cormorant+Garamond:ital,wght@1,600&family=Special+Elite&display=swap"
       />
       <AksaraAuthProvider>
         <AksaraNav />
