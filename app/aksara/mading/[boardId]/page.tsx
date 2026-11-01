@@ -7,6 +7,7 @@ import { useAuth } from "@/lib/aksara/auth";
 import Board from "@/components/aksara/Board";
 import ItemSheet from "@/components/aksara/ItemSheet";
 import ContextMenu from "@/components/aksara/ContextMenu";
+import PressLoader from "@/components/aksara/PressLoader";
 import {
   subscribeItems,
   addItem,
@@ -318,8 +319,8 @@ export default function BoardPage() {
 
   if (status === "loading" || (canView && !loaded)) {
     return (
-      <div className="min-h-screen bg-[#E9DDC4] flex flex-col items-center justify-center gap-2 px-6 text-center">
-        <p className="font-[var(--font-caveat)] text-xl">Memuat papan…</p>
+      <div className="min-h-[calc(100vh-3.2rem)] bg-[#E9DDC4] grid place-items-center px-6">
+        <PressLoader label="Memuat papan…" />
       </div>
     );
   }

@@ -485,3 +485,50 @@
 .aksara-v1 .mBtn:active{transform:scale(.97)}
 .aksara-v1 .mBtnGhost{background:transparent;color:var(--red);box-shadow:none;
   border:1.5px dashed rgba(192,59,33,.5)}
+
+/* ---------- mesin cetak: animasi loading (dari aksara/loading.html demo 03) ---------- */
+.aksara-v1 .pressScene{position:relative;width:280px;max-width:88vw;height:218px;overflow:hidden}
+.aksara-v1 .pressFade{position:absolute;inset:0}
+.aksara-v1 .typeRow{display:flex;gap:4px;justify-content:center;margin-top:8px}
+.aksara-v1 .typeRow b{font:900 22px var(--fd);background:linear-gradient(180deg,#57493c,#221D15 70%);color:var(--paper);
+  width:30px;height:40px;display:grid;place-items:center;border-radius:4px;
+  box-shadow:inset 0 -6px 0 rgba(0,0,0,.4),0 3px 0 rgba(0,0,0,.25);
+  animation:aks-typedrop 2.4s cubic-bezier(.2,.9,.3,1.2) infinite}
+.aksara-v1 .typeRow b.dot{background:linear-gradient(180deg,#d94a35,#8e1f10)}
+.aksara-v1 .typeRow b:nth-child(1){animation-delay:.15s}.aksara-v1 .typeRow b:nth-child(2){animation-delay:.35s}
+.aksara-v1 .typeRow b:nth-child(3){animation-delay:.55s}.aksara-v1 .typeRow b:nth-child(4){animation-delay:.8s}
+.aksara-v1 .typeRow b:nth-child(5){animation-delay:1.05s}.aksara-v1 .typeRow b:nth-child(6){animation-delay:1.35s}
+@keyframes aks-typedrop{0%{transform:translateY(0)}5%{transform:translateY(15px)}9%{transform:translateY(-2px)}13%,100%{transform:translateY(0)}}
+.aksara-v1 .burst{position:absolute;inset:0;pointer-events:none}
+.aksara-v1 .burst i{position:absolute;top:58px;width:6px;height:6px;border-radius:50%;opacity:0;
+  animation:aks-burst 2.4s linear infinite}
+@keyframes aks-burst{0%{opacity:0;transform:translate(0,0) scale(.5)}3%{opacity:1}
+  11%{opacity:0;transform:translate(var(--dx),15px) scale(1.1)}100%{opacity:0}}
+.aksara-v1 .paperFeed{width:212px;background:#FDFBF4;border-radius:2px;margin:10px auto 0;padding:10px 12px 12px;
+  box-shadow:0 8px 14px -8px rgba(24,20,16,.45);text-align:center;
+  animation:aks-feed 2.4s ease-in-out infinite}
+@keyframes aks-feed{0%{transform:translateY(-5px)}50%{transform:translateY(5px)}100%{transform:translateY(-5px)}}
+.aksara-v1 .inkLine{display:flex;justify-content:center;gap:2px;font:900 26px var(--fd);color:var(--ink)}
+.aksara-v1 .inkLine span{display:inline-block;opacity:0}
+.aksara-v1 .inkLine span:nth-child(1){animation:aks-ink1 4.8s ease-out infinite}
+.aksara-v1 .inkLine span:nth-child(2){animation:aks-ink2 4.8s ease-out infinite}
+.aksara-v1 .inkLine span:nth-child(3){animation:aks-ink3 4.8s ease-out infinite}
+.aksara-v1 .inkLine span:nth-child(4){animation:aks-ink4 4.8s ease-out infinite}
+.aksara-v1 .inkLine span:nth-child(5){animation:aks-ink5 4.8s ease-out infinite}
+.aksara-v1 .inkLine span:nth-child(6){animation:aks-ink6 4.8s ease-out infinite;color:var(--red)}
+@keyframes aks-ink1{0%{opacity:0;transform:translateY(4px) scale(.9)}4.6%{opacity:0;transform:translateY(4px) scale(.9)}5.6%{opacity:1;transform:none}55.6%{opacity:1}57.6%{opacity:0;transform:none}100%{opacity:0;transform:translateY(4px) scale(.9)}}
+@keyframes aks-ink2{0%{opacity:0;transform:translateY(4px) scale(.9)}8.8%{opacity:0;transform:translateY(4px) scale(.9)}9.8%{opacity:1;transform:none}59.8%{opacity:1}61.8%{opacity:0;transform:none}100%{opacity:0;transform:translateY(4px) scale(.9)}}
+@keyframes aks-ink3{0%{opacity:0;transform:translateY(4px) scale(.9)}13%{opacity:0;transform:translateY(4px) scale(.9)}14%{opacity:1;transform:none}64%{opacity:1}66%{opacity:0;transform:none}100%{opacity:0;transform:translateY(4px) scale(.9)}}
+@keyframes aks-ink4{0%{opacity:0;transform:translateY(4px) scale(.9)}18.2%{opacity:0;transform:translateY(4px) scale(.9)}19.2%{opacity:1;transform:none}69.2%{opacity:1}71.2%{opacity:0;transform:none}100%{opacity:0;transform:translateY(4px) scale(.9)}}
+@keyframes aks-ink5{0%{opacity:0;transform:translateY(4px) scale(.9)}23.4%{opacity:0;transform:translateY(4px) scale(.9)}24.4%{opacity:1;transform:none}74.4%{opacity:1}76.4%{opacity:0;transform:none}100%{opacity:0;transform:translateY(4px) scale(.9)}}
+@keyframes aks-ink6{0%{opacity:0;transform:translateY(4px) scale(.9)}29.6%{opacity:0;transform:translateY(4px) scale(.9)}30.6%{opacity:1;transform:none}80.6%{opacity:1}82.6%{opacity:0;transform:none}100%{opacity:0;transform:translateY(4px) scale(.9)}}
+.aksara-v1 .edisi{margin-top:6px;font:700 10px var(--fm);letter-spacing:.24em;color:var(--red);
+  border:1.5px solid rgba(192,59,33,.7);border-radius:4px;display:inline-block;padding:2px 8px;
+  opacity:0;transform:rotate(-6deg);animation:aks-edisiin 4.8s ease infinite}
+@keyframes aks-edisiin{0%,32%{opacity:0;transform:scale(1.6) rotate(-6deg)}34%{opacity:1;transform:scale(1) rotate(-6deg)}55%{opacity:1}57%,100%{opacity:0;transform:scale(1) rotate(-6deg)}}
+.aksara-v1 .roller{width:190px;height:20px;border-radius:99px;
+  background:repeating-linear-gradient(90deg,var(--ink) 0 10px,#4a4036 10px 20px);
+  animation:aks-roll 1s linear infinite;box-shadow:0 4px 6px -2px rgba(24,20,16,.5)}
+@keyframes aks-roll{to{background-position:20px 0}}
+.aksara-v1 .pressHint{font:500 9px var(--fm);letter-spacing:.26em;text-transform:uppercase;
+  color:rgba(34,29,21,.5)}
