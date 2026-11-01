@@ -93,7 +93,9 @@ main{max-width:520px;margin:0 auto;padding:10px 14px 60px;display:grid;gap:18px}
 .pressScene{position:relative;width:280px;height:218px;overflow:hidden}
 .pressFade{position:absolute;inset:0}
 @keyframes fadeio{0%{opacity:0}3%{opacity:1}90%{opacity:1}97%,100%{opacity:0}}
-.pressFade{animation:fadeio 2.4s linear infinite}
+/* fade pembungkus dimatikan: tiap elemen loop mulus sendiri-sendiri,
+   jadi tidak ada sisa cetakan yang bocor pas animasi mengulang */
+.pressFade{position:absolute;inset:0}
 .typeRow{display:flex;gap:4px;justify-content:center;margin-top:8px}
 .typeRow b{font:900 22px var(--fd);background:linear-gradient(180deg,#57493c,#221D15 70%);color:var(--paper);
   width:30px;height:40px;display:grid;place-items:center;border-radius:4px;
@@ -112,17 +114,17 @@ main{max-width:520px;margin:0 auto;padding:10px 14px 60px;display:grid;gap:18px}
 .paperFeed{width:212px;background:#FDFBF4;border-radius:2px;margin:10px auto 0;padding:10px 12px 12px;
   box-shadow:0 8px 14px -8px rgba(24,20,16,.45);text-align:center;
   animation:feed 2.4s ease-in-out infinite}
-@keyframes feed{0%{transform:translateY(-5px)}70%,100%{transform:translateY(5px)}}
+@keyframes feed{0%{transform:translateY(-5px)}50%{transform:translateY(5px)}100%{transform:translateY(-5px)}}
 .inkLine{display:flex;justify-content:center;gap:2px;font:900 26px var(--fd);color:var(--ink)}
 .inkLine span{display:inline-block;opacity:0;animation:inkw 2.4s ease-out infinite}
 .inkLine span:nth-child(1){animation-delay:.25s}.inkLine span:nth-child(2){animation-delay:.45s}
 .inkLine span:nth-child(3){animation-delay:.65s}.inkLine span:nth-child(4){animation-delay:.9s}
 .inkLine span:nth-child(5){animation-delay:1.15s}.inkLine span:nth-child(6){animation-delay:1.45s;color:var(--red)}
-@keyframes inkw{0%{opacity:0;transform:translateY(4px) scale(.9)}3%{opacity:1;transform:none}100%{opacity:1}}
+@keyframes inkw{0%{opacity:0;transform:translateY(4px) scale(.9)}3%{opacity:1;transform:none}88%{opacity:1}95%,100%{opacity:0;transform:none}}
 .edisi{margin-top:6px;font:700 10px var(--fm);letter-spacing:.24em;color:var(--red);
   border:1.5px solid rgba(192,59,33,.7);border-radius:4px;display:inline-block;padding:2px 8px;
   opacity:0;transform:rotate(-6deg);animation:edisiin 2.4s ease infinite;animation-delay:1.75s}
-@keyframes edisiin{0%{opacity:0;transform:scale(1.6) rotate(-6deg)}4%{opacity:1;transform:scale(1) rotate(-6deg)}100%{opacity:1}}
+@keyframes edisiin{0%{opacity:0;transform:scale(1.6) rotate(-6deg)}4%{opacity:1;transform:scale(1) rotate(-6deg)}86%{opacity:1}93%,100%{opacity:0;transform:scale(1) rotate(-6deg)}}
 .roller{margin-top:14px;width:190px;height:20px;border-radius:99px;position:relative;
   background:repeating-linear-gradient(90deg,var(--ink) 0 10px,#4a4036 10px 20px);
   animation:roll 1s linear infinite;box-shadow:0 4px 6px -2px rgba(24,20,16,.5)}
