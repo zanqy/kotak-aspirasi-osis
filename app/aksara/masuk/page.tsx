@@ -52,14 +52,14 @@ function MasukInner() {
       <Reveal><p className="text-[10px] tracking-[0.24em] uppercase text-[#C03B21] font-[var(--font-ibm-plex-mono)]">
         Kartu anggota · masuk
       </p></Reveal>
-      <Reveal delay={70}><h1 className="font-[var(--font-caveat)] font-bold text-[clamp(2.4rem,10vw,3.2rem)] leading-[1.05] mt-2">
+      <Reveal delay={110}><h1 className="font-[var(--font-caveat)] font-bold text-[clamp(2.4rem,10vw,3.2rem)] leading-[1.05] mt-2">
         Siapa nih?
       </h1></Reveal>
-      <Reveal delay={130}><p className="font-[var(--font-spectral)] italic text-[0.95rem] leading-relaxed text-[#221D15]/65 mt-1">
+      <Reveal delay={200}><p className="font-[var(--font-spectral)] italic text-[0.95rem] leading-relaxed text-[#221D15]/65 mt-1">
         Cukup akun Google. Setelah masuk, kami tanya namamu sekali.
       </p></Reveal>
 
-      <Reveal delay={190}><div className="mt-6 bg-[#FDFBF4] border border-[#221D15]/20 rounded-[14px] p-5 shadow-[0_14px_26px_-14px_rgba(24,20,16,0.4)] -rotate-[0.5deg]">
+      <Reveal delay={290}><div className="mt-6 bg-[#FDFBF4] border border-[#221D15]/20 rounded-[14px] p-5 shadow-[0_14px_26px_-14px_rgba(24,20,16,0.4)] -rotate-[0.5deg]">
         <button
           onClick={handleGoogle}
           disabled={loading}
@@ -86,7 +86,7 @@ function MasukInner() {
         </p>
       </div></Reveal>
 
-      <Reveal delay={270}><p className="mt-4 text-center text-[0.85rem] font-[var(--font-spectral)] italic text-[#221D15]/55">
+      <Reveal delay={410}><p className="mt-4 text-center text-[0.85rem] font-[var(--font-spectral)] italic text-[#221D15]/55">
         Cuma mau lihat-lihat?{" "}
         <a href="/aksara/mading/umum" className="text-[#C03B21] no-underline font-semibold">
           Intip mading umum
