@@ -319,7 +319,10 @@ export default function BoardPage() {
 
   if (status === "loading" || (canView && !loaded)) {
     return (
-      <div className="min-h-[calc(100vh-3.2rem)] bg-[#E9DDC4] grid place-items-center px-6">
+      <div
+        className="bg-[#E9DDC4] grid place-items-center px-6 py-8"
+        style={{ minHeight: "calc(100dvh - 3.2rem)" }}
+      >
         <PressLoader label="Memuat papan…" />
       </div>
     );
