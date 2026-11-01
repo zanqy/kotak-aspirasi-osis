@@ -89,7 +89,7 @@ function KirimInner() {
         </div></Reveal>
 
         {/* Verse */}
-        <Reveal delay={140}>
+        <Reveal delay={170}>
         <div className="text-center my-2">
           <div className="flex items-center gap-3 text-[#9c7a2e] text-[17px]">
             <span className="flex-1 h-px bg-gradient-to-r from-transparent to-[#9c7a2e]/80" />
@@ -102,7 +102,7 @@ function KirimInner() {
         </div></Reveal>
 
         {/* Form */}
-        <Reveal delay={260}>
+        <Reveal delay={310}>
         {!sent ? (
           <form onSubmit={handleSend}>
             <div className="relative mt-2 min-h-[368px]">
@@ -212,7 +212,7 @@ function KirimInner() {
         )}
 
         </Reveal>
-        <Reveal delay={380}><p className="text-center text-[10px] tracking-[3px] text-[#221D15]/45 mt-7 uppercase">
+        <Reveal delay={460}><p className="text-center text-[10px] tracking-[3px] text-[#221D15]/45 mt-7 uppercase">
           AKSARA · KANTOR POS REDAKSI
         </p></Reveal>
       </main>

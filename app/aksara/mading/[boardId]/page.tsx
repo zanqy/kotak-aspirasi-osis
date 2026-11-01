@@ -355,10 +355,10 @@ export default function BoardPage() {
         <main className="shell">
           <header className="mast">
             <Reveal><p className="orn">Diterbitkan MPK · OSIS — Wajib Dibaca, Tidak Wajib Percaya</p></Reveal>
-            <Reveal delay={110}><h1>
+            <Reveal delay={130}><h1>
               AKSARA<i>.</i>
             </h1></Reveal>
-            <Reveal delay={210}><div className="ed">
+            <Reveal delay={250}><div className="ed">
               <span>
                 EDISI <b>231</b>
               </span>
@@ -369,7 +369,7 @@ export default function BoardPage() {
             </div></Reveal>
           </header>
 
-          <Reveal delay={300}><div className="dataline">
+          <Reveal delay={360}><div className="dataline">
             <span>
               <b>CUACA</b> Cerah Berawan
             </span>
@@ -381,7 +381,7 @@ export default function BoardPage() {
             </span>
           </div></Reveal>
 
-          <Reveal delay={390}><Board
+          <Reveal delay={470}><Board
             items={items as never}
             onItemTap={(it) => {
               if (!canEdit || moveMode) return;
@@ -397,7 +397,7 @@ export default function BoardPage() {
           />
           </Reveal>
 
-          <Reveal delay={510}><div className="madingBar">
+          <Reveal delay={610}><div className="madingBar">
             {undoItem && (
               <button type="button" className="mBtn mBtnGhost" onClick={handleUndo}>
                 ↶ Batalkan hapus

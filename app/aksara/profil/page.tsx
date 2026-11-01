@@ -78,7 +78,7 @@ function ProfilInner() {
         </div>
       </div></Reveal>
 
-      <Reveal delay={140}><div className="mt-4 flex justify-end">
+      <Reveal delay={170}><div className="mt-4 flex justify-end">
         <button
           onClick={() => setEditing(!editing)}
           className="text-[10px] tracking-[0.12em] uppercase font-[var(--font-ibm-plex-mono)] font-medium text-[#221D15] border border-[#221D15]/30 rounded-full px-4 py-1.5 bg-transparent cursor-pointer"
@@ -128,7 +128,7 @@ function ProfilInner() {
         </div>
       )}
 
-      <Reveal delay={250}><div className="mt-8">
+      <Reveal delay={300}><div className="mt-8">
         <h3 className="font-[var(--font-fraunces)] font-bold text-[1.1rem] mb-2">
           Galeri Karyaku
         </h3>

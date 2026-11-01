@@ -71,10 +71,10 @@ export default function AksaraHome() {
         <Reveal><p className="text-[10px] tracking-[0.24em] uppercase text-[#C03B21] font-[var(--font-ibm-plex-mono)]">
           Selamat datang
         </p></Reveal>
-        <Reveal delay={110}><h1 className="font-[var(--font-fraunces)] font-extrabold text-[clamp(2.2rem,9vw,3rem)] leading-[1] mt-1.5">
+        <Reveal delay={130}><h1 className="font-[var(--font-fraunces)] font-extrabold text-[clamp(2.2rem,9vw,3rem)] leading-[1] mt-1.5">
           Halo, {nama}<span className="text-[#C03B21]">.</span>
         </h1></Reveal>
-        <Reveal delay={200}><p className="font-[var(--font-spectral)] italic text-[0.95rem] text-[#221D15]/65 mt-1">
+        <Reveal delay={240}><p className="font-[var(--font-spectral)] italic text-[0.95rem] text-[#221D15]/65 mt-1">
           {hasName
             ? student?.kelas
               ? `${student.kelas} · anggota AKSARA`
@@ -100,7 +100,7 @@ export default function AksaraHome() {
         )}
 
         <div className="grid gap-3 mt-5">
-          <Reveal delay={300}><Link
+          <Reveal delay={360}><Link
             href="/aksara/mading/umum"
             className="flex items-center gap-3.5 bg-[#221D15] text-[#F2ECDE] rounded-[14px] px-4 py-4 no-underline active:scale-[0.98] transition-transform"
           >
@@ -114,7 +114,7 @@ export default function AksaraHome() {
             </span>
           </Link></Reveal>
 
-          <Reveal delay={390}><Link
+          <Reveal delay={470}><Link
             href="/aksara/mading/pribadi"
             className="flex items-center gap-3.5 bg-[#FDFBF4] text-[#221D15] border border-[#221D15]/22 rounded-[14px] px-4 py-4 no-underline active:scale-[0.98] transition-transform"
           >
@@ -128,7 +128,7 @@ export default function AksaraHome() {
             </span>
           </Link></Reveal>
 
-          <Reveal delay={480}><Link
+          <Reveal delay={580}><Link
             href="/aksara/kirim"
             className="flex items-center gap-3.5 bg-[#FDFBF4] text-[#221D15] border border-[#221D15]/22 rounded-[14px] px-4 py-4 no-underline active:scale-[0.98] transition-transform"
           >
@@ -142,7 +142,7 @@ export default function AksaraHome() {
             </span>
           </Link></Reveal>
 
-          <Reveal delay={570}><Link
+          <Reveal delay={680}><Link
             href="/aksara/profil"
             className="flex items-center gap-3.5 bg-[#FDFBF4] text-[#221D15] border border-[#221D15]/22 rounded-[14px] px-4 py-4 no-underline active:scale-[0.98] transition-transform"
           >
@@ -238,14 +238,14 @@ export default function AksaraHome() {
         <Reveal><p className="text-[10px] tracking-[0.24em] uppercase text-[#C03B21] font-[var(--font-ibm-plex-mono)]">
           Mading hidup · mading umum
         </p></Reveal>
-        <Reveal delay={110}><h1 className="font-[var(--font-fraunces)] font-extrabold text-[clamp(3.4rem,18vw,5.2rem)] leading-[0.95] tracking-[-0.02em] mt-1.5">
+        <Reveal delay={130}><h1 className="font-[var(--font-fraunces)] font-extrabold text-[clamp(3.4rem,18vw,5.2rem)] leading-[0.95] tracking-[-0.02em] mt-1.5">
           AKSARA<span className="text-[#C03B21]">.</span>
         </h1></Reveal>
-        <Reveal delay={200}><p className="font-[var(--font-spectral)] italic text-[0.98rem] leading-relaxed text-[#221D15]/70 max-w-[36ch] mt-1">
+        <Reveal delay={240}><p className="font-[var(--font-spectral)] italic text-[0.98rem] leading-relaxed text-[#221D15]/70 max-w-[36ch] mt-1">
           Papan tulis bebas anak sekolah — ditempel tangan, dibaca semua orang.
         </p></Reveal>
 
-        <Reveal delay={290}><div className="grid gap-2 mt-4">
+        <Reveal delay={350}><div className="grid gap-2 mt-4">
           {[
             "Intip mading umum, tanpa akun.",
             "Masuk pakai Google, kami tanya nama sekali.",
@@ -258,7 +258,7 @@ export default function AksaraHome() {
           ))}
         </div></Reveal>
 
-        <Reveal delay={390}><div className="grid gap-2.5 mt-5">
+        <Reveal delay={470}><div className="grid gap-2.5 mt-5">
           <Link
             href="/aksara/mading/umum"
             className="flex items-center gap-3.5 bg-[#221D15] text-[#F2ECDE] rounded-[14px] px-4 py-4 no-underline active:scale-[0.98] transition-transform"
