@@ -5,6 +5,7 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import { useAuth } from "@/lib/aksara/auth";
 import AuthGate from "@/components/aksara/AuthGate";
+import Reveal from "@/components/aksara/Reveal";
 
 function ProfilInner() {
   const { user, student, saveStudent } = useAuth();
@@ -41,7 +42,7 @@ function ProfilInner() {
   return (
     <main className="max-w-[520px] mx-auto px-4 py-6">
       {/* Kartu Pelajar */}
-      <div className="bg-[#F7F1E1] rounded-[8px] shadow-[0_14px_24px_-12px_rgba(24,20,16,0.5)] p-5 flex gap-4 items-center rotate-[1deg] border border-[#221D15]/10">
+      <Reveal><div className="bg-[#F7F1E1] rounded-[8px] shadow-[0_14px_24px_-12px_rgba(24,20,16,0.5)] p-5 flex gap-4 items-center rotate-[1deg] border border-[#221D15]/10">
         <div className="w-[72px] h-[86px] flex-none bg-gradient-to-br from-[#D7E4EF] to-[#B9CFE2] border-[3px] border-[#FDFBF4] shadow-[0_2px_5px_rgba(24,20,16,0.3)] flex items-center justify-center font-[var(--font-caveat)] font-bold text-[1.8rem] -rotate-2 overflow-hidden">
           {student?.fotoUrl ? (
             // eslint-disable-next-line @next/next/no-img-element
@@ -75,16 +76,16 @@ function ProfilInner() {
             {bio}
           </p>
         </div>
-      </div>
+      </div></Reveal>
 
-      <div className="mt-4 flex justify-end">
+      <Reveal delay={90}><div className="mt-4 flex justify-end">
         <button
           onClick={() => setEditing(!editing)}
           className="text-[10px] tracking-[0.12em] uppercase font-[var(--font-ibm-plex-mono)] font-medium text-[#221D15] border border-[#221D15]/30 rounded-full px-4 py-1.5 bg-transparent cursor-pointer"
         >
           {editing ? "Batal" : "Ubah profil"}
         </button>
-      </div>
+      </div></Reveal>
 
       {editing && (
         <div className="mt-3 bg-[#FDFBF4] border border-[#221D15]/20 rounded-[12px] p-4">
@@ -127,7 +128,7 @@ function ProfilInner() {
         </div>
       )}
 
-      <div className="mt-8">
+      <Reveal delay={160}><div className="mt-8">
         <h3 className="font-[var(--font-fraunces)] font-bold text-[1.1rem] mb-2">
           Galeri Karyaku
         </h3>
@@ -148,7 +149,7 @@ function ProfilInner() {
             Mading Pribadi
           </Link>
         </div>
-      </div>
+      </div></Reveal>
     </main>
   );
 }

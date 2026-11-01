@@ -5,6 +5,7 @@ import { useEffect, useState, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { useAuth } from "@/lib/aksara/auth";
+import Reveal from "@/components/aksara/Reveal";
 import PressLoader from "@/components/aksara/PressLoader";
 
 function KenalanInner() {
@@ -65,17 +66,17 @@ function KenalanInner() {
 
   return (
     <main className="max-w-[520px] mx-auto px-4 py-8">
-      <p className="text-[10px] tracking-[0.24em] uppercase text-[#C03B21] font-[var(--font-ibm-plex-mono)]">
+      <Reveal><p className="text-[10px] tracking-[0.24em] uppercase text-[#C03B21] font-[var(--font-ibm-plex-mono)]">
         Kartu anggota · sekali isi
-      </p>
-      <h1 className="font-[var(--font-fraunces)] font-extrabold text-[clamp(2rem,8vw,2.6rem)] leading-[1.05] mt-1.5">
+      </p></Reveal>
+      <Reveal delay={70}><h1 className="font-[var(--font-fraunces)] font-extrabold text-[clamp(2rem,8vw,2.6rem)] leading-[1.05] mt-1.5">
         Namamu siapa<span className="text-[#C03B21]">?</span>
-      </h1>
-      <p className="font-[var(--font-spectral)] italic text-[0.95rem] leading-relaxed text-[#221D15]/65 mt-1.5">
+      </h1></Reveal>
+      <Reveal delay={130}><p className="font-[var(--font-spectral)] italic text-[0.95rem] leading-relaxed text-[#221D15]/65 mt-1.5">
         Biar tempelan dan suratmu ada nama pemiliknya. Cuma ini yang ditanya sekarang.
-      </p>
+      </p></Reveal>
 
-      <div className="mt-6 bg-[#FDFBF4] border border-[#221D15]/20 rounded-[14px] p-5 shadow-[0_10px_20px_-14px_rgba(24,20,16,0.6)]">
+      <Reveal delay={190}><div className="mt-6 bg-[#FDFBF4] border border-[#221D15]/20 rounded-[14px] p-5 shadow-[0_10px_20px_-14px_rgba(24,20,16,0.6)]">
         <label className="block text-[10px] tracking-[0.16em] uppercase text-[#221D15]/55 font-[var(--font-ibm-plex-mono)]">
           Nama panggilan di mading
         </label>
@@ -110,9 +111,9 @@ function KenalanInner() {
             Lewati, pakai nama sekarang
           </Link>
         )}
-      </div>
+      </div></Reveal>
 
-      <div className="mt-5 flex items-center gap-2.5">
+      <Reveal delay={270}><div className="mt-5 flex items-center gap-2.5">
         {user.photoURL ? (
           // eslint-disable-next-line @next/next/no-img-element
           <img
@@ -137,11 +138,11 @@ function KenalanInner() {
         >
           Ganti
         </button>
-      </div>
+      </div></Reveal>
 
-      <p className="mt-6 font-[var(--font-spectral)] italic text-[0.8rem] text-[#221D15]/45 leading-relaxed">
+      <Reveal delay={330}><p className="mt-6 font-[var(--font-spectral)] italic text-[0.8rem] text-[#221D15]/45 leading-relaxed">
         NISN dan kelas belum diminta — nanti setelah datanya ada dari sekolah.
-      </p>
+      </p></Reveal>
     </main>
   );
 }

@@ -8,6 +8,7 @@ import Board from "@/components/aksara/Board";
 import ItemSheet from "@/components/aksara/ItemSheet";
 import ContextMenu from "@/components/aksara/ContextMenu";
 import PressLoader from "@/components/aksara/PressLoader";
+import Reveal from "@/components/aksara/Reveal";
 import {
   subscribeItems,
   addItem,
@@ -353,11 +354,11 @@ export default function BoardPage() {
       <div className="aksara-v1">
         <main className="shell">
           <header className="mast">
-            <p className="orn">Diterbitkan MPK · OSIS — Wajib Dibaca, Tidak Wajib Percaya</p>
-            <h1>
+            <Reveal><p className="orn">Diterbitkan MPK · OSIS — Wajib Dibaca, Tidak Wajib Percaya</p></Reveal>
+            <Reveal delay={70}><h1>
               AKSARA<i>.</i>
-            </h1>
-            <div className="ed">
+            </h1></Reveal>
+            <Reveal delay={140}><div className="ed">
               <span>
                 EDISI <b>231</b>
               </span>
@@ -365,10 +366,10 @@ export default function BoardPage() {
               <span>
                 HARGA: <b>1 SENYUM</b>
               </span>
-            </div>
+            </div></Reveal>
           </header>
 
-          <div className="dataline">
+          <Reveal delay={200}><div className="dataline">
             <span>
               <b>CUACA</b> Cerah Berawan
             </span>
@@ -378,9 +379,9 @@ export default function BoardPage() {
             <span>
               <b>TERBIT</b> {today.toUpperCase()} WIB
             </span>
-          </div>
+          </div></Reveal>
 
-          <Board
+          <Reveal delay={260}><Board
             items={items as never}
             onItemTap={(it) => {
               if (!canEdit || moveMode) return;
@@ -394,8 +395,9 @@ export default function BoardPage() {
             canEdit={canEdit}
             folioLabel={`${boardName.toUpperCase()}`}
           />
+          </Reveal>
 
-          <div className="madingBar">
+          <Reveal delay={340}><div className="madingBar">
             {undoItem && (
               <button type="button" className="mBtn mBtnGhost" onClick={handleUndo}>
                 ↶ Batalkan hapus
@@ -410,7 +412,7 @@ export default function BoardPage() {
                 Masuk untuk nempel
               </a>
             )}
-          </div>
+          </div></Reveal>
         </main>
 
         {moveMode && (

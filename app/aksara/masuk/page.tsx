@@ -4,6 +4,7 @@
 import { Suspense, useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useAuth } from "@/lib/aksara/auth";
+import Reveal from "@/components/aksara/Reveal";
 import PressLoader from "@/components/aksara/PressLoader";
 
 function MasukInner() {
@@ -48,17 +49,17 @@ function MasukInner() {
 
   return (
     <main className="min-h-[calc(100vh-3.2rem)] flex flex-col justify-center px-5 py-10 max-w-[460px] mx-auto">
-      <p className="text-[10px] tracking-[0.24em] uppercase text-[#C03B21] font-[var(--font-ibm-plex-mono)]">
+      <Reveal><p className="text-[10px] tracking-[0.24em] uppercase text-[#C03B21] font-[var(--font-ibm-plex-mono)]">
         Kartu anggota · masuk
-      </p>
-      <h1 className="font-[var(--font-caveat)] font-bold text-[clamp(2.4rem,10vw,3.2rem)] leading-[1.05] mt-2">
+      </p></Reveal>
+      <Reveal delay={70}><h1 className="font-[var(--font-caveat)] font-bold text-[clamp(2.4rem,10vw,3.2rem)] leading-[1.05] mt-2">
         Siapa nih?
-      </h1>
-      <p className="font-[var(--font-spectral)] italic text-[0.95rem] leading-relaxed text-[#221D15]/65 mt-1">
+      </h1></Reveal>
+      <Reveal delay={130}><p className="font-[var(--font-spectral)] italic text-[0.95rem] leading-relaxed text-[#221D15]/65 mt-1">
         Cukup akun Google. Setelah masuk, kami tanya namamu sekali.
-      </p>
+      </p></Reveal>
 
-      <div className="mt-6 bg-[#FDFBF4] border border-[#221D15]/20 rounded-[14px] p-5 shadow-[0_14px_26px_-14px_rgba(24,20,16,0.4)] -rotate-[0.5deg]">
+      <Reveal delay={190}><div className="mt-6 bg-[#FDFBF4] border border-[#221D15]/20 rounded-[14px] p-5 shadow-[0_14px_26px_-14px_rgba(24,20,16,0.4)] -rotate-[0.5deg]">
         <button
           onClick={handleGoogle}
           disabled={loading}
@@ -83,14 +84,14 @@ function MasukInner() {
           Akun Google cuma dipakai untuk mengenali kamu — bukan buat posting apa pun
           tanpa kamu. NISN belum diminta.
         </p>
-      </div>
+      </div></Reveal>
 
-      <p className="mt-4 text-center text-[0.85rem] font-[var(--font-spectral)] italic text-[#221D15]/55">
+      <Reveal delay={270}><p className="mt-4 text-center text-[0.85rem] font-[var(--font-spectral)] italic text-[#221D15]/55">
         Cuma mau lihat-lihat?{" "}
         <a href="/aksara/mading/umum" className="text-[#C03B21] no-underline font-semibold">
           Intip mading umum
         </a>
-      </p>
+      </p></Reveal>
     </main>
   );
 }

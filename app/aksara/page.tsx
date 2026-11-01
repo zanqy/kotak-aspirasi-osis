@@ -6,6 +6,7 @@ import Link from "next/link";
 import { collection, getDocs, limit, orderBy, query } from "firebase/firestore";
 import { getClientDb } from "@/lib/firebase-client";
 import { useAuth } from "@/lib/aksara/auth";
+import Reveal from "@/components/aksara/Reveal";
 import PressLoader from "@/components/aksara/PressLoader";
 
 type Item = {
@@ -67,19 +68,19 @@ export default function AksaraHome() {
     const nama = student?.nama || user.displayName || "Teman";
     return (
       <main className="px-5 py-6 max-w-[520px] mx-auto">
-        <p className="text-[10px] tracking-[0.24em] uppercase text-[#C03B21] font-[var(--font-ibm-plex-mono)]">
+        <Reveal><p className="text-[10px] tracking-[0.24em] uppercase text-[#C03B21] font-[var(--font-ibm-plex-mono)]">
           Selamat datang
-        </p>
-        <h1 className="font-[var(--font-fraunces)] font-extrabold text-[clamp(2.2rem,9vw,3rem)] leading-[1] mt-1.5">
+        </p></Reveal>
+        <Reveal delay={70}><h1 className="font-[var(--font-fraunces)] font-extrabold text-[clamp(2.2rem,9vw,3rem)] leading-[1] mt-1.5">
           Halo, {nama}<span className="text-[#C03B21]">.</span>
-        </h1>
-        <p className="font-[var(--font-spectral)] italic text-[0.95rem] text-[#221D15]/65 mt-1">
+        </h1></Reveal>
+        <Reveal delay={130}><p className="font-[var(--font-spectral)] italic text-[0.95rem] text-[#221D15]/65 mt-1">
           {hasName
             ? student?.kelas
               ? `${student.kelas} · anggota AKSARA`
               : "Anggota AKSARA"
             : "Nama panggilanmu belum diisi"}
-        </p>
+        </p></Reveal>
 
         {!hasName && (
           <div className="mt-4 rounded-[12px] border border-[#C03B21]/35 bg-[#C03B21]/5 px-4 py-3">
@@ -99,7 +100,7 @@ export default function AksaraHome() {
         )}
 
         <div className="grid gap-3 mt-5">
-          <Link
+          <Reveal delay={200}><Link
             href="/aksara/mading/umum"
             className="flex items-center gap-3.5 bg-[#221D15] text-[#F2ECDE] rounded-[14px] px-4 py-4 no-underline active:scale-[0.98] transition-transform"
           >
@@ -111,9 +112,9 @@ export default function AksaraHome() {
                 Papan publik, siapa pun boleh nempel
               </span>
             </span>
-          </Link>
+          </Link></Reveal>
 
-          <Link
+          <Reveal delay={260}><Link
             href="/aksara/mading/pribadi"
             className="flex items-center gap-3.5 bg-[#FDFBF4] text-[#221D15] border border-[#221D15]/22 rounded-[14px] px-4 py-4 no-underline active:scale-[0.98] transition-transform"
           >
@@ -125,9 +126,9 @@ export default function AksaraHome() {
                 Kamarmu sendiri
               </span>
             </span>
-          </Link>
+          </Link></Reveal>
 
-          <Link
+          <Reveal delay={320}><Link
             href="/aksara/kirim"
             className="flex items-center gap-3.5 bg-[#FDFBF4] text-[#221D15] border border-[#221D15]/22 rounded-[14px] px-4 py-4 no-underline active:scale-[0.98] transition-transform"
           >
@@ -139,9 +140,9 @@ export default function AksaraHome() {
                 Pos kilat redaksi
               </span>
             </span>
-          </Link>
+          </Link></Reveal>
 
-          <Link
+          <Reveal delay={380}><Link
             href="/aksara/profil"
             className="flex items-center gap-3.5 bg-[#FDFBF4] text-[#221D15] border border-[#221D15]/22 rounded-[14px] px-4 py-4 no-underline active:scale-[0.98] transition-transform"
           >
@@ -153,7 +154,7 @@ export default function AksaraHome() {
                 Identitas + galeri karya
               </span>
             </span>
-          </Link>
+          </Link></Reveal>
         </div>
 
         <div className="flex justify-between mt-6 font-[var(--font-ibm-plex-mono)] text-[10px] tracking-[0.14em] uppercase text-[#221D15]/50">
@@ -234,17 +235,17 @@ export default function AksaraHome() {
       />
 
       <div className="relative z-10 flex flex-col justify-end min-h-[calc(100vh-3.2rem)] px-5 py-6 max-w-[520px] mx-auto">
-        <p className="text-[10px] tracking-[0.24em] uppercase text-[#C03B21] font-[var(--font-ibm-plex-mono)]">
+        <Reveal><p className="text-[10px] tracking-[0.24em] uppercase text-[#C03B21] font-[var(--font-ibm-plex-mono)]">
           Mading hidup · mading umum
-        </p>
-        <h1 className="font-[var(--font-fraunces)] font-extrabold text-[clamp(3.4rem,18vw,5.2rem)] leading-[0.95] tracking-[-0.02em] mt-1.5">
+        </p></Reveal>
+        <Reveal delay={70}><h1 className="font-[var(--font-fraunces)] font-extrabold text-[clamp(3.4rem,18vw,5.2rem)] leading-[0.95] tracking-[-0.02em] mt-1.5">
           AKSARA<span className="text-[#C03B21]">.</span>
-        </h1>
-        <p className="font-[var(--font-spectral)] italic text-[0.98rem] leading-relaxed text-[#221D15]/70 max-w-[36ch] mt-1">
+        </h1></Reveal>
+        <Reveal delay={130}><p className="font-[var(--font-spectral)] italic text-[0.98rem] leading-relaxed text-[#221D15]/70 max-w-[36ch] mt-1">
           Papan tulis bebas anak sekolah — ditempel tangan, dibaca semua orang.
-        </p>
+        </p></Reveal>
 
-        <div className="grid gap-2 mt-4">
+        <Reveal delay={190}><div className="grid gap-2 mt-4">
           {[
             "Intip mading umum, tanpa akun.",
             "Masuk pakai Google, kami tanya nama sekali.",
@@ -255,9 +256,9 @@ export default function AksaraHome() {
               <span>{t}</span>
             </div>
           ))}
-        </div>
+        </div></Reveal>
 
-        <div className="grid gap-2.5 mt-5">
+        <Reveal delay={260}><div className="grid gap-2.5 mt-5">
           <Link
             href="/aksara/mading/umum"
             className="flex items-center gap-3.5 bg-[#221D15] text-[#F2ECDE] rounded-[14px] px-4 py-4 no-underline active:scale-[0.98] transition-transform"
@@ -288,7 +289,7 @@ export default function AksaraHome() {
               </span>
             </span>
           </Link>
-        </div>
+        </div></Reveal>
 
         <div className="flex justify-between mt-4 font-[var(--font-ibm-plex-mono)] text-[10px] tracking-[0.14em] uppercase text-[#221D15]/50">
           <span>Edisi 231</span>

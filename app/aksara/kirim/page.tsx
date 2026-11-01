@@ -7,6 +7,7 @@ import { useAuth } from "@/lib/aksara/auth";
 import { collection, addDoc, serverTimestamp } from "firebase/firestore";
 import Link from "next/link";
 import AuthGate from "@/components/aksara/AuthGate";
+import Reveal from "@/components/aksara/Reveal";
 
 function KirimInner() {
   const { user, student } = useAuth();
@@ -56,7 +57,7 @@ function KirimInner() {
     <div>
       <main className="max-w-[520px] mx-auto px-4 py-6">
         {/* Cap pos */}
-        <div className="flex items-center gap-4 mb-4">
+        <Reveal><div className="flex items-center gap-4 mb-4">
           <svg className="w-[80px] h-[80px] flex-none" viewBox="0 0 120 120" aria-hidden="true">
             <defs>
               <path id="c" d="M60,60 m-42,0 a42,42 0 1,1 84,0 a42,42 0 1,1 -84,0" />
@@ -85,9 +86,10 @@ function KirimInner() {
               Pos kilat redaksi · sampai hari ini juga
             </p>
           </div>
-        </div>
+        </div></Reveal>
 
         {/* Verse */}
+        <Reveal delay={90}>
         <div className="text-center my-2">
           <div className="flex items-center gap-3 text-[#9c7a2e] text-[17px]">
             <span className="flex-1 h-px bg-gradient-to-r from-transparent to-[#9c7a2e]/80" />
@@ -97,9 +99,10 @@ function KirimInner() {
           <p className="font-[var(--font-spectral)] italic font-semibold text-[19px] text-[#5b4a2e] mt-2 min-h-[50px] px-2.5 transition-opacity">
             Surat adalah rindu yang belajar berjalan.
           </p>
-        </div>
+        </div></Reveal>
 
         {/* Form */}
+        <Reveal delay={170}>
         {!sent ? (
           <form onSubmit={handleSend}>
             <div className="relative mt-2 min-h-[368px]">
@@ -208,9 +211,10 @@ function KirimInner() {
           </div>
         )}
 
-        <p className="text-center text-[10px] tracking-[3px] text-[#221D15]/45 mt-7 uppercase">
+        </Reveal>
+        <Reveal delay={250}><p className="text-center text-[10px] tracking-[3px] text-[#221D15]/45 mt-7 uppercase">
           AKSARA · KANTOR POS REDAKSI
-        </p>
+        </p></Reveal>
       </main>
     </div>
   );
