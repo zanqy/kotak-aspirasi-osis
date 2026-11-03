@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Konsep B5 — Kaca Gelap | Tharra</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+<style>
+/* KONSEP B5 — Kaca di atas gradasi gelap.
+   Ide: beranda seperti aplikasi modern (bukan media cetak): latar gelap dengan
+   dua cahaya besar, kartu kaca tembus pandang, tipografi sans besar.
+   Paling "aplikasi", paling jauh dari kesan koran. */
+:root{
+  --bg:#07070C; --ink:#F5F6FA; --dim:#9AA0B4;
+  --glass:rgba(255,255,255,.055);
+  --stroke:rgba(255,255,255,.12);
+  --warm:#FF8A4C; --cool:#6C8CFF;
+  --sans:"Instrument Sans",system-ui,sans-serif; --serif:"Instrument Serif",Georgia,serif;
+}
+*{box-sizing:border-box}
+body{
+  margin:0;background:var(--bg);color:var(--ink);font-family:var(--sans);
+  min-height:100dvh;display:flex;flex-direction:column;justify-content:center;
+  padding:26px 18px;overflow-x:hidden;position:relative;
+}
+/* dua cahaya */
+body::before{
+  content:"";position:fixed;width:70vmax;height:70vmax;left:-15vmax;top:-25vmax;
+  background:radial-gradient(circle, rgba(255,138,76,.35) 0%, transparent 62%);
+  filter:blur(30px);pointer-events:none;
+}
+body::after{
+  content:"";position:fixed;width:65vmax;height:65vmax;right:-20vmax;bottom:-25vmax;
+  background:radial-gradient(circle, rgba(108,140,255,.35) 0%, transparent 62%);
+  filter:blur(30px);pointer-events:none;
+}
+/* butiran halus supaya gradasi tidak belang */
+.grain{
+  position:fixed;inset:0;pointer-events:none;opacity:.35;mix-blend-mode:overlay;
+  background-image:radial-gradient(rgba(255,255,255,.35) .5px, transparent .5px);
+  background-size:3px 3px;
+}
+
+.wrap{position:relative;z-index:2;width:100%;max-width:920px;margin:0 auto}
+
+.top{display:flex;justify-content:space-between;gap:10px;
+  font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--dim);margin-bottom:44px}
+.top b{color:var(--ink);letter-spacing:.24em;font-weight:600}
+
+h1{
+  font-family:var(--serif);font-weight:400;font-size:clamp(38px,7.6vw,72px);
+  line-height:1.02;letter-spacing:-.02em;margin:0 0 12px;
+}
+h1 em{font-style:italic;color:var(--warm)}
+.lead{font-size:14px;line-height:1.6;color:var(--dim);max-width:44ch;margin:0 0 34px}
+
+/* kartu kaca */
+.cards{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+
+.card{
+  position:relative;display:flex;flex-direction:column;justify-content:space-between;
+  min-height:214px;padding:22px;text-decoration:none;color:var(--ink);
+  background:var(--glass);border:1px solid var(--stroke);border-radius:22px;
+  backdrop-filter:blur(16px) saturate(130%);
+  -webkit-backdrop-filter:blur(16px) saturate(130%);
+  overflow:hidden;transition:transform .35s cubic-bezier(.19,1,.22,1),border-color .35s ease,background .35s ease;
+}
+.card:hover{transform:translateY(-5px);border-color:rgba(255,255,255,.28);background:rgba(255,255,255,.085)}
+.card:focus-visible{outline:2px solid var(--cool);outline-offset:3px}
+
+/* kilau atas */
+.card::before{
+  content:"";position:absolute;inset:0;border-radius:22px;pointer-events:none;
+  background:linear-gradient(160deg, rgba(255,255,255,.16) 0%, transparent 38%);
+}
+
+.card .idx{font-size:10px;letter-spacing:.2em;color:var(--dim)}
+.card h2{
+  font-family:var(--sans);font-weight:600;font-size:clamp(24px,3.6vw,30px);
+  letter-spacing:-.02em;margin:14px 0 0;line-height:1.05;
+}
+.card p{font-size:12.5px;line-height:1.6;color:var(--dim);margin:8px 0 0;max-width:26ch}
+
+.card .go{
+  display:inline-flex;align-items:center;gap:8px;margin-top:18px;
+  font-size:11px;letter-spacing:.06em;color:var(--ink);
+}
+.card .go .dot{
+  width:26px;height:26px;border-radius:50%;display:grid;place-items:center;
+  border:1px solid var(--stroke);background:rgba(255,255,255,.06);
+  transition:transform .3s ease,background .3s ease;
+}
+.card:hover .go .dot{transform:translateX(6px);background:rgba(255,255,255,.14)}
+
+.card.k .glow{background:radial-gradient(circle, rgba(255,138,76,.55) 0%, transparent 65%)}
+.card.a .glow{background:radial-gradient(circle, rgba(108,140,255,.55) 0%, transparent 65%)}
+.card .glow{
+  position:absolute;width:200px;height:200px;right:-60px;bottom:-70px;pointer-events:none;
+  filter:blur(24px);opacity:.7;
+}
+
+.foot{
+  display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;
+  margin-top:34px;padding-top:14px;border-top:1px solid rgba(255,255,255,.1);
+  font-size:9.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--dim);
+}
+.foot a{color:var(--dim);text-decoration:none}
+
+@media(max-width:640px){
+  .cards{grid-template-columns:1fr}
+  .card{min-height:0}
+  .top{margin-bottom:30px}
+}
+</style>
+</head>
+<body>
+<div class="grain"></div>
+
+<div class="wrap">
+  <div class="top">
+    <span><b>THARRA</b> · OSIS HUMAS</span>
+    <span>MMXXV</span>
+  </div>
+
+  <h1>Dua ruang, <em>satu</em> sekolah.</h1>
+  <p class="lead">Katakan untuk menyuarakan yang tertahan. Aksara untuk menempel dan berkirim surat. Pilih salah satu.</p>
+
+  <div class="cards">
+    <a class="card k" href="../index.html">
+      <span class="glow"></span>
+      <div>
+        <div class="idx">01 — KOTAK ASPIRASI</div>
+        <h2>Katakan</h2>
+        <p>Anonim, dibaca pengurus OSIS, bisa dilacak lewat kode tiket.</p>
+      </div>
+      <span class="go">Masuk <span class="dot">→</span></span>
+    </a>
+
+    <a class="card a" href="../index.html">
+      <span class="glow"></span>
+      <div>
+        <div class="idx">02 — MADING &amp; SURAT</div>
+        <h2>Aksara</h2>
+        <p>Papan mading dan surat untuk teman sekelas. Perlu akun sekolah.</p>
+      </div>
+      <span class="go">Masuk <span class="dot">→</span></span>
+    </a>
+  </div>
+
+  <div class="foot">
+    <span>Tharra — Katakan &amp; Aksara</span>
+    <a href="index.html">← daftar konsep</a>
+  </div>
+</div>
+
+</body>
+</html>
