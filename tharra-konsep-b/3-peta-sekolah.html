@@ -72,7 +72,7 @@ main{flex:1;display:flex;flex-direction:column;justify-content:center;padding:10
   filter:drop-shadow(0 14px 18px var(--shadow));
 }
 .wall{
-  position:relative;width:100%;height:74px;margin:-40px auto 0;
+  position:relative;width:100%;height:74px;margin:-34px auto 0;
   background:linear-gradient(180deg,var(--tint-2) 0%,var(--tint-3) 100%);
   clip-path:polygon(0 0,50% 26%,100% 0,100% 66%,50% 100%,0 66%);
 }
@@ -80,6 +80,18 @@ main{flex:1;display:flex;flex-direction:column;justify-content:center;padding:10
   position:absolute;left:50%;top:16px;transform:translateX(-50%);
   width:8px;height:8px;border-radius:50%;background:rgba(255,255,255,.75);
   box-shadow:0 0 0 2px rgba(255,255,255,.2);
+}
+/* pintu */
+.wall::after{
+  content:"";position:absolute;left:50%;bottom:0;transform:translateX(-50%);
+  width:16px;height:26px;background:rgba(0,0,0,.35);
+  clip-path:polygon(50% 0,100% 26%,100% 100%,0 100%,0 26%);
+}
+/* bayangan di tanah */
+.building::after{
+  content:"";position:absolute;left:50%;bottom:-6px;transform:translateX(-50%);
+  width:78%;height:14px;border-radius:50%;
+  background:rgba(23,26,22,.16);filter:blur(6px);
 }
 
 /* label bangunan */
@@ -100,9 +112,10 @@ main{flex:1;display:flex;flex-direction:column;justify-content:center;padding:10
 
 /* keterangan kecil di atas bangunan */
 .pin{
-  position:absolute;top:-6px;left:50%;transform:translateX(-50%);
+  position:relative;display:table;margin:0 auto 10px;
   font-family:var(--mono);font-size:8px;letter-spacing:.14em;text-transform:uppercase;
-  color:var(--muted);background:var(--bg);padding:2px 6px;border:1px solid var(--line);border-radius:999px;
+  color:#2F352E;background:#FFFFFF;padding:3px 8px;border:1px solid #B9C0B4;border-radius:999px;
+  box-shadow:0 2px 6px rgba(23,26,22,.08);
 }
 
 /* legenda */
