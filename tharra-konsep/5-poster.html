@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Konsep 5 — Poster Tipografi | Tharra</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400..900;1,9..144,400..900&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+/* KONSEP 5 — Poster tipografi.
+   Ide: beranda seperti poster cetak: satu kata raksasa, dua blok warna,
+   angka besar. Paling sedikit teks, paling banyak bentuk. */
+:root{
+  --paper:#F1E9D6; --ink:#1E1A14; --red:#C0392B; --green:#3E5B38;
+  --mono:"IBM Plex Mono",monospace;
+}
+*{box-sizing:border-box}
+body{
+  margin:0;background:var(--paper);color:var(--ink);
+  font-family:var(--mono);padding:20px 18px 60px;
+}
+.poster{max-width:900px;margin:0 auto;position:relative}
+
+/* kepala */
+.line{
+  display:flex;justify-content:space-between;gap:10px;
+  font-size:9px;letter-spacing:.26em;text-transform:uppercase;
+  border-bottom:1px solid var(--ink);padding-bottom:8px;
+}
+
+/* kata raksasa */
+.word{
+  font-family:"Fraunces",serif;font-weight:900;letter-spacing:-.055em;
+  font-size:clamp(76px,22vw,190px);line-height:.82;margin:16px 0 0;
+}
+.word span{color:var(--red)}
+
+.sub{
+  display:flex;align-items:baseline;justify-content:space-between;gap:14px;
+  margin-top:6px;flex-wrap:wrap;
+}
+.sub p{
+  margin:0;font-size:clamp(13px,2.4vw,16px);line-height:1.5;max-width:40ch;
+  font-family:"Fraunces",serif;font-style:italic;font-weight:400;
+}
+.sub .ed{
+  font-family:var(--mono);font-size:9px;letter-spacing:.2em;text-transform:uppercase;
+  color:#6E6350;
+}
+
+/* dua blok */
+.blocks{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:26px}
+
+.block{
+  position:relative;display:flex;flex-direction:column;justify-content:space-between;
+  min-height:260px;padding:20px 18px;text-decoration:none;color:var(--paper);
+  overflow:hidden;transition:transform .35s cubic-bezier(.19,1,.22,1);
+}
+.block:hover{transform:translateY(-4px)}
+.block.red{background:var(--red)}
+.block.green{background:var(--green)}
+
+.block .n{
+  font-size:10px;letter-spacing:.24em;opacity:.75;
+}
+.block h2{
+  font-family:"Fraunces",serif;font-weight:800;font-size:clamp(30px,6vw,46px);
+  margin:0;letter-spacing:-.03em;line-height:.92;
+}
+.block p{
+  margin:8px 0 0;font-size:11.5px;line-height:1.6;max-width:24ch;opacity:.85;
+}
+.block .arrow{
+  align-self:flex-end;font-size:26px;line-height:1;transition:transform .3s ease;
+}
+.block:hover .arrow{transform:translateX(6px)}
+
+/* angka raksasa di sudut blok */
+.block .big{
+  position:absolute;right:-6px;bottom:-26px;font-family:"Fraunces",serif;font-weight:900;
+  font-size:120px;line-height:.7;color:rgba(241,233,214,.16);pointer-events:none;
+}
+
+/* garis bawah */
+.bottom{
+  margin-top:20px;border-top:1px solid var(--ink);padding-top:10px;
+  display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;
+  font-size:9px;letter-spacing:.18em;text-transform:uppercase;color:#6E6350;
+}
+.bottom a{color:inherit;text-decoration:none}
+
+@media(max-width:640px){
+  .blocks{grid-template-columns:1fr}
+  .block{min-height:200px}
+}
+</style>
+</head>
+<body>
+<div class="poster">
+
+  <div class="line">
+    <span>Tharra · OSIS Humas</span>
+    <span>MMXXV · Sekolah Kita</span>
+  </div>
+
+  <h1 class="word">THARRA<span>.</span></h1>
+
+  <div class="sub">
+    <p>Dua ruang: satu untuk bicara, satu untuk menempel tulisan.</p>
+    <span class="ed">Poster 01 / 02</span>
+  </div>
+
+  <div class="blocks">
+    <a class="block red" href="../index.html">
+      <span class="n">01 — KOTAK ASPIRASI</span>
+      <div>
+        <h2>Katakan</h2>
+        <p>Tulis yang belum sempat kamu ucapkan. Anonim, dibaca pengurus.</p>
+      </div>
+      <span class="arrow">→</span>
+      <span class="big">01</span>
+    </a>
+
+    <a class="block green" href="../index.html">
+      <span class="n">02 — MADING &amp; SURAT</span>
+      <div>
+        <h2>Aksara</h2>
+        <p>Papan mading sekolah dan surat untuk teman sekelas.</p>
+      </div>
+      <span class="arrow">→</span>
+      <span class="big">02</span>
+    </a>
+  </div>
+
+  <div class="bottom">
+    <span>Tharra — Katakan &amp; Aksara</span>
+    <span>dibuat oleh OSIS bagian Humas</span>
+    <a href="index.html">← daftar konsep</a>
+  </div>
+
+</div>
+</body>
+</html>

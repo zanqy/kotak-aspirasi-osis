@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Konsep 4 — Dua Pintu | Tharra</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300..900&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+/* KONSEP 4 — Layar terbelah dua pintu.
+   Ide: tidak ada kartu. Layarnya dibagi dua; menyentuh satu sisi membukanya.
+   Paling berani, paling sedikit teks, sangat jelas "pilih satu". */
+:root{
+  --k:#7E2A1A; --k-2:#5B1B0F; --a:#3D5B36; --a-2:#283D24;
+  --paper:#F5EEDC; --ink:#221D15;
+}
+*{box-sizing:border-box}
+html,body{height:100%;margin:0}
+body{
+  font-family:"IBM Plex Mono",monospace;background:var(--ink);color:var(--paper);
+  overflow:hidden;
+}
+
+.top{
+  position:fixed;z-index:20;top:0;left:0;right:0;display:flex;justify-content:space-between;
+  padding:14px 18px;font-size:9px;letter-spacing:.26em;text-transform:uppercase;
+  color:rgba(245,238,220,.6);mix-blend-mode:difference;pointer-events:none;
+}
+
+.split{display:flex;height:100dvh;width:100%;transition:filter .4s ease}
+
+.half{
+  position:relative;flex:1 1 50%;display:flex;flex-direction:column;justify-content:flex-end;
+  padding:26px 24px 34px;text-decoration:none;color:var(--paper);
+  transition:flex-basis .55s cubic-bezier(.19,1,.22,1), background .4s ease;
+  overflow:hidden;
+}
+.half.k{background:linear-gradient(165deg,var(--k) 0%,var(--k-2) 100%)}
+.half.a{background:linear-gradient(165deg,var(--a) 0%,var(--a-2) 100%)}
+
+/* garis jahitan di tengah */
+.half.k::after{
+  content:"";position:absolute;right:0;top:0;bottom:0;width:1px;
+  background:repeating-linear-gradient(to bottom, rgba(245,238,220,.35) 0 6px, transparent 6px 12px);
+}
+
+.seam{
+  position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);z-index:10;
+  width:52px;height:52px;border-radius:50%;display:grid;place-items:center;
+  background:var(--paper);color:var(--ink);font-size:9px;letter-spacing:.1em;
+  box-shadow:0 10px 24px -14px rgba(0,0,0,.8);
+}
+
+.half .num{
+  position:absolute;top:22px;left:24px;font-size:10px;letter-spacing:.24em;
+  color:rgba(245,238,220,.55);
+}
+.half h1{
+  font-family:"Fraunces",serif;font-weight:800;margin:0;
+  font-size:clamp(40px,9vw,78px);line-height:.9;letter-spacing:-.03em;
+}
+.half p{
+  margin:10px 0 0;max-width:26ch;font-size:12px;line-height:1.65;
+  color:rgba(245,238,220,.75);
+}
+.half .go{
+  display:inline-block;margin-top:16px;font-size:9.5px;letter-spacing:.2em;text-transform:uppercase;
+  border-bottom:1px solid rgba(245,238,220,.5);padding-bottom:3px;
+}
+
+/* ilustrasi samar di latar */
+.half .glyph{
+  position:absolute;right:-20px;top:50%;transform:translateY(-50%);
+  font-family:"Fraunces",serif;font-weight:800;font-size:clamp(180px,42vw,420px);
+  color:rgba(245,238,220,.07);line-height:1;pointer-events:none;user-select:none;
+}
+
+@media(hover:hover){
+  .split:hover .half{flex-basis:50%}
+  .split .half:hover{flex-basis:58%}
+  .split .half:hover p{color:rgba(245,238,220,.92)}
+}
+
+/* versi HP: bertumpuk, bukan berdampingan */
+@media(max-width:620px){
+  body{overflow:auto}
+  .split{flex-direction:column;height:auto;min-height:100dvh}
+  .half{flex:0 0 auto;min-height:50dvh;justify-content:flex-end}
+  .half.k::after{display:none}
+  .seam{display:none}
+  .half .glyph{font-size:150px;right:-10px}
+}
+</style>
+</head>
+<body>
+
+<div class="top">
+  <span>THARRA</span>
+  <span>DUA RUANG · SATU SEKOLAH</span>
+</div>
+
+<div class="split">
+  <a class="half k" href="../index.html">
+    <span class="glyph">K</span>
+    <span class="num">01 · KOTAK ASPIRASI</span>
+    <h1>Katakan</h1>
+    <p>Tulis yang belum sempat kamu ucapkan. Anonim, dibaca pengurus OSIS.</p>
+    <span class="go">Masuk →</span>
+  </a>
+
+  <a class="half a" href="../index.html">
+    <span class="glyph">A</span>
+    <span class="num">02 · MADING &amp; SURAT</span>
+    <h1>Aksara</h1>
+    <p>Papan mading sekolah dan surat untuk teman sekelas.</p>
+    <span class="go">Masuk →</span>
+  </a>
+
+  <span class="seam">atau</span>
+</div>
+
+</body>
+</html>
