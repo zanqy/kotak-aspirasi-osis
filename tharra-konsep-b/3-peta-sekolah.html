@@ -64,34 +64,17 @@ main{flex:1;display:flex;flex-direction:column;justify-content:center;padding:10
 }
 .building:hover{transform:translateY(-8px)}
 
-/* atap + dua sisi: dibuat dengan clip-path, bukan 3D asli */
-.roof{
-  position:relative;height:96px;margin:0 auto;width:100%;
-  background:linear-gradient(160deg,var(--tint) 0%,var(--tint-2) 100%);
-  clip-path:polygon(50% 0,100% 32%,50% 64%,0 32%);
-  filter:drop-shadow(0 14px 18px var(--shadow));
+/* satu bentuk utuh: atap belah ketupat di atas badan */
+.shape{
+  position:relative;width:100%;height:132px;
+  background:linear-gradient(180deg, var(--tint) 0 34%, var(--tint-2) 34%, var(--tint-3) 100%);
+  clip-path:polygon(50% 0,100% 27%,100% 73%,50% 100%,0 73%,0 27%);
+  filter:drop-shadow(0 14px 16px var(--shadow));
 }
-.wall{
-  position:relative;width:100%;height:74px;margin:-34px auto 0;
-  background:linear-gradient(180deg,var(--tint-2) 0%,var(--tint-3) 100%);
-  clip-path:polygon(0 0,50% 26%,100% 0,100% 66%,50% 100%,0 66%);
-}
-.light{
-  position:absolute;left:50%;top:16px;transform:translateX(-50%);
-  width:8px;height:8px;border-radius:50%;background:rgba(255,255,255,.75);
-  box-shadow:0 0 0 2px rgba(255,255,255,.2);
-}
-/* pintu */
-.wall::after{
-  content:"";position:absolute;left:50%;bottom:0;transform:translateX(-50%);
-  width:16px;height:26px;background:rgba(0,0,0,.35);
+.door{
+  position:absolute;left:50%;bottom:0;transform:translateX(-50%);
+  width:18px;height:30px;background:rgba(0,0,0,.32);
   clip-path:polygon(50% 0,100% 26%,100% 100%,0 100%,0 26%);
-}
-/* bayangan di tanah */
-.building::after{
-  content:"";position:absolute;left:50%;bottom:-6px;transform:translateX(-50%);
-  width:78%;height:14px;border-radius:50%;
-  background:rgba(23,26,22,.16);filter:blur(6px);
 }
 
 /* label bangunan */
@@ -152,8 +135,7 @@ main{flex:1;display:flex;flex-direction:column;justify-content:center;padding:10
 
     <a class="building k" href="../index.html">
       <span class="pin">anonim</span>
-      <div class="roof"></div>
-      <div class="wall"><span class="light"></span></div>
+      <div class="shape"><span class="door"></span></div>
       <div class="tag">
         <b>Katakan</b>
         <span><i class="dot"></i>Kotak aspirasi</span>
@@ -162,8 +144,7 @@ main{flex:1;display:flex;flex-direction:column;justify-content:center;padding:10
 
     <a class="building a" href="../index.html">
       <span class="pin">perlu akun</span>
-      <div class="roof"></div>
-      <div class="wall"><span class="light"></span></div>
+      <div class="shape"><span class="door"></span></div>
       <div class="tag">
         <b>Aksara</b>
         <span><i class="dot"></i>Mading &amp; surat</span>
