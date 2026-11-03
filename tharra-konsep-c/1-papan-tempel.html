@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Konsep C1 — Papan Tempel | Tharra</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400..900;1,9..144,400..900&family=IBM+Plex+Mono:wght@400;500&family=Caveat:wght@600;700&display=swap" rel="stylesheet">
+<style>
+/* KONSEP C1 — Papan tempel.
+   Tema tetap: krem, tinta, segel merah. Yang beda: dua ruang tampil sebagai
+   kertas yang ditempel di papan, dengan selotip dan paku. */
+:root{
+  --board:#E7DCC2; --board-2:#DDD0B2; --paper:#FCF9F2; --ink:#221D15;
+  --soft:#5C5042; --faint:#8B7B62; --red:#C03B21; --line:#CFBE9C;
+  --fd:"Fraunces",serif; --fm:"IBM Plex Mono",monospace; --hw:"Caveat",cursive;
+}
+*{box-sizing:border-box}
+body{
+  margin:0;background:var(--board);color:var(--ink);font-family:var(--fm);
+  min-height:100dvh;padding:24px 18px 60px;
+  background-image:
+    radial-gradient(rgba(34,29,21,.07) 1px, transparent 1px),
+    radial-gradient(rgba(34,29,21,.045) 1px, transparent 1px);
+  background-size:9px 9px, 13px 13px;
+  background-position:0 0, 4px 6px;
+  position:relative;
+}
+/* bayangan tepi papan */
+body::before{
+  content:"";position:fixed;inset:0;pointer-events:none;
+  box-shadow:inset 0 0 120px rgba(90,70,35,.28);
+}
+.wrap{max-width:880px;margin:0 auto;position:relative;z-index:1}
+
+.head{display:flex;align-items:flex-end;justify-content:space-between;gap:12px;margin-bottom:26px}
+.head h1{
+  font-family:var(--fd);font-weight:700;font-size:clamp(26px,5vw,38px);
+  margin:0;letter-spacing:-.02em;line-height:1.05;
+}
+.head .sub{
+  font-size:9.5px;letter-spacing:.22em;text-transform:uppercase;color:#7A6446;
+  margin:6px 0 0;
+}
+.head .date{
+  font-family:var(--hw);font-size:19px;color:#7A6446;transform:rotate(-2deg);white-space:nowrap;
+}
+
+.board{display:grid;grid-template-columns:1fr 1fr;gap:22px;padding:6px 2px 10px}
+
+.note{
+  position:relative;display:block;text-decoration:none;color:inherit;
+  background:var(--paper);padding:24px 20px 20px;
+  border:1px solid rgba(180,160,120,.55);
+  box-shadow:0 12px 24px -18px rgba(60,45,20,.85), 0 1px 0 rgba(255,255,255,.6) inset;
+  transform:rotate(var(--rot,-1.4deg));
+  transition:transform .35s cubic-bezier(.19,1,.22,1), box-shadow .35s ease;
+}
+.note:hover{transform:rotate(0deg) translateY(-4px);box-shadow:0 22px 34px -20px rgba(60,45,20,.9)}
+.note:focus-visible{outline:2px solid var(--red);outline-offset:4px}
+.note:nth-child(2){--rot:1.6deg}
+
+/* selotip */
+.tape{
+  position:absolute;top:-12px;left:50%;transform:translateX(-50%) rotate(-3deg);
+  width:96px;height:26px;background:rgba(224,165,38,.42);
+  border-left:1px dashed rgba(181,129,14,.6);border-right:1px dashed rgba(181,129,14,.6);
+}
+.note:nth-child(2) .tape{transform:translateX(-50%) rotate(2.5deg)}
+
+/* paku */
+.pin{
+  position:absolute;right:18px;top:14px;width:12px;height:12px;border-radius:50%;
+  background:radial-gradient(circle at 35% 30%, #D8573B 0%, #8C2F1D 70%);
+  box-shadow:0 3px 6px -2px rgba(0,0,0,.5);
+}
+
+.note .no{font-size:9px;letter-spacing:.2em;color:var(--faint)}
+.note h2{
+  font-family:var(--fd);font-weight:800;font-size:clamp(24px,4.6vw,32px);
+  margin:6px 0 0;letter-spacing:-.01em;line-height:1;
+}
+.note h2 i{font-style:normal;color:var(--red)}
+.note .tag{font-size:9px;letter-spacing:.18em;text-transform:uppercase;color:var(--faint);margin-top:5px}
+.note p{font-family:var(--fd);font-size:14.5px;line-height:1.6;color:var(--soft);margin:12px 0 0}
+.note .go{
+  display:inline-block;margin-top:14px;font-size:10px;letter-spacing:.18em;
+  text-transform:uppercase;color:var(--red);border-bottom:1px solid rgba(192,59,33,.45);
+  padding-bottom:2px;
+}
+.note .scrawl{
+  position:absolute;right:16px;bottom:12px;font-family:var(--hw);font-size:18px;
+  color:rgba(140,47,29,.55);transform:rotate(-3deg);
+}
+
+.foot{
+  display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;
+  margin-top:26px;padding-top:12px;border-top:1px dashed rgba(90,70,35,.35);
+  font-size:9px;letter-spacing:.16em;text-transform:uppercase;color:#7A6446;
+}
+.foot a{color:inherit;text-decoration:none}
+
+@media(max-width:660px){
+  .board{grid-template-columns:1fr;gap:26px}
+  .head .date{display:none}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="head">
+    <div>
+      <h1>Dua catatan di papan</h1>
+      <p class="sub">Tharra · OSIS Humas</p>
+    </div>
+    <span class="date">silakan dipinjam</span>
+  </header>
+
+  <div class="board">
+    <a class="note" href="../index.html">
+      <span class="tape"></span>
+      <span class="pin"></span>
+      <span class="no">CATATAN 01</span>
+      <h2>Katakan<i>.</i></h2>
+      <div class="tag">Kotak aspirasi</div>
+      <p>Tulis yang selama ini kamu simpan. Anonim, dibaca pengurus OSIS, bisa dipantau lewat kode tiket.</p>
+      <span class="go">Tulis aspirasi →</span>
+      <span class="scrawl">jangan ditahan</span>
+    </a>
+
+    <a class="note" href="../index.html">
+      <span class="tape"></span>
+      <span class="pin"></span>
+      <span class="no">CATATAN 02</span>
+      <h2>Aksara<i>.</i></h2>
+      <div class="tag">Mading &amp; surat</div>
+      <p>Papan mading sekolah dan surat untuk teman sekelas — tempel, baca, kirim seperti amplop.</p>
+      <span class="go">Buka mading →</span>
+      <span class="scrawl">buat temanmu</span>
+    </a>
+  </div>
+
+  <footer class="foot">
+    <span>Tharra — Katakan &amp; Aksara</span>
+    <a href="index.html">← daftar konsep</a>
+  </footer>
+</div>
+</body>
+</html>
