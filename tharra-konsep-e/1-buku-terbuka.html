@@ -6,111 +6,103 @@
 <title>Konsep E1 — Buku Terbuka | Tharra</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..900;1,9..144,300..900&family=IBM+Plex+Mono:wght@400;500&family=Caveat:wght@600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..900;1,9..144,300..900&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
-/* KONSEP E1 — Buku terbuka di atas meja.
-   Dua halaman = dua ruang. Gutter di tengah, ribbon, nomor halaman.
-   Di HP buku "dibuka" jadi dua halaman bertumpuk (rotasi dimatikan). */
+/* KONSEP E1 — Buku terbuka, versi rapi.
+   Aturan yang dipegang: satu sumbu tengah, CTA selalu tombol 44px,
+   label minimum 10px, tidak ada hiasan yang menembus tepi kertas. */
 :root{
-  --desk:#D9C9A9; --desk-2:#C9B68F; --paper:#FBF6E7; --paper-2:#F3EAD3;
-  --ink:#241E15; --soft:#5C5042; --faint:#8B7B62; --red:#B4311F; --green:#3F5A38;
-  --fd:"Fraunces",serif; --fm:"IBM Plex Mono",monospace; --hw:"Caveat",cursive;
+  --desk:#DCCBAA; --desk-2:#C9B58F;
+  --paper:#FBF6E7; --paper2:#F5EEDA;
+  --ink:#231D15; --soft:#5A4E3C; --line:#DACAA6; --faint:#77684C;
+  --red:#B4311F; --green:#3F5A38;
+  --fd:"Fraunces",Georgia,serif; --fm:"IBM Plex Mono",ui-monospace,monospace;
 }
 *{box-sizing:border-box}
 body{
-  margin:0;min-height:100dvh;background:radial-gradient(120% 80% at 50% 0%, #E6D8B9 0%, var(--desk) 45%, var(--desk-2) 100%);
-  color:var(--ink);font-family:var(--fm);display:flex;flex-direction:column;justify-content:center;
-  padding:26px 16px 40px;overflow-x:hidden;
-}
-body::before{
-  content:"";position:fixed;inset:0;pointer-events:none;opacity:.5;
-  background:repeating-linear-gradient(93deg, rgba(120,90,50,.06) 0 2px, transparent 2px 10px);
+  margin:0;background:radial-gradient(110% 70% at 50% 0%, #EFE3C8 0%, var(--desk) 55%, var(--desk-2) 100%);
+  color:var(--ink);font-family:var(--fm);
+  display:flex;flex-direction:column;justify-content:center;align-items:center;
+  padding:22px 16px 26px;min-height:100dvh;overflow-x:hidden;
 }
 
 .top{
-  display:flex;justify-content:space-between;gap:10px;max-width:960px;margin:0 auto 18px;width:100%;
-  font-size:8.5px;letter-spacing:.2em;text-transform:uppercase;color:#6E5F45;position:relative;z-index:2;
+  width:100%;max-width:940px;display:flex;justify-content:space-between;gap:12px;
+  font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--faint);margin-bottom:16px;
 }
 
-.stage{perspective:1700px;position:relative;z-index:2;max-width:960px;margin:0 auto;width:100%}
+.stage{width:100%;max-width:940px;perspective:1900px}
 
 .book{
-  position:relative;display:grid;grid-template-columns:1fr 1fr;
-  transform:rotateX(16deg);transform-origin:50% 100%;
-  filter:drop-shadow(0 40px 40px rgba(60,42,18,.35));
+  display:grid;grid-template-columns:1fr 1fr;position:relative;
+  transform:rotateX(7deg);transform-origin:50% 100%;
+  filter:drop-shadow(0 26px 30px rgba(70,50,20,.28));
 }
-
-/* halaman */
-.page{
-  position:relative;background:linear-gradient(180deg,var(--paper) 0%,var(--paper-2) 100%);
-  padding:30px 26px 44px;min-height:420px;display:flex;flex-direction:column;
-  text-decoration:none;color:inherit;transition:background .3s ease;
-}
-.page:first-child{border-radius:6px 0 0 8px;box-shadow:inset -14px 0 24px -20px rgba(60,42,18,.8)}
-.page:last-child{border-radius:0 6px 8px 0;box-shadow:inset 14px 0 24px -20px rgba(60,42,18,.8)}
-.page:hover{background:#FFFDF4}
-
-/* gutter */
 .book::after{
-  content:"";position:absolute;left:50%;top:0;bottom:0;width:26px;transform:translateX(-50%);
-  background:linear-gradient(90deg, rgba(120,95,55,.02), rgba(120,95,55,.28) 44%, rgba(255,255,255,.6) 52%, rgba(120,95,55,.02));
+  content:"";position:absolute;left:50%;top:0;bottom:0;width:28px;transform:translateX(-50%);
+  background:linear-gradient(90deg,rgba(90,70,35,.05),rgba(90,70,35,.26) 46%,rgba(255,255,255,.55) 54%,rgba(90,70,35,.05));
   pointer-events:none;
 }
 
-.pg-num{
-  position:absolute;bottom:16px;font-size:9px;letter-spacing:.16em;color:var(--faint);
+.page{
+  position:relative;display:flex;flex-direction:column;
+  background:linear-gradient(180deg,var(--paper) 0%,var(--paper2) 100%);
+  padding:30px 28px 26px;min-height:392px;text-decoration:none;color:inherit;
 }
-.page:first-child .pg-num{left:26px}
-.page:last-child .pg-num{right:26px}
+.page:hover{background:#FFFDF5}
+.page.k{border-radius:8px 0 0 8px;box-shadow:inset -18px 0 26px -22px rgba(70,50,20,.85)}
+.page.a{border-radius:0 8px 8px 0;box-shadow:inset 18px 0 26px -22px rgba(70,50,20,.85)}
+.page:focus-visible{outline:2px solid var(--red);outline-offset:-6px}
 
-.kicker{
-  font-size:9.5px;letter-spacing:.16em;text-transform:uppercase;color:#6E5F45;
-}
+.label{font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--faint)}
 .page h2{
-  font-family:var(--fd);font-weight:800;font-size:clamp(26px,4.4vw,38px);letter-spacing:-.02em;
-  line-height:1;margin:8px 0 0;
+  font-family:var(--fd);font-weight:800;font-size:clamp(26px,4.2vw,34px);
+  letter-spacing:-.02em;line-height:1.05;margin:8px 0 0;
 }
 .page h2 i{font-style:normal;color:var(--red)}
-.page .dek{
-  font-family:var(--fd);font-size:14px;line-height:1.65;color:var(--soft);margin:12px 0 0;max-width:26ch;
+.page p{
+  font-family:var(--fd);font-size:15px;line-height:1.62;color:var(--soft);margin:12px 0 0;max-width:30ch;
 }
-.page .go{
-  margin-top:auto;align-self:flex-start;
-  display:inline-flex;align-items:center;gap:8px;min-height:42px;padding:0 16px;
-  border-radius:999px;background:var(--red);color:#FBF6E7;
-  font-size:9.5px;letter-spacing:.18em;text-transform:uppercase;
-  box-shadow:0 6px 12px -8px rgba(120,30,10,.8);
+.cta{
+  margin-top:auto;display:inline-flex;align-items:center;justify-content:center;gap:8px;
+  min-height:44px;padding:0 18px;border-radius:999px;
+  background:var(--red);color:#FBF6E7;text-decoration:none;
+  font-size:10.5px;letter-spacing:.16em;text-transform:uppercase;
+  align-self:flex-start;box-shadow:0 8px 14px -10px rgba(120,30,10,.9);
 }
+.page.a .cta{background:var(--green)}
+.pnum{position:absolute;bottom:14px;font-size:10px;color:var(--faint);letter-spacing:.12em}
+.page.k .pnum{left:28px}
+.page.a .pnum{right:28px}
 
-/* ilustrasi kecil di halaman */
-.mark{width:54px;height:54px;border-radius:50%;display:grid;place-items:center;
-  font-family:var(--fd);font-weight:700;font-size:18px;color:#F6E3C4;margin-bottom:14px;
-  background:radial-gradient(circle at 34% 30%, #B8482B 0%, #8C2F1D 66%, #59180C 100%);
-  box-shadow:0 8px 14px -10px rgba(60,15,5,.9);transform:rotate(-4deg)}
-.mark.a{background:radial-gradient(circle at 34% 30%, #55764B 0%, #3F5A38 66%, #243520 100%);transform:rotate(4deg)}
-
-/* ribbon */
-.ribbon{
-  position:absolute;top:-6px;right:16%;width:16px;height:64px;background:var(--red);
-  clip-path:polygon(0 0,100% 0,100% 100%,50% 82%,0 100%);
-  box-shadow:0 3px 8px -4px rgba(0,0,0,.5);z-index:3;
-}
+.pager{display:none}
 
 .foot{
-  display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;max-width:960px;margin:20px auto 0;width:100%;
-  font-size:8.5px;letter-spacing:.16em;text-transform:uppercase;color:#6E5F45;position:relative;z-index:2;
+  width:100%;max-width:940px;display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;
+  margin-top:18px;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--faint);
 }
-.foot a{color:inherit;text-decoration:none}
+.foot a{color:inherit;text-decoration:none;min-height:32px;display:inline-flex;align-items:center}
 
-/* HP: buku jadi dua halaman bertumpuk */
+/* ---------- HP: satu halaman per layar, dengan pager ---------- */
 @media(max-width:720px){
-  .book{grid-template-columns:1fr;transform:none;filter:drop-shadow(0 20px 26px rgba(60,42,18,.3))}
+  .book{grid-template-columns:1fr;transform:none;filter:drop-shadow(0 18px 22px rgba(70,50,20,.26))}
   .book::after{display:none}
-  .page{min-height:0;border-radius:10px}
-  .page:first-child{border-radius:10px 10px 0 0;box-shadow:inset 0 -16px 22px -20px rgba(60,42,18,.7)}
-  .page:first-child{box-shadow:inset 0 -18px 26px -18px rgba(60,42,18,.45)}
-  .page:last-child{border-radius:0 0 10px 10px;box-shadow:inset 0 18px 26px -18px rgba(60,42,18,.45)}
-  .ribbon{right:10%}
+  .page{min-height:0;padding:24px 22px 20px;border-radius:10px 10px 0 0}
+  .page.a{display:none}
+  .book.show-a .page.k{display:none}
+  .book.show-a .page.a{display:flex;border-radius:10px 10px 0 0}
+  .pnum{display:none}
+  .pager{
+    display:flex;align-items:center;justify-content:space-between;gap:12px;
+    background:var(--paper2);border-top:1px solid var(--line);
+    padding:10px 14px;border-radius:0 0 10px 10px;
+  }
+  .pager span{font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--faint)}
+  .pager button{
+    min-height:40px;padding:0 14px;border-radius:999px;border:1px solid var(--line);
+    background:#fff;color:var(--ink);font-family:var(--fm);font-size:10px;
+    letter-spacing:.14em;text-transform:uppercase;cursor:pointer;
+  }
 }
 </style>
 </head>
@@ -122,26 +114,27 @@ body::before{
 </div>
 
 <div class="stage">
-  <div class="book">
-    <span class="ribbon" aria-hidden="true"></span>
-
-    <a class="page" href="../index.html">
-      <div class="mark">K</div>
-      <div class="kicker">Halaman 01 · kotak aspirasi</div>
+  <div class="book" id="book">
+    <a class="page k" href="../index.html">
+      <span class="label">Halaman 01 · kotak aspirasi</span>
       <h2>Katakan<i>.</i></h2>
-      <p class="dek">Tulis yang selama ini kamu simpan. Anonim, dibaca pengurus OSIS, bisa dipantau lewat kode tiket.</p>
-      <span class="go">Tulis aspirasi →</span>
-      <span class="pg-num">01</span>
+      <p>Tulis yang selama ini kamu simpan. Anonim, dibaca pengurus OSIS, bisa dipantau lewat kode tiket.</p>
+      <span class="cta">Tulis aspirasi →</span>
+      <span class="pnum">01</span>
     </a>
 
-    <a class="page" href="../index.html">
-      <div class="mark a">A</div>
-      <div class="kicker">Halaman 02 · mading &amp; surat</div>
+    <a class="page a" href="../index.html">
+      <span class="label">Halaman 02 · mading &amp; surat</span>
       <h2>Aksara<i>.</i></h2>
-      <p class="dek">Papan mading sekolah dan surat untuk teman sekelas — tempel, baca, kirim seperti amplop.</p>
-      <span class="go">Buka mading →</span>
-      <span class="pg-num">02</span>
+      <p>Papan mading sekolah dan surat untuk teman sekelas — tempel, baca, kirim seperti amplop.</p>
+      <span class="cta">Buka mading →</span>
+      <span class="pnum">02</span>
     </a>
+
+    <div class="pager">
+      <span id="pgLabel">Halaman 1 dari 2</span>
+      <button id="pgBtn" type="button">Halaman 2 →</button>
+    </div>
   </div>
 </div>
 
@@ -150,5 +143,16 @@ body::before{
   <a href="index.html">← daftar konsep</a>
 </div>
 
+<script>
+  // Pager hanya aktif di layar sempit; di desktop kedua halaman tampil bersama.
+  const book = document.getElementById('book');
+  const btn = document.getElementById('pgBtn');
+  const lbl = document.getElementById('pgLabel');
+  btn.addEventListener('click', () => {
+    const showingA = book.classList.toggle('show-a');
+    btn.textContent = showingA ? '← Halaman 1' : 'Halaman 2 →';
+    lbl.textContent = showingA ? 'Halaman 2 dari 2' : 'Halaman 1 dari 2';
+  });
+</script>
 </body>
 </html>

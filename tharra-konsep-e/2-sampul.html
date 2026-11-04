@@ -8,105 +8,108 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..900;1,9..144,300..900&family=IBM+Plex+Mono:wght@400;500&family=Cormorant+Garamond:ital,wght@0,400;1,400&display=swap" rel="stylesheet">
 <style>
-/* KONSEP E2 — Sampul buku tertutup.
-   Beranda = sampul: kain gelap, huruf foil, pita kertas (obi), tepi halaman.
-   Dua ruang disebut di pita; masuk lewat "buka". */
+/* KONSEP E2 — Sampul buku, versi rapi.
+   Satu sumbu tengah, pita di dalam batas sampul, CTA tombol penuh,
+   huruf foil tanpa bevel. Di HP sampul tegak lurus (tanpa rotasi). */
 :root{
-  --room:#241E16; --cover:#5E2016; --cover-2:#4A180F; --foil:#E8C98A;
-  --paper:#F3EAD3; --ink:#1E1810; --red:#C05A3A;
-  --fd:"Fraunces",serif; --fc:"Cormorant Garamond",serif; --fm:"IBM Plex Mono",monospace;
+  --cover:#5D2016; --cover2:#47170F;
+  --paper:#F3EAD3; --ink:#1E1810; --foil:#E7C88D; --red:#C0503A;
+  --fd:"Fraunces",Georgia,serif; --fc:"Cormorant Garamond",Georgia,serif;
+  --fm:"IBM Plex Mono",ui-monospace,monospace;
 }
 *{box-sizing:border-box}
 body{
-  margin:0;min-height:100dvh;background:radial-gradient(120% 90% at 50% 0%, #2A2118 0%, #17120C 55%, #0D0A06 100%);
-  color:var(--paper);display:flex;flex-direction:column;align-items:center;justify-content:center;
-  padding:28px 16px;font-family:var(--fm);overflow-x:hidden;
+  margin:0;min-height:100dvh;
+  background:radial-gradient(120% 85% at 50% 0%, #2A2118 0%, #17120C 58%, #0C0906 100%);
+  color:var(--paper);font-family:var(--fm);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  padding:26px 16px 22px;overflow-x:hidden;
 }
-/* cahaya meja */
 body::before{
   content:"";position:fixed;inset:0;pointer-events:none;
-  background:radial-gradient(40% 30% at 50% 12%, rgba(232,201,138,.16) 0%, transparent 70%);
+  background:radial-gradient(38% 28% at 50% 10%, rgba(231,200,141,.14) 0%, transparent 72%);
 }
 
-.stage{position:relative;perspective:1400px;margin-bottom:26px}
+.stage{perspective:1500px;margin-bottom:4px}
 
 .book{
-  position:relative;width:min(340px,80vw);aspect-ratio:3/4.2;
-  border-radius:6px 12px 12px 6px;
+  position:relative;width:min(346px,84vw);aspect-ratio:3/4.15;
+  border-radius:4px 10px 10px 4px;
   background:
-    repeating-linear-gradient(92deg, rgba(0,0,0,.16) 0 1px, transparent 1px 3px),
-    linear-gradient(145deg, var(--cover) 0%, var(--cover-2) 100%);
+    repeating-linear-gradient(90deg, rgba(0,0,0,.14) 0 1px, transparent 1px 4px),
+    linear-gradient(160deg, var(--cover) 0%, var(--cover2) 100%);
   box-shadow:
-    inset -18px 0 26px -20px rgba(0,0,0,.9),
-    inset 12px 0 18px -14px rgba(255,255,255,.18),
-    0 34px 60px -30px rgba(0,0,0,.9);
-  transform:rotateY(-14deg) rotateX(4deg);
-  transform-style:preserve-3d;
-  transition:transform .6s cubic-bezier(.19,1,.22,1);
+    inset -16px 0 24px -20px rgba(0,0,0,.85),
+    inset 10px 0 16px -14px rgba(255,255,255,.14),
+    0 28px 48px -26px rgba(0,0,0,.95);
+  transform:rotateY(-9deg);
+  transition:transform .55s cubic-bezier(.19,1,.22,1);
 }
-.book:hover{transform:rotateY(-6deg) rotateX(2deg) translateY(-4px)}
+.book:hover{transform:rotateY(-4deg) translateY(-3px)}
 
-/* tulang buku */
+/* tulang */
 .book::before{
-  content:"";position:absolute;left:0;top:0;bottom:0;width:16px;
-  background:linear-gradient(90deg, rgba(0,0,0,.55), transparent);
-  border-radius:6px 0 0 6px;
+  content:"";position:absolute;left:0;top:0;bottom:0;width:14px;
+  background:linear-gradient(90deg, rgba(0,0,0,.55), rgba(0,0,0,0));
+  border-radius:4px 0 0 4px;
 }
-/* tepi halaman di kanan */
+/* tepi halaman */
 .book::after{
-  content:"";position:absolute;right:-7px;top:6px;bottom:6px;width:9px;
-  border-radius:0 3px 3px 0;
-  background:repeating-linear-gradient(0deg, #E9DFC5 0 1px, #C9BC9C 1px 2px);
-  box-shadow:2px 0 8px rgba(0,0,0,.5);
+  content:"";position:absolute;right:-6px;top:5px;bottom:5px;width:8px;border-radius:0 2px 2px 0;
+  background:repeating-linear-gradient(0deg, #E7DCC0 0 1px, #C6B896 1px 2px);
+  box-shadow:2px 0 6px rgba(0,0,0,.45);
 }
 
-/* isi sampul */
-.inside{position:absolute;inset:0;padding:34px 26px 26px;display:flex;flex-direction:column}
+.inside{position:absolute;inset:0;padding:32px 26px 22px;display:flex;flex-direction:column}
+
 .brand{
-  font-family:var(--fd);font-weight:800;font-size:clamp(30px,8vw,44px);letter-spacing:-.03em;
-  margin:0;background:linear-gradient(180deg,#F3DCA8 0%,#D9B679 55%,#B08A45 100%);
+  font-family:var(--fd);font-weight:800;font-size:clamp(30px,8.4vw,42px);
+  letter-spacing:.01em;line-height:1;margin:0;
+  background:linear-gradient(180deg,#F0D8A4 0%,#DDB877 58%,#C39A55 100%);
   -webkit-background-clip:text;background-clip:text;color:transparent;
-  text-shadow:0 1px 0 rgba(0,0,0,.35);
 }
-.brand span{-webkit-text-fill-color:var(--red)}
+.brand i{font-style:normal;-webkit-text-fill-color:var(--red)}
 
-.rule{height:1px;background:linear-gradient(90deg, rgba(232,201,138,.6), transparent);margin:14px 0 12px}
+.rule{height:1px;background:linear-gradient(90deg,rgba(231,200,141,.55),rgba(231,200,141,0));margin:16px 0 14px}
 
-.sub{
-  font-family:var(--fm);font-size:8.5px;letter-spacing:.24em;text-transform:uppercase;
-  color:rgba(243,234,211,.65);margin:0 0 6px;
-}
+.sub{font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:rgba(243,234,211,.7);margin:0 0 8px}
 .title{
-  font-family:var(--fc);font-style:italic;font-size:clamp(17px,4.4vw,21px);
-  color:rgba(243,234,211,.92);line-height:1.3;margin:0;
+  font-family:var(--fc);font-style:italic;font-size:clamp(17px,4.5vw,20px);
+  line-height:1.35;color:rgba(243,234,211,.94);margin:0;max-width:24ch;
 }
 
-/* pita kertas (obi) */
+/* pita: di dalam batas sampul, tanpa rotasi berlebih */
 .obi{
-  position:absolute;left:-14px;right:-14px;bottom:74px;padding:12px 18px;
-  background:var(--paper);color:var(--ink);transform:rotate(-1.2deg);
-  box-shadow:0 10px 20px -12px rgba(0,0,0,.9);
+  margin-top:auto;margin-bottom:16px;
+  background:var(--paper);color:var(--ink);
+  padding:12px 14px;border-radius:2px;
+  box-shadow:0 8px 16px -12px rgba(0,0,0,.9);
 }
 .obi b{display:block;font-family:var(--fd);font-weight:700;font-size:13px;letter-spacing:-.01em}
-.obi span{display:block;margin-top:3px;font-size:7.5px;letter-spacing:.18em;text-transform:uppercase;color:#6B5B41}
+.obi span{display:block;margin-top:3px;font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:#6B5B41}
 
-/* tombol buka */
+/* CTA: tombol sungguhan */
 .open{
-  align-self:flex-start;margin-top:auto;display:inline-flex;align-items:center;gap:8px;
-  text-decoration:none;color:var(--paper);
-  font-size:9px;letter-spacing:.2em;text-transform:uppercase;
-  border-bottom:1px solid rgba(243,234,211,.45);padding-bottom:3px;
+  min-height:44px;display:flex;align-items:center;justify-content:center;gap:8px;
+  background:var(--paper);color:#3A2412;text-decoration:none;border-radius:999px;
+  font-size:10.5px;letter-spacing:.16em;text-transform:uppercase;font-weight:500;
 }
-.open:hover{color:var(--foil);border-color:var(--foil)}
+.open:hover{background:#FFFDF4}
 
-/* keterangan di luar buku */
-.caption{text-align:center;font-size:8.5px;letter-spacing:.2em;text-transform:uppercase;color:rgba(243,234,211,.45)}
-.caption a{color:inherit;text-decoration:none;border-bottom:1px solid rgba(243,234,211,.25)}
+/* kaki halaman di luar buku */
+.caption{
+  margin-top:20px;display:flex;gap:16px;flex-wrap:wrap;justify-content:center;
+  font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:rgba(243,234,211,.62);
+}
+.caption a{color:inherit;text-decoration:none;min-height:32px;display:inline-flex;align-items:center}
 
 @media(max-width:520px){
-  .book{transform:rotateY(-7deg) rotateX(2deg)}
-  .inside{padding:26px 20px 22px}
-  .obi{bottom:64px}
+  .book{transform:none}
+  .inside{padding:26px 20px 18px}
+  .brand{font-size:32px}
+}
+@media(min-width:900px) and (min-height:700px){
+  .book{width:360px}
 }
 </style>
 </head>
@@ -115,22 +118,24 @@ body::before{
 <div class="stage">
   <div class="book">
     <div class="inside">
-      <h1 class="brand">THARRA<span>.</span></h1>
+      <h1 class="brand">THARRA<i>.</i></h1>
       <div class="rule"></div>
       <p class="sub">Buku ruang · OSIS Humas</p>
       <p class="title">Katakan &amp; Aksara — dua ruang untuk sekolah yang sama.</p>
 
-      <a class="open" href="../index.html">Buka buku →</a>
-    </div>
+      <div class="obi">
+        <b>Katakan &amp; Aksara</b>
+        <span>Edisi MMXXV · untuk siswa</span>
+      </div>
 
-    <div class="obi">
-      <b>Katakan &amp; Aksara</b>
-      <span>Edisi MMXXV · untuk siswa</span>
+      <a class="open" href="../index.html">Buka buku →</a>
     </div>
   </div>
 </div>
 
-<p class="caption"><a href="index.html">← daftar konsep</a></p>
+<div class="caption">
+  <a href="index.html">← daftar konsep</a>
+</div>
 
 </body>
 </html>
