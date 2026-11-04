@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Konsep E1 — Buku Terbuka | Tharra</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..900;1,9..144,300..900&family=IBM+Plex+Mono:wght@400;500&family=Caveat:wght@600&display=swap" rel="stylesheet">
+<style>
+/* KONSEP E1 — Buku terbuka di atas meja.
+   Dua halaman = dua ruang. Gutter di tengah, ribbon, nomor halaman.
+   Di HP buku "dibuka" jadi dua halaman bertumpuk (rotasi dimatikan). */
+:root{
+  --desk:#D9C9A9; --desk-2:#C9B68F; --paper:#FBF6E7; --paper-2:#F3EAD3;
+  --ink:#241E15; --soft:#5C5042; --faint:#8B7B62; --red:#B4311F; --green:#3F5A38;
+  --fd:"Fraunces",serif; --fm:"IBM Plex Mono",monospace; --hw:"Caveat",cursive;
+}
+*{box-sizing:border-box}
+body{
+  margin:0;min-height:100dvh;background:radial-gradient(120% 80% at 50% 0%, #E6D8B9 0%, var(--desk) 45%, var(--desk-2) 100%);
+  color:var(--ink);font-family:var(--fm);display:flex;flex-direction:column;justify-content:center;
+  padding:26px 16px 40px;overflow-x:hidden;
+}
+body::before{
+  content:"";position:fixed;inset:0;pointer-events:none;opacity:.5;
+  background:repeating-linear-gradient(93deg, rgba(120,90,50,.06) 0 2px, transparent 2px 10px);
+}
+
+.top{
+  display:flex;justify-content:space-between;gap:10px;max-width:960px;margin:0 auto 18px;width:100%;
+  font-size:8.5px;letter-spacing:.2em;text-transform:uppercase;color:#6E5F45;position:relative;z-index:2;
+}
+
+.stage{perspective:1700px;position:relative;z-index:2;max-width:960px;margin:0 auto;width:100%}
+
+.book{
+  position:relative;display:grid;grid-template-columns:1fr 1fr;
+  transform:rotateX(16deg);transform-origin:50% 100%;
+  filter:drop-shadow(0 40px 40px rgba(60,42,18,.35));
+}
+
+/* halaman */
+.page{
+  position:relative;background:linear-gradient(180deg,var(--paper) 0%,var(--paper-2) 100%);
+  padding:30px 26px 44px;min-height:420px;display:flex;flex-direction:column;
+  text-decoration:none;color:inherit;transition:background .3s ease;
+}
+.page:first-child{border-radius:6px 0 0 8px;box-shadow:inset -14px 0 24px -20px rgba(60,42,18,.8)}
+.page:last-child{border-radius:0 6px 8px 0;box-shadow:inset 14px 0 24px -20px rgba(60,42,18,.8)}
+.page:hover{background:#FFFDF4}
+
+/* gutter */
+.book::after{
+  content:"";position:absolute;left:50%;top:0;bottom:0;width:26px;transform:translateX(-50%);
+  background:linear-gradient(90deg, rgba(120,95,55,.02), rgba(120,95,55,.28) 44%, rgba(255,255,255,.6) 52%, rgba(120,95,55,.02));
+  pointer-events:none;
+}
+
+.pg-num{
+  position:absolute;bottom:16px;font-size:9px;letter-spacing:.16em;color:var(--faint);
+}
+.page:first-child .pg-num{left:26px}
+.page:last-child .pg-num{right:26px}
+
+.kicker{
+  font-size:8.5px;letter-spacing:.2em;text-transform:uppercase;color:var(--faint);
+}
+.page h2{
+  font-family:var(--fd);font-weight:800;font-size:clamp(26px,4.4vw,38px);letter-spacing:-.02em;
+  line-height:1;margin:8px 0 0;
+}
+.page h2 i{font-style:normal;color:var(--red)}
+.page .dek{
+  font-family:var(--fd);font-size:14px;line-height:1.65;color:var(--soft);margin:12px 0 0;max-width:26ch;
+}
+.page .go{
+  margin-top:auto;padding-top:18px;font-size:9.5px;letter-spacing:.18em;text-transform:uppercase;
+  color:var(--red);border-bottom:1px solid rgba(180,49,31,.4);align-self:flex-start;padding-bottom:2px;
+}
+
+/* ilustrasi kecil di halaman */
+.mark{width:54px;height:54px;border-radius:50%;display:grid;place-items:center;
+  font-family:var(--fd);font-weight:700;font-size:18px;color:#F6E3C4;margin-bottom:14px;
+  background:radial-gradient(circle at 34% 30%, #B8482B 0%, #8C2F1D 66%, #59180C 100%);
+  box-shadow:0 8px 14px -10px rgba(60,15,5,.9);transform:rotate(-4deg)}
+.mark.a{background:radial-gradient(circle at 34% 30%, #55764B 0%, #3F5A38 66%, #243520 100%);transform:rotate(4deg)}
+
+/* ribbon */
+.ribbon{
+  position:absolute;top:-6px;right:16%;width:16px;height:64px;background:var(--red);
+  clip-path:polygon(0 0,100% 0,100% 100%,50% 82%,0 100%);
+  box-shadow:0 3px 8px -4px rgba(0,0,0,.5);z-index:3;
+}
+
+.foot{
+  display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;max-width:960px;margin:20px auto 0;width:100%;
+  font-size:8.5px;letter-spacing:.16em;text-transform:uppercase;color:#6E5F45;position:relative;z-index:2;
+}
+.foot a{color:inherit;text-decoration:none}
+
+/* HP: buku jadi dua halaman bertumpuk */
+@media(max-width:720px){
+  .book{grid-template-columns:1fr;transform:none;filter:drop-shadow(0 20px 26px rgba(60,42,18,.3))}
+  .book::after{display:none}
+  .page{min-height:0;border-radius:10px}
+  .page:first-child{border-radius:10px 10px 0 0;box-shadow:inset 0 -16px 22px -20px rgba(60,42,18,.7)}
+  .page:last-child{border-radius:0 0 10px 10px;box-shadow:inset 0 16px 22px -20px rgba(60,42,18,.7);border-top:1px dashed rgba(120,95,55,.35)}
+  .ribbon{right:10%}
+}
+</style>
+</head>
+<body>
+
+<div class="top">
+  <span>Tharra · OSIS Humas</span>
+  <span>Buku ruang · MMXXV</span>
+</div>
+
+<div class="stage">
+  <div class="book">
+    <span class="ribbon" aria-hidden="true"></span>
+
+    <a class="page" href="../index.html">
+      <div class="mark">K</div>
+      <div class="kicker">Halaman 01 · kotak aspirasi</div>
+      <h2>Katakan<i>.</i></h2>
+      <p class="dek">Tulis yang selama ini kamu simpan. Anonim, dibaca pengurus OSIS, bisa dipantau lewat kode tiket.</p>
+      <span class="go">Tulis aspirasi →</span>
+      <span class="pg-num">01</span>
+    </a>
+
+    <a class="page" href="../index.html">
+      <div class="mark a">A</div>
+      <div class="kicker">Halaman 02 · mading &amp; surat</div>
+      <h2>Aksara<i>.</i></h2>
+      <p class="dek">Papan mading sekolah dan surat untuk teman sekelas — tempel, baca, kirim seperti amplop.</p>
+      <span class="go">Buka mading →</span>
+      <span class="pg-num">02</span>
+    </a>
+  </div>
+</div>
+
+<div class="foot">
+  <span>Tharra — Katakan &amp; Aksara</span>
+  <a href="index.html">← daftar konsep</a>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Konsep E3 — Buku Membuka | Tharra</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..900;1,9..144,300..900&family=IBM+Plex+Mono:wght@400;500&family=Caveat:wght@600&display=swap" rel="stylesheet">
+<style>
+/* KONSEP E3 — Buku yang membuka sendiri.
+   Saat halaman dimuat, sampul terangkat ke kiri lalu terbuka; setelah itu
+   dua halaman jadi dua ruang. Ada tombol untuk mengulang animasinya. */
+:root{
+  --desk:#DFD0B2; --paper:#FBF6E7; --paper-2:#F4EBD6; --ink:#241E15; --soft:#5C5042;
+  --faint:#8B7B62; --red:#B4311F; --cover:#5E2016;
+  --fd:"Fraunces",serif; --fm:"IBM Plex Mono",monospace; --hw:"Caveat",cursive;
+}
+*{box-sizing:border-box}
+body{
+  margin:0;min-height:100dvh;background:radial-gradient(110% 80% at 50% 0%, #EFE3C8 0%, var(--desk) 60%, #CBB894 100%);
+  color:var(--ink);font-family:var(--fm);display:flex;flex-direction:column;justify-content:center;
+  padding:26px 16px 40px;overflow-x:hidden;
+}
+.top{
+  display:flex;justify-content:space-between;gap:10px;max-width:920px;margin:0 auto 16px;width:100%;
+  font-size:8.5px;letter-spacing:.2em;text-transform:uppercase;color:#6E5F45;
+}
+
+.stage{
+  position:relative;max-width:920px;margin:0 auto;width:100%;
+  perspective:1800px;
+}
+
+.spread{
+  position:relative;display:grid;grid-template-columns:1fr 1fr;
+  filter:drop-shadow(0 26px 34px rgba(60,42,18,.35));
+}
+
+.page{
+  position:relative;background:linear-gradient(180deg,var(--paper),var(--paper-2));
+  min-height:400px;padding:30px 26px 44px;display:flex;flex-direction:column;
+  text-decoration:none;color:inherit;
+}
+.page:first-child{border-radius:6px 0 0 8px;box-shadow:inset -16px 0 24px -20px rgba(60,42,18,.85)}
+.page:last-child{border-radius:0 6px 8px 0;box-shadow:inset 16px 0 24px -20px rgba(60,42,18,.85)}
+.spread::after{
+  content:"";position:absolute;left:50%;top:0;bottom:0;width:22px;transform:translateX(-50%);
+  background:linear-gradient(90deg, rgba(120,95,55,.02), rgba(120,95,55,.25) 46%, rgba(255,255,255,.55) 54%, rgba(120,95,55,.02));
+  pointer-events:none;
+}
+
+/* sampul yang membuka */
+.cover{
+  position:absolute;left:0;top:0;bottom:0;width:50%;transform-origin:left center;
+  background:
+    repeating-linear-gradient(92deg, rgba(0,0,0,.15) 0 1px, transparent 1px 3px),
+    linear-gradient(145deg,#6B261A,#4A180F);
+  border-radius:6px 0 0 8px;
+  box-shadow:inset -20px 0 30px -18px rgba(0,0,0,.9), 0 20px 30px -22px rgba(0,0,0,.8);
+  animation:open 1.15s cubic-bezier(.22,1,.36,1) .35s forwards;
+  z-index:5;display:flex;align-items:center;justify-content:center;
+}
+.cover span{
+  font-family:var(--fd);font-weight:800;font-size:clamp(20px,3.4vw,30px);color:#E7C88D;
+  letter-spacing:.02em;transform:rotate(-2deg);opacity:.9;text-align:center;padding:0 14px;
+}
+@keyframes open{
+  from{transform:rotateY(0deg)}
+  to{transform:rotateY(-168deg);opacity:.9}
+}
+
+/* isi halaman */
+.kicker{font-size:8.5px;letter-spacing:.2em;text-transform:uppercase;color:var(--faint)}
+.page h2{
+  font-family:var(--fd);font-weight:800;font-size:clamp(26px,4.6vw,38px);letter-spacing:-.02em;
+  line-height:1;margin:8px 0 0;
+}
+.page h2 i{font-style:normal;color:var(--red)}
+.page .dek{font-family:var(--fd);font-size:14px;line-height:1.65;color:var(--soft);margin:12px 0 0;max-width:26ch}
+.page .go{
+  margin-top:auto;padding-top:18px;font-size:9.5px;letter-spacing:.18em;text-transform:uppercase;
+  color:var(--red);border-bottom:1px solid rgba(180,49,31,.4);align-self:flex-start;padding-bottom:2px;
+}
+.pg-num{position:absolute;bottom:16px;font-size:9px;letter-spacing:.16em;color:var(--faint)}
+.page:first-child .pg-num{left:26px}
+.page:last-child .pg-num{right:26px}
+
+/* ornamen halaman */
+.orn{
+  font-family:var(--hw);font-size:17px;color:rgba(122,46,24,.5);margin-bottom:10px;
+}
+
+/* kendali */
+.ctrl{
+  display:flex;justify-content:center;margin:22px auto 0;
+}
+.ctrl button{
+  font-family:var(--fm);font-size:9px;letter-spacing:.18em;text-transform:uppercase;
+  background:transparent;border:1px solid rgba(110,95,69,.5);color:#5E5138;
+  padding:8px 14px;border-radius:999px;cursor:pointer;
+}
+.ctrl button:hover{background:rgba(255,255,255,.4)}
+
+.foot{
+  display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;max-width:920px;margin:14px auto 0;width:100%;
+  font-size:8.5px;letter-spacing:.16em;text-transform:uppercase;color:#6E5F45;
+}
+.foot a{color:inherit;text-decoration:none}
+
+@media(max-width:720px){
+  .spread{grid-template-columns:1fr}
+  .spread::after{display:none}
+  .page{min-height:0;border-radius:10px}
+  .page:first-child{border-radius:10px 10px 0 0}
+  .page:last-child{border-radius:0 0 10px 10px;border-top:1px dashed rgba(120,95,55,.35)}
+  .cover{width:100%;border-radius:10px;animation:none;opacity:0;pointer-events:none}
+}
+</style>
+</head>
+<body>
+
+<div class="top">
+  <span>Tharra · OSIS Humas</span>
+  <span>MMXXV</span>
+</div>
+
+<div class="stage">
+  <div class="spread" id="spread">
+    <div class="cover"><span>THARRA</span></div>
+
+    <a class="page" href="../index.html">
+      <span class="orn">halaman pertama</span>
+      <div class="kicker">01 · kotak aspirasi</div>
+      <h2>Katakan<i>.</i></h2>
+      <p class="dek">Tulis yang selama ini kamu simpan. Anonim, dibaca pengurus OSIS, bisa dipantau lewat kode tiket.</p>
+      <span class="go">Tulis aspirasi →</span>
+      <span class="pg-num">01</span>
+    </a>
+
+    <a class="page" href="../index.html">
+      <span class="orn">halaman kedua</span>
+      <div class="kicker">02 · mading &amp; surat</div>
+      <h2>Aksara<i>.</i></h2>
+      <p class="dek">Papan mading sekolah dan surat untuk teman sekelas — tempel, baca, kirim seperti amplop.</p>
+      <span class="go">Buka mading →</span>
+      <span class="pg-num">02</span>
+    </a>
+  </div>
+</div>
+
+<div class="ctrl">
+  <button onclick="const s=document.getElementById('spread');s.classList.remove('again');void s.offsetWidth;s.classList.add('again');const c=s.querySelector('.cover');c.style.animation='none';void c.offsetWidth;c.style.animation='open 1.15s cubic-bezier(.22,1,.36,1) .15s forwards';">Buka lagi</button>
+</div>
+
+<div class="foot">
+  <span>Tharra — Katakan &amp; Aksara</span>
+  <a href="index.html">← daftar konsep</a>
+</div>
+
+</body>
+</html>
