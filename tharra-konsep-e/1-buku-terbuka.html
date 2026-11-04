@@ -52,7 +52,7 @@ body{
 
 /* papan sampul, lebih besar dari blok halaman */
 .boards{
-  position:absolute;inset:-11px -10px -13px;z-index:0;border-radius:7px;
+  position:absolute;inset:-14px -13px -16px;z-index:0;border-radius:7px;
   background:linear-gradient(160deg,var(--cover) 0%,var(--cover2) 100%);
   box-shadow:inset 0 0 0 1px rgba(217,184,124,.20), 0 16px 30px -18px rgba(40,12,6,.85);
 }
@@ -64,13 +64,24 @@ body{
 /* blok halaman: tumpukan kertas di bawah & samping */
 .block{
   position:absolute;inset:0;z-index:1;border-radius:3px;
-  background:repeating-linear-gradient(180deg,#EFE6CE 0 1px,#CDBE9C 1px 2px);
-  transform:translate(4px,6px);
-  box-shadow:0 2px 3px rgba(60,42,16,.22);
+  background:repeating-linear-gradient(180deg,#F2E9D3 0 1px,#C6B590 1px 2px);
+  transform:translate(13px,11px);
+  box-shadow:0 5px 8px -4px rgba(60,42,16,.35);
+}
+/* tepi kanan blok halaman: garis vertikal (tumpukan kertas dilihat dari samping) */
+.block::after{
+  content:"";position:absolute;top:0;bottom:0;right:0;width:13px;
+  background:repeating-linear-gradient(90deg,#F4EBD5 0 1px,#C9B995 1px 2px);
+  border-radius:0 3px 3px 0;
 }
 
 /* halaman */
 .pages{position:relative;z-index:2;display:grid;grid-template-columns:1fr 1fr;transform-style:preserve-3d}
+/* butir kertas: tekstur halus di atas kedua halaman */
+.pages::after{
+  content:"";position:absolute;inset:0;z-index:4;pointer-events:none;opacity:.42;mix-blend-mode:multiply;
+  background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/></filter><rect width='160' height='160' filter='url(%23n)' opacity='0.2'/></svg>");
+}
 .page{
   position:relative;display:flex;flex-direction:column;text-decoration:none;color:inherit;
   padding:30px 30px 26px;min-height:398px;background:var(--paper);
@@ -106,10 +117,11 @@ body{
 
 /* tulang buku */
 .gutter{
-  position:absolute;left:50%;top:0;bottom:0;width:38px;transform:translateX(-50%);z-index:3;pointer-events:none;
+  position:absolute;left:50%;top:0;bottom:0;width:56px;transform:translateX(-50%);z-index:3;pointer-events:none;
   background:linear-gradient(90deg,
-    rgba(70,50,20,0) 0%, rgba(70,50,20,.18) 30%, rgba(58,42,16,.36) 47%,
-    rgba(255,255,255,.7) 53%, rgba(70,50,20,.14) 70%, rgba(70,50,20,0) 100%);
+    rgba(70,50,20,0) 0%, rgba(70,50,20,.12) 22%, rgba(58,42,16,.30) 40%,
+    rgba(48,34,12,.45) 49%, rgba(255,255,255,.75) 54%, rgba(70,50,20,.20) 66%,
+    rgba(70,50,20,.06) 82%, rgba(70,50,20,0) 100%);
 }
 
 /* pita pembatas */
@@ -129,10 +141,11 @@ body{
 .page h2 i{font-style:normal;color:var(--red)}
 .page p{font-family:var(--fd);font-size:15px;line-height:1.62;color:var(--soft);margin:12px 0 0;max-width:30ch}
 .cta{
-  margin-top:auto;display:inline-flex;align-items:center;justify-content:center;gap:8px;
-  min-height:44px;padding:0 18px;border-radius:999px;background:var(--red);color:#FBF6E7;
+  margin-top:auto;display:inline-flex;align-items:center;justify-content:center;gap:10px;
+  min-height:46px;padding:0 20px;border-radius:3px;background:var(--red);color:#FBF6E7;
   text-decoration:none;font-size:10.5px;letter-spacing:.16em;text-transform:uppercase;
-  align-self:flex-start;box-shadow:0 8px 14px -10px rgba(120,30,10,.9);
+  align-self:flex-start;
+  box-shadow:inset 0 0 0 1px rgba(0,0,0,.18), inset 0 -3px 0 rgba(0,0,0,.22);
 }
 .page.a .cta{background:var(--green)}
 .pnum{position:absolute;bottom:14px;font-size:10.5px;color:var(--faint);letter-spacing:.12em}
