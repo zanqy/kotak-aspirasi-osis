@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Konsep D5 — Surat Terbuka | Tharra</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Caveat:wght@600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+/* KONSEP D5 — Satu surat terbuka, seluruh layar.
+   Tidak ada kartu, tidak ada tombol besar: dua nama ruang ditulis di dalam
+   kalimat surat, digarisbawahi seperti orang menandai. */
+:root{
+  --paper:#F4EDD9; --paper-2:#EFE6CE; --ink:#221C14; --red:#B4311F;
+  --faint:#7C6C55; --fc:"Cormorant Garamond",serif; --fm:"IBM Plex Mono",monospace;
+  --hw:"Caveat",cursive;
+}
+*{box-sizing:border-box}
+body{
+  margin:0;background:#E4D9C0;color:var(--ink);font-family:var(--fc);
+  min-height:100dvh;display:flex;justify-content:center;padding:20px 14px;
+}
+.letter{
+  position:relative;width:100%;max-width:720px;background:var(--paper);
+  padding:38px 26px 30px;
+  box-shadow:0 26px 60px -40px rgba(50,38,18,.9), 0 1px 0 rgba(255,255,255,.7) inset;
+  border:1px solid #E0D3B5;
+}
+/* garis lipatan horizontal (surat dilipat tiga) */
+.letter::before,.letter::after{
+  content:"";position:absolute;left:0;right:0;height:2px;pointer-events:none;
+  background:linear-gradient(180deg, rgba(120,95,55,.16), rgba(255,255,255,.45) 60%, rgba(120,95,55,.12));
+}
+.letter::before{top:33%}
+.letter::after{top:66%}
+
+/* kepala */
+.head{
+  display:flex;justify-content:space-between;align-items:baseline;gap:10px;
+  font-family:var(--fm);font-size:8px;letter-spacing:.2em;text-transform:uppercase;color:var(--faint);
+  margin-bottom:34px;
+}
+.head b{color:var(--ink);letter-spacing:.26em}
+
+/* isi surat */
+.from{
+  font-family:var(--hw);font-size:24px;color:#7A6446;transform:rotate(-1.5deg);display:block;margin-bottom:14px;
+}
+.body{
+  font-size:clamp(19px,4.4vw,25px);line-height:1.62;font-weight:300;letter-spacing:.002em;
+  max-width:46ch;
+}
+.body p{margin:0 0 18px}
+.body .lead{font-size:1.02em}
+.body em{font-style:italic}
+.body .hand{font-family:var(--hw);font-size:1.35em;color:#7A2E18}
+
+/* dua nama ruang di dalam kalimat */
+.room{
+  font-weight:600;color:var(--ink);text-decoration:none;position:relative;
+  background-image:linear-gradient(transparent 62%, rgba(192,50,29,.28) 62%);
+  background-size:100% 100%;
+  border-bottom:1px solid rgba(192,50,29,.55);
+  padding-bottom:1px;transition:color .25s ease,background-color .25s ease;
+}
+.room:hover{color:var(--red);background-color:rgba(192,50,29,.07)}
+.room:focus-visible{outline:2px solid var(--red);outline-offset:3px}
+.room i{font-style:normal;color:var(--red)}
+
+/* tanda tangan */
+.sign{margin-top:30px;text-align:right}
+.sign .who{font-family:var(--hw);font-size:30px;color:#2C2419;transform:rotate(-2deg);display:inline-block}
+.sign .role{display:block;font-family:var(--fm);font-size:8px;letter-spacing:.18em;text-transform:uppercase;color:var(--faint);margin-top:2px}
+
+/* perangko di pojok */
+.stamp{
+  position:absolute;right:22px;top:22px;width:64px;height:76px;
+  background:
+    repeating-linear-gradient(0deg, transparent 0 4px, rgba(244,237,217,.9) 4px 6px),
+    repeating-linear-gradient(90deg, transparent 0 4px, rgba(244,237,217,.9) 4px 6px),
+    var(--paper-2);
+  border:1px dashed #C6B48E;display:grid;place-items:center;
+  transform:rotate(3deg);box-shadow:0 4px 10px -8px rgba(0,0,0,.5);
+}
+.stamp span{font-family:"Cormorant Garamond",serif;font-weight:600;font-size:26px;color:var(--red);opacity:.9}
+
+/* kaki */
+.foot{
+  display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;
+  margin-top:34px;padding-top:10px;border-top:1px solid rgba(124,108,85,.3);
+  font-family:var(--fm);font-size:8px;letter-spacing:.16em;text-transform:uppercase;color:var(--faint);
+}
+.foot a{color:inherit;text-decoration:none}
+
+@media(max-width:560px){
+  .letter{padding:30px 20px 24px}
+  .stamp{width:52px;height:62px;right:16px;top:16px}
+  .body{font-size:19px}
+}
+</style>
+</head>
+<body>
+<div class="letter">
+
+  <div class="head">
+    <span><b>THARRA</b> · OSIS HUMAS</span>
+    <span>MMXXV</span>
+  </div>
+
+  <span class="from">untuk kamu yang baca ini,</span>
+
+  <div class="body">
+    <p class="lead">Ada dua hal yang biasanya cuma dipendam: hal yang mengganjal, dan hal yang pengin dibagi.</p>
+
+    <p>Untuk yang pertama, ada <a class="room" href="../index.html">Katakan<i>.</i></a> — kotak aspirasi tempat kamu bisa menulis tanpa nama. Dibaca pengurus, dan kamu bisa memantau jawabannya lewat kode tiket.</p>
+
+    <p>Untuk yang kedua, ada <a class="room" href="../index.html">Aksara<i>.</i></a> — papan mading sekolah dan surat untuk teman sekelas. Tempel, baca, atau kirim seperti amplop sungguhan.</p>
+
+    <p class="hand">pilih salah satu, atau dua-duanya.</p>
+  </div>
+
+  <div class="sign">
+    <span class="who">OSIS Humas</span>
+    <span class="role">Sekolah kita</span>
+  </div>
+
+  <span class="stamp" aria-hidden="true"><span>T</span></span>
+
+  <div class="foot">
+    <span>Tharra — Katakan &amp; Aksara</span>
+    <a href="index.html">← daftar konsep</a>
+  </div>
+</div>
+</body>
+</html>

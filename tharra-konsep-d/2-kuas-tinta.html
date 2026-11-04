@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Konsep D2 — Kuas Tinta | Tharra</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..900;1,9..144,300..900&family=IBM+Plex+Mono:wght@400;500&family=Caveat:wght@700&display=swap" rel="stylesheet">
+<style>
+/* KONSEP D2 — Sapuan tinta.
+   Halaman seperti kertas yang baru disapukan kuas: gumpalan tinta besar,
+   huruf tebal di atasnya, segel merah sebagai penutup. */
+:root{
+  --paper:#F5EEDC; --ink:#171310; --red:#C0321D; --faint:#8B7B62;
+  --fd:"Fraunces",serif; --fm:"IBM Plex Mono",monospace; --hw:"Caveat",cursive;
+}
+*{box-sizing:border-box}
+body{
+  margin:0;background:var(--paper);color:var(--ink);min-height:100dvh;
+  font-family:var(--fm);overflow-x:hidden;position:relative;
+}
+/* gumpalan tinta */
+.ink{
+  position:absolute;pointer-events:none;filter:blur(1px);
+}
+.ink.a{
+  width:min(78vw,560px);height:min(46vw,330px);left:-12vw;top:-8vh;opacity:.92;
+  background:radial-gradient(closest-side at 42% 48%, #171310 0%, #171310 62%, rgba(23,19,16,.65) 76%, transparent 82%);
+  border-radius:58% 42% 63% 37% / 47% 55% 45% 53%;
+  transform:rotate(-14deg);
+}
+.ink.b{
+  width:min(62vw,420px);height:min(38vw,270px);right:-14vw;bottom:-6vh;opacity:.9;
+  background:radial-gradient(closest-side at 55% 50%, #B4311F 0%, #B4311F 58%, rgba(180,49,31,.6) 74%, transparent 82%);
+  border-radius:44% 56% 38% 62% / 58% 42% 58% 42%;
+  transform:rotate(11deg);
+}
+/* percikan */
+.spark{position:absolute;border-radius:50%;background:var(--ink);opacity:.75;pointer-events:none}
+.s1{width:7px;height:7px;left:46vw;top:12vh}
+.s2{width:4px;height:4px;left:52vw;top:9vh}
+.s3{width:10px;height:10px;left:38vw;top:16vh;opacity:.5}
+.s4{width:5px;height:5px;right:22vw;bottom:18vh;background:var(--red)}
+
+.wrap{position:relative;z-index:2;max-width:900px;margin:0 auto;padding:30px 20px 70px}
+
+.top{
+  display:flex;justify-content:space-between;gap:10px;
+  font-size:9px;letter-spacing:.2em;text-transform:uppercase;color:#6E5F49;
+}
+
+/* judul besar di atas tinta */
+.hero{margin:8vh 0 0;max-width:640px}
+.hero .small{
+  font-family:var(--hw);font-size:22px;color:var(--red);transform:rotate(-2deg);display:block;margin-bottom:6px;
+}
+.hero h1{
+  font-family:var(--fd);font-weight:900;font-size:clamp(44px,12vw,104px);line-height:.84;
+  letter-spacing:-.05em;margin:0;
+  color:var(--paper);mix-blend-mode:normal;
+  text-shadow:none;
+}
+.hero h1 span{
+  color:var(--paper);
+  position:relative;z-index:1;
+}
+.hero h1 em{font-style:italic;font-weight:500}
+
+/* dua tautan ditulis sebagai baris kalimat */
+.links{margin:9vh 0 0;max-width:520px}
+.links a{
+  display:block;text-decoration:none;color:var(--ink);
+  padding:18px 0;border-top:1px solid rgba(23,19,16,.25);
+  transition:padding-left .3s cubic-bezier(.19,1,.22,1), background .3s ease;
+}
+.links a:last-child{border-bottom:1px solid rgba(23,19,16,.25)}
+.links a:hover{padding-left:10px;background:rgba(23,19,16,.035)}
+.links .nm{
+  font-family:var(--fd);font-weight:800;font-size:clamp(26px,5.6vw,40px);letter-spacing:-.03em;line-height:1;
+}
+.links .nm i{font-style:normal;color:var(--red)}
+.links .ds{
+  display:block;margin-top:6px;font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:#6E5F49;
+}
+.links .ar{float:right;font-family:var(--fd);font-size:26px;color:var(--red);line-height:1}
+
+/* segel */
+.seal{
+  position:absolute;right:26px;bottom:34px;width:76px;height:76px;border-radius:50%;
+  display:grid;place-items:center;font-family:var(--fd);font-weight:700;font-size:15px;
+  color:#F6E3C4;background:radial-gradient(circle at 34% 30%, #B8482B 0%, #8C2F1D 66%, #59180C 100%);
+  box-shadow:0 12px 20px -12px rgba(60,15,5,.9), inset 0 -3px 6px rgba(0,0,0,.25);
+  transform:rotate(-8deg);z-index:3;text-align:center;line-height:1.1;
+}
+
+.foot{
+  position:relative;z-index:2;display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;
+  margin-top:12vh;font-size:8.5px;letter-spacing:.16em;text-transform:uppercase;color:#6E5F49;
+}
+.foot a{color:inherit;text-decoration:none}
+
+@media(max-width:640px){
+  .hero h1{font-size:clamp(40px,13vw,64px)}
+  .seal{width:62px;height:62px;font-size:12px;right:18px;bottom:18px}
+  .ink.a{width:96vw;height:52vh;left:-30vw;top:-6vh}
+}
+</style>
+</head>
+<body>
+<div class="ink a"></div>
+<div class="ink b"></div>
+<span class="spark s1"></span><span class="spark s2"></span><span class="spark s3"></span><span class="spark s4"></span>
+
+<div class="wrap">
+  <div class="top">
+    <span>Tharra · OSIS Humas</span>
+    <span>MMXXV</span>
+  </div>
+
+  <div class="hero">
+    <span class="small">sebelum jadi tulisan,</span>
+    <h1><span>INI<br>TEMPAT<br><em>KAMU</em></span></h1>
+  </div>
+
+  <nav class="links">
+    <a href="../index.html">
+      <span class="ar">→</span>
+      <span class="nm">Katakan<i>.</i></span>
+      <span class="ds">Kotak aspirasi · anonim</span>
+    </a>
+    <a href="../index.html">
+      <span class="ar">→</span>
+      <span class="nm">Aksara<i>.</i></span>
+      <span class="ds">Mading &amp; surat · perlu akun</span>
+    </a>
+  </nav>
+
+  <div class="seal">OSIS<br>HUMAS</div>
+
+  <div class="foot">
+    <span>Tharra — Katakan &amp; Aksara</span>
+    <a href="index.html">← daftar konsep</a>
+  </div>
+</div>
+</body>
+</html>
