@@ -124,14 +124,6 @@ body{
     rgba(70,50,20,.06) 82%, rgba(70,50,20,0) 100%);
 }
 
-/* pita pembatas */
-.ribbon{
-  position:absolute;left:calc(50% + 26px);top:-22px;width:17px;height:52px;z-index:1;
-  background:linear-gradient(90deg,#8F2412,#C24A2C 46%,#7F200F);
-  clip-path:polygon(0 0,100% 0,100% 100%,50% 84%,0 100%);
-  box-shadow:0 6px 10px -6px rgba(60,15,5,.8);
-}
-
 /* ---------- isi halaman ---------- */
 .label{font-size:10.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--faint)}
 .page h2{
@@ -182,7 +174,6 @@ body{
   .book.show-a .page.a{display:flex}
   .page.a::before,.page.a::after{display:none}
   .gutter{display:none}
-  .ribbon{left:auto;right:18px;top:-12px;height:72px;width:15px}
   .pnum{display:none}
   .pager{
     display:flex;align-items:center;justify-content:space-between;gap:12px;
@@ -209,7 +200,6 @@ body{
   <div class="book" id="book">
     <div class="boards" aria-hidden="true"></div>
     <div class="block" aria-hidden="true"></div>
-    <span class="ribbon" aria-hidden="true"></span>
 
     <div class="pages">
       <a class="page k" href="../index.html">
