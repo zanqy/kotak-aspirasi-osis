@@ -14,7 +14,7 @@
 :root{
   --desk:#DCCBAA; --desk-2:#C9B58F;
   --paper:#FBF6E7; --paper2:#F5EEDA;
-  --ink:#231D15; --soft:#5A4E3C; --line:#DACAA6; --faint:#77684C;
+  --ink:#231D15; --soft:#5A4E3C; --line:#DACAA6; --faint:#6A5B42;
   --red:#B4311F; --green:#3F5A38;
   --fd:"Fraunces",Georgia,serif; --fm:"IBM Plex Mono",ui-monospace,monospace;
 }
@@ -54,7 +54,7 @@ body{
 .page.a{border-radius:0 8px 8px 0;box-shadow:inset 18px 0 26px -22px rgba(70,50,20,.85)}
 .page:focus-visible{outline:2px solid var(--red);outline-offset:-6px}
 
-.label{font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--faint)}
+.label{font-size:10.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--faint)}
 .page h2{
   font-family:var(--fd);font-weight:800;font-size:clamp(26px,4.2vw,34px);
   letter-spacing:-.02em;line-height:1.05;margin:8px 0 0;
@@ -85,6 +85,9 @@ body{
 
 /* ---------- HP: satu halaman per layar, dengan pager ---------- */
 @media(max-width:720px){
+  body{justify-content:flex-start;padding-top:16px}
+  .top{margin-bottom:10px}
+  .foot{margin-top:auto;padding-top:14px}
   .book{grid-template-columns:1fr;transform:none;filter:drop-shadow(0 18px 22px rgba(70,50,20,.26))}
   .book::after{display:none}
   .page{min-height:0;padding:24px 22px 20px;border-radius:10px 10px 0 0}
@@ -116,7 +119,7 @@ body{
 <div class="stage">
   <div class="book" id="book">
     <a class="page k" href="../index.html">
-      <span class="label">Halaman 01 · kotak aspirasi</span>
+      <span class="label">Halaman 1 · kotak aspirasi</span>
       <h2>Katakan<i>.</i></h2>
       <p>Tulis yang selama ini kamu simpan. Anonim, dibaca pengurus OSIS, bisa dipantau lewat kode tiket.</p>
       <span class="cta">Tulis aspirasi →</span>
@@ -124,7 +127,7 @@ body{
     </a>
 
     <a class="page a" href="../index.html">
-      <span class="label">Halaman 02 · mading &amp; surat</span>
+      <span class="label">Halaman 2 · mading &amp; surat</span>
       <h2>Aksara<i>.</i></h2>
       <p>Papan mading sekolah dan surat untuk teman sekelas — tempel, baca, kirim seperti amplop.</p>
       <span class="cta">Buka mading →</span>
@@ -132,7 +135,7 @@ body{
     </a>
 
     <div class="pager">
-      <span id="pgLabel">Halaman 1 dari 2</span>
+      <span id="pgLabel">Halaman 1 / 2</span>
       <button id="pgBtn" type="button">Halaman 2 →</button>
     </div>
   </div>
@@ -151,7 +154,7 @@ body{
   btn.addEventListener('click', () => {
     const showingA = book.classList.toggle('show-a');
     btn.textContent = showingA ? '← Halaman 1' : 'Halaman 2 →';
-    lbl.textContent = showingA ? 'Halaman 2 dari 2' : 'Halaman 1 dari 2';
+    lbl.textContent = showingA ? 'Halaman 2 / 2' : 'Halaman 1 / 2';
   });
 </script>
 </body>
