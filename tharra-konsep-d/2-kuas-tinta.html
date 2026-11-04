@@ -23,7 +23,7 @@ body{
 }
 /* gumpalan tinta */
 .ink{
-  position:absolute;pointer-events:none;filter:blur(1px);
+  position:absolute;pointer-events:none;filter:blur(.4px);
 }
 .ink.a{
   width:min(78vw,560px);height:min(46vw,330px);left:-12vw;top:-8vh;opacity:.92;
@@ -57,10 +57,10 @@ body{
   font-family:var(--hw);font-size:22px;color:var(--red);transform:rotate(-2deg);display:block;margin-bottom:6px;
 }
 .hero h1{
-  font-family:var(--fd);font-weight:900;font-size:clamp(44px,12vw,104px);line-height:.84;
-  letter-spacing:-.05em;margin:0;
-  color:var(--paper);mix-blend-mode:normal;
-  text-shadow:none;
+  font-family:var(--fd);font-weight:900;font-size:clamp(38px,10vw,86px);line-height:.86;
+  letter-spacing:-.045em;margin:0;
+  color:var(--paper);
+  text-shadow:0 1px 0 rgba(23,19,16,.35);
 }
 .hero h1 span{
   color:var(--paper);
@@ -88,7 +88,7 @@ body{
 
 /* segel */
 .seal{
-  position:absolute;right:26px;bottom:34px;width:76px;height:76px;border-radius:50%;
+  position:relative;margin:26px 0 0 auto;width:76px;height:76px;border-radius:50%;
   display:grid;place-items:center;font-family:var(--fd);font-weight:700;font-size:15px;
   color:#F6E3C4;background:radial-gradient(circle at 34% 30%, #B8482B 0%, #8C2F1D 66%, #59180C 100%);
   box-shadow:0 12px 20px -12px rgba(60,15,5,.9), inset 0 -3px 6px rgba(0,0,0,.25);
