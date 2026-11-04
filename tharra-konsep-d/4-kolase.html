@@ -16,9 +16,10 @@
   --faint:#7C6C55; --fd:"Fraunces",serif; --fm:"IBM Plex Mono",monospace; --hw:"Caveat",cursive;
 }
 *{box-sizing:border-box}
+html{overflow-x:hidden}
 body{
   margin:0;background:var(--bg);color:var(--ink);font-family:var(--fm);
-  min-height:100dvh;padding:26px 16px 70px;overflow-x:hidden;position:relative;
+  min-height:100dvh;padding:26px 16px 70px;overflow-x:clip;position:relative;
 }
 body::before{
   content:"";position:fixed;inset:0;pointer-events:none;opacity:.45;

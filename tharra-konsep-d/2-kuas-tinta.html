@@ -16,9 +16,10 @@
   --fd:"Fraunces",serif; --fm:"IBM Plex Mono",monospace; --hw:"Caveat",cursive;
 }
 *{box-sizing:border-box}
+html{overflow-x:hidden}
 body{
   margin:0;background:var(--paper);color:var(--ink);min-height:100dvh;
-  font-family:var(--fm);overflow-x:hidden;position:relative;
+  font-family:var(--fm);overflow-x:clip;position:relative;
 }
 /* gumpalan tinta */
 .ink{
