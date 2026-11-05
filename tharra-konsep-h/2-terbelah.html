@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Konsep H2 — Beranda Terbelah | Tharra</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..900;1,9..144,300..900&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+/* KONSEP H2 — Beranda terbelah: teks di kiri, contoh tampilan di kanan.
+   Panel kanan bukan gambar: kartu contoh aspirasi dan surat, dibuat dengan CSS. */
+:root{
+  --paper:#F6F0E0; --card:#FFFCF3; --ink:#221C14; --soft:#5C5042; --faint:#7A6A4E;
+  --line:#DFD0B0; --red:#B4311F; --green:#3E5A3A;
+  --fd:"Fraunces",Georgia,serif; --fm:"IBM Plex Mono",ui-monospace,monospace;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--fm)}
+.wrap{max-width:1120px;margin:0 auto;padding:0 22px}
+
+.nav{display:flex;align-items:center;justify-content:space-between;padding:18px 0;border-bottom:1px solid var(--line)}
+.brand{font-family:var(--fd);font-weight:800;font-size:19px;color:inherit;text-decoration:none}
+.brand i{font-style:normal;color:var(--red)}
+.nav .links{display:flex;gap:22px}
+.nav .links a{font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--soft);text-decoration:none}
+.nav .cta{min-height:38px;display:inline-flex;align-items:center;padding:0 15px;background:var(--red);
+  color:#FBF6E7;text-decoration:none;border-radius:2px;font-size:10px;letter-spacing:.14em;text-transform:uppercase}
+
+/* hero dua kolom */
+.hero{display:grid;grid-template-columns:1.05fr .95fr;gap:48px;align-items:center;padding:54px 0 46px}
+.kicker{font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--faint)}
+h1{font-family:var(--fd);font-weight:800;font-size:clamp(32px,4.6vw,50px);line-height:1.02;
+  letter-spacing:-.03em;margin:14px 0 0;max-width:15ch}
+h1 i{font-style:normal;color:var(--red)}
+.hero p{font-family:var(--fd);font-size:16.5px;line-height:1.62;color:var(--soft);margin:18px 0 0;max-width:44ch}
+.actions{display:flex;gap:12px;flex-wrap:wrap;margin-top:26px}
+.btn{min-height:46px;display:inline-flex;align-items:center;padding:0 20px;border-radius:2px;text-decoration:none;
+  font-size:10.5px;letter-spacing:.16em;text-transform:uppercase}
+.btn.primary{background:var(--red);color:#FBF6E7}
+.btn.ghost{border:1.5px solid rgba(49,73,43,.6);color:#31492B;background:transparent}
+
+/* panel contoh */
+.preview{position:relative;padding:22px;background:#EFE6CE;border:1px solid var(--line);border-radius:6px;
+  box-shadow:0 24px 40px -34px rgba(50,38,18,.8)}
+.preview .ph{font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--faint);margin-bottom:14px}
+.mini{background:var(--card);border:1px solid var(--line);border-radius:4px;padding:14px 16px;margin-bottom:12px;
+  box-shadow:0 6px 12px -12px rgba(50,38,18,.8)}
+.mini:last-child{margin-bottom:0}
+.mini .tag{display:inline-block;font-size:8.5px;letter-spacing:.14em;text-transform:uppercase;
+  padding:3px 6px;border-radius:2px;background:rgba(180,49,31,.09);color:var(--red)}
+.mini.g .tag{background:rgba(62,90,58,.1);color:var(--green)}
+.mini h3{font-family:var(--fd);font-size:15px;margin:8px 0 0;font-weight:700;letter-spacing:-.01em}
+.mini p{font-family:var(--fd);font-size:13px;line-height:1.5;color:var(--soft);margin:6px 0 0}
+.mini .id{display:flex;justify-content:space-between;margin-top:10px;font-size:8.5px;letter-spacing:.12em;
+  text-transform:uppercase;color:var(--faint)}
+
+/* dua bagian bawah */
+.sect{display:grid;grid-template-columns:1fr 1fr;gap:22px;padding:8px 0 42px}
+.box{background:var(--card);border:1px solid var(--line);border-radius:6px;padding:22px 22px 20px}
+.box .k{font-size:10.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--faint)}
+.box h2{font-family:var(--fd);font-weight:800;font-size:24px;margin:8px 0 0;letter-spacing:-.02em}
+.box h2 i{font-style:normal;color:var(--red)}
+.box p{font-family:var(--fd);font-size:14px;line-height:1.58;color:var(--soft);margin:10px 0 0}
+.box a{display:inline-flex;margin-top:16px;min-height:40px;align-items:center;font-size:10px;letter-spacing:.14em;
+  text-transform:uppercase;color:var(--red);text-decoration:none;border-bottom:1px solid rgba(180,49,31,.4)}
+.box.b a{color:var(--green);border-color:rgba(62,90,58,.4)}
+
+.foot{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;padding:16px 0 40px;
+  border-top:1px solid var(--line);font-size:9.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--faint)}
+.foot a{color:inherit;text-decoration:none}
+
+@media(max-width:900px){
+  .hero{grid-template-columns:1fr;gap:30px;padding:36px 0 30px}
+  .nav .links{display:none}
+  .sect{grid-template-columns:1fr}
+  h1{max-width:none}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <nav class="nav">
+    <a class="brand" href="#">THARRA<i>.</i></a>
+    <div class="links">
+      <a href="#">Katakan</a><a href="#">Aksara</a><a href="#">Cek tiket</a>
+    </div>
+    <a class="cta" href="#">Tulis aspirasi</a>
+  </nav>
+
+  <section class="hero">
+    <div>
+      <span class="kicker">OSIS Humas · Sekolah kita</span>
+      <h1>Dua ruang, satu tempat untuk <i>didengar</i>.</h1>
+      <p>Katakan menampung aspirasi anonim. Aksara menyimpan mading dan surat antar siswa. Keduanya dikelola pengurus OSIS.</p>
+      <div class="actions">
+        <a class="btn primary" href="../index.html">Tulis aspirasi</a>
+        <a class="btn ghost" href="../index.html">Buka mading</a>
+      </div>
+    </div>
+
+    <div class="preview">
+      <div class="ph">Contoh tampilan</div>
+
+      <div class="mini">
+        <span class="tag">Aspirasi · anonim</span>
+        <h3>Lampu koridor lantai 2 mati</h3>
+        <p>Sudah dua minggu gelap, agak serem kalau pulang sore.</p>
+        <div class="id"><span>Tiket #A7K2</span><span>Dibalas</span></div>
+      </div>
+
+      <div class="mini g">
+        <span class="tag">Surat · Aksara</span>
+        <h3>Untuk kelas XI-3</h3>
+        <p>Makasih sudah bantu bersih-bersih setelah pensi kemarin.</p>
+        <div class="id"><span>Dari siswa</span><span>Hari ini</span></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="sect">
+    <div class="box a">
+      <span class="k">Kotak aspirasi</span>
+      <h2>Katakan<i>.</i></h2>
+      <p>Tulis keluhan, usulan, atau hal kecil yang perlu diperbaiki. Tanpa nama, bisa dipantau lewat kode tiket.</p>
+      <a href="../index.html">Tulis aspirasi →</a>
+    </div>
+    <div class="box b">
+      <span class="k">Mading &amp; surat</span>
+      <h2>Aksara<i>.</i></h2>
+      <p>Papan mading sekolah dan surat untuk teman sekelas. Perlu akun sekolah untuk menempel dan mengirim.</p>
+      <a href="../index.html">Buka mading →</a>
+    </div>
+  </section>
+
+  <footer class="foot">
+    <span>Tharra — Katakan &amp; Aksara · MMXXV</span>
+    <a href="../index.html">← daftar konsep</a>
+  </footer>
+
+</div>
+</body>
+</html>
