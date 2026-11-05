@@ -638,7 +638,7 @@ html.intro-run body{animation:gridSettle 2.6s cubic-bezier(.22,1,.36,1) both}
       return el.animate(
         [{ opacity: 0, transform: 'translateY(' + (dy || 16) + 'px)' },
          { opacity: 1, transform: 'translateY(0)' }],
-        { duration: 560, delay: delay, easing: 'cubic-bezier(.22,1,.36,1)', fill: 'both' }
+        { duration: 620, delay: delay, easing: 'cubic-bezier(.25,.8,.3,1)', fill: 'both' }
       );
     }
 
@@ -669,9 +669,9 @@ html.intro-run body{animation:gridSettle 2.6s cubic-bezier(.22,1,.36,1) both}
       }
       function drop(el, delay) {
         return el.animate(
-          [{ opacity: 0, transform: 'translateY(-16px) rotate(-.7deg) scale(.985)' },
+          [{ opacity: 0, transform: 'translateY(-12px) rotate(-.35deg) scale(.99)' },
            { opacity: 1, transform: 'translateY(0) rotate(0deg) scale(1)' }],
-          { duration: 620, delay: delay, easing: 'cubic-bezier(.22,1,.36,1)', fill: 'both' }
+          { duration: 640, delay: delay, easing: 'cubic-bezier(.25,.8,.3,1)', fill: 'both' }
         );
       }
 
@@ -700,45 +700,45 @@ html.intro-run body{animation:gridSettle 2.6s cubic-bezier(.22,1,.36,1) both}
       rise(qs('.nav')[0], 200, 12);
 
       // 2 — laporan utama: saat tab bergeser ke B
-      rise(qs('.lead .kick')[0], 320, 10);
-      rise(qs('.lead h2')[0], 370, 20);
-      rise(qs('.quickline')[0], 470, 10);
-      qs('.dek .body p').forEach(function (el, i) { rise(el, 520 + i * 70, 12); });
-      rise(qs('.dek .side-note')[0], 640, 12);
+      rise(qs('.lead .kick')[0], 200, 10);
+      rise(qs('.lead h2')[0], 250, 18);
+      rise(qs('.quickline')[0], 330, 10);
+      qs('.dek .body p').forEach(function (el, i) { rise(el, 380 + i * 55, 12); });
+      rise(qs('.dek .side-note')[0], 500, 12);
 
       // 3 — panduan + angka: saat tab di C
-      rise(qs('.howto')[0], 600, 14);
-      qs('.howto-steps li').forEach(function (el, i) { rise(el, 640 + i * 55, 9); });
-      rise(qs('.figures')[0], 780, 12);
-      qs('.figures .fig').forEach(function (el, i) { drop(el, 820 + i * 50); });
+      rise(qs('.howto')[0], 580, 14);
+      qs('.howto-steps li').forEach(function (el, i) { rise(el, 620 + i * 50, 9); });
+      rise(qs('.figures')[0], 740, 12);
+      qs('.figures .fig').forEach(function (el, i) { drop(el, 780 + i * 45); });
       qs('.fig b').forEach(function (el, i) {
-        window.setTimeout(function () { count(el); }, 860 + i * 50);
+        window.setTimeout(function () { count(el); }, 820 + i * 45);
       });
 
       // 4 — kartu ruang + indeks: saat tab berangkat ke tepi
-      rise(qs('.main')[0], 1030, 14);
-      qs('.main .ruang, .main .indeks').forEach(function (el, i) { drop(el, 1070 + i * 60); });
-      qs('.indeks li').forEach(function (el, i) { rise(el, 1140 + i * 45, 7); });
+      rise(qs('.main')[0], 950, 14);
+      qs('.main .ruang, .main .indeks').forEach(function (el, i) { drop(el, 990 + i * 55); });
+      qs('.indeks li').forEach(function (el, i) { rise(el, 1050 + i * 40, 7); });
 
       // 5 — tab: datang, singgah di A, B, C, lalu menyempil di tepi
       if (tab) {
         tab.animate([
-          { opacity: 0, transform: at([-(vw * 0.56), -(vh * 0.33)], -17, .88) },
-          { opacity: 1, offset: .04 },
-          { transform: at(A, -9, .97), offset: .10 },
-          { transform: at(A, -8, .98), offset: .24 },
-          { transform: at(B, -6, .99), offset: .32 },
-          { transform: at(B, -5, 1), offset: .46 },
-          { transform: at(C, -4, 1), offset: .54 },
-          { transform: at(C, -3, 1), offset: .64 },
-          { transform: at([-44, -6], -4, 1.02), offset: .76 },
-          { transform: at([-26, 0], -2, 1.01), offset: .86 },
+          { opacity: 0, transform: at([-(vw * 0.56), -(vh * 0.33)], -16, .9) },
+          { opacity: 1, offset: .05 },
+          { transform: at(A, -9, .98), offset: .10 },
+          { transform: at(A, -8, .98), offset: .17 },
+          { transform: at(B, -6, .99), offset: .30 },
+          { transform: at(B, -5, .99), offset: .37 },
+          { transform: at(C, -4, 1), offset: .52 },
+          { transform: at(C, -3, 1), offset: .59 },
+          { transform: at([-34, -4], -3, 1.01), offset: .80 },
+          { transform: at([-16, 0], -1.5, 1), offset: .90 },
           { transform: at([0, 0], 0, 1), offset: 1 }
-        ], { duration: 1800, delay: 0, easing: 'cubic-bezier(.32,.9,.28,1)', fill: 'both' });
+        ], { duration: 1900, delay: 0, easing: 'cubic-bezier(.4,0,.2,1)', fill: 'both' });
 
-        stamp(A, 460);
-        stamp(B, 900);
-        stamp(C, 1300);
+        stamp(A, 330);
+        stamp(B, 700);
+        stamp(C, 1120);
 
         var seal = tab.querySelector('.pk-seal');
         if (seal) {
