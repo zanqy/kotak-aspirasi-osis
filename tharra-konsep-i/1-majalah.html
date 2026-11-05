@@ -34,6 +34,8 @@ a{color:inherit}
 .mast .issue{text-align:right;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--faint);line-height:1.8}
 .mast .issue b{display:block;font-family:var(--fd);font-size:15px;letter-spacing:0;text-transform:none;color:var(--ink)}
 
+.navwrap{position:relative}
+.fade{display:none}
 .nav{position:relative;display:flex;align-items:center;gap:22px;flex-wrap:wrap;padding:10px 0;border-bottom:1px solid var(--line)}
 .nav .links{display:flex;gap:22px;flex-wrap:wrap;flex:1}
 .nav a{font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--soft);text-decoration:none;
@@ -43,27 +45,6 @@ a{color:inherit}
 .nav .navcta{min-height:38px;display:inline-flex;align-items:center;padding:0 14px;border-radius:2px;
   background:var(--red);color:#FBF6E7;border:none;font-size:9.5px;letter-spacing:.14em;text-transform:uppercase}
 
-/* menu ringkas untuk layar sempit */
-.mnav{display:none}
-.mnav summary{list-style:none;cursor:pointer;display:inline-flex;align-items:center;gap:9px;
-  min-height:40px;padding:0 12px;border:1px solid var(--line);border-radius:2px;background:var(--card);
-  font-size:9.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--soft)}
-.mnav summary::-webkit-details-marker{display:none}
-.mnav summary .ic{display:inline-block;width:12px;height:9px;position:relative}
-.mnav summary .ic::before,.mnav summary .ic::after{content:"";position:absolute;left:0;right:0;height:1.6px;
-  background:var(--red)}
-.mnav summary .ic::before{top:0;box-shadow:0 4px 0 var(--red)}
-.mnav summary .ic::after{bottom:0}
-.mnav[open] summary .ic::before{transform:translateY(3.5px) rotate(45deg);box-shadow:none}
-.mnav[open] summary .ic::after{transform:translateY(-3.5px) rotate(-45deg)}
-.mnav .sheet{position:absolute;left:0;right:0;top:calc(100% - 1px);z-index:30;
-  background:var(--card);border:1px solid var(--line);border-radius:3px;
-  box-shadow:0 26px 40px -26px rgba(40,26,8,.95);padding:8px;display:flex;flex-direction:column}
-.mnav .sheet a{display:flex;align-items:center;min-height:46px;padding:0 12px;font-size:10.5px;
-  letter-spacing:.12em;text-transform:uppercase;color:var(--soft);text-decoration:none;
-  border-bottom:1px solid rgba(120,100,60,.18);border-left:none}
-.mnav .sheet a:last-child{border-bottom:none}
-.mnav .sheet a.on{color:var(--red);font-weight:500;box-shadow:inset 2px 0 0 var(--red);padding-left:14px}
 
 /* ---------- laporan utama ---------- */
 .lead{padding:32px 0 24px;border-bottom:1px solid var(--line)}
@@ -193,10 +174,16 @@ a{color:inherit}
   padding:10px 0 36px;font-size:9.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--faint)}
 
 @media(max-width:940px){
-  .nav{flex-wrap:nowrap;gap:12px}
-  .nav .links{display:none}
-  .mnav{display:block;flex:1}
-  .nav .navcta{margin-left:auto}
+  .nav{flex-wrap:nowrap;gap:14px}
+  .nav .links{flex:1 1 auto;min-width:0;flex-wrap:nowrap;gap:18px;
+    overflow-x:auto;scrollbar-width:none;-webkit-overflow-scrolling:touch;padding-right:10px;
+    -webkit-mask-image:linear-gradient(90deg,#000 84%,rgba(0,0,0,0) 100%);
+    mask-image:linear-gradient(90deg,#000 84%,rgba(0,0,0,0) 100%)}
+  .nav .links::-webkit-scrollbar{display:none}
+  .nav .links a{white-space:nowrap;min-height:40px;display:inline-flex;align-items:center;
+    border-bottom:none;padding:0;color:var(--soft)}
+  .nav .links a.on{color:var(--red);box-shadow:inset 0 -2px 0 var(--red)}
+  .nav .navcta{margin-left:0;flex:none}
   .dek{grid-template-columns:1fr;gap:18px}
   .dek .side-note{border-left:none;padding-left:0;border-top:1px solid var(--line);padding-top:12px;
     display:grid;grid-template-columns:1fr 1fr;gap:0 18px}
@@ -238,19 +225,9 @@ a{color:inherit}
     <div class="issue">Ruang siswa<b>Katakan &amp; Aksara</b></div>
   </header>
 
+  <div class="navwrap">
+  <span class="fade" aria-hidden="true"></span>
   <nav class="nav">
-    <details class="mnav">
-      <summary><span class="ic" aria-hidden="true"></span>Menu</summary>
-      <div class="sheet">
-        <a class="on" href="#" aria-current="page">Beranda</a>
-        <a href="#">Katakan</a>
-        <a href="#">Aksara</a>
-        <a href="#">Lacak aspirasi</a>
-        <a href="#">Panduan</a>
-        <a href="#">Tentang</a>
-      </div>
-    </details>
-
     <div class="links">
       <a class="on" href="#">Beranda</a>
       <a href="#">Katakan</a>
@@ -261,6 +238,7 @@ a{color:inherit}
     </div>
     <a class="navcta" href="../index.html">Tulis aspirasi</a>
   </nav>
+  </div>
 
   <section class="lead">
     <div class="kick">Laporan utama</div>
@@ -447,21 +425,5 @@ a{color:inherit}
 
 </div>
 
-<script>
-  // Menu HP: tutup saat klik di luar atau setelah memilih tautan.
-  (function () {
-    const m = document.querySelector('.mnav');
-    if (!m) return;
-    document.addEventListener('click', (e) => {
-      if (m.open && !m.contains(e.target)) m.open = false;
-    });
-    m.querySelectorAll('.sheet a').forEach(a =>
-      a.addEventListener('click', () => { m.open = false; })
-    );
-    document.addEventListener('keydown', (e) => {
-      if (e.key === 'Escape') m.open = false;
-    });
-  })();
-</script>
 </body>
 </html>
