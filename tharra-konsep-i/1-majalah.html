@@ -218,6 +218,63 @@ a{color:inherit}
   .pull{grid-template-columns:auto 1fr}
   .pull .aside{display:none}
 }
+
+/* ---------- tab "Apa ini?" di tepi kanan ---------- */
+.peek{
+  position:fixed;right:0;top:40%;transform:translateY(-50%);z-index:40;
+  writing-mode:vertical-rl;text-orientation:mixed;
+  display:flex;align-items:center;gap:8px;
+  padding:16px 9px;border:1px solid var(--line);border-right:none;border-radius:4px 0 0 4px;
+  background:linear-gradient(90deg,#FFFDF5,#F7EFDC);
+  color:var(--red);font-family:var(--fm);font-size:10px;letter-spacing:.2em;text-transform:uppercase;
+  cursor:pointer;box-shadow:-8px 8px 18px -14px rgba(40,26,8,.9);
+  transition:transform .22s ease, box-shadow .22s ease;
+}
+.peek::before{content:"";width:3px;height:22px;background:var(--red);border-radius:1px}
+.peek:hover{transform:translateY(-50%) translateX(-4px);box-shadow:-12px 8px 22px -14px rgba(40,26,8,.95)}
+.peek:focus-visible{outline:2px solid var(--red);outline-offset:2px}
+
+/* ---------- panel penjelasan ---------- */
+.sheet{
+  position:fixed;top:0;right:0;left:auto;height:100dvh;width:min(430px,94vw);max-width:none;max-height:none;
+  margin:0;padding:0;border:none;background:var(--card);color:var(--ink);
+  box-shadow:-40px 0 70px -46px rgba(30,20,8,.95);
+  animation:slidein .28s cubic-bezier(.22,1,.36,1);
+}
+.sheet::backdrop{background:rgba(30,20,8,.45)}
+.sheet[open]{display:block}
+@keyframes slidein{from{transform:translateX(24px);opacity:0}to{transform:none;opacity:1}}
+
+.sheet-in{height:100%;overflow-y:auto;display:flex;flex-direction:column;
+  padding:26px 24px calc(30px + env(safe-area-inset-bottom))}
+.sheet .top{display:flex;justify-content:space-between;align-items:flex-start;gap:12px}
+.sheet .k{font-size:9.5px;letter-spacing:.18em;text-transform:uppercase;color:var(--red)}
+.sheet h2{font-family:var(--fd);font-weight:800;font-size:clamp(24px,3.4vw,30px);letter-spacing:-.02em;
+  line-height:1.05;margin:8px 0 0}
+.sheet .x{flex:none;width:38px;height:38px;border:1px solid var(--line);background:transparent;border-radius:50%;
+  color:var(--soft);font-size:18px;line-height:1;cursor:pointer}
+.sheet .x:hover{background:#F3E9D2;color:var(--ink)}
+.sheet .lede{font-family:var(--fd);font-size:15.5px;line-height:1.6;color:var(--soft);margin:16px 0 0}
+.sheet dl{margin:20px 0 0;border-top:1px solid var(--line)}
+.sheet dl > div{display:grid;grid-template-columns:96px 1fr;gap:12px;padding:12px 0;border-bottom:1px solid var(--line)}
+.sheet dt{font-family:var(--fm);font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:var(--faint);padding-top:3px}
+.sheet dd{margin:0;font-family:var(--fd);font-size:13.5px;line-height:1.55;color:var(--ink)}
+.sheet .aksi{margin-top:auto;padding-top:22px;display:flex;flex-direction:column;gap:10px}
+.sheet .aksi a,.sheet .aksi button{
+  min-height:44px;display:inline-flex;align-items:center;justify-content:center;border-radius:2px;
+  font-family:var(--fm);font-size:10px;letter-spacing:.16em;text-transform:uppercase;text-decoration:none;cursor:pointer}
+.sheet .aksi a{background:var(--red);color:#FBF6E7;border:none}
+.sheet .aksi button{background:transparent;color:var(--soft);border:1px solid var(--line)}
+
+@media(max-width:560px){
+  .peek{top:auto;bottom:92px;transform:none;padding:13px 8px;font-size:9px}
+  .peek:hover{transform:translateX(-3px)}
+  .sheet{top:auto;bottom:0;right:0;left:0;width:100%;height:auto;max-height:88dvh;
+    border-radius:10px 10px 0 0;animation:slideup .3s cubic-bezier(.22,1,.36,1)}
+  @keyframes slideup{from{transform:translateY(30px);opacity:0}to{transform:none;opacity:1}}
+  .sheet dl > div{grid-template-columns:84px 1fr}
+}
+
 @media(max-width:940px){
   .howto-steps{grid-template-columns:1fr;gap:12px}
   .howto-steps li{grid-template-columns:24px 1fr}
@@ -440,5 +497,47 @@ a{color:inherit}
 
 </div>
 
+
+<button class="peek" id="peekBtn" type="button" aria-haspopup="dialog" aria-controls="aboutSheet">Apa ini?</button>
+
+<dialog class="sheet" id="aboutSheet" aria-labelledby="aboutTitle">
+  <div class="sheet-in">
+    <div class="top">
+      <div>
+        <span class="k">Tentang</span>
+        <h2 id="aboutTitle">Apa itu Tharra?</h2>
+      </div>
+      <button class="x" id="closeSheet" type="button" aria-label="Tutup">×</button>
+    </div>
+
+    <p class="lede">Tharra ruang siswa yang diurus OSIS bagian Humas. Isinya dua: satu tempat menulis hal yang sulit diucapkan, satu papan untuk tulisan dan surat.</p>
+
+    <dl>
+      <div><dt>Siapa yang urus</dt><dd>Divisi Humas OSIS, dibantu guru pembina untuk hal yang menyangkut keselamatan.</dd></div>
+      <div><dt>Untuk siapa</dt><dd>Semua siswa. Satu ruang tidak perlu akun, satu lagi perlu akun sekolah.</dd></div>
+      <div><dt>Identitas</dt><dd>Nama tidak diminta di ruang anonim. Yang tercatat hanya isi, waktu, dan kode balasan.</dd></div>
+      <div><dt>Kapan dibaca</dt><dd>Setiap Senin dan Kamis. Balasan diumumkan berkala di halaman lacak.</dd></div>
+    </dl>
+
+    <div class="aksi">
+      <a href="#cara-pakai" id="toHowto">Cara pakai, tiga langkah</a>
+      <button id="closeSheet2" type="button">Tutup</button>
+    </div>
+  </div>
+</dialog>
+
+<script>
+  (function () {
+    const btn = document.getElementById('peekBtn');
+    const dlg = document.getElementById('aboutSheet');
+    const open = () => { dlg.showModal ? dlg.showModal() : dlg.setAttribute('open', ''); };
+    const close = () => { dlg.close ? dlg.close() : dlg.removeAttribute('open'); };
+    btn.addEventListener('click', open);
+    document.getElementById('closeSheet').addEventListener('click', close);
+    document.getElementById('closeSheet2').addEventListener('click', close);
+    document.getElementById('toHowto').addEventListener('click', close);
+    dlg.addEventListener('click', (e) => { if (e.target === dlg) close(); });
+  })();
+</script>
 </body>
 </html>
