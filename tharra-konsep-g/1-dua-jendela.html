@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Konsep G1 — Dua Jendela | Tharra</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..900;1,9..144,300..900&family=IBM+Plex+Mono:wght@400;500&family=Caveat:wght@600&display=swap" rel="stylesheet">
+<style>
+/* KONSEP G1 — Dua jendela di dinding sekolah.
+   Dua ruang = dua jendela; cahaya di dalamnya berbeda (satu redup, satu terang).
+   Semua CSS, tanpa gambar. */
+:root{
+  --wall:#E9DCC0; --wall2:#DCCBAB; --frame:#5C2018; --frame2:#43150F;
+  --paper:#F7F0DC; --ink:#241E15; --soft:#5A4E3C; --faint:#7A6A4E;
+  --red:#B4311F; --green:#3E5A3A;
+  --fd:"Fraunces",Georgia,serif; --fm:"IBM Plex Mono",ui-monospace,monospace; --hw:"Caveat",cursive;
+}
+*{box-sizing:border-box}
+body{
+  margin:0;min-height:100dvh;overflow-x:hidden;color:var(--ink);font-family:var(--fm);
+  background:linear-gradient(180deg,#F0E5CB 0%,var(--wall) 42%,var(--wall2) 100%);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;padding:26px 18px 30px;
+}
+/* tekstur dinding */
+body::before{content:"";position:fixed;inset:0;pointer-events:none;opacity:.6;
+  background-image:radial-gradient(rgba(90,70,35,.10) 1px,transparent 1px);background-size:7px 7px}
+
+.top{width:min(940px,100%);display:flex;justify-content:space-between;gap:12px;
+  font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--faint);margin-bottom:18px;position:relative}
+
+.lead{width:min(940px,100%);margin-bottom:26px;position:relative}
+.lead h1{font-family:var(--fd);font-weight:800;font-size:clamp(26px,4.6vw,42px);line-height:1.02;
+  letter-spacing:-.025em;margin:0;max-width:20ch}
+.lead h1 i{font-style:normal;color:var(--red)}
+
+.wall{display:grid;grid-template-columns:1fr 1fr;gap:34px;width:min(940px,100%);position:relative}
+
+/* jendela */
+.win{
+  display:block;text-decoration:none;color:inherit;position:relative;
+  padding:14px;background:linear-gradient(160deg,var(--frame),var(--frame2));
+  border-radius:3px;
+  box-shadow:0 18px 28px -20px rgba(50,32,10,.9), inset 0 0 0 1px rgba(255,255,255,.12);
+  transition:transform .3s cubic-bezier(.19,1,.22,1);
+}
+.win:hover{transform:translateY(-4px)}
+.win:focus-visible{outline:3px solid var(--red);outline-offset:4px}
+
+/* kaca: dibagi empat lewat gradient */
+.glass{
+  position:relative;aspect-ratio:4/3.4;border-radius:1px;overflow:hidden;
+  background:
+    linear-gradient(180deg,#FFFDF3 0%,#F6ECD2 42%,#E4D3AF 100%);
+  box-shadow:inset 0 0 30px rgba(90,70,35,.35);
+}
+/* bingkai tengah: palang */
+.glass::after{content:"";position:absolute;left:0;top:0;bottom:0;width:37%;pointer-events:none;
+  background:linear-gradient(118deg,rgba(255,255,255,.75) 0%,rgba(255,255,255,.15) 34%,transparent 52%)}
+.glass::before{content:"";position:absolute;left:37%;top:0;bottom:0;width:9px;
+  background:linear-gradient(180deg,var(--frame),var(--frame2));
+  box-shadow:1px 0 0 rgba(255,255,255,.25)}
+
+/* papan ketik yang digantung di kaca — teks tidak menabrak palang */
+.inner{position:absolute;top:0;bottom:0;right:0;left:calc(37% + 9px);display:grid;place-items:center;padding:12px}
+.plaque{
+  position:relative;width:100%;max-width:300px;background:#FBF4E1;
+  padding:16px 18px 15px;border-radius:2px;
+  box-shadow:0 10px 18px -14px rgba(50,32,10,.9), inset 0 0 0 1px rgba(120,100,60,.35);
+  display:flex;flex-direction:column;gap:6px;
+}
+.plaque::before{content:"";position:absolute;left:50%;top:-9px;width:26px;height:9px;transform:translateX(-50%);
+  background:linear-gradient(180deg,#C9A96A,#9E7C43);border-radius:2px 2px 0 0}
+.inner .k{font-size:9px;letter-spacing:.16em;text-transform:uppercase;color:#6A5B42}
+.inner h2{font-family:var(--fd);font-weight:800;font-size:clamp(23px,3.2vw,30px);letter-spacing:-.02em;
+  line-height:1;margin:0;color:var(--ink)}
+.inner h2 i{font-style:normal;color:var(--red)}
+.win.b .inner h2 i{color:var(--green)}
+.cta{margin-top:8px;align-self:flex-start;min-height:40px;display:inline-flex;align-items:center;padding:0 14px;
+  border-radius:2px;background:var(--red);color:#FBF6E7;font-size:9.5px;letter-spacing:.16em;text-transform:uppercase}
+.win.b .cta{background:var(--green)}
+.inner .desc{font-family:var(--fd);font-size:13px;line-height:1.5;color:var(--soft);margin:0}
+
+/* label kuningan di bawah jendela */
+.plate{
+  margin-top:12px;display:flex;justify-content:space-between;align-items:center;gap:10px;
+  background:#C9A96A;color:#3A2712;padding:8px 12px;border-radius:2px;
+  font-size:9.5px;letter-spacing:.16em;text-transform:uppercase;
+  box-shadow:inset 0 0 0 1px rgba(60,40,10,.35), inset 0 -2px 0 rgba(0,0,0,.18);
+}
+.plate b{font-weight:500}
+
+/* cahaya tumpahan di dinding */
+.spill{position:absolute;left:8%;right:8%;bottom:-14px;height:16px;border-radius:50%;
+  background:radial-gradient(50% 50% at 50% 50%,rgba(255,250,230,.85),transparent 70%);filter:blur(2px)}
+
+.foot{width:min(940px,100%);display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;
+  margin-top:34px;font-size:9.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--faint);position:relative}
+.foot a{color:inherit;text-decoration:none;min-height:32px;display:inline-flex;align-items:center}
+
+@media(max-width:760px){
+  .wall{grid-template-columns:1fr;gap:22px}
+  .lead{margin-bottom:18px}
+  .inner h2{font-size:26px}
+}
+</style>
+</head>
+<body>
+
+<div class="top"><span>Tharra · OSIS Humas</span><span>Dua jendela · MMXXV</span></div>
+
+<div class="lead">
+  <h1>Ada dua jendela di dinding <i>sekolah</i>.</h1>
+</div>
+
+<div class="wall">
+  <a class="win a" href="../index.html">
+    <div class="glass">
+      <div class="inner">
+        <span class="k">Kotak aspirasi · anonim</span>
+        <h2>Katakan<i>.</i></h2>
+        <p class="desc">Tulis yang selama ini kamu simpan. Anonim, dibaca pengurus OSIS, bisa dipantau lewat kode tiket.</p>
+        <span class="cta">Tulis aspirasi →</span>
+      </div>
+    </div>
+    <span class="plate"><b>Buka jendela</b><span>01</span></span>
+  </a>
+
+  <a class="win b" href="../index.html">
+    <div class="glass" style="background:linear-gradient(180deg,#FFFDF4 0%,#EFE9CE 45%,#D6CDA6 100%)">
+      <div class="inner">
+        <span class="k">Mading &amp; surat · perlu akun</span>
+        <h2>Aksara<i>.</i></h2>
+        <p class="desc">Papan mading sekolah dan surat untuk teman sekelas — tempel, baca, kirim.</p>
+        <span class="cta">Buka mading →</span>
+      </div>
+    </div>
+    <span class="plate"><b>Buka jendela</b><span>02</span></span>
+  </a>
+</div>
+
+<div class="foot">
+  <span>Tharra — Katakan &amp; Aksara</span>
+  <a href="index.html">← daftar konsep</a>
+</div>
+
+</body>
+</html>

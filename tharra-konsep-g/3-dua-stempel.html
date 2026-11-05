@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Konsep G3 — Dua Stempel | Tharra</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..900;1,9..144,300..900&family=IBM+Plex+Mono:wght@400;500;700&family=Caveat:wght@600&display=swap" rel="stylesheet">
+<style>
+/* KONSEP G3 — Dua stempel di atas kertas.
+   Beranda = selembar kertas dengan dua cap: KATAKAN dan AKSARA.
+   Cap kedua ruang bisa diketuk. Ada bantalan tinta dan dua stempel kayu. */
+:root{
+  --paper:#F5EDD8; --ink:#241E15; --soft:#5A4E3C; --faint:#7A6A4E;
+  --red:#B4311F; --green:#3E5A3A; --wood:#8A6A45; --wood2:#654B2E;
+  --fd:"Fraunces",Georgia,serif; --fm:"IBM Plex Mono",ui-monospace,monospace; --hw:"Caveat",cursive;
+}
+*{box-sizing:border-box}
+html,body{height:100%}
+body{
+  margin:0;background:#D9C8A6;color:var(--ink);font-family:var(--fm);
+  display:flex;align-items:center;justify-content:center;padding:26px 16px;overflow-x:hidden;
+  background-image:radial-gradient(rgba(60,44,18,.10) 1px,transparent 1px);background-size:5px 5px;
+}
+
+.sheet{
+  position:relative;width:min(880px,100%);background:var(--paper);
+  padding:38px 34px 30px;box-shadow:0 26px 50px -34px rgba(60,42,16,.9), 0 1px 0 rgba(255,255,255,.6) inset;
+  border:1px solid #E4D6B6;
+}
+/* lipatan kertas ringan */
+.sheet::after{content:"";position:absolute;inset:0;pointer-events:none;
+  background:linear-gradient(105deg,transparent 62%,rgba(255,255,255,.5) 74%,transparent 86%);opacity:.5}
+
+.top{display:flex;justify-content:space-between;gap:10px;font-size:9.5px;letter-spacing:.18em;
+  text-transform:uppercase;color:var(--faint);border-bottom:1px solid rgba(120,100,60,.3);padding-bottom:10px}
+
+.lead{margin:26px 0 0;max-width:34ch}
+.lead h1{font-family:var(--fd);font-weight:800;font-size:clamp(26px,4.6vw,40px);line-height:1.02;
+  letter-spacing:-.025em;margin:0}
+.lead h1 span{color:var(--red)}
+.lead p{font-family:var(--fd);font-size:14.5px;line-height:1.6;color:var(--soft);margin:10px 0 0}
+
+/* area cap */
+.stamps{display:grid;grid-template-columns:1fr 1fr;gap:22px;margin-top:30px}
+
+.stamp{
+  position:relative;display:block;text-decoration:none;color:inherit;
+  border:2px solid rgba(180,49,31,.55);border-radius:3px;padding:18px 18px 20px;
+  background:rgba(180,49,31,.03);
+  transform:rotate(-1.1deg);
+  transition:transform .25s ease, background .25s ease;
+}
+.stamp:nth-child(2){border-color:rgba(62,90,58,.55);background:rgba(62,90,58,.04);transform:rotate(0.9deg)}
+.stamp:hover{transform:rotate(0deg) translateY(-2px);background:rgba(180,49,31,.07)}
+.stamp:nth-child(2):hover{background:rgba(62,90,58,.08)}
+.stamp:focus-visible{outline:2px solid var(--red);outline-offset:3px}
+
+.stamp .word{
+  font-family:var(--fd);font-weight:900;font-size:clamp(26px,4.4vw,38px);letter-spacing:.02em;
+  line-height:1;color:var(--red);text-transform:uppercase;
+}
+.stamp:nth-child(2) .word{color:var(--green)}
+.stamp .sub{display:block;margin-top:8px;font-size:9.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--faint)}
+.stamp .desc{display:block;margin-top:10px;font-family:var(--fd);font-size:13.5px;line-height:1.55;color:var(--soft)}
+.stamp .cta{margin-top:14px;align-self:flex-start;display:inline-flex;align-items:center;min-height:42px;
+  padding:0 16px;border-radius:2px;background:var(--red);color:#FBF6E7;
+  font-size:9.5px;letter-spacing:.16em;text-transform:uppercase}
+.stamp:nth-child(2) .cta{background:var(--green)}
+
+/* bantalan tinta + stempel kayu */
+.props{display:flex;align-items:flex-end;gap:16px;margin-top:28px}
+.pad{width:104px;height:66px;border-radius:4px;background:#8E2412;
+  box-shadow:inset 0 0 0 6px #6E1A0C, inset 0 0 22px rgba(0,0,0,.45), 0 8px 14px -10px rgba(0,0,0,.7);
+  transform:rotate(-4deg)}
+.peg{position:relative;width:64px;height:64px;border-radius:50%;
+  background:radial-gradient(circle at 34% 28%,#9C7A50,#6D5133 62%,#4C3720);
+  box-shadow:0 8px 14px -8px rgba(0,0,0,.7);transform:rotate(6deg)}
+.peg::after{content:"";position:absolute;left:50%;top:50%;width:26px;height:26px;transform:translate(-50%,-50%);
+  border-radius:50%;background:radial-gradient(circle at 40% 34%,#B99A70,#8A6A45 70%);opacity:.9}
+.peg.b{transform:rotate(-7deg)}
+
+.props-label{margin-left:auto;font-size:9px;letter-spacing:.16em;text-transform:uppercase;color:var(--faint);align-self:center}
+
+.foot{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;margin-top:26px;
+  padding-top:12px;border-top:1px solid rgba(120,100,60,.28);
+  font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:var(--faint)}
+.foot a{color:inherit;text-decoration:none;min-height:32px;display:inline-flex;align-items:center}
+
+@media(max-width:760px){
+  .sheet{padding:26px 20px 22px}
+  .stamps{grid-template-columns:1fr;gap:16px}
+  .props{margin-top:22px}
+  .note{display:none}
+}
+</style>
+</head>
+<body>
+<div class="sheet">
+  <div class="top"><span>Tharra · OSIS Humas</span><span>Dua cap · MMXXV</span></div>
+
+  <div class="lead">
+    <h1>Dua cap, satu <span>lembar</span>.</h1>
+    <p>Pilih satu ruang, atau pakai dua-duanya.</p>
+  </div>
+
+  <div class="stamps">
+    <a class="stamp" href="../index.html">
+      <span class="word">Katakan</span>
+      <span class="sub">Kotak aspirasi · anonim</span>
+      <span class="desc">Tulis yang selama ini kamu simpan. Dibaca pengurus OSIS, bisa dipantau lewat kode tiket.</span>
+      <span class="cta">Tulis aspirasi →</span>
+    </a>
+
+    <a class="stamp" href="../index.html">
+      <span class="word">Aksara</span>
+      <span class="sub">Mading &amp; surat · perlu akun</span>
+      <span class="desc">Papan mading sekolah dan surat untuk teman sekelas — tempel, baca, kirim.</span>
+      <span class="cta">Buka mading →</span>
+    </a>
+  </div>
+
+  <div class="props">
+    <div class="pad" aria-hidden="true"></div>
+    <div class="peg" aria-hidden="true"></div>
+    <div class="peg b" aria-hidden="true"></div>
+    <span class="props-label">Bantalan tinta &amp; dua stempel</span>
+  </div>
+
+  <div class="foot">
+    <span>Tharra — Katakan &amp; Aksara</span>
+    <a href="index.html">← daftar konsep</a>
+  </div>
+</div>
+</body>
+</html>

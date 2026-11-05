@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Konsep G2 — Dua Laci | Tharra</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..900;1,9..144,300..900&family=IBM+Plex+Mono:wght@400;500&family=Caveat:wght@600&display=swap" rel="stylesheet">
+<style>
+/* KONSEP G2 — Dua laci meja.
+   Beranda = muka lemari laci kayu: dua laci dengan pemegang kuningan
+   dan label ketik. Dua ruang, dua laci. */
+:root{
+  --wood:#8A6742; --wood2:#6B4C2C; --wood3:#553A20;
+  --brass:#C9A96A; --brass2:#9E7C43;
+  --paper:#F4EAD2; --ink:#241E15; --soft:#5A4E3C; --faint:#7A6A4E;
+  --red:#B4311F; --green:#3E5A3A;
+  --fd:"Fraunces",Georgia,serif; --fm:"IBM Plex Mono",ui-monospace,monospace; --hw:"Caveat",cursive;
+}
+*{box-sizing:border-box}
+body{
+  margin:0;min-height:100dvh;overflow-x:hidden;color:var(--ink);font-family:var(--fm);
+  background:radial-gradient(90% 60% at 50% 0%,#EFE3C8 0%,#D9C8A6 55%,#C3AC83 100%);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;padding:28px 18px 32px;
+}
+
+.top{width:min(900px,100%);display:flex;justify-content:space-between;gap:12px;
+  font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--faint);margin-bottom:16px}
+
+.lead{width:min(900px,100%);margin-bottom:22px}
+.lead h1{font-family:var(--fd);font-weight:800;font-size:clamp(25px,4.4vw,38px);line-height:1.03;
+  letter-spacing:-.025em;margin:0;max-width:24ch}
+.lead h1 i{font-style:normal;color:var(--red)}
+
+.cabinet{
+  width:min(900px,100%);position:relative;padding:20px;
+  background:
+    repeating-linear-gradient(92deg,rgba(0,0,0,.05) 0 2px,transparent 2px 7px),
+    linear-gradient(160deg,var(--wood) 0%,var(--wood2) 60%,var(--wood3) 100%);
+  border-radius:4px;
+  box-shadow:0 28px 44px -30px rgba(40,22,6,.95), inset 0 0 0 1px rgba(255,255,255,.12);
+}
+/* garis meja di atas lemari */
+.cabinet::before{content:"";position:absolute;left:-14px;right:-14px;top:-16px;height:16px;
+  background:linear-gradient(180deg,#A07A50,#7A5836);border-radius:3px 3px 0 0;
+  box-shadow:0 -2px 0 rgba(255,255,255,.18) inset}
+
+.drawers{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+
+.drawer{
+  position:relative;box-shadow:inset 0 1px 0 rgba(255,255,255,.2), inset 0 -3px 8px rgba(0,0,0,.28),
+             0 10px 18px -14px rgba(0,0,0,.9);
+  outline:1px solid rgba(30,16,4,.55);outline-offset:-1px;
+  display:block;text-decoration:none;color:inherit;
+  padding:20px 20px 18px;border-radius:3px;
+  background:linear-gradient(165deg,#9A7550 0%,#7E5C39 55%,#6A4A2A 100%);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.2), inset 0 -3px 8px rgba(0,0,0,.28),
+             0 10px 18px -14px rgba(0,0,0,.9);
+  transition:transform .3s cubic-bezier(.19,1,.22,1), box-shadow .3s ease;
+}
+.drawer:hover{transform:translateY(-3px);box-shadow:inset 0 1px 0 rgba(255,255,255,.25),
+  inset 0 -3px 8px rgba(0,0,0,.3), 0 16px 22px -16px rgba(0,0,0,.95)}
+.drawer:focus-visible{outline:3px solid var(--brass);outline-offset:3px}
+
+/* label kuningan */
+.holder{
+  display:flex;align-items:center;justify-content:space-between;gap:10px;
+  background:linear-gradient(180deg,#D8B979,#B9964F);
+  padding:6px 10px;border-radius:2px;
+  box-shadow:inset 0 0 0 1px rgba(70,48,16,.4), 0 2px 4px rgba(0,0,0,.35);
+}
+.card{
+  flex:1;background:var(--paper);padding:8px 10px;border-radius:1px;
+  box-shadow:inset 0 0 0 1px rgba(120,100,60,.3);
+}
+.card .k{display:block;font-size:8px;letter-spacing:.16em;text-transform:uppercase;color:var(--faint)}
+.card .t{display:block;font-family:var(--fd);font-weight:700;font-size:17px;letter-spacing:-.01em;margin-top:2px}
+.card .t i{font-style:normal;color:var(--red)}
+.drawer.b .card .t i{color:var(--green)}
+.holder .no{font-family:var(--fd);font-size:12px;color:#4A3212;letter-spacing:.1em}
+
+/* pemegang laci: ada sekrup kiri-kanan */
+.handle{position:relative;margin:18px auto 0;width:58%;height:13px;border-radius:7px;
+  background:linear-gradient(180deg,#E3C68C,#B58F4C 62%,#8A6832);
+  box-shadow:0 3px 5px rgba(0,0,0,.5), inset 0 1px 0 rgba(255,255,255,.55)}
+.handle::before,.handle::after{content:"";position:absolute;top:50%;width:7px;height:7px;border-radius:50%;
+  transform:translateY(-50%);background:radial-gradient(circle at 35% 32%,#F0DCAE,#8A6832);
+  box-shadow:0 1px 2px rgba(0,0,0,.5)}
+.handle::before{left:-11px}
+.handle::after{right:-11px}
+
+/* keterangan di laci */
+.drawer .desc{
+  margin:14px 0 0;font-family:var(--fd);font-size:13.5px;line-height:1.55;
+  color:#F6ECD6;max-width:30ch;
+}
+.drawer .go{margin-top:12px;display:inline-block;font-family:var(--hw);font-size:19px;color:#F3DCB0}
+
+.captions{display:grid;grid-template-columns:1fr 1fr;gap:18px;width:min(900px,100%);margin-top:18px}
+.cap{background:#F5EBD3;border:1px solid #DCCAA6;border-radius:2px;padding:14px 16px;
+  box-shadow:0 10px 18px -16px rgba(40,22,6,.8)}
+.cap p{margin:0;font-family:var(--fd);font-size:13.5px;line-height:1.55;color:var(--soft)}
+.cap .go{display:inline-block;margin-top:10px;font-family:var(--fm);font-size:9.5px;letter-spacing:.16em;
+  text-transform:uppercase;color:var(--red);text-decoration:none;border-bottom:1px solid rgba(180,49,31,.45);padding-bottom:2px}
+.captions .cap:nth-child(2) .go{color:var(--green);border-color:rgba(62,90,58,.45)}
+
+.foot{width:min(900px,100%);display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;
+  margin-top:30px;font-size:9.5px;letter-spacing:.14em;text-transform:uppercase;color:#5E4C31}
+.foot a{color:inherit;text-decoration:none;min-height:32px;display:inline-flex;align-items:center}
+
+@media(max-width:760px){
+  .drawers{grid-template-columns:1fr;gap:14px}
+  .cabinet{padding:14px}
+  .lead h1{font-size:26px}
+}
+</style>
+</head>
+<body>
+
+<div class="top"><span>Tharra · OSIS Humas</span><span>Dua laci · MMXXV</span></div>
+
+<div class="lead">
+  <h1>Dua laci yang siap kamu <i>buka</i>.</h1>
+</div>
+
+<div class="cabinet">
+  <div class="drawers">
+    <a class="drawer a" href="../index.html">
+      <div class="holder">
+        <div class="card">
+          <span class="k">Kotak aspirasi · anonim</span>
+          <span class="t">Katakan<i>.</i></span>
+        </div>
+        <span class="no">01</span>
+      </div>
+      <div class="handle" aria-hidden="true"></div>
+    </a>
+
+    <a class="drawer b" href="../index.html">
+      <div class="holder">
+        <div class="card">
+          <span class="k">Mading &amp; surat · perlu akun</span>
+          <span class="t">Aksara<i>.</i></span>
+        </div>
+        <span class="no">02</span>
+      </div>
+      <div class="handle" aria-hidden="true"></div>
+    </a>
+  </div>
+</div>
+
+<div class="captions">
+  <div class="cap">
+    <p>Tulis yang selama ini kamu simpan. Anonim, dibaca pengurus OSIS, bisa dipantau lewat kode tiket.</p>
+    <a class="go" href="../index.html">Tulis aspirasi →</a>
+  </div>
+  <div class="cap">
+    <p>Papan mading sekolah dan surat untuk teman sekelas — tempel, baca, kirim.</p>
+    <a class="go" href="../index.html">Buka mading →</a>
+  </div>
+</div>
+
+<div class="foot">
+  <span>Tharra — Katakan &amp; Aksara</span>
+  <a href="index.html">← daftar konsep</a>
+</div>
+
+</body>
+</html>
