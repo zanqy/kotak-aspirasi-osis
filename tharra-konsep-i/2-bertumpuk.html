@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Konsep I2 — Beranda Bertumpuk | Tharra</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..900;1,9..144,300..900&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+/* KONSEP I2 — Beranda produk dengan panel bertumpuk.
+   Kepadatan dari: hero besar + dua kartu contoh yang saling menumpuk,
+   strip angka, langkah kerja bernomor, dan pita ajakan di bawah. */
+:root{
+  --paper:#F5EEDA; --card:#FFFCF3; --ink:#211B13; --soft:#574B39; --faint:#6E5F45;
+  --line:#D8C7A4; --red:#B4311F; --green:#3E5A3A;
+  --fd:"Fraunces",Georgia,serif; --fm:"IBM Plex Mono",ui-monospace,monospace;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--fm)}
+.wrap{max-width:1140px;margin:0 auto;padding:0 22px}
+
+.nav{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:16px 0;border-bottom:1px solid var(--line)}
+.brand{font-family:var(--fd);font-weight:800;font-size:19px;color:inherit;text-decoration:none}
+.brand i{font-style:normal;color:var(--red)}
+.nav .links{display:flex;gap:22px}
+.nav .links a{font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--soft);text-decoration:none}
+.nav .right{display:flex;gap:10px;align-items:center}
+.nav .login{font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--soft);text-decoration:none}
+.nav .cta{min-height:38px;display:inline-flex;align-items:center;padding:0 15px;background:var(--red);
+  color:#FBF6E7;text-decoration:none;border-radius:2px;font-size:10px;letter-spacing:.14em;text-transform:uppercase}
+
+/* hero */
+.hero{display:grid;grid-template-columns:1.02fr .98fr;gap:52px;align-items:center;padding:52px 0 40px}
+.kick{display:inline-flex;align-items:center;gap:8px;font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--faint)}
+.kick .dot{width:6px;height:6px;border-radius:50%;background:var(--red)}
+h1{font-family:var(--fd);font-weight:800;font-size:clamp(32px,4.4vw,52px);line-height:1.02;
+  letter-spacing:-.035em;margin:14px 0 0;max-width:16ch}
+h1 i{font-style:normal;color:var(--red)}
+.hero .dek{font-family:var(--fd);font-size:16.5px;line-height:1.62;color:var(--soft);margin:18px 0 0;max-width:46ch}
+.actions{display:flex;gap:12px;flex-wrap:wrap;margin-top:26px}
+.btn{min-height:46px;display:inline-flex;align-items:center;padding:0 20px;border-radius:2px;text-decoration:none;
+  font-size:10.5px;letter-spacing:.16em;text-transform:uppercase}
+.btn.primary{background:var(--red);color:#FBF6E7}
+.btn.ghost{border:1.5px solid rgba(49,73,43,.6);color:#31492B}
+.trust{display:flex;gap:18px;flex-wrap:wrap;margin-top:22px;font-size:10px;letter-spacing:.12em;
+  text-transform:uppercase;color:var(--faint)}
+.trust span{display:inline-flex;align-items:center;gap:6px}
+.trust span::before{content:"·";color:var(--red);font-size:14px;line-height:1}
+
+/* panel contoh bertumpuk */
+.stack{position:relative;padding:24px 20px 34px 34px}
+.stack::before{content:"";position:absolute;inset:18px 6px 10px 16px;background:#E9DDBE;
+  border:1px solid var(--line);border-radius:6px;transform:rotate(2.2deg);z-index:0}
+.stack::after{content:"";position:absolute;inset:26px -2px 4px 8px;background:#EFE3C6;
+  border:1px solid var(--line);border-radius:6px;transform:rotate(-1.4deg);z-index:1}
+.panel{position:relative;z-index:3;background:var(--card);border:1px solid var(--line);border-radius:6px;
+  padding:16px 18px;box-shadow:0 18px 30px -26px rgba(50,38,18,.9)}
+.panel + .panel{margin-top:14px}
+.panel .row{display:flex;justify-content:space-between;align-items:center;gap:10px}
+.panel .tag{font-size:9.5px;letter-spacing:.14em;text-transform:uppercase;padding:4px 7px;border-radius:2px;
+  background:rgba(180,49,31,.1);color:var(--red)}
+.panel.g .tag{background:rgba(62,90,58,.12);color:var(--green)}
+.panel .code{font-size:9.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--faint)}
+.panel h3{font-family:var(--fd);font-size:16px;margin:10px 0 0;letter-spacing:-.01em}
+.panel p{font-family:var(--fd);font-size:13.5px;line-height:1.55;color:var(--soft);margin:6px 0 0}
+.panel .status{display:flex;justify-content:space-between;margin-top:12px;padding-top:10px;
+  border-top:1px solid var(--line);font-size:9.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--faint)}
+.panel .status b{color:var(--green);font-weight:500}
+
+/* strip angka */
+.stats{display:grid;grid-template-columns:repeat(3,1fr);border-top:1px solid var(--line);
+  border-bottom:1px solid var(--line)}
+.stat{padding:20px 22px;border-right:1px solid var(--line)}
+.stat:last-child{border-right:none}
+.stat b{display:block;font-family:var(--fd);font-weight:800;font-size:32px;letter-spacing:-.03em;line-height:1}
+.stat b i{font-style:normal;color:var(--red);font-size:20px}
+.stat span{display:block;margin-top:6px;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--faint)}
+
+/* dua ruang */
+.ruang{display:grid;grid-template-columns:1fr 1fr;gap:22px;padding:40px 0 34px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:6px;padding:24px;
+  display:flex;flex-direction:column;text-decoration:none;color:inherit;transition:transform .22s ease, box-shadow .22s ease}
+.card:hover{transform:translateY(-3px);box-shadow:0 20px 34px -28px rgba(50,38,18,.9)}
+.card .top{display:flex;justify-content:space-between;align-items:baseline}
+.card .k{font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--faint)}
+.card .no{font-family:var(--fd);font-weight:900;font-size:14px;color:var(--red)}
+.card h2{font-family:var(--fd);font-weight:800;font-size:28px;letter-spacing:-.02em;margin:10px 0 0;line-height:1}
+.card h2 i{font-style:normal;color:var(--red)}
+.card p{font-family:var(--fd);font-size:14.5px;line-height:1.6;color:var(--soft);margin:12px 0 0}
+.card ul{list-style:none;margin:14px 0 0;padding:0;font-family:var(--fd);font-size:13.5px;line-height:1.7;color:var(--soft)}
+.card ul li{position:relative;padding-left:16px}
+.card ul li::before{content:"—";position:absolute;left:0;color:var(--faint)}
+.card .btn{margin-top:20px;align-self:flex-start}
+.card.b .btn{background:var(--green);color:#F6EFDD}
+.card .note{margin-top:10px;font-size:9.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--faint)}
+
+/* cara kerja */
+.how{padding:8px 0 40px}
+.how .head{display:flex;align-items:baseline;justify-content:space-between;gap:16px;
+  border-bottom:1px solid var(--rule, var(--ink));padding-bottom:10px;margin-bottom:22px}
+.how h2{font-family:var(--fd);font-weight:800;font-size:clamp(22px,3vw,30px);letter-spacing:-.02em;margin:0}
+.how span{font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--faint)}
+.steps{display:grid;grid-template-columns:repeat(3,1fr);gap:24px}
+.step{position:relative;padding-top:16px;border-top:1px solid var(--line)}
+.step .n{font-family:var(--fd);font-weight:900;font-size:12px;letter-spacing:.1em;color:var(--red)}
+.step h3{font-family:var(--fd);font-size:18px;margin:8px 0 0;letter-spacing:-.01em}
+.step p{font-family:var(--fd);font-size:13.5px;line-height:1.58;color:var(--soft);margin:8px 0 0}
+
+/* pita ajakan */
+.band{display:flex;align-items:center;justify-content:space-between;gap:20px;flex-wrap:wrap;
+  background:#251E15;color:#F5EEDA;border-radius:6px;padding:26px 28px;margin-bottom:34px}
+.band h2{font-family:var(--fd);font-weight:800;font-size:clamp(20px,2.6vw,26px);margin:0;letter-spacing:-.02em}
+.band h2 i{font-style:normal;color:#E28A63}
+.band p{margin:8px 0 0;font-family:var(--fd);font-size:13.5px;color:rgba(245,238,218,.75);max-width:44ch}
+.band .btn{background:#F5EEDA;color:#251E15}
+
+.foot{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;padding:14px 0 38px;
+  border-top:1px solid var(--line);font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--faint)}
+.foot a{color:inherit;text-decoration:none}
+
+@media(max-width:900px){
+  .hero{grid-template-columns:1fr;gap:26px;padding:34px 0 26px}
+  .stack{padding:20px 12px 26px 22px}
+  .nav .links{display:none}
+  .ruang{grid-template-columns:1fr}
+  .steps{grid-template-columns:1fr;gap:16px}
+  .stats{grid-template-columns:1fr}
+  .stat{border-right:none;border-bottom:1px solid var(--line)}
+  .stat:last-child{border-bottom:none}
+  h1{max-width:none}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <nav class="nav">
+    <a class="brand" href="#">THARRA<i>.</i></a>
+    <div class="links"><a href="#">Katakan</a><a href="#">Aksara</a><a href="#">Lacak aspirasi</a><a href="#">Tentang</a></div>
+    <div class="right"><a class="login" href="#">Masuk</a><a class="cta" href="../index.html">Tulis aspirasi</a></div>
+  </nav>
+
+  <section class="hero">
+    <div>
+      <span class="kick"><span class="dot"></span>OSIS Humas · Sekolah kita</span>
+      <h1>Suara siswa punya tempat, tulisan siswa punya <i>panggung</i>.</h1>
+      <p class="dek">Katakan untuk aspirasi tanpa nama. Aksara untuk mading dan surat. Dua-duanya dikelola pengurus OSIS dan dibuka setiap hari.</p>
+      <div class="actions">
+        <a class="btn primary" href="../index.html">Tulis aspirasi</a>
+        <a class="btn ghost" href="../index.html">Buka mading</a>
+      </div>
+      <div class="trust"><span>Tanpa akun untuk Katakan</span><span>Kode tiket untuk lacak balasan</span></div>
+    </div>
+
+    <div class="stack">
+      <div class="panel">
+        <div class="row"><span class="tag">Aspirasi · anonim</span><span class="code">#A7K2</span></div>
+        <h3>Lampu koridor lantai 2 mati</h3>
+        <p>Sudah dua minggu gelap, agak serem kalau pulang sore.</p>
+        <div class="status"><span>Dikirim 12 Feb</span><b>Dibalas</b></div>
+      </div>
+      <div class="panel g">
+        <div class="row"><span class="tag">Surat · Aksara</span><span class="code">XI-3</span></div>
+        <h3>Untuk kelas XI-3</h3>
+        <p>Makasih sudah bantu bersih-bersih setelah pensi kemarin.</p>
+        <div class="status"><span>Dari siswa</span><b>Hari ini</b></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="stats">
+    <div class="stat"><b>128<i>+</i></b><span>Aspirasi masuk semester ini</span></div>
+    <div class="stat"><b>92<i>%</i></b><span>Dibalas dalam 7 hari</span></div>
+    <div class="stat"><b>6<i> hari</i></b><span>Mading diperbarui tiap minggu</span></div>
+  </section>
+
+  <section class="ruang">
+    <a class="card a" href="../index.html">
+      <div class="top"><span class="k">Kotak aspirasi · anonim</span><span class="no">01</span></div>
+      <h2>Katakan<i>.</i></h2>
+      <p>Tulis keluhan, usulan, atau hal kecil yang perlu diperbaiki. Dibaca pengurus, bisa dipantau lewat kode tiket.</p>
+      <ul><li>Nama tidak diminta</li><li>Dapat kode tiket</li><li>Balasan muncul di halaman lacak</li></ul>
+      <span class="btn primary">Tulis aspirasi →</span>
+      <span class="note">Tanpa akun · ± 2 menit</span>
+    </a>
+
+    <a class="card b" href="../index.html">
+      <div class="top"><span class="k">Mading &amp; surat · perlu akun</span><span class="no">02</span></div>
+      <h2>Aksara<i>.</i></h2>
+      <p>Papan mading sekolah dan surat untuk teman sekelas. Tempel pengumuman, baca karya, kirim pesan.</p>
+      <ul><li>Mading diperbarui pengurus</li><li>Surat ke satu kelas</li><li>Perlu akun sekolah</li></ul>
+      <span class="btn">Buka mading →</span>
+      <span class="note">Perlu akun sekolah</span>
+    </a>
+  </section>
+
+  <section class="how">
+    <div class="head"><h2>Cara kerjanya</h2><span>Tiga langkah</span></div>
+    <div class="steps">
+      <div class="step"><span class="n">01</span><h3>Pilih ruang</h3><p>Katakan kalau ingin anonim. Aksara kalau ingin menempel atau berkirim surat.</p></div>
+      <div class="step"><span class="n">02</span><h3>Tulis atau tempel</h3><p>Aspirasi cukup satu paragraf. Surat bisa lebih panjang, dengan lampiran nama kelas.</p></div>
+      <div class="step"><span class="n">03</span><h3>Pantau balasan</h3><p>Simpan kode tiket untuk aspirasi. Untuk surat, balasan masuk ke akunmu.</p></div>
+    </div>
+  </section>
+
+  <section class="band">
+    <div>
+      <h2>Ada yang mengganjal? Mulai dari <i>satu paragraf</i>.</h2>
+      <p>Tidak perlu rapi. Yang penting sampai — pengurus membaca setiap kiriman.</p>
+    </div>
+    <a class="btn" href="../index.html">Tulis sekarang</a>
+  </section>
+
+  <footer class="foot">
+    <span>Tharra — Katakan &amp; Aksara · MMXXV</span>
+    <a href="../index.html">← daftar konsep</a>
+  </footer>
+
+</div>
+</body>
+</html>
