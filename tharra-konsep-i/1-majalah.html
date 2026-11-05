@@ -361,6 +361,19 @@ a{color:inherit}
   .nav .navcta{padding:0 12px;font-size:9px}
   .hide-sm{display:none}
 }
+/* ---- intro penyusunan halaman ---- */
+html.intro-run .meta-row,
+html.intro-run .mast,
+html.intro-run .nav,
+html.intro-run .lead > *,
+html.intro-run .howto,
+html.intro-run .figures,
+html.intro-run .main{opacity:0}
+html.intro-run .peek{opacity:0}
+@media(prefers-reduced-motion:reduce){
+  html.intro-run .meta-row,html.intro-run .mast,html.intro-run .nav,html.intro-run .lead > *,
+  html.intro-run .howto,html.intro-run .figures,html.intro-run .main,html.intro-run .peek{opacity:1}
+}
 </style>
 </head>
 <body>
@@ -601,13 +614,126 @@ a{color:inherit}
   </div>
 </dialog>
 
+
+<script>
+  /* Intro: halaman disusun bagian demi bagian, lalu tab menyempil di tepi. */
+  (function () {
+    var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    var seen;
+    try { seen = sessionStorage.getItem('tharra-assemble'); } catch (e) { seen = '1'; }
+    if (reduce || seen) return;
+
+    var root = document.documentElement;
+    root.classList.add('intro-run');
+    try { sessionStorage.setItem('tharra-assemble', '1'); } catch (e) {}
+
+    function qs(s) { return Array.prototype.slice.call(document.querySelectorAll(s)); }
+    function rise(el, delay, dy) {
+      return el.animate(
+        [{ opacity: 0, transform: 'translateY(' + (dy || 16) + 'px)' },
+         { opacity: 1, transform: 'translateY(0)' }],
+        { duration: 560, delay: delay, easing: 'cubic-bezier(.22,1,.36,1)', fill: 'both' }
+      );
+    }
+
+    function count(el) {
+      var raw = el.textContent.trim();
+      var num = parseInt(raw.replace(/[^0-9]/g, ''), 10);
+      if (!num) return;
+      var suffix = raw.replace(/[0-9]/g, '');
+      var t0 = performance.now(), dur = 700;
+      function step(t) {
+        var p = Math.min(1, (t - t0) / dur);
+        var eased = 1 - Math.pow(1 - p, 3);
+        el.textContent = Math.round(num * eased) + suffix;
+        if (p < 1) requestAnimationFrame(step);
+      }
+      el.textContent = '0' + suffix;
+      requestAnimationFrame(step);
+    }
+
+    function play() {
+      var vw = window.innerWidth, vh = window.innerHeight;
+      var A = [-(vw * 0.30), -(vh * 0.06)];
+      var B = [-(vw * 0.24), (vh * 0.10)];
+      var C = [-(vw * 0.16), (vh * 0.22)];
+
+      function at(p, rot, sc) {
+        return 'translate(' + p[0].toFixed(0) + 'px,' + p[1].toFixed(0) + 'px) rotate(' + rot + 'deg) scale(' + sc + ')';
+      }
+
+      // 1. kepala terbit
+      rise(qs('.meta-row')[0], 90, 16);
+      rise(qs('.mast')[0], 160, 20);
+      rise(qs('.nav')[0], 300, 14);
+
+      // 2. laporan utama disusun
+      rise(qs('.lead .kick')[0], 470, 12);
+      rise(qs('.lead h2')[0], 540, 20);
+      rise(qs('.quickline')[0], 700, 12);
+      qs('.dek .body p').forEach(function (el, i) { rise(el, 760 + i * 100, 14); });
+      rise(qs('.dek .side-note')[0], 980, 14);
+
+      // 3. panduan + angka
+      rise(qs('.howto')[0], 1060, 16);
+      qs('.howto-steps li').forEach(function (el, i) { rise(el, 1120 + i * 90, 10); });
+      rise(qs('.figures')[0], 1320, 14);
+      qs('.figures .fig').forEach(function (el, i) { rise(el, 1380 + i * 80, 12); });
+      qs('.fig b').forEach(function (el, i) {
+        window.setTimeout(function () { count(el); }, 1420 + i * 80);
+      });
+
+      // 4. dua ruang + indeks
+      rise(qs('.main')[0], 1600, 16);
+      qs('.main .ruang, .main .indeks').forEach(function (el, i) { rise(el, 1660 + i * 90, 14); });
+      qs('.indeks li').forEach(function (el, i) { rise(el, 1760 + i * 70, 8); });
+
+      // 5. tab: datang, singgah tiga kali sambil bagian halaman muncul, lalu menyempil
+      var tab = document.getElementById('peekBtn');
+      if (tab) {
+        tab.animate([
+          { opacity: 0, transform: at([-(vw * 0.55), -(vh * 0.34)], -16, .88) },
+          { opacity: 1, offset: .05 },
+          { transform: at(A, -9, .97), offset: .16 },
+          { transform: at(A, -8, .98), offset: .30 },
+          { transform: at(B, -6, .99), offset: .42 },
+          { transform: at(B, -5, 1), offset: .56 },
+          { transform: at(C, -4, 1), offset: .66 },
+          { transform: at(C, -3, 1), offset: .76 },
+          { transform: at([-42, -6], -4, 1.02), offset: .87 },
+          { transform: at([-24, 0], -2, 1.01), offset: .94 },
+          { transform: at([0, 0], 0, 1), offset: 1 }
+        ], { duration: 2250, delay: 120, easing: 'cubic-bezier(.32,.9,.28,1)', fill: 'both' });
+
+        var seal = tab.querySelector('.pk-seal');
+        if (seal) {
+          seal.animate([
+            { opacity: 0, transform: 'scale(.25) rotate(-22deg)' },
+            { opacity: 1, transform: 'scale(1.24) rotate(5deg)', offset: .55 },
+            { opacity: 1, transform: 'scale(.94) rotate(-9deg)', offset: .78 },
+            { opacity: 1, transform: 'scale(1) rotate(-6deg)' }
+          ], { duration: 700, delay: 2050, easing: 'cubic-bezier(.22,1,.36,1)', fill: 'both' });
+        }
+      }
+
+      window.setTimeout(function () { root.classList.remove('intro-run'); }, 3000);
+    }
+
+    if (document.readyState === 'complete') play();
+    else window.addEventListener('load', play);
+
+    // jaring pengaman: kalau ada yang gagal, jangan biarkan halaman kosong
+    window.setTimeout(function () { root.classList.remove('intro-run'); }, 5000);
+  })();
+</script>
+
 <script>
   (function () {
     const btn = document.getElementById('peekBtn');
 
     // Animasi selip hanya sekali per sesi, dan tidak dipaksa jika pengguna memilih gerak minimal.
     const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    if (!reduce && btn && !sessionStorage.getItem('tharra-peek')) {
+    if (!reduce && btn && !sessionStorage.getItem('tharra-peek') && !sessionStorage.getItem('tharra-assemble')) {
       btn.classList.add('intro');
       btn.addEventListener('animationend', () => {
         btn.classList.remove('intro');
