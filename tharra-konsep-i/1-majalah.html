@@ -327,6 +327,7 @@ a{color:inherit}
 
 @media(max-width:560px){
   .peek{top:auto;bottom:92px;transform:none;padding:13px 8px;font-size:9px}
+  .pk-bar{display:none}
   .peek:hover{transform:translateX(-3px)}
   .peek.intro{animation:peekInSm 3.4s cubic-bezier(.22,1,.36,1) .8s both}
   @keyframes peekInSm{
@@ -363,20 +364,38 @@ a{color:inherit}
 }
 /* ---- intro penyusunan halaman ---- */
 /* saat intro: blok disembunyikan dulu, lalu dicetak baris demi baris */
-html.intro-run .meta-row,
-html.intro-run .mast,
-html.intro-run .nav,
-html.intro-run .lead > *,
-html.intro-run .dek .body p,
-html.intro-run .dek .side-note,
-html.intro-run .howto,
-html.intro-run .howto-steps li,
-html.intro-run .figures,
-html.intro-run .figures .fig,
-html.intro-run .main,
-html.intro-run .main .ruang,
-html.intro-run .main .indeks,
-html.intro-run .indeks li{clip-path:inset(0 100% 0 0)}
+@media(min-width:761px){
+  html.intro-run .meta-row,
+  html.intro-run .mast,
+  html.intro-run .nav,
+  html.intro-run .lead > *,
+  html.intro-run .dek .body p,
+  html.intro-run .dek .side-note,
+  html.intro-run .howto,
+  html.intro-run .howto-steps li,
+  html.intro-run .figures,
+  html.intro-run .figures .fig,
+  html.intro-run .main,
+  html.intro-run .main .ruang,
+  html.intro-run .main .indeks,
+  html.intro-run .indeks li{clip-path:inset(0 100% 0 0)}
+}
+@media(max-width:760px){
+  html.intro-run .meta-row,
+  html.intro-run .mast,
+  html.intro-run .nav,
+  html.intro-run .lead > *,
+  html.intro-run .dek .body p,
+  html.intro-run .dek .side-note,
+  html.intro-run .howto,
+  html.intro-run .howto-steps li,
+  html.intro-run .figures,
+  html.intro-run .figures .fig,
+  html.intro-run .main,
+  html.intro-run .main .ruang,
+  html.intro-run .main .indeks,
+  html.intro-run .indeks li{opacity:0}
+}
 html.intro-run .peek{opacity:0}
 html.intro-run body{animation:gridSettle 2.2s cubic-bezier(.55,0,.35,1) both}
 @keyframes gridSettle{from{background-size:26px 26px}to{background-size:6px 6px}}
@@ -665,16 +684,25 @@ html.intro-run body{animation:gridSettle 2.2s cubic-bezier(.55,0,.35,1) both}
 
     function play() {
       // Halaman "dicetak" baris demi baris dari kiri ke kanan, mengikuti urutan baca.
-      var step = 55;
-      var dur = 420;
-      var ease = 'cubic-bezier(.3,.7,.3,1)';
+      var small = window.matchMedia('(max-width: 760px)').matches;
+      var step = small ? 32 : 55;
+      var dur = small ? 360 : 420;
+      var ease = small ? 'cubic-bezier(.25,.8,.3,1)' : 'cubic-bezier(.3,.7,.3,1)';
 
       function wipe(el, delay) {
         if (!el) return;
-        el.animate([
-          { clipPath: 'inset(0 100% 0 0)', opacity: .35 },
-          { clipPath: 'inset(0 0 0 0)', opacity: 1 }
-        ], { duration: dur, delay: delay, easing: ease, fill: 'both' });
+        if (small) {
+          // layar sempit: teks tidak dipotong (kata bisa terbelah), cukup pudar sambil naik
+          el.animate([
+            { opacity: 0, transform: 'translateY(10px)' },
+            { opacity: 1, transform: 'translateY(0)' }
+          ], { duration: dur, delay: delay, easing: ease, fill: 'both' });
+        } else {
+          el.animate([
+            { clipPath: 'inset(0 100% 0 0)', opacity: .35 },
+            { clipPath: 'inset(0 0 0 0)', opacity: 1 }
+          ], { duration: dur, delay: delay, easing: ease, fill: 'both' });
+        }
       }
 
       var order = [
@@ -704,11 +732,14 @@ html.intro-run body{animation:gridSettle 2.2s cubic-bezier(.55,0,.35,1) both}
       // tab: menyelip setelah halaman selesai tercetak, lalu cap
       var tab = document.getElementById('peekBtn');
       if (tab) {
-        tab.animate([
-          { opacity: 0, transform: 'translateX(108%) rotate(-3deg)' },
-          { opacity: 1, transform: 'translateX(-12px) rotate(-1.4deg)', offset: .74 },
-          { opacity: 1, transform: 'translateX(0) rotate(0deg)' }
-        ], { duration: 560, delay: tail - 120, easing: 'cubic-bezier(.3,.9,.3,1)', fill: 'both' });
+        var tabFrom = small
+          ? [{ opacity: 0, transform: 'translateY(46px)' },
+             { opacity: 1, transform: 'translateY(-6px)', offset: .74 },
+             { opacity: 1, transform: 'translateY(0)' }]
+          : [{ opacity: 0, transform: 'translateX(108%) rotate(-3deg)' },
+             { opacity: 1, transform: 'translateX(-12px) rotate(-1.4deg)', offset: .74 },
+             { opacity: 1, transform: 'translateX(0) rotate(0deg)' }];
+        tab.animate(tabFrom, { duration: 520, delay: tail - 140, easing: 'cubic-bezier(.3,.9,.3,1)', fill: 'both' });
 
         var seal = tab.querySelector('.pk-seal');
         if (seal) {
