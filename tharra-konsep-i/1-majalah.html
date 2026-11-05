@@ -223,31 +223,75 @@ a{color:inherit}
 .peek{
   position:fixed;right:0;top:40%;transform:translateY(-50%);z-index:40;
   writing-mode:vertical-rl;text-orientation:mixed;
-  display:flex;align-items:center;gap:8px;
-  padding:16px 9px;border:1px solid var(--line);border-right:none;border-radius:4px 0 0 4px;
+  display:flex;flex-direction:column;align-items:center;gap:9px;
+  padding:15px 9px 13px;border:1px solid var(--line);border-right:none;border-radius:4px 0 0 4px;
   background:linear-gradient(90deg,#FFFDF5,#F7EFDC);
   color:var(--red);font-family:var(--fm);font-size:10px;letter-spacing:.2em;text-transform:uppercase;
   cursor:pointer;box-shadow:-8px 8px 18px -14px rgba(40,26,8,.9);
+  transform-origin:right center;
   transition:transform .22s ease, box-shadow .22s ease;
 }
-.peek::before{content:"";width:3px;height:22px;background:var(--red);border-radius:1px}
-.peek:hover{transform:translateY(-50%) translateX(-4px);box-shadow:-12px 8px 22px -14px rgba(40,26,8,.95)}
-/* kertas menyelip keluar, berhenti, lalu masuk ke posisi */
-.peek.intro{animation:peekIn 2.6s cubic-bezier(.22,1,.36,1) .9s both}
-@keyframes peekIn{
-  0%{transform:translate(120%,-50%) rotate(0deg);opacity:0;box-shadow:-6px 6px 14px -12px rgba(40,26,8,.6)}
-  50%{transform:translate(-26px,-50%) rotate(-1.4deg);opacity:1;box-shadow:-20px 12px 28px -14px rgba(40,26,8,1)}
-  70%{transform:translate(-26px,-50%) rotate(-1.4deg);opacity:1}
-  86%{transform:translate(-7px,-50%) rotate(-0.4deg)}
-  100%{transform:translate(0,-50%) rotate(0deg);box-shadow:-8px 8px 18px -14px rgba(40,26,8,.9)}
+.pk-bar{width:3px;height:22px;background:var(--red);border-radius:1px;transform-origin:top center}
+.pk-txt{display:block}
+.pk-seal{
+  width:19px;height:19px;border-radius:50%;display:grid;place-items:center;
+  background:radial-gradient(circle at 34% 30%,#C6462C,#8E2412 72%);
+  color:#FBEBD2;font-family:var(--fd);font-weight:700;font-size:12px;line-height:1;
+  box-shadow:0 2px 4px -2px rgba(90,20,6,.9), inset 0 -1px 2px rgba(0,0,0,.35);
+  transform:rotate(-6deg);
 }
-/* kilau tipis saat menyelip */
-.peek.intro::after{content:"";position:absolute;inset:0;border-radius:inherit;pointer-events:none;
-  background:linear-gradient(90deg,rgba(180,49,31,.16),transparent 60%);
-  animation:peekGlow 2.6s ease .9s both}
-@keyframes peekGlow{0%,40%{opacity:0}52%{opacity:1}100%{opacity:0}}
-@media(prefers-reduced-motion:reduce){.peek.intro{animation:none}.peek.intro::after{display:none}}
+.peek:hover{transform:translateY(-50%) translateX(-4px);box-shadow:-12px 8px 22px -14px rgba(40,26,8,.95)}
 .peek:focus-visible{outline:2px solid var(--red);outline-offset:2px}
+
+/* ---- urutan masuk: garis tepi → kertas menyelip → cap → teks muncul ---- */
+.peek.intro{animation:peekIn 3.4s cubic-bezier(.22,1,.36,1) .8s both}
+@keyframes peekIn{
+  0%{transform:translate(0,-50%) scaleX(.04);opacity:0;
+     box-shadow:-2px 2px 6px -4px rgba(40,26,8,.5)}
+  6%{opacity:1;transform:translate(0,-50%) scaleX(.12)}
+  20%{transform:translate(-22px,-50%) scaleX(1) rotate(-3deg);
+      box-shadow:-26px 16px 34px -16px rgba(40,26,8,1)}
+  32%{transform:translate(-18px,-50%) scaleX(1) rotate(-2.2deg)}
+  48%{transform:translate(-20px,-50%) scaleX(1) rotate(-2.7deg)}
+  64%{transform:translate(-14px,-50%) scaleX(1) rotate(-1.2deg)}
+  76%{transform:translate(-10px,-50%) rotate(-.5deg)}
+  86%{transform:translate(-2px,-50%) rotate(.2deg)}
+  93%{transform:translate(-1px,-50%) rotate(-.1deg)}
+  100%{transform:translate(0,-50%) rotate(0)}
+}
+.peek.intro .pk-bar{animation:barGrow 3.4s cubic-bezier(.22,1,.36,1) .8s both}
+@keyframes barGrow{
+  0%,4%{transform:scaleY(0);opacity:0}
+  12%{transform:scaleY(1);opacity:1}
+  100%{transform:scaleY(1);opacity:1}
+}
+.peek.intro .pk-txt{animation:txtReveal 3.4s ease .8s both}
+@keyframes txtReveal{
+  0%,26%{clip-path:inset(0 0 100% 0);opacity:.15}
+  44%,100%{clip-path:inset(0 0 0 0);opacity:1}
+}
+.peek.intro .pk-seal{animation:sealStamp 3.4s cubic-bezier(.22,1,.36,1) .8s both}
+@keyframes sealStamp{
+  0%,30%{opacity:0;transform:scale(.25) rotate(-22deg)}
+  40%{opacity:1;transform:scale(1.22) rotate(4deg)}
+  47%{transform:scale(.94) rotate(-8deg)}
+  54%,100%{opacity:1;transform:scale(1) rotate(-6deg)}
+}
+/* kilau menyapu saat kertas keluar */
+.peek.intro::after{content:"";position:absolute;inset:0;border-radius:inherit;pointer-events:none;
+  background:linear-gradient(100deg,transparent 20%,rgba(255,255,255,.85) 46%,rgba(180,49,31,.12) 58%,transparent 76%);
+  background-size:240% 100%;background-position:120% 0;
+  animation:peekSweep 3.4s ease .8s both}
+@keyframes peekSweep{
+  0%,18%{background-position:140% 0;opacity:0}
+  26%{opacity:1}
+  44%{background-position:-40% 0;opacity:0}
+  100%{opacity:0}
+}
+@media(prefers-reduced-motion:reduce){
+  .peek.intro,.peek.intro .pk-bar,.peek.intro .pk-txt,.peek.intro .pk-seal{animation:none}
+  .peek.intro::after{display:none}
+}
 
 /* ---------- panel penjelasan ---------- */
 .sheet{
@@ -284,13 +328,17 @@ a{color:inherit}
 @media(max-width:560px){
   .peek{top:auto;bottom:92px;transform:none;padding:13px 8px;font-size:9px}
   .peek:hover{transform:translateX(-3px)}
-  .peek.intro{animation:peekInSm 2.6s cubic-bezier(.22,1,.36,1) .9s both}
+  .peek.intro{animation:peekInSm 3.4s cubic-bezier(.22,1,.36,1) .8s both}
   @keyframes peekInSm{
-    0%{transform:translate(120%,0) rotate(0deg);opacity:0}
-    50%{transform:translate(-22px,0) rotate(-1.2deg);opacity:1}
-    70%{transform:translate(-22px,0) rotate(-1.2deg)}
-    86%{transform:translate(-6px,0) rotate(-0.4deg)}
-    100%{transform:translate(0,0) rotate(0deg)}
+    0%{transform:translate(0,0) scaleX(.04);opacity:0}
+    6%{opacity:1;transform:translate(0,0) scaleX(.12)}
+    20%{transform:translate(-12px,0) scaleX(1) rotate(-2.6deg);box-shadow:-22px 14px 30px -16px rgba(40,26,8,1)}
+    32%{transform:translate(-9px,0) rotate(-2deg)}
+    48%{transform:translate(-11px,0) rotate(-2.4deg)}
+    64%{transform:translate(-7px,0) rotate(-1.1deg)}
+    76%{transform:translate(-8px,0) rotate(-.4deg)}
+    86%{transform:translate(-2px,0) rotate(.2deg)}
+    100%{transform:translate(0,0) rotate(0)}
   }
   .sheet{top:auto;bottom:0;right:0;left:0;width:100%;height:auto;max-height:88dvh;
     border-radius:10px 10px 0 0;animation:slideup .3s cubic-bezier(.22,1,.36,1)}
@@ -521,7 +569,11 @@ a{color:inherit}
 </div>
 
 
-<button class="peek" id="peekBtn" type="button" aria-haspopup="dialog" aria-controls="aboutSheet">Apa ini?</button>
+<button class="peek" id="peekBtn" type="button" aria-haspopup="dialog" aria-controls="aboutSheet">
+  <span class="pk-bar" aria-hidden="true"></span>
+  <span class="pk-txt">Apa ini?</span>
+  <span class="pk-seal" aria-hidden="true">?</span>
+</button>
 
 <dialog class="sheet" id="aboutSheet" aria-labelledby="aboutTitle">
   <div class="sheet-in">
