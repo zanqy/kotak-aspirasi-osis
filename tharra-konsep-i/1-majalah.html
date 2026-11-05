@@ -232,6 +232,21 @@ a{color:inherit}
 }
 .peek::before{content:"";width:3px;height:22px;background:var(--red);border-radius:1px}
 .peek:hover{transform:translateY(-50%) translateX(-4px);box-shadow:-12px 8px 22px -14px rgba(40,26,8,.95)}
+/* kertas menyelip keluar, berhenti, lalu masuk ke posisi */
+.peek.intro{animation:peekIn 2.6s cubic-bezier(.22,1,.36,1) .9s both}
+@keyframes peekIn{
+  0%{transform:translate(120%,-50%) rotate(0deg);opacity:0;box-shadow:-6px 6px 14px -12px rgba(40,26,8,.6)}
+  50%{transform:translate(-26px,-50%) rotate(-1.4deg);opacity:1;box-shadow:-20px 12px 28px -14px rgba(40,26,8,1)}
+  70%{transform:translate(-26px,-50%) rotate(-1.4deg);opacity:1}
+  86%{transform:translate(-7px,-50%) rotate(-0.4deg)}
+  100%{transform:translate(0,-50%) rotate(0deg);box-shadow:-8px 8px 18px -14px rgba(40,26,8,.9)}
+}
+/* kilau tipis saat menyelip */
+.peek.intro::after{content:"";position:absolute;inset:0;border-radius:inherit;pointer-events:none;
+  background:linear-gradient(90deg,rgba(180,49,31,.16),transparent 60%);
+  animation:peekGlow 2.6s ease .9s both}
+@keyframes peekGlow{0%,40%{opacity:0}52%{opacity:1}100%{opacity:0}}
+@media(prefers-reduced-motion:reduce){.peek.intro{animation:none}.peek.intro::after{display:none}}
 .peek:focus-visible{outline:2px solid var(--red);outline-offset:2px}
 
 /* ---------- panel penjelasan ---------- */
@@ -269,6 +284,14 @@ a{color:inherit}
 @media(max-width:560px){
   .peek{top:auto;bottom:92px;transform:none;padding:13px 8px;font-size:9px}
   .peek:hover{transform:translateX(-3px)}
+  .peek.intro{animation:peekInSm 2.6s cubic-bezier(.22,1,.36,1) .9s both}
+  @keyframes peekInSm{
+    0%{transform:translate(120%,0) rotate(0deg);opacity:0}
+    50%{transform:translate(-22px,0) rotate(-1.2deg);opacity:1}
+    70%{transform:translate(-22px,0) rotate(-1.2deg)}
+    86%{transform:translate(-6px,0) rotate(-0.4deg)}
+    100%{transform:translate(0,0) rotate(0deg)}
+  }
   .sheet{top:auto;bottom:0;right:0;left:0;width:100%;height:auto;max-height:88dvh;
     border-radius:10px 10px 0 0;animation:slideup .3s cubic-bezier(.22,1,.36,1)}
   @keyframes slideup{from{transform:translateY(30px);opacity:0}to{transform:none;opacity:1}}
@@ -529,6 +552,16 @@ a{color:inherit}
 <script>
   (function () {
     const btn = document.getElementById('peekBtn');
+
+    // Animasi selip hanya sekali per sesi, dan tidak dipaksa jika pengguna memilih gerak minimal.
+    const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (!reduce && btn && !sessionStorage.getItem('tharra-peek')) {
+      btn.classList.add('intro');
+      btn.addEventListener('animationend', () => {
+        btn.classList.remove('intro');
+        try { sessionStorage.setItem('tharra-peek', '1'); } catch (e) {}
+      }, { once: true });
+    }
     const dlg = document.getElementById('aboutSheet');
     const open = () => { dlg.showModal ? dlg.showModal() : dlg.setAttribute('open', ''); };
     const close = () => { dlg.close ? dlg.close() : dlg.removeAttribute('open'); };
