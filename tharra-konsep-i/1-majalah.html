@@ -66,6 +66,17 @@ a{color:inherit}
 .dek .side-note dt:first-child{margin-top:0}
 .dek .side-note dd{margin:3px 0 0;font-family:var(--fd);font-size:14px;color:var(--ink)}
 
+/* ---------- panduan singkat ---------- */
+.howto{border-bottom:1px solid var(--line);padding:16px 0 18px;background:rgba(255,252,243,.55)}
+.howto-head{display:flex;align-items:baseline;justify-content:space-between;gap:14px;margin-bottom:12px}
+.howto-head .k{font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--red)}
+.howto-head p{margin:0;font-family:var(--fd);font-size:13.5px;color:var(--soft)}
+.howto-steps{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(3,1fr);gap:22px}
+.howto-steps li{display:grid;grid-template-columns:26px 1fr;gap:10px;align-items:start}
+.howto-steps .n{font-family:var(--fm);font-size:9.5px;letter-spacing:.1em;color:var(--red);padding-top:3px}
+.howto-steps b{display:block;font-family:var(--fd);font-size:15px;letter-spacing:-.01em}
+.howto-steps span{display:block;margin-top:3px;font-family:var(--fd);font-size:13px;line-height:1.5;color:var(--soft)}
+
 /* ---------- angka semester ---------- */
 .figures{display:grid;grid-template-columns:repeat(4,1fr);border-bottom:1px solid var(--line)}
 .fig{padding:18px 22px;border-right:1px solid var(--line)}
@@ -202,7 +213,13 @@ a{color:inherit}
   .pull{grid-template-columns:auto 1fr}
   .pull .aside{display:none}
 }
+@media(max-width:940px){
+  .howto-steps{grid-template-columns:1fr;gap:12px}
+  .howto-steps li{grid-template-columns:24px 1fr}
+}
 @media(max-width:560px){
+  .howto-head{flex-direction:column;align-items:flex-start;gap:4px}
+  .howto-head .k{white-space:nowrap}
   .mast{flex-direction:column;align-items:flex-start;gap:6px}
   .mast .issue{text-align:left}
   .foot{grid-template-columns:1fr}
@@ -258,6 +275,18 @@ a{color:inherit}
         </dl>
       </div>
     </div>
+  </section>
+
+  <section class="howto">
+    <div class="howto-head">
+      <span class="k">Cara pakai</span>
+      <p>Tiga langkah, kurang dari dua menit.</p>
+    </div>
+    <ol class="howto-steps">
+      <li><span class="n">01</span><div><b>Pilih ruang</b><span>Anonim untuk keluhan, akun untuk mading dan surat.</span></div></li>
+      <li><span class="n">02</span><div><b>Tulis satu paragraf</b><span>Sebut lokasi atau waktu kalau ada — itu yang membuatnya bisa ditindaklanjuti.</span></div></li>
+      <li><span class="n">03</span><div><b>Pantau balasan</b><span>Simpan kode yang muncul setelah mengirim, lalu buka halaman lacak.</span></div></li>
+    </ol>
   </section>
 
   <section class="figures">
@@ -321,27 +350,6 @@ a{color:inherit}
       <cite>Rekap aspirasi bulan lalu · Humas</cite>
     </div>
     <div class="aside">Dari 128 kiriman semester ini, 61 di antaranya soal fasilitas kelas dan kantin.</div>
-  </section>
-
-  <section class="sect">
-    <div class="head"><h2>Cara kerjanya</h2><span>Tiga langkah</span></div>
-    <div class="steps">
-      <div class="step">
-        <span class="n">01</span>
-        <h3>Pilih ruang</h3>
-        <p>Katakan kalau ingin anonim. Aksara kalau ingin menempel di mading atau berkirim surat.</p>
-      </div>
-      <div class="step">
-        <span class="n">02</span>
-        <h3>Tulis atau tempel</h3>
-        <p>Aspirasi cukup satu paragraf. Surat boleh lebih panjang, dengan nama kelas sebagai alamat.</p>
-      </div>
-      <div class="step">
-        <span class="n">03</span>
-        <h3>Pantau balasan</h3>
-        <p>Simpan kode tiket untuk aspirasi. Untuk surat, balasan masuk ke akun sekolahmu.</p>
-      </div>
-    </div>
   </section>
 
   <section class="sect">
