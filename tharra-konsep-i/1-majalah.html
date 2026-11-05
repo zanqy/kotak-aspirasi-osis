@@ -362,23 +362,35 @@ a{color:inherit}
   .hide-sm{display:none}
 }
 /* ---- intro penyusunan halaman ---- */
+/* saat intro: blok disembunyikan dulu, lalu dicetak baris demi baris */
 html.intro-run .meta-row,
 html.intro-run .mast,
 html.intro-run .nav,
 html.intro-run .lead > *,
+html.intro-run .dek .body p,
+html.intro-run .dek .side-note,
 html.intro-run .howto,
+html.intro-run .howto-steps li,
 html.intro-run .figures,
-html.intro-run .main{opacity:0}
+html.intro-run .figures .fig,
+html.intro-run .main,
+html.intro-run .main .ruang,
+html.intro-run .main .indeks,
+html.intro-run .indeks li{clip-path:inset(0 100% 0 0)}
 html.intro-run .peek{opacity:0}
-/* grid titik ikut merapat saat halaman disusun */
-html.intro-run body{animation:gridSettle 2.6s cubic-bezier(.22,1,.36,1) both}
-@keyframes gridSettle{from{background-size:30px 30px}to{background-size:6px 6px}}
-/* titik yang ditinggal tab di setiap persinggahan */
-.drop-dot{position:fixed;width:9px;height:9px;border-radius:50%;background:var(--red);opacity:0;
-  margin:-4.5px 0 0 -4.5px;pointer-events:none;z-index:38}
+html.intro-run body{animation:gridSettle 2.2s cubic-bezier(.55,0,.35,1) both}
+@keyframes gridSettle{from{background-size:26px 26px}to{background-size:6px 6px}}
+/* mata pisau: garis tipis di batas lembar yang sedang ditarik */
+.reveal-edge{position:fixed;left:0;right:0;top:0;height:3px;z-index:45;pointer-events:none;
+  background:linear-gradient(90deg,rgba(180,49,31,0),rgba(180,49,31,.55) 20%,rgba(180,49,31,.55) 80%,rgba(180,49,31,0));
+  box-shadow:0 10px 26px -6px rgba(60,40,14,.45)}
 @media(prefers-reduced-motion:reduce){
   html.intro-run .meta-row,html.intro-run .mast,html.intro-run .nav,html.intro-run .lead > *,
-  html.intro-run .howto,html.intro-run .figures,html.intro-run .main,html.intro-run .peek{opacity:1}
+  html.intro-run .dek .body p,html.intro-run .dek .side-note,html.intro-run .howto,
+  html.intro-run .howto-steps li,html.intro-run .figures,html.intro-run .figures .fig,
+  html.intro-run .main,html.intro-run .main .ruang,html.intro-run .main .indeks,
+  html.intro-run .indeks li{clip-path:none}
+  html.intro-run .peek{opacity:1}
 }
 </style>
 </head>
@@ -634,13 +646,6 @@ html.intro-run body{animation:gridSettle 2.6s cubic-bezier(.22,1,.36,1) both}
     try { sessionStorage.setItem('tharra-assemble', '1'); } catch (e) {}
 
     function qs(s) { return Array.prototype.slice.call(document.querySelectorAll(s)); }
-    function rise(el, delay, dy) {
-      return el.animate(
-        [{ opacity: 0, transform: 'translateY(' + (dy || 16) + 'px)' },
-         { opacity: 1, transform: 'translateY(0)' }],
-        { duration: 620, delay: delay, easing: 'cubic-bezier(.25,.8,.3,1)', fill: 'both' }
-      );
-    }
 
     function count(el) {
       var raw = el.textContent.trim();
@@ -659,99 +664,64 @@ html.intro-run body{animation:gridSettle 2.6s cubic-bezier(.22,1,.36,1) both}
     }
 
     function play() {
-      var vw = window.innerWidth, vh = window.innerHeight;
-      var A = [-(vw * 0.30), -(vh * 0.05)];
-      var B = [-(vw * 0.24), (vh * 0.11)];
-      var C = [-(vw * 0.16), (vh * 0.23)];
+      // Halaman "dicetak" baris demi baris dari kiri ke kanan, mengikuti urutan baca.
+      var step = 55;
+      var dur = 420;
+      var ease = 'cubic-bezier(.3,.7,.3,1)';
 
-      function at(p, rot, sc) {
-        return 'translate(' + p[0].toFixed(0) + 'px,' + p[1].toFixed(0) + 'px) rotate(' + rot + 'deg) scale(' + sc + ')';
-      }
-      function drop(el, delay) {
-        return el.animate(
-          [{ opacity: 0, transform: 'translateY(-12px) rotate(-.35deg) scale(.99)' },
-           { opacity: 1, transform: 'translateY(0) rotate(0deg) scale(1)' }],
-          { duration: 640, delay: delay, easing: 'cubic-bezier(.25,.8,.3,1)', fill: 'both' }
-        );
+      function wipe(el, delay) {
+        if (!el) return;
+        el.animate([
+          { clipPath: 'inset(0 100% 0 0)', opacity: .35 },
+          { clipPath: 'inset(0 0 0 0)', opacity: 1 }
+        ], { duration: dur, delay: delay, easing: ease, fill: 'both' });
       }
 
-      var tab = document.getElementById('peekBtn');
-      var base = tab ? tab.getBoundingClientRect() : null;
+      var order = [
+        '.meta-row', '.mast', '.nav',
+        '.lead .kick', '.lead h2', '.quickline',
+        '.dek .body p', '.dek .side-note',
+        '.howto', '.howto-steps li',
+        '.figures', '.figures .fig',
+        '.main', '.main .ruang', '.main .indeks', '.indeks li'
+      ];
 
-      // titik yang ditinggal setiap kali tab selesai menyentuh satu bagian
-      function stamp(p, delay) {
-        if (!base) return;
-        var d = document.createElement('span');
-        d.className = 'drop-dot';
-        d.style.left = (base.left + p[0]) + 'px';
-        d.style.top = (base.top + p[1]) + 'px';
-        document.body.appendChild(d);
-        var a = d.animate([
-          { opacity: 0, transform: 'scale(.3)' },
-          { opacity: .55, transform: 'scale(1)', offset: .25 },
-          { opacity: 0, transform: 'scale(2.4)' }
-        ], { duration: 900, delay: delay, easing: 'ease-out', fill: 'both' });
-        a.onfinish = function () { d.remove(); };
-      }
-
-      // 1 — kepala: disusun saat tab berhenti di titik A
-      rise(qs('.meta-row')[0], 60, 14);
-      rise(qs('.mast')[0], 120, 18);
-      rise(qs('.nav')[0], 200, 12);
-
-      // 2 — laporan utama: saat tab bergeser ke B
-      rise(qs('.lead .kick')[0], 200, 10);
-      rise(qs('.lead h2')[0], 250, 18);
-      rise(qs('.quickline')[0], 330, 10);
-      qs('.dek .body p').forEach(function (el, i) { rise(el, 380 + i * 55, 12); });
-      rise(qs('.dek .side-note')[0], 500, 12);
-
-      // 3 — panduan + angka: saat tab di C
-      rise(qs('.howto')[0], 580, 14);
-      qs('.howto-steps li').forEach(function (el, i) { rise(el, 620 + i * 50, 9); });
-      rise(qs('.figures')[0], 740, 12);
-      qs('.figures .fig').forEach(function (el, i) { drop(el, 780 + i * 45); });
-      qs('.fig b').forEach(function (el, i) {
-        window.setTimeout(function () { count(el); }, 820 + i * 45);
+      var t = 0;
+      order.forEach(function (sel) {
+        qs(sel).forEach(function (el) {
+          wipe(el, t);
+          t += step;
+        });
       });
 
-      // 4 — kartu ruang + indeks: saat tab berangkat ke tepi
-      rise(qs('.main')[0], 950, 14);
-      qs('.main .ruang, .main .indeks').forEach(function (el, i) { drop(el, 990 + i * 55); });
-      qs('.indeks li').forEach(function (el, i) { rise(el, 1050 + i * 40, 7); });
+      // angka menghitung saat barisnya selesai dicetak
+      qs('.fig b').forEach(function (el, i) {
+        window.setTimeout(function () { count(el); }, 620 + i * 70);
+      });
 
-      // 5 — tab: datang, singgah di A, B, C, lalu menyempil di tepi
+      var tail = t + dur;
+
+      // tab: menyelip setelah halaman selesai tercetak, lalu cap
+      var tab = document.getElementById('peekBtn');
       if (tab) {
         tab.animate([
-          { opacity: 0, transform: at([-(vw * 0.56), -(vh * 0.33)], -16, .9) },
-          { opacity: 1, offset: .05 },
-          { transform: at(A, -9, .98), offset: .10 },
-          { transform: at(A, -8, .98), offset: .17 },
-          { transform: at(B, -6, .99), offset: .30 },
-          { transform: at(B, -5, .99), offset: .37 },
-          { transform: at(C, -4, 1), offset: .52 },
-          { transform: at(C, -3, 1), offset: .59 },
-          { transform: at([-34, -4], -3, 1.01), offset: .80 },
-          { transform: at([-16, 0], -1.5, 1), offset: .90 },
-          { transform: at([0, 0], 0, 1), offset: 1 }
-        ], { duration: 1900, delay: 0, easing: 'cubic-bezier(.4,0,.2,1)', fill: 'both' });
-
-        stamp(A, 330);
-        stamp(B, 700);
-        stamp(C, 1120);
+          { opacity: 0, transform: 'translateX(108%) rotate(-3deg)' },
+          { opacity: 1, transform: 'translateX(-12px) rotate(-1.4deg)', offset: .74 },
+          { opacity: 1, transform: 'translateX(0) rotate(0deg)' }
+        ], { duration: 560, delay: tail - 120, easing: 'cubic-bezier(.3,.9,.3,1)', fill: 'both' });
 
         var seal = tab.querySelector('.pk-seal');
         if (seal) {
           seal.animate([
-            { opacity: 0, transform: 'scale(.25) rotate(-22deg)' },
-            { opacity: 1, transform: 'scale(1.26) rotate(5deg)', offset: .55 },
-            { opacity: 1, transform: 'scale(.94) rotate(-9deg)', offset: .78 },
+            { opacity: 0, transform: 'scale(.3) rotate(-18deg)' },
+            { opacity: 1, transform: 'scale(1.18) rotate(4deg)', offset: .55 },
+            { opacity: 1, transform: 'scale(.96) rotate(-8deg)', offset: .78 },
             { opacity: 1, transform: 'scale(1) rotate(-6deg)' }
-          ], { duration: 620, delay: 1400, easing: 'cubic-bezier(.22,1,.36,1)', fill: 'both' });
+          ], { duration: 520, delay: tail + 240, easing: 'cubic-bezier(.22,1,.36,1)', fill: 'both' });
         }
       }
 
-      window.setTimeout(function () { root.classList.remove('intro-run'); }, 2400);
+      window.setTimeout(function () { root.classList.remove('intro-run'); }, 2600);
     }
 
     if (document.readyState === 'complete') play();
