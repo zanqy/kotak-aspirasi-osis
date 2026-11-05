@@ -53,6 +53,11 @@ a{color:inherit}
 .lead h2{font-family:var(--fd);font-weight:800;font-size:clamp(30px,5vw,52px);line-height:1.02;
   letter-spacing:-.035em;margin:14px 0 0;max-width:24ch}
 .lead h2 i{font-style:normal;color:var(--red)}
+.quickline{margin:16px 0 0;max-width:56ch;border-left:2px solid rgba(180,49,31,.55);padding:2px 0 2px 12px;
+  font-family:var(--fm);font-size:11.5px;letter-spacing:.02em;line-height:1.65;color:#4F4433}
+.quickline b{color:var(--ink);font-weight:500}
+.quickline a{color:var(--red);text-decoration:none;border-bottom:1px solid rgba(180,49,31,.5);
+  white-space:nowrap;display:inline-block;padding:3px 0}
 
 .dek{display:grid;grid-template-columns:1.35fr .65fr;gap:32px;margin-top:22px}
 .dek .body p{font-family:var(--fd);font-size:16.5px;line-height:1.62;color:var(--soft);margin:0 0 14px}
@@ -67,7 +72,8 @@ a{color:inherit}
 .dek .side-note dd{margin:3px 0 0;font-family:var(--fd);font-size:14px;color:var(--ink)}
 
 /* ---------- panduan singkat ---------- */
-.howto{border-bottom:1px solid var(--line);padding:16px 0 18px;background:rgba(255,252,243,.55)}
+.howto{border-bottom:1px solid var(--line);padding:16px 0 18px;background:rgba(255,252,243,.55);
+  scroll-margin-top:14px}
 .howto-head{display:flex;align-items:baseline;justify-content:space-between;gap:14px;margin-bottom:12px}
 .howto-head .k{font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--red)}
 .howto-head p{margin:0;font-family:var(--fd);font-size:13.5px;color:var(--soft)}
@@ -260,6 +266,7 @@ a{color:inherit}
   <section class="lead">
     <div class="kick">Laporan utama</div>
     <h2>Sebagian hal lebih mudah ditulis daripada <i>diucapkan</i>.</h2>
+    <p class="quickline"><b>Cara pakai:</b> pilih ruang, tulis satu paragraf, simpan kode balasan. <a href="#cara-pakai">Rinciannya →</a></p>
 
     <div class="dek">
       <div class="body">
@@ -277,7 +284,7 @@ a{color:inherit}
     </div>
   </section>
 
-  <section class="howto">
+  <section class="howto" id="cara-pakai">
     <div class="howto-head">
       <span class="k">Cara pakai</span>
       <p>Tiga langkah, kurang dari dua menit.</p>
