@@ -362,6 +362,102 @@ a{color:inherit}
   .nav .navcta{padding:0 12px;font-size:9px}
   .hide-sm{display:none}
 }
+/* ---- intro: motion pass (kamera, gelombang, cap) ---- */
+html.intro-run .meta-row,
+html.intro-run .mast,
+html.intro-run .nav,
+html.intro-run .lead > *,
+html.intro-run .dek .body p,
+html.intro-run .dek .side-note,
+html.intro-run .howto,
+html.intro-run .howto-steps li,
+html.intro-run .figures,
+html.intro-run .figures .fig,
+html.intro-run .main,
+html.intro-run .main .ruang,
+html.intro-run .main .indeks,
+html.intro-run .indeks li,
+html.intro-run .peek{opacity:0}
+
+/* riak titik: pola yang sama, tumbuh dari tengah atas lalu hilang */
+.wrap{position:relative;z-index:1}
+.dot-ripple{position:fixed;inset:-10%;z-index:0;pointer-events:none;
+  background-image:radial-gradient(rgba(60,44,18,.26) 1.3px,transparent 1.4px);
+  background-size:20px 20px;
+  -webkit-mask-image:radial-gradient(circle at 50% 16%,#000 0%,rgba(0,0,0,.5) 38%,transparent 64%);
+  mask-image:radial-gradient(circle at 50% 16%,#000 0%,rgba(0,0,0,.5) 38%,transparent 64%)}
+/* cincin hentakan saat tab mendarat */
+.impact-ring{position:fixed;width:120px;height:120px;border-radius:50%;border:2px solid rgba(180,49,31,.55);
+  pointer-events:none;z-index:41;margin:-60px 0 0 -60px}
+/* ---------- panel penjelasan ---------- */
+.sheet{
+  position:fixed;top:0;right:0;left:auto;height:100dvh;width:min(430px,94vw);max-width:none;max-height:none;
+  margin:0;padding:0;border:none;background:var(--card);color:var(--ink);
+  box-shadow:-40px 0 70px -46px rgba(30,20,8,.95);
+  animation:slidein .28s cubic-bezier(.22,1,.36,1);
+}
+.sheet::backdrop{background:rgba(30,20,8,.45)}
+.sheet[open]{display:block}
+@keyframes slidein{from{transform:translateX(24px);opacity:0}to{transform:none;opacity:1}}
+
+.sheet-in{height:100%;overflow-y:auto;display:flex;flex-direction:column;
+  padding:26px 24px calc(30px + env(safe-area-inset-bottom))}
+.sheet .top{display:flex;justify-content:space-between;align-items:flex-start;gap:12px}
+.sheet .k{font-size:9.5px;letter-spacing:.18em;text-transform:uppercase;color:var(--red)}
+.sheet h2{font-family:var(--fd);font-weight:800;font-size:clamp(24px,3.4vw,30px);letter-spacing:-.02em;
+  line-height:1.05;margin:8px 0 0}
+.sheet .x{flex:none;width:38px;height:38px;border:1px solid var(--line);background:transparent;border-radius:50%;
+  color:var(--soft);font-size:18px;line-height:1;cursor:pointer}
+.sheet .x:hover{background:#F3E9D2;color:var(--ink)}
+.sheet .lede{font-family:var(--fd);font-size:15.5px;line-height:1.6;color:var(--soft);margin:16px 0 0}
+.sheet dl{margin:20px 0 0;border-top:1px solid var(--line)}
+.sheet dl > div{display:grid;grid-template-columns:96px 1fr;gap:12px;padding:12px 0;border-bottom:1px solid var(--line)}
+.sheet dt{font-family:var(--fm);font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:var(--faint);padding-top:3px}
+.sheet dd{margin:0;font-family:var(--fd);font-size:13.5px;line-height:1.55;color:var(--ink)}
+.sheet .aksi{margin-top:auto;padding-top:22px;display:flex;flex-direction:column;gap:10px}
+.sheet .aksi a,.sheet .aksi button{
+  min-height:44px;display:inline-flex;align-items:center;justify-content:center;border-radius:2px;
+  font-family:var(--fm);font-size:10px;letter-spacing:.16em;text-transform:uppercase;text-decoration:none;cursor:pointer}
+.sheet .aksi a{background:var(--red);color:#FBF6E7;border:none}
+.sheet .aksi button{background:transparent;color:var(--soft);border:1px solid var(--line)}
+
+@media(max-width:560px){
+  .peek{top:auto;bottom:92px;transform:none;padding:13px 8px;font-size:9px}
+  .pk-bar{display:none}
+  .peek:hover{transform:translateX(-3px)}
+  .peek.intro{animation:peekInSm 3.4s cubic-bezier(.22,1,.36,1) .8s both}
+  @keyframes peekInSm{
+    0%{transform:translate(0,0) scaleX(.04);opacity:0}
+    6%{opacity:1;transform:translate(0,0) scaleX(.12)}
+    20%{transform:translate(-12px,0) scaleX(1) rotate(-2.6deg);box-shadow:-22px 14px 30px -16px rgba(40,26,8,1)}
+    32%{transform:translate(-9px,0) rotate(-2deg)}
+    48%{transform:translate(-11px,0) rotate(-2.4deg)}
+    64%{transform:translate(-7px,0) rotate(-1.1deg)}
+    76%{transform:translate(-8px,0) rotate(-.4deg)}
+    86%{transform:translate(-2px,0) rotate(.2deg)}
+    100%{transform:translate(0,0) rotate(0)}
+  }
+  .sheet{top:auto;bottom:0;right:0;left:0;width:100%;height:auto;max-height:88dvh;
+    border-radius:10px 10px 0 0;animation:slideup .3s cubic-bezier(.22,1,.36,1)}
+  @keyframes slideup{from{transform:translateY(30px);opacity:0}to{transform:none;opacity:1}}
+  .sheet dl > div{grid-template-columns:84px 1fr}
+}
+
+@media(max-width:940px){
+  .howto-steps{grid-template-columns:1fr;gap:12px}
+  .howto-steps li{grid-template-columns:24px 1fr}
+}
+@media(max-width:560px){
+  .howto-head{flex-direction:column;align-items:flex-start;gap:4px}
+  .howto-head .k{white-space:nowrap}
+  .mast{flex-direction:column;align-items:flex-start;gap:6px}
+  .mast .issue{text-align:left}
+  .foot{grid-template-columns:1fr}
+  .meta-row{flex-direction:column;gap:4px}
+  .meta-row .right{gap:10px;flex-wrap:wrap}
+  .nav .navcta{padding:0 12px;font-size:9px}
+  .hide-sm{display:none}
+}
 /* ---- intro penyusunan halaman ---- */
 /* saat intro: blok disembunyikan dulu, lalu dicetak baris demi baris */
 @media(min-width:761px){
@@ -683,28 +779,30 @@ html.intro-run body{animation:gridSettle 2.2s cubic-bezier(.55,0,.35,1) both}
     }
 
     function play() {
-      // Halaman "dicetak" baris demi baris dari kiri ke kanan, mengikuti urutan baca.
       var small = window.matchMedia('(max-width: 760px)').matches;
-      var step = small ? 32 : 55;
-      var dur = small ? 360 : 420;
-      var ease = small ? 'cubic-bezier(.25,.8,.3,1)' : 'cubic-bezier(.3,.7,.3,1)';
+      var wrap = document.querySelector('.wrap');
+      var spring = 'cubic-bezier(.16,1.02,.3,1)';
+      var step = small ? 46 : 58;
+      var dur = small ? 620 : 700;
 
-      function wipe(el, delay) {
-        if (!el) return;
-        if (small) {
-          // layar sempit: teks tidak dipotong (kata bisa terbelah), cukup pudar sambil naik
-          el.animate([
-            { opacity: 0, transform: 'translateY(10px)' },
-            { opacity: 1, transform: 'translateY(0)' }
-          ], { duration: dur, delay: delay, easing: ease, fill: 'both' });
-        } else {
-          el.animate([
-            { clipPath: 'inset(0 100% 0 0)', opacity: .35 },
-            { clipPath: 'inset(0 0 0 0)', opacity: 1 }
-          ], { duration: dur, delay: delay, easing: ease, fill: 'both' });
-        }
-      }
+      // 1 — kamera: halaman sedikit menunduk lalu tegak (bukan fade)
+      wrap.animate([
+        { transform: 'perspective(1400px) rotateX(4.6deg) translateY(26px) scale(.972)' },
+        { transform: 'none' }
+      ], { duration: 1150, easing: 'cubic-bezier(.16,1,.3,1)', fill: 'both' });
 
+      // 2 — riak titik menyebar dari tengah atas
+      var ripple = document.createElement('div');
+      ripple.className = 'dot-ripple';
+      document.body.appendChild(ripple);
+      ripple.animate([
+        { transform: 'scale(.5)', opacity: .6 },
+        { transform: 'scale(1.35)', opacity: .22, offset: .62 },
+        { transform: 'scale(1.95)', opacity: 0 }
+      ], { duration: 1500, easing: 'cubic-bezier(.2,.7,.3,1)', fill: 'both' })
+        .onfinish = function () { ripple.remove(); };
+
+      // 3 — gelombang blok: datang dengan bobot, mendarat, memantul sedikit
       var order = [
         '.meta-row', '.mast', '.nav',
         '.lead .kick', '.lead h2', '.quickline',
@@ -714,32 +812,55 @@ html.intro-run body{animation:gridSettle 2.2s cubic-bezier(.55,0,.35,1) both}
         '.main', '.main .ruang', '.main .indeks', '.indeks li'
       ];
 
-      var t = 0;
+      var i = 0;
       order.forEach(function (sel) {
         qs(sel).forEach(function (el) {
-          wipe(el, t);
-          t += step;
+          var d = 60 + i * step;
+          el.animate([
+            { opacity: 0, transform: 'translateY(' + (small ? 26 : 36) + 'px) rotate(' + (i % 2 ? .5 : -.5) + 'deg) scale(.978)', filter: 'blur(4px)' },
+            { opacity: .85, transform: 'translateY(-8px) rotate(0deg) scale(1.004)', filter: 'blur(0px)', offset: .72 },
+            { opacity: 1, transform: 'none', filter: 'blur(0px)' }
+          ], { duration: dur, delay: d, easing: spring, fill: 'both' });
+          i++;
         });
       });
 
-      // angka menghitung saat barisnya selesai dicetak
-      qs('.fig b').forEach(function (el, i) {
-        window.setTimeout(function () { count(el); }, 620 + i * 70);
+      var waveEnd = 60 + i * step + dur;
+
+      // angka mulai saat kartunya mendarat
+      qs('.fig b').forEach(function (el, k) {
+        window.setTimeout(function () { count(el); }, Math.min(waveEnd - 260, 900) + k * 70);
       });
 
-      var tail = t + dur;
-
-      // tab: menyelip setelah halaman selesai tercetak, lalu cap
+      // 4 — tab: jatuh dari atas, menghantam tepi, memantul
       var tab = document.getElementById('peekBtn');
       if (tab) {
-        var tabFrom = small
-          ? [{ opacity: 0, transform: 'translateY(46px)' },
-             { opacity: 1, transform: 'translateY(-6px)', offset: .74 },
-             { opacity: 1, transform: 'translateY(0)' }]
-          : [{ opacity: 0, transform: 'translateX(108%) rotate(-3deg)' },
-             { opacity: 1, transform: 'translateX(-12px) rotate(-1.4deg)', offset: .74 },
-             { opacity: 1, transform: 'translateX(0) rotate(0deg)' }];
-        tab.animate(tabFrom, { duration: 520, delay: tail - 140, easing: 'cubic-bezier(.3,.9,.3,1)', fill: 'both' });
+        var t0 = waveEnd - 120;
+        tab.animate([
+          { opacity: 0, transform: 'translateY(-84px) rotate(-10deg) scale(1.03)' },
+          { opacity: 1, offset: .10 },
+          { opacity: 1, transform: 'translateY(7px) rotate(1.6deg) scale(.97)', offset: .66 },
+          { opacity: 1, transform: 'translateY(-3px) rotate(-.8deg) scale(1.01)', offset: .84 },
+          { opacity: 1, transform: 'none' }
+        ], { duration: 660, delay: t0, easing: 'cubic-bezier(.35,.85,.3,1)', fill: 'both' });
+
+        // jolt halaman + cincin hentakan
+        var impact = t0 + 430;
+        wrap.animate([
+          { transform: 'none' }, { transform: 'translateY(2px)', offset: .4 }, { transform: 'none' }
+        ], { duration: 200, delay: impact, easing: 'ease-out' });
+
+        var ring = document.createElement('div');
+        ring.className = 'impact-ring';
+        var r = tab.getBoundingClientRect();
+        ring.style.left = (r.left + r.width / 2) + 'px';
+        ring.style.top = (r.top + r.height / 2) + 'px';
+        document.body.appendChild(ring);
+        ring.animate([
+          { transform: 'scale(.25)', opacity: .7 },
+          { transform: 'scale(1.9)', opacity: 0 }
+        ], { duration: 620, delay: impact, easing: 'cubic-bezier(.2,.7,.3,1)', fill: 'both' })
+          .onfinish = function () { ring.remove(); };
 
         var seal = tab.querySelector('.pk-seal');
         if (seal) {
@@ -748,11 +869,11 @@ html.intro-run body{animation:gridSettle 2.2s cubic-bezier(.55,0,.35,1) both}
             { opacity: 1, transform: 'scale(1.18) rotate(4deg)', offset: .55 },
             { opacity: 1, transform: 'scale(.96) rotate(-8deg)', offset: .78 },
             { opacity: 1, transform: 'scale(1) rotate(-6deg)' }
-          ], { duration: 520, delay: tail + 240, easing: 'cubic-bezier(.22,1,.36,1)', fill: 'both' });
+          ], { duration: 520, delay: impact + 150, easing: 'cubic-bezier(.22,1,.36,1)', fill: 'both' });
         }
       }
 
-      window.setTimeout(function () { root.classList.remove('intro-run'); }, 2600);
+      window.setTimeout(function () { root.classList.remove('intro-run'); }, 3800);
     }
 
     if (document.readyState === 'complete') play();
