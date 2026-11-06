@@ -48,6 +48,13 @@ button:active{transform:translateY(1px)}
 .note b{color:var(--ink)}
 
 .w{display:inline-block;will-change:transform,opacity}
+
+.w,.ch{display:inline-block;will-change:transform,opacity}
+.ruleline{position:absolute;left:0;right:0;height:1px;background:var(--line);transform-origin:left center;z-index:3}
+.sheet{overflow:visible}
+.quickbar{position:absolute;left:0;top:2px;bottom:2px;width:2px;background:var(--red);transform-origin:top center}
+.quick{position:relative;border-left:0;padding-left:10px}
+@media(prefers-reduced-motion:reduce){.w,.ch{opacity:1!important;transform:none!important}}
 </style>
 </head>
 <body>
@@ -76,14 +83,17 @@ button:active{transform:translateY(1px)}
 
 <div class="bar">
   <button id="replay">Ulangi</button>
-  <span style="font-size:10px;color:#6E5F45">1.100 ms · 17 ms per kata · transform+opacity</span>
+  <span style="font-size:10px;color:#6E5F45">±4,1 detik · empat jenis gerak · transform+opacity</span>
 </div>
-<div class="note"><b>Mekanisme:</b> hanya tipografi yang bergerak. Tiap kata datang dari bawah 9 px dengan kemiringan kecil, mendarat, lalu lurus — seperti huruf dipasang di jalurnya. Kotak, garis, dan angka tidak beranimasi. <b>Biaya:</b> sedang — ±70 elemen, tapi hanya transform+opacity.</div>
+<div class="note"><b>Mekanisme:</b> empat jenis benda dipasang dengan cara berbeda, berurutan mengikuti halaman. <b>(1)</b> Dua garis nav menggambar dari kiri. <b>(2)</b> Huruf THARRA dijatuhkan satu per satu seperti logam, 76 ms jarak. <b>(3)</b> Tag, nav, dan label merah masuk dari kiri dengan rapat. <b>(4)</b> Judul datang lebih lambat (88 ms per kata) dengan kemiringan. <b>(5)</b> Bar merah catatan tumbuh ke bawah, lalu kata-katanya menyusul. <b>(6)</b> Paragraf menyala per kata, berhenti 115 ms tiap ganti baris. <b>(7)</b> Sel angka turun terakhir, angkanya menghitung. Total ±4,1 detik. <b>Biaya:</b> 86 animasi, semuanya transform+opacity.</div>
 <script>
+(function(){
+const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+const sheet = document.getElementById('sheet');
 
-function wrapWords(el){
-  const nodes=[...el.childNodes];
-  nodes.forEach(node=>{
+/* --- pemecah teks: kata & huruf --- */
+function splitWords(el){
+  [...el.childNodes].forEach(node=>{
     if(node.nodeType===3){
       const parts=node.textContent.split(/(\s+)/);
       const frag=document.createDocumentFragment();
@@ -93,31 +103,150 @@ function wrapWords(el){
         frag.appendChild(s);
       });
       el.replaceChild(frag,node);
-    } else if(node.nodeType===1 && !node.classList.contains('cap')){
-      wrapWords(node);
+    } else if(node.nodeType===1 && node.tagName!=='BR'){
+      splitWords(node);
     }
   });
 }
-[document.querySelector('.kick'), document.querySelector('.hero h2'), document.querySelector('.quick'),
- ...document.querySelectorAll('p[data-type]'), ...document.querySelectorAll('.stats div')]
-  .forEach(el=>{ if(el) wrapWords(el); });
+function splitChars(el){
+  const txt=el.textContent; el.textContent='';
+  [...txt].forEach(c=>{
+    if(c===' '){ el.appendChild(document.createTextNode(' ')); return; }
+    const s=document.createElement('span'); s.className='ch'; s.textContent=c;
+    el.appendChild(s);
+  });
+}
 
-const words=[...document.querySelectorAll('.w')];
+const h1=document.querySelector('.mast h1');
+const kick=document.querySelector('.kick');
+const h2=document.querySelector('.hero h2');
+const tag=document.querySelector('.mast .tag');
+const navs=[...document.querySelectorAll('nav span')];
+const quick=document.querySelector('.quick');
+const ps=[...document.querySelectorAll('p[data-type]')];
+const stats=[...document.querySelectorAll('.stats div')];
+
+splitChars(h1); splitChars(kick); splitWords(h2); splitWords(tag); splitWords(quick);
+navs.forEach(splitWords); ps.forEach(splitWords); stats.forEach(splitWords);
+
+/* --- garis yang menggambar sendiri --- */
+function line(top){
+  const d=document.createElement('div'); d.className='ruleline'; d.style.top=top+'px';
+  sheet.appendChild(d); return d;
+}
+const navEl=document.querySelector('nav');
+const navTop=navEl.offsetTop, navBottom=navTop+navEl.offsetHeight;
+const lineA=line(navTop), lineB=line(navBottom);
+
+/* --- bar merah di catatan cara pakai --- */
+const qbar=document.createElement('i'); qbar.className='quickbar'; quick.appendChild(qbar);
+
+/* --- jadwal: tiap jenis punya perilaku sendiri --- */
+const Q=[];
+let t=340;
+function add(el, o){ Q.push(Object.assign({el:el, delay:t}, o)); }
+function step(gap){ t+=gap; }
+function linePause(){ t+=115; }
+
+/* garis */
+add(lineA,{kind:'draw',dur:280}); step(70);
+add(lineB,{kind:'draw',dur:280}); step(300);
+
+/* masthead: huruf dijatuhkan seperti logam, satu per satu */
+document.querySelectorAll('.mast h1 .ch').forEach(c=>{ add(c,{kind:'type',dur:290}); step(76); });
+step(200);
+
+/* tag kanan: kata naik pelan */
+document.querySelectorAll('.mast .tag .w').forEach(w=>{ add(w,{kind:'rise',dur:200}); step(50); });
+step(110);
+
+/* nav: masuk dari kiri, cepat */
+navs.forEach(n=>{ n.querySelectorAll('.w').forEach(w=>{ add(w,{kind:'slideL',dur:200}); step(42); }); });
+step(240);
+
+/* label merah: huruf merapat ke tempatnya */
+document.querySelectorAll('.kick .ch').forEach(c=>{ add(c,{kind:'kern',dur:220}); step(15); });
+step(220);
+
+/* judul: paling lambat, ada jeda antar frasa */
+document.querySelectorAll('.hero h2 .w').forEach(w=>{ add(w,{kind:'title',dur:380}); step(88); });
+step(360);
+
+/* catatan cara pakai */
+add(qbar,{kind:'growY',dur:240}); step(120);
+quick.querySelectorAll('.w').forEach(w=>{ add(w,{kind:'rise',dur:200}); step(30); });
+step(220);
+
+/* paragraf: lebih cepat, tapi berhenti tiap ganti baris */
+ps.forEach((p,pi)=>{
+  const ws=[...p.querySelectorAll('.w')];
+  let lastTop=null;
+  ws.forEach(w=>{
+    const top=w.offsetTop;
+    if(lastTop!==null && top>lastTop+4) linePause();
+    lastTop=top;
+    add(w,{kind:'rise',dur:190}); step(26);
+  });
+  if(pi<ps.length-1) linePause();
+});
+step(320);
+
+/* angka: sel turun, angkanya menyusul */
+stats.forEach(s=>{
+  add(s,{kind:'cell',dur:250}); step(72);
+});
+/* rapatkan seluruh jadwal supaya total ±3,6 detik tanpa mengubah ritme relatif */
+const TARGET=3600;
+const k=Math.min(1, TARGET/t);
+Q.forEach(q=>{ q.delay=Math.round(q.delay*k); });
+t=Math.round(t*k);
+
+function count(el){
+  const raw=el.textContent.trim();
+  const num=parseInt(raw.replace(/[^0-9]/g,''),10);
+  if(!num) return;
+  const suf=raw.replace(/[0-9]/g,'');
+  const dur=520, t0=performance.now();
+  el.textContent='0'+suf;
+  (function s(now){
+    const p=Math.min(1,(now-t0)/dur);
+    el.textContent=Math.round(num*(1-Math.pow(1-p,3)))+suf;
+    if(p<1) requestAnimationFrame(s);
+  })(performance.now());
+}
+
+const KF={
+  type:  e=>[{opacity:0,transform:'translateY(-26px) rotate(3deg)'},{opacity:1,transform:'translateY(2px) rotate(-.6deg)',offset:.72},{opacity:1,transform:'translateY(0) rotate(0deg)'}],
+  kern:  e=>[{opacity:0,transform:'translateX(-9px)'},{opacity:1,transform:'translateX(0)'}],
+  rise:  e=>[{opacity:0,transform:'translateY(9px)'},{opacity:1,transform:'translateY(0)'}],
+  slideL:e=>[{opacity:0,transform:'translateX(-10px)'},{opacity:1,transform:'translateX(0)'}],
+  title: e=>[{opacity:0,transform:'translateY(12px) rotate(1deg)'},{opacity:1,transform:'translateY(-1px) rotate(-.2deg)',offset:.7},{opacity:1,transform:'translateY(0) rotate(0)'}],
+  cell:  e=>[{opacity:0,transform:'translateY(-14px)'},{opacity:1,transform:'translateY(2px)',offset:.7},{opacity:1,transform:'translateY(0)'}],
+  draw:  e=>[{transform:'scaleX(0)',opacity:1},{transform:'scaleX(1)',opacity:1}],
+  growY: e=>[{transform:'scaleY(0)'},{transform:'scaleY(1)'}]
+};
+const EASE={type:'cubic-bezier(.3,1.25,.4,1)', kern:'cubic-bezier(.25,1,.4,1)', rise:'cubic-bezier(.25,1,.4,1)',
+  slideL:'cubic-bezier(.25,1,.4,1)', title:'cubic-bezier(.3,1.2,.4,1)', cell:'cubic-bezier(.3,1.25,.4,1)',
+  draw:'cubic-bezier(.55,0,.35,1)', growY:'cubic-bezier(.55,0,.35,1)'};
+
 let anims=[];
 function play(){
   anims.forEach(a=>a.cancel()); anims=[];
-  words.forEach((w,i)=>{
-    anims.push(w.animate([
-      {opacity:0, transform:'translateY(9px) rotate(1.4deg)'},
-      {opacity:1, transform:'translateY(-1px) rotate(-.2deg)', offset:.7},
-      {opacity:1, transform:'translateY(0) rotate(0deg)'}
-    ], {duration:260, delay:i*17, easing:'cubic-bezier(.25,1.1,.4,1)', fill:'both'}));
+  if(reduce){ anims=[]; return; }
+  Q.forEach(item=>{
+    const kf=KF[item.kind](item.el);
+    anims.push(item.el.animate(kf,{duration:item.dur,delay:item.delay,easing:EASE[item.kind],fill:'both'}));
   });
+  stats.forEach((s,i)=>{
+    const b=s.querySelector('b');
+    window.setTimeout(()=>count(b), Q[Q.length-stats.length+i].delay+180);
+  });
+  window.__total=t+520;
   window.__anims=anims;
 }
 document.getElementById('replay').onclick=play;
 if(document.fonts&&document.fonts.ready){document.fonts.ready.then(play);}else{play();}
-
+})();
 </script>
 </body>
 </html>
