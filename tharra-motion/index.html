@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="id"><head><meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Referensi motion "menyusun" — Tharra</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..900;1,9..144,300..900&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{--paper:#F6F0DF;--card:#FFFCF3;--ink:#211B13;--soft:#574B39;--line:#D5C4A2;--red:#B4311F;
+  --fd:"Fraunces",Georgia,serif;--fm:"IBM Plex Mono",monospace}
+*{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--fm);
+  background-image:radial-gradient(rgba(60,44,18,.16) 1px,transparent 1.1px);background-size:22px 22px;
+  padding:34px 18px 60px}
+.wrap{max-width:640px;margin:0 auto}
+.meta{font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:#6E5F45;display:flex;justify-content:space-between}
+h1{font-family:var(--fd);font-size:34px;font-weight:600;letter-spacing:-.02em;margin:12px 0 6px;line-height:1.05}
+h1 em{color:var(--red);font-style:italic}
+p.lead{font-family:var(--fd);font-size:15px;line-height:1.6;color:#3A3123;max-width:52ch}
+ol{list-style:none;padding:0;margin:26px 0 0;border-top:1px solid var(--ink)}
+li{border-bottom:1px solid var(--line)}
+a{display:grid;grid-template-columns:34px 1fr auto;gap:12px;align-items:baseline;
+  padding:15px 2px;text-decoration:none;color:inherit}
+a:hover{background:#FFF9E9}
+a .n{font-size:11px;color:var(--red);letter-spacing:.1em}
+a .t{font-family:var(--fd);font-size:19px}
+a .t small{display:block;font-family:var(--fm);font-size:10.5px;color:#6E5F45;margin-top:3px;line-height:1.5;letter-spacing:0}
+a .c{font-size:9.5px;letter-spacing:.12em;text-transform:uppercase;color:#6E5F45;white-space:nowrap}
+.foot{margin-top:26px;font-size:10.5px;color:#5B4E38;line-height:1.7;border-top:1px solid var(--line);padding-top:12px}
+</style></head>
+<body><div class="wrap">
+<div class="meta"><span>Tharra · Referensi</span><span>Lima mekanisme</span></div>
+<h1>Bagaimana halaman <em>disusun</em>.</h1>
+<p class="lead">Lima cara berbeda untuk memasukkan isi halaman, semuanya memakai tema yang sama. Tiap halaman bisa diulang dengan tombol “Ulangi” di bawahnya.</p>
+<ol>
+<li><a href="1-kepala-cetak.html"><span class="n">01</span><span class="t">Kepala cetak<small>Penutup kertas turun; isi cuma tersingkap. Paling ringan.</small></span><span class="c">900 ms</span></a></li>
+<li><a href="2-lembar-dilipat.html"><span class="n">02</span><span class="t">Lembar dilipat<small>Tiga lipatan berputar terbuka berurutan.</small></span><span class="c">1.200 ms</span></a></li>
+<li><a href="3-tinta-meresap.html"><span class="n">03</span><span class="t">Tinta meresap<small>Noda tinta menyebar dari kepala; urutan ikut jarak.</small></span><span class="c">1.500 ms</span></a></li>
+<li><a href="4-meja-susun.html"><span class="n">04</span><span class="t">Meja susun<small>Blok dijatuhkan satu per satu, garis bantu menggambar.</small></span><span class="c">1.600 ms</span></a></li>
+<li><a href="5-huruf-dipasang.html"><span class="n">05</span><span class="t">Huruf dipasang<small>Hanya kata yang bergerak, di luar kotaknya tetap diam.</small></span><span class="c">1.100 ms</span></a></li>
+</ol>
+<div class="foot">Catatan: kelima halaman ini hanya memperagakan gerak, bukan tata letak final. Setelah satu dipilih, saya tulis ulang intro beranda majalah memakai mekanisme itu — bukan tambal-sulam.</div>
+</div></body></html>

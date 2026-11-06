@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tinta meresap — Referensi motion Tharra</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..900;1,9..144,300..900&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{--paper:#F6F0DF;--card:#FFFCF3;--ink:#211B13;--soft:#574B39;--line:#D5C4A2;
+  --red:#B4311F;--fd:"Fraunces",Georgia,serif;--fm:"IBM Plex Mono",ui-monospace,monospace}
+*{box-sizing:border-box}
+body{margin:0;min-height:100vh;background:var(--paper);color:var(--ink);font-family:var(--fm);
+  background-image:radial-gradient(rgba(60,44,18,.16) 1px,transparent 1.1px);background-size:22px 22px;
+  padding:22px 16px 40px;display:flex;flex-direction:column;align-items:center;gap:14px}
+.top{width:100%;max-width:600px;display:flex;justify-content:space-between;align-items:baseline;gap:12px;
+  font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--faint,#6E5F45)}
+.top b{color:var(--red);letter-spacing:.18em}
+.stage{width:100%;max-width:600px;perspective:1000px}
+.sheet{position:relative;background:var(--card);border:1px solid var(--line);padding:22px 20px 20px;
+  box-shadow:0 22px 44px -34px rgba(40,26,8,.75);overflow:hidden}
+.meta{display:flex;justify-content:space-between;font-size:8.5px;letter-spacing:.14em;color:#6E5F45;text-transform:uppercase}
+.mast{display:flex;align-items:flex-end;justify-content:space-between;gap:10px;margin:10px 0 4px}
+.mast h1{margin:0;font-family:var(--fd);font-weight:600;font-size:38px;line-height:.86;letter-spacing:-.03em}
+.mast h1 .dot{color:var(--red)}
+.mast .tag{font-size:8.5px;letter-spacing:.18em;color:#6E5F45;text-align:right;line-height:1.5}
+nav{display:flex;gap:14px;font-size:9px;letter-spacing:.14em;border-top:1px solid var(--line);
+  border-bottom:1px solid var(--line);padding:7px 0;margin:10px 0 16px;color:var(--soft)}
+nav .on{color:var(--red);border-bottom:1px solid var(--red)}
+.kick{font-size:9px;letter-spacing:.2em;color:var(--red);text-transform:uppercase;margin-bottom:8px}
+.hero h2{margin:0 0 10px;font-family:var(--fd);font-weight:600;font-size:27px;line-height:1.08;letter-spacing:-.02em}
+.hero h2 em{font-style:italic;color:var(--red)}
+.quick{border-left:2px solid var(--red);padding-left:8px;font-size:10px;line-height:1.5;color:var(--soft);margin-bottom:14px}
+p{margin:0 0 10px;font-family:var(--fd);font-size:14px;line-height:1.6;color:#2B2418}
+p .cap{float:left;font-size:34px;line-height:.86;color:var(--red);margin:2px 6px 0 0}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);border-top:1px solid var(--line);margin-top:14px;padding-top:10px}
+.stats div{font-size:9px;color:#6E5F45;border-right:1px solid var(--line);padding-right:6px}
+.stats div:last-child{border:0}
+.stats b{display:block;font-family:var(--fd);font-size:19px;color:var(--ink);font-weight:600;margin-bottom:2px}
+.bar{display:flex;gap:10px;align-items:center;width:100%;max-width:600px}
+button{font-family:var(--fm);font-size:10px;letter-spacing:.14em;text-transform:uppercase;padding:9px 14px;
+  background:var(--ink);color:var(--paper);border:0;cursor:pointer}
+button.ghost{background:transparent;color:var(--ink);border:1px solid var(--line)}
+button:active{transform:translateY(1px)}
+.note{width:100%;max-width:600px;font-size:10.5px;line-height:1.6;color:#5B4E38;
+  border-top:1px solid var(--line);padding-top:10px}
+.note b{color:var(--ink)}
+
+@property --p{syntax:'<number>';inherits:false;initial-value:0}
+.sheet{
+  -webkit-mask-image:radial-gradient(circle at 50% 4%, #000 calc(var(--p) * 1%), rgba(0,0,0,.75) calc(var(--p) * 1% + 8%), transparent calc(var(--p) * 1% + 19%));
+  mask-image:radial-gradient(circle at 50% 4%, #000 calc(var(--p) * 1%), rgba(0,0,0,.75) calc(var(--p) * 1% + 8%), transparent calc(var(--p) * 1% + 19%));
+  will-change:mask-image;
+}
+</style>
+</head>
+<body>
+<div class="top"><span><b>03</b> · Tinta meresap</span><span>Referensi gerak</span></div>
+
+<div class="stage">
+  <div class="sheet" id="sheet">
+    <div class="meta"><span>OSIS HUMAS · SEKOLAH KITA</span><span>EDISI 07 · NOV 2026</span></div>
+    <div class="mast">
+      <h1>THARRA<span class="dot">.</span></h1>
+      <div class="tag">RUANG SISWA<br>Katakan &amp; Aksara</div>
+    </div>
+    <nav><span class="on">BERANDA</span><span>KATAKAN</span><span>AKSARA</span><span>LACAK</span></nav>
+    <section class="hero">
+      <div class="kick">Laporan utama</div>
+      <h2>Sebagian hal lebih mudah <em>ditulis</em> daripada diucapkan.</h2>
+      <div class="quick">Cara pakai: pilih ruang, tulis satu paragraf, simpan kode balasan.</div>
+      <p data-type><span class="cap">A</span>da yang tertahan karena takut menyakiti orang, hilang karena tak punya tempat, lalu berputar di kepala tanpa jejak.</p>
+      <p data-type>Halaman ini dibuat supaya hal itu tidak selalu begitu. Tidak perlu rapi, tidak perlu panjang.</p>
+    </section>
+    <div class="stats">
+      <div><b>128+</b>Aspirasi</div><div><b>92%</b>Dibalas</div><div><b>24</b>Surat</div><div><b>6</b>Hari</div>
+    </div>
+  </div>
+</div>
+
+<div class="bar">
+  <button id="replay">Ulangi</button>
+  <span style="font-size:10px;color:#6E5F45">1.500 ms · satu kali menyebar · mask</span>
+</div>
+<div class="note"><b>Mekanisme:</b> tidak ada yang masuk. Isi sudah di tempatnya, tapi belum terlihat; noda tinta menyebar dari kepala halaman ke bawah dengan tepi lembut, jadi urutan muncul mengikuti <b>jarak dari titik tumpah</b>, bukan urutan blok. <b>Biaya:</b> paling berat — mask di seluruh isi membuat repaint tiap frame. Di HP panjang bisa tersendat.</div>
+<script>
+
+const sheet=document.getElementById('sheet');
+let raf=null;
+function play(){
+  if(raf) cancelAnimationFrame(raf);
+  const t0=performance.now(), dur=1500;
+  function step(t){
+    const p=Math.min(1,(t-t0)/dur);
+    const eased=1-Math.pow(1-p,2.1);
+    sheet.style.setProperty('--p', (eased*185).toFixed(1));
+    if(p<1) raf=requestAnimationFrame(step);
+  }
+  sheet.style.setProperty('--p','0');
+  raf=requestAnimationFrame(step);
+}
+document.getElementById('replay').onclick=play;
+if(document.fonts&&document.fonts.ready){document.fonts.ready.then(play);}else{play();}
+
+</script>
+</body>
+</html>
