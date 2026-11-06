@@ -909,7 +909,10 @@ html.intro-run .peek{opacity:0}
       });
     }
 
-    window.setTimeout(cleanup, total + 140);
+    window.setTimeout(function () {
+      cleanup();
+      window.dispatchEvent(new Event('tharra-ready'));
+    }, total + 140);
     window.setTimeout(function () { root.classList.remove('intro-run'); }, total + 1600);
   })();
   </script>
@@ -1022,6 +1025,7 @@ html.intro-run .peek{opacity:0}
   }
 
   function check() {
+    if (document.documentElement.classList.contains('intro-run')) return;
     var vh = window.innerHeight || 800;
     secs.forEach(function (s) {
       if (s.dataset.done) return;
@@ -1037,6 +1041,7 @@ html.intro-run .peek{opacity:0}
     requestAnimationFrame(function () { ticking = false; check(); });
   }
 
+  window.addEventListener('tharra-ready', check);
   window.addEventListener('scroll', onScroll, { passive: true });
   window.addEventListener('resize', onScroll);
   window.addEventListener('load', check);
