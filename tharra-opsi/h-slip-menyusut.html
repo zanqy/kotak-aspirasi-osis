@@ -4,7 +4,7 @@
 <script>try{sessionStorage.setItem('tharra-typeset','1');sessionStorage.setItem('tharra-assemble','1');sessionStorage.setItem('tharra-peek','1')}catch(e){}</script>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Opsi H — strip menyusut jadi slip — Tharra</title>
+<title>Opsi H — slip menyusut (baris sendiri) — Tharra</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..900;1,9..144,300..900&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
@@ -460,31 +460,28 @@ html.intro-run .wrap > *{opacity:0}
 @media(prefers-reduced-motion:reduce){html.intro-run .wrap > *{opacity:1}}
 html.intro-run .peek{opacity:0}
 
-/* OPSI H — strip lebar yang menyusut jadi slip */
-.mast{position:relative}
-.slipabout{position:absolute;right:0;bottom:-40px;display:inline-flex;align-items:center;gap:9px;
-  background:var(--card);border:1px solid var(--line);padding:8px 11px;white-space:nowrap;overflow:hidden;
+/* OPSI H2 — slip punya barisnya sendiri, tidak menimpa apa pun */
+.sliprow{display:flex;justify-content:flex-end;align-items:center;height:46px;margin:6px 0 16px}
+.slipabout{display:inline-flex;align-items:center;gap:9px;background:var(--card);border:1px solid var(--line);
+  padding:8px 11px;white-space:nowrap;overflow:hidden;width:100%;
   box-shadow:3px 7px 16px -12px rgba(40,26,8,.9);font-family:var(--fm);font-size:8.5px;letter-spacing:.15em;
-  text-transform:uppercase;color:var(--soft);cursor:pointer;text-decoration:none;z-index:6;max-width:100%}
+  text-transform:uppercase;color:var(--soft);cursor:pointer;text-decoration:none;position:relative;z-index:2}
 .slipabout .q{display:grid;place-items:center;width:18px;height:18px;border:1px solid var(--red);border-radius:50%;
   color:var(--red);font-size:9px;letter-spacing:0;flex:0 0 auto}
 .slipabout b{color:var(--red);font-weight:400}
-.slipabout .long{display:inline}
 .slipabout .short{display:none}
 .slipabout::before{content:"";position:absolute;left:0;top:0;bottom:0;width:2px;background:var(--red);opacity:.55}
 .slipabout::after{content:"";position:absolute;left:6px;right:6px;top:-1px;height:1px;
   background:repeating-linear-gradient(90deg,rgba(180,49,31,.45) 0 4px,transparent 4px 8px)}
-.slipabout:hover{border-color:#C9B48D}
-/* keadaan akhir (setelah menyusut) */
-.slipabout.small{transform:rotate(-1.4deg)}
+.slipabout.small{width:auto;transform:rotate(-1.4deg)}
 .slipabout.small .long{display:none}
 .slipabout.small .short{display:inline}
-/* tombol ulang untuk halaman referensi */
+.slipabout:hover{border-color:#C9B48D}
 .replay{position:fixed;left:12px;bottom:14px;z-index:60;font-family:var(--fm);font-size:9px;letter-spacing:.14em;
   text-transform:uppercase;color:#6E5F45;background:rgba(255,252,243,.92);border:1px solid var(--line);
   padding:8px 10px;cursor:pointer;box-shadow:0 6px 14px -10px rgba(40,26,8,.6)}
 .replay:hover{color:var(--red);border-color:var(--red)}
-@media(max-width:560px){.slipabout{bottom:-36px;font-size:8px;padding:7px 9px}}
+@media(max-width:560px){.slipabout{font-size:8px;padding:7px 9px} .sliprow{height:44px;margin:6px 0 14px}}
 
 </style>
 <script>
@@ -510,11 +507,6 @@ html.intro-run .peek{opacity:0}
   <header class="mast">
     <h1>THARRA<i>.</i></h1>
     <div class="issue">Ruang siswa<b>Katakan &amp; Aksara</b></div>
-      <a class="slipabout" data-about href="#" aria-haspopup="dialog">
-        <span class="q" aria-hidden="true">?</span>
-        <span class="long">Baru di sini? Apa itu <b>Tharra</b> →</span>
-        <span class="short">Apa ini? <b>Tharra</b></span>
-      </a>
   </header>
 
   <div class="navwrap">
@@ -530,6 +522,14 @@ html.intro-run .peek{opacity:0}
     </div>
     <a class="navcta" href="../index.html">Tulis aspirasi</a>
   </nav>
+  </div>
+
+  <div class="sliprow">
+    <a class="slipabout" data-about href="#" aria-haspopup="dialog">
+      <span class="q" aria-hidden="true">?</span>
+      <span class="long">Baru di sini? Apa itu <b>Tharra</b> →</span>
+      <span class="short">Apa ini? <b>Tharra</b></span>
+    </a>
   </div>
 
   <section class="lead">
@@ -1089,41 +1089,19 @@ html.intro-run .peek{opacity:0}
   var el=document.querySelector('.slipabout'); if(!el) return;
   var reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
   var anims=[];
-
-  function finalState(){
-    el.classList.add('small');
-    el.style.width='auto';
-    el.style.transform='rotate(-1.4deg)';
-  }
   function run(){
     anims.forEach(function(a){a.cancel();}); anims=[];
-    el.classList.remove('small');
-    el.style.transform='none';
-    el.style.width='auto';
-    if(reduce){ finalState(); return; }
-
-    el.style.width='100%';
-
-    // 1. muncul sebagai strip
-    anims.push(el.animate([
-      {opacity:0, transform:'translateY(-8px)'},
-      {opacity:1, transform:'none'}
-    ], {duration:420, easing:'cubic-bezier(.25,1,.4,1)', fill:'both'}));
-
-    // 2. menyusut ditarik ke kanan
-    anims.push(el.animate([
-      {width:'100%', transform:'rotate(0deg)'},
-      {width:'138px', transform:'rotate(-1.4deg)'}
-    ], {duration:820, delay:1500, easing:'cubic-bezier(.6,0,.3,1)', fill:'both'}));
-
-    // 3. teks panjang hilang, label pendek muncul
-    var long=el.querySelector('.long'), short=el.querySelector('.short');
-    anims.push(long.animate([{opacity:1},{opacity:0}], {duration:260, delay:1820, easing:'linear', fill:'both'}));
-    anims.push(short.animate([{opacity:0},{opacity:1}], {duration:300, delay:2020, easing:'linear', fill:'both'}));
-
+    el.classList.remove('small'); el.style.transform='none'; el.style.width='100%';
+    if(reduce){ el.classList.add('small'); el.style.width='auto'; return; }
+    anims.push(el.animate([{opacity:0, transform:'translateY(-8px)'},{opacity:1, transform:'none'}],
+      {duration:420, easing:'cubic-bezier(.25,1,.4,1)', fill:'both'}));
+    anims.push(el.animate([{width:'100%', transform:'rotate(0deg)'},{width:'139px', transform:'rotate(-1.4deg)'}],
+      {duration:820, delay:1500, easing:'cubic-bezier(.6,0,.3,1)', fill:'both'}));
+    var l=el.querySelector('.long'), sh=el.querySelector('.short');
+    anims.push(l.animate([{opacity:1},{opacity:0}], {duration:260, delay:1820, easing:'linear', fill:'both'}));
+    anims.push(sh.animate([{opacity:0},{opacity:1}], {duration:300, delay:2020, easing:'linear', fill:'both'}));
     window.setTimeout(function(){ el.classList.add('small'); el.style.width='auto'; }, 2340);
   }
-
   if(document.fonts && document.fonts.ready){ document.fonts.ready.then(run); } else { run(); }
   document.getElementById('replayMotion').addEventListener('click', run);
 })();
