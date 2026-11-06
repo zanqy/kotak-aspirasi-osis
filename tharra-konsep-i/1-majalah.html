@@ -362,33 +362,11 @@ a{color:inherit}
   .nav .navcta{padding:0 12px;font-size:9px}
   .hide-sm{display:none}
 }
-/* ---- intro: motion pass (kamera, gelombang, cap) ---- */
-html.intro-run .meta-row,
-html.intro-run .mast,
-html.intro-run .nav,
-html.intro-run .lead > *,
-html.intro-run .dek .body p,
-html.intro-run .dek .side-note,
-html.intro-run .howto,
-html.intro-run .howto-steps li,
-html.intro-run .figures,
-html.intro-run .figures .fig,
-html.intro-run .main,
-html.intro-run .main .ruang,
-html.intro-run .main .indeks,
-html.intro-run .indeks li,
-html.intro-run .peek{opacity:0}
-
-/* riak titik: pola yang sama, tumbuh dari tengah atas lalu hilang */
-.wrap{position:relative;z-index:1}
-.dot-ripple{position:fixed;inset:-10%;z-index:0;pointer-events:none;
-  background-image:radial-gradient(rgba(60,44,18,.26) 1.3px,transparent 1.4px);
-  background-size:20px 20px;
-  -webkit-mask-image:radial-gradient(circle at 50% 16%,#000 0%,rgba(0,0,0,.5) 38%,transparent 64%);
-  mask-image:radial-gradient(circle at 50% 16%,#000 0%,rgba(0,0,0,.5) 38%,transparent 64%)}
+/* ---- intro: hanya transform + opacity, hanya yang terlihat ---- */
+html.intro-run .ir{opacity:0;will-change:transform,opacity}
 /* cincin hentakan saat tab mendarat */
-.impact-ring{position:fixed;width:120px;height:120px;border-radius:50%;border:2px solid rgba(180,49,31,.55);
-  pointer-events:none;z-index:41;margin:-60px 0 0 -60px}
+.impact-ring{position:fixed;width:96px;height:96px;border-radius:50%;border:1.5px solid rgba(180,49,31,.5);
+  pointer-events:none;z-index:41;margin:-48px 0 0 -48px;will-change:transform,opacity}
 /* ---------- panel penjelasan ---------- */
 .sheet{
   position:fixed;top:0;right:0;left:auto;height:100dvh;width:min(430px,94vw);max-width:none;max-height:none;
@@ -749,7 +727,7 @@ html.intro-run body{animation:gridSettle 2.2s cubic-bezier(.55,0,.35,1) both}
 
 
 <script>
-  /* Intro: halaman disusun bagian demi bagian, lalu tab menyempil di tepi. */
+  /* Intro: blok masuk bergelombang; hanya yang terlihat, hanya transform+opacity. */
   (function () {
     var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     var seen;
@@ -758,97 +736,70 @@ html.intro-run body{animation:gridSettle 2.2s cubic-bezier(.55,0,.35,1) both}
 
     var root = document.documentElement;
     root.classList.add('intro-run');
-    try { sessionStorage.setItem('tharra-assemble', '1'); } catch (e) {}
 
-    function qs(s) { return Array.prototype.slice.call(document.querySelectorAll(s)); }
+    var ORDER = ['.meta-row', '.mast', '.nav', '.lead .kick', '.lead h2', '.quickline',
+      '.dek .body p', '.dek .side-note', '.howto', '.howto-steps', '.figures', '.main'];
+
+    var all = [];
+    ORDER.forEach(function (sel) {
+      Array.prototype.forEach.call(document.querySelectorAll(sel), function (el) { all.push(el); });
+    });
+
+    // hanya yang ada di layar pertama; sisanya tidak disentuh sama sekali
+    var vh = window.innerHeight || 800;
+    var targets = all.filter(function (el) {
+      var r = el.getBoundingClientRect();
+      return r.top < vh * 0.92;
+    });
+    targets.forEach(function (el) { el.classList.add('ir'); });
+
+    try { sessionStorage.setItem('tharra-assemble', '1'); } catch (e) {}
 
     function count(el) {
       var raw = el.textContent.trim();
       var num = parseInt(raw.replace(/[^0-9]/g, ''), 10);
       if (!num) return;
       var suffix = raw.replace(/[0-9]/g, '');
-      var t0 = performance.now(), dur = 700;
-      function step(t) {
-        var p = Math.min(1, (t - t0) / dur);
-        var eased = 1 - Math.pow(1 - p, 3);
-        el.textContent = Math.round(num * eased) + suffix;
-        if (p < 1) requestAnimationFrame(step);
-      }
+      var t0 = performance.now(), dur = 600;
       el.textContent = '0' + suffix;
-      requestAnimationFrame(step);
+      (function step(t) {
+        var p = Math.min(1, (t - t0) / dur);
+        el.textContent = Math.round(num * (1 - Math.pow(1 - p, 3))) + suffix;
+        if (p < 1) requestAnimationFrame(step);
+      })(performance.now());
     }
 
     function play() {
-      var small = window.matchMedia('(max-width: 760px)').matches;
-      var wrap = document.querySelector('.wrap');
-      var spring = 'cubic-bezier(.16,1.02,.3,1)';
-      var step = small ? 46 : 58;
-      var dur = small ? 620 : 700;
+      window.__start = performance.now();
+      var small = window.innerWidth <= 760;
+      var stepMs = small ? 52 : 62;
+      var dur = small ? 460 : 520;
+      var n = targets.length;
 
-      // 1 — kamera: halaman sedikit menunduk lalu tegak (bukan fade)
-      wrap.animate([
-        { transform: 'perspective(1400px) rotateX(4.6deg) translateY(26px) scale(.972)' },
-        { transform: 'none' }
-      ], { duration: 1150, easing: 'cubic-bezier(.16,1,.3,1)', fill: 'both' });
-
-      // 2 — riak titik menyebar dari tengah atas
-      var ripple = document.createElement('div');
-      ripple.className = 'dot-ripple';
-      document.body.appendChild(ripple);
-      ripple.animate([
-        { transform: 'scale(.5)', opacity: .6 },
-        { transform: 'scale(1.35)', opacity: .22, offset: .62 },
-        { transform: 'scale(1.95)', opacity: 0 }
-      ], { duration: 1500, easing: 'cubic-bezier(.2,.7,.3,1)', fill: 'both' })
-        .onfinish = function () { ripple.remove(); };
-
-      // 3 — gelombang blok: datang dengan bobot, mendarat, memantul sedikit
-      var order = [
-        '.meta-row', '.mast', '.nav',
-        '.lead .kick', '.lead h2', '.quickline',
-        '.dek .body p', '.dek .side-note',
-        '.howto', '.howto-steps li',
-        '.figures', '.figures .fig',
-        '.main', '.main .ruang', '.main .indeks', '.indeks li'
-      ];
-
-      var i = 0;
-      order.forEach(function (sel) {
-        qs(sel).forEach(function (el) {
-          var d = 60 + i * step;
-          el.animate([
-            { opacity: 0, transform: 'translateY(' + (small ? 26 : 36) + 'px) rotate(' + (i % 2 ? .5 : -.5) + 'deg) scale(.978)', filter: 'blur(4px)' },
-            { opacity: .85, transform: 'translateY(-8px) rotate(0deg) scale(1.004)', filter: 'blur(0px)', offset: .72 },
-            { opacity: 1, transform: 'none', filter: 'blur(0px)' }
-          ], { duration: dur, delay: d, easing: spring, fill: 'both' });
-          i++;
-        });
+      targets.forEach(function (el, i) {
+        el.animate([
+          { opacity: 0, transform: 'translate3d(0,' + (small ? 14 : 20) + 'px,0)' },
+          { opacity: 1, transform: 'translate3d(0,-2px,0)', offset: .72 },
+          { opacity: 1, transform: 'translate3d(0,0,0)' }
+        ], { duration: dur, delay: 40 + i * stepMs, easing: 'cubic-bezier(.22,1,.36,1)', fill: 'both' });
       });
 
-      var waveEnd = 60 + i * step + dur;
+      var waveEnd = 40 + n * stepMs + dur;
 
-      // angka mulai saat kartunya mendarat
-      qs('.fig b').forEach(function (el, k) {
-        window.setTimeout(function () { count(el); }, Math.min(waveEnd - 260, 900) + k * 70);
+      var figs = document.querySelectorAll('.fig b');
+      Array.prototype.forEach.call(figs, function (el, k) {
+        window.setTimeout(function () { count(el); }, Math.max(200, waveEnd - 320) + k * 80);
       });
 
-      // 4 — tab: jatuh dari atas, menghantam tepi, memantul
       var tab = document.getElementById('peekBtn');
       if (tab) {
-        var t0 = waveEnd - 120;
+        var t0 = waveEnd - 80;
         tab.animate([
-          { opacity: 0, transform: 'translateY(-84px) rotate(-10deg) scale(1.03)' },
-          { opacity: 1, offset: .10 },
-          { opacity: 1, transform: 'translateY(7px) rotate(1.6deg) scale(.97)', offset: .66 },
-          { opacity: 1, transform: 'translateY(-3px) rotate(-.8deg) scale(1.01)', offset: .84 },
-          { opacity: 1, transform: 'none' }
-        ], { duration: 660, delay: t0, easing: 'cubic-bezier(.35,.85,.3,1)', fill: 'both' });
-
-        // jolt halaman + cincin hentakan
-        var impact = t0 + 430;
-        wrap.animate([
-          { transform: 'none' }, { transform: 'translateY(2px)', offset: .4 }, { transform: 'none' }
-        ], { duration: 200, delay: impact, easing: 'ease-out' });
+          { opacity: 0, transform: 'translateY(-56px) rotate(-7deg) scale(1.02)' },
+          { opacity: 1, offset: .12 },
+          { opacity: 1, transform: 'translateY(6px) rotate(1.2deg) scale(.98)', offset: .68 },
+          { opacity: 1, transform: 'translate3d(0,0,0)' }
+        ], { duration: 520, delay: t0, easing: 'cubic-bezier(.35,.85,.3,1)', fill: 'both' });
 
         var ring = document.createElement('div');
         ring.className = 'impact-ring';
@@ -856,31 +807,33 @@ html.intro-run body{animation:gridSettle 2.2s cubic-bezier(.55,0,.35,1) both}
         ring.style.left = (r.left + r.width / 2) + 'px';
         ring.style.top = (r.top + r.height / 2) + 'px';
         document.body.appendChild(ring);
-        ring.animate([
-          { transform: 'scale(.25)', opacity: .7 },
-          { transform: 'scale(1.9)', opacity: 0 }
-        ], { duration: 620, delay: impact, easing: 'cubic-bezier(.2,.7,.3,1)', fill: 'both' })
+        ring.animate([{ transform: 'scale(.3)', opacity: .65 }, { transform: 'scale(1.8)', opacity: 0 }],
+          { duration: 560, delay: t0 + 380, easing: 'cubic-bezier(.2,.7,.3,1)', fill: 'both' })
           .onfinish = function () { ring.remove(); };
 
         var seal = tab.querySelector('.pk-seal');
         if (seal) {
           seal.animate([
             { opacity: 0, transform: 'scale(.3) rotate(-18deg)' },
-            { opacity: 1, transform: 'scale(1.18) rotate(4deg)', offset: .55 },
-            { opacity: 1, transform: 'scale(.96) rotate(-8deg)', offset: .78 },
+            { opacity: 1, transform: 'scale(1.16) rotate(4deg)', offset: .55 },
             { opacity: 1, transform: 'scale(1) rotate(-6deg)' }
-          ], { duration: 520, delay: impact + 150, easing: 'cubic-bezier(.22,1,.36,1)', fill: 'both' });
+          ], { duration: 460, delay: t0 + 520, easing: 'cubic-bezier(.22,1,.36,1)', fill: 'both' });
         }
       }
 
-      window.setTimeout(function () { root.classList.remove('intro-run'); }, 3800);
+      window.setTimeout(function () {
+        root.classList.remove('intro-run');
+        targets.forEach(function (el) { el.classList.remove('ir'); el.style.willChange = ''; });
+      }, 3200);
     }
 
-    if (document.readyState === 'complete') play();
-    else window.addEventListener('load', play);
+    function startAfterPaint() {
+      requestAnimationFrame(function () { requestAnimationFrame(play); });
+    }
+    if (document.readyState === 'complete') startAfterPaint();
+    else window.addEventListener('load', startAfterPaint);
 
-    // jaring pengaman: kalau ada yang gagal, jangan biarkan halaman kosong
-    window.setTimeout(function () { root.classList.remove('intro-run'); }, 5000);
+    window.setTimeout(function () { root.classList.remove('intro-run'); }, 4000);
   })();
 </script>
 
