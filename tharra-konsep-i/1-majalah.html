@@ -452,10 +452,23 @@ html.intro-run .ts .w,html.intro-run .ts .ch{opacity:0}
 .wp{opacity:0}
 
 /* ---- intro: typesetting ---- */
+html.pond .wrap{opacity:0}
+html.pond .peek{opacity:0}
 html.intro-run .wrap > *{opacity:0}
 @media(prefers-reduced-motion:reduce){html.intro-run .wrap > *{opacity:1}}
 html.intro-run .peek{opacity:0}
 </style>
+<script>
+  /* Kunci tampilan sebelum body dilukis: kalau intro akan jalan, mulai dari kertas kosong. */
+  (function () {
+    try {
+      var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      if (reduce || sessionStorage.getItem('tharra-typeset')) return;
+      document.documentElement.classList.add('pond');
+      window.setTimeout(function () { document.documentElement.classList.remove('pond'); }, 7000);
+    } catch (e) {}
+  })();
+</script>
 </head>
 <body>
 <div class="wrap">
@@ -865,6 +878,7 @@ html.intro-run .peek{opacity:0}
     Q.forEach(function (q) {
       q.el.animate(KF[q.kind], { duration: q.dur, delay: q.delay, easing: EASE[q.kind], fill: 'both' });
     });
+    root.classList.remove('pond');
 
     var tab = document.getElementById('peekBtn');
     if (tab) {
@@ -879,10 +893,6 @@ html.intro-run .peek{opacity:0}
       root.classList.remove('intro-run');
       Array.prototype.forEach.call(document.querySelectorAll('.ts,.tsb'), function (el) {
         el.classList.remove('ts', 'tsb');
-        Array.prototype.forEach.call(el.querySelectorAll('.w,.ch'), function (sp) {
-          sp.replaceWith(document.createTextNode(sp.textContent));
-        });
-        el.normalize();
       });
     }
 
@@ -969,6 +979,7 @@ html.intro-run .peek{opacity:0}
     if (s.dataset.done) return;
     s.dataset.done = '1';
     s.classList.remove('wp');
+    s.animate([{ opacity: 0 }, { opacity: 1 }], { duration: 240, easing: 'linear', fill: 'both' });
 
     var t = 0;
     var heads = s.querySelectorAll('h2,h3');
@@ -994,27 +1005,29 @@ html.intro-run .peek{opacity:0}
       window.setTimeout(function () { count(b); }, Math.min(t, 700) + i * 90);
     });
 
-    // bersihkan span kata setelah selesai
-    window.setTimeout(function () {
-      Array.prototype.forEach.call(s.querySelectorAll('.w'), function (sp) {
-        sp.replaceWith(document.createTextNode(sp.textContent));
-      });
-      s.normalize();
-    }, t + 420);
+    // span dibiarkan (tidak dibongkar) supaya tata letak tidak melompat saat selesai
   }
 
-  if (!('IntersectionObserver' in window)) {
-    secs.forEach(function (s) { s.classList.remove('wp'); });
-    return;
-  }
-
-  var io = new IntersectionObserver(function (entries) {
-    entries.forEach(function (e) {
-      if (e.isIntersecting) { reveal(e.target); io.unobserve(e.target); }
+  function check() {
+    var vh = window.innerHeight || 800;
+    secs.forEach(function (s) {
+      if (s.dataset.done) return;
+      var r = s.getBoundingClientRect();
+      if (r.top < vh + 140) reveal(s);
     });
-  }, { rootMargin: '0px 0px -8% 0px', threshold: 0.1 });
+  }
 
-  secs.forEach(function (s) { io.observe(s); });
+  var ticking = false;
+  function onScroll() {
+    if (ticking) return;
+    ticking = true;
+    requestAnimationFrame(function () { ticking = false; check(); });
+  }
+
+  window.addEventListener('scroll', onScroll, { passive: true });
+  window.addEventListener('resize', onScroll);
+  window.addEventListener('load', check);
+  check();
 
   // jaring pengaman: kalau sesuatu gagal, jangan biarkan bagian tersembunyi
   window.setTimeout(function () {
