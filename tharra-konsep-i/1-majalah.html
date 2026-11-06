@@ -448,6 +448,9 @@ html.intro-run .ts .w,html.intro-run .ts .ch{opacity:0}
   .nav .navcta{padding:0 12px;font-size:9px}
   .hide-sm{display:none}
 }
+/* ---- penyusunan saat digulir: seluruh halaman, bukan cuma atas ---- */
+.wp{opacity:0}
+
 /* ---- intro: typesetting ---- */
 /* bagian jauh di bawah layar tidak di-layout saat awal, supaya pembagian kata tidak memicu reflow panjang */
 .pull,.sect,.rules,.foot{content-visibility:auto;contain-intrinsic-size:auto 520px}
@@ -901,5 +904,114 @@ html.intro-run .peek{opacity:0}
     dlg.addEventListener('click', (e) => { if (e.target === dlg) close(); });
   })();
 </script>
+
+<script>
+/* Sisa halaman disusun saat masuk layar — pola yang sama, lebih cepat. */
+(function () {
+  var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if (reduce) return;
+
+  var secs = [].slice.call(document.querySelectorAll('.howto,.figures,.main,.pull,.sect,.rules,.foot'));
+  if (!secs.length) return;
+  secs.forEach(function (s) { s.classList.add('wp'); });
+
+  function splitWords(el) {
+    Array.prototype.slice.call(el.childNodes).forEach(function (node) {
+      if (node.nodeType === 3) {
+        var frag = document.createDocumentFragment();
+        node.textContent.split(/(\s+)/).forEach(function (part) {
+          if (!part.trim()) { frag.appendChild(document.createTextNode(part)); return; }
+          var sp = document.createElement('span');
+          sp.className = 'w'; sp.textContent = part;
+          frag.appendChild(sp);
+        });
+        el.replaceChild(frag, node);
+      } else if (node.nodeType === 1) { splitWords(node); }
+    });
+  }
+
+  var RISE = [{ opacity: 0, transform: 'translateY(18px)' },
+              { opacity: 1, transform: 'translateY(-2px)', offset: .72 },
+              { opacity: 1, transform: 'none' }];
+  var DROP = [{ opacity: 0, transform: 'translateY(-14px)' },
+              { opacity: 1, transform: 'translateY(3px)', offset: .72 },
+              { opacity: 1, transform: 'none' }];
+  var SLIDE = [{ opacity: 0, transform: 'translateX(-18px)' },
+               { opacity: 1, transform: 'translateX(3px)', offset: .74 },
+               { opacity: 1, transform: 'none' }];
+  var EASE = 'cubic-bezier(.25,1,.4,1)';
+
+  function count(el) {
+    var raw = el.textContent.trim();
+    var num = parseInt(raw.replace(/[^0-9]/g, ''), 10);
+    if (!num) return;
+    var suf = raw.replace(/[0-9]/g, '');
+    var t0 = performance.now(), dur = 520;
+    el.textContent = '0' + suf;
+    (function step(now) {
+      var p = Math.min(1, (now - t0) / dur);
+      el.textContent = Math.round(num * (1 - Math.pow(1 - p, 3))) + suf;
+      if (p < 1) requestAnimationFrame(step);
+    })(performance.now());
+  }
+
+  function reveal(s) {
+    if (s.dataset.done) return;
+    s.dataset.done = '1';
+    s.classList.remove('wp');
+
+    var t = 0;
+    var heads = s.querySelectorAll('h2,h3');
+    Array.prototype.forEach.call(heads, function (h) {
+      splitWords(h);
+      Array.prototype.forEach.call(h.querySelectorAll('.w'), function (w) {
+        w.animate(RISE, { duration: 280, delay: t, easing: EASE, fill: 'both' });
+        t += 80;
+      });
+      t += 60;
+    });
+
+    var blocks = s.querySelectorAll(':scope > .head > span, :scope > .howto-head .k, p, li, .fig, .post, .ruang, blockquote, cite, .aside, .tip, :scope > .k, :scope > .num');
+    var seen = 0;
+    Array.prototype.forEach.call(blocks, function (b) {
+      if (b.closest('h2,h3')) return;
+      if (seen++ > 16) return;
+      b.animate(RISE, { duration: 280, delay: t, easing: EASE, fill: 'both' });
+      t += 60;
+    });
+
+    Array.prototype.forEach.call(s.querySelectorAll('.fig b'), function (b, i) {
+      window.setTimeout(function () { count(b); }, Math.min(t, 700) + i * 90);
+    });
+
+    // bersihkan span kata setelah selesai
+    window.setTimeout(function () {
+      Array.prototype.forEach.call(s.querySelectorAll('.w'), function (sp) {
+        sp.replaceWith(document.createTextNode(sp.textContent));
+      });
+      s.normalize();
+    }, t + 420);
+  }
+
+  if (!('IntersectionObserver' in window)) {
+    secs.forEach(function (s) { s.classList.remove('wp'); });
+    return;
+  }
+
+  var io = new IntersectionObserver(function (entries) {
+    entries.forEach(function (e) {
+      if (e.isIntersecting) { reveal(e.target); io.unobserve(e.target); }
+    });
+  }, { rootMargin: '0px 0px -8% 0px', threshold: 0.1 });
+
+  secs.forEach(function (s) { io.observe(s); });
+
+  // jaring pengaman: kalau sesuatu gagal, jangan biarkan bagian tersembunyi
+  window.setTimeout(function () {
+    secs.forEach(function (s) { if (!s.dataset.done) { s.classList.remove('wp'); s.dataset.done = '1'; } });
+  }, 20000);
+})();
+</script>
+
 </body>
 </html>
