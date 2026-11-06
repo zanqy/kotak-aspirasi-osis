@@ -462,8 +462,8 @@ html.intro-run .peek{opacity:0}
 
 /* OPSI L — kartu memanjang di baris label, lalu menyusut */
 .lead .kick{position:relative}
-.lead .kick::after{display:none}
-.aboutcard{position:absolute;top:50%;transform:translateY(-50%);left:0;width:0;height:26px;
+.lead .kick::after{position:relative;z-index:1}
+.aboutcard{position:absolute;top:50%;transform:translateY(-50%);left:0;width:0;height:26px;z-index:4;
   display:inline-flex;align-items:center;gap:8px;overflow:hidden;white-space:nowrap;
   background:var(--card);border:1px solid var(--line);padding:0 9px;
   font-family:var(--fm);font-size:8.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--soft);
