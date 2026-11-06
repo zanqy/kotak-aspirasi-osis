@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="id"><head><meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>D · di dalam panduan — Opsi penempatan "?" · Tharra</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..900;1,9..144,300..900&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{--paper:#F6F0DF;--card:#FFFCF3;--ink:#211B13;--soft:#574B39;--faint:#6E5F45;
+ --line:#D5C4A2;--red:#B4311F;--green:#3E5A3A;--fd:"Fraunces",Georgia,serif;--fm:"IBM Plex Mono",ui-monospace,monospace}
+*{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--fm);
+ background-image:radial-gradient(rgba(60,44,18,.16) 1px,transparent 1.1px);background-size:22px 22px;padding:0 0 60px}
+.wrap{max-width:600px;margin:0 auto;padding:18px 20px 0}
+.meta{display:flex;justify-content:space-between;font-size:8.5px;letter-spacing:.16em;color:var(--faint);text-transform:uppercase}
+.mast{display:flex;align-items:flex-end;justify-content:space-between;gap:10px;border-top:2px solid var(--ink);
+ margin-top:8px;padding-top:8px}
+.mast h1{margin:0;font-family:var(--fd);font-size:46px;line-height:.84;letter-spacing:-.03em;font-weight:600}
+.mast h1 .dot{color:var(--red)}
+.issue{font-size:8.5px;letter-spacing:.16em;color:var(--faint);text-align:right;line-height:1.7;text-transform:uppercase}
+.issue b{display:block;font-family:var(--fd);font-size:13px;letter-spacing:0;text-transform:none;color:var(--ink)}
+nav{display:flex;align-items:center;gap:14px;font-size:9px;letter-spacing:.14em;text-transform:uppercase;
+ border-top:1px solid var(--line);border-bottom:1px solid var(--line);padding:9px 0;margin:12px 0 20px;color:var(--soft)}
+nav a{color:inherit;text-decoration:none}
+nav .on{color:var(--red);border-bottom:1px solid var(--red)}
+nav .cta{margin-left:auto;background:var(--red);color:#fff;padding:8px 12px;letter-spacing:.12em}
+.kick{display:flex;align-items:center;gap:8px;font-size:9px;letter-spacing:.2em;color:var(--red);text-transform:uppercase}
+.kick::after{content:"";flex:1;height:1px;background:var(--red);opacity:.35}
+h2{margin:10px 0 12px;font-family:var(--fd);font-size:29px;line-height:1.08;letter-spacing:-.02em;font-weight:600}
+h2 em{color:var(--red);font-style:italic}
+.quick{border-left:2px solid var(--red);padding-left:9px;font-size:10.5px;line-height:1.6;color:var(--soft);margin:0 0 16px}
+p{font-family:var(--fd);font-size:14.5px;line-height:1.62;color:#2B2418;margin:0 0 12px}
+p .cap{float:left;font-size:38px;line-height:.84;color:var(--red);margin:3px 7px 0 0}
+.note{margin-top:16px;border-top:1px solid var(--line);padding-top:8px;display:flex;justify-content:space-between;
+ font-size:8.5px;letter-spacing:.14em;color:var(--faint);text-transform:uppercase}
+.howto{margin-top:26px;border-top:1px solid var(--line);padding-top:14px}
+.howto h3{font-family:var(--fd);font-size:20px;margin:0 0 4px}
+.steps{list-style:none;padding:0;margin:12px 0 0;display:grid;gap:10px}
+.steps li{display:grid;grid-template-columns:26px 1fr;gap:10px;border-top:1px solid var(--line);padding-top:8px;font-size:10.5px;line-height:1.5}
+.steps .n{color:var(--red);font-size:9px;letter-spacing:.1em;padding-top:1px}
+.steps b{display:block;font-family:var(--fd);font-size:14px;margin-bottom:2px}
+.card{margin-top:26px;border:1px solid var(--line);background:var(--card);padding:16px}
+.card h3{font-family:var(--fd);font-size:19px;margin:0 0 6px}
+.foot{margin-top:28px;border-top:2px solid var(--ink);padding-top:10px;font-size:8.5px;letter-spacing:.14em;color:var(--faint);text-transform:uppercase}
+dialog{border:0;padding:0;max-width:430px;width:calc(100% - 32px);background:var(--card);color:var(--ink);
+ box-shadow:0 30px 60px -30px rgba(30,20,5,.6)}
+dialog::backdrop{background:rgba(33,27,19,.35)}
+.sheet{padding:24px 22px}
+.sheet h4{font-family:var(--fd);font-size:22px;margin:0 0 8px}
+.sheet p{font-family:var(--fm);font-size:11px;line-height:1.7;color:var(--soft)}
+.sheet .x{float:right;background:none;border:0;font-size:16px;cursor:pointer;color:var(--soft)}
+.tag{display:inline-block;font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:var(--red);margin-bottom:10px}
+
+.inlineabout{display:inline-flex;align-items:center;gap:6px;margin-top:10px;font-size:10px;letter-spacing:.1em;
+ text-transform:uppercase;color:var(--red);text-decoration:none;border-bottom:1px dashed rgba(180,49,31,.5);padding-bottom:2px;cursor:pointer}
+</style>
+</head><body>
+<div style="max-width:600px;margin:0 auto;padding:14px 20px 0;font-size:9px;letter-spacing:.16em;text-transform:uppercase;color:#6E5F45;display:flex;justify-content:space-between">
+  <span><b style="color:#B4311F">D</b> · Di dalam panduan</span><span>Opsi penempatan</span>
+</div>
+
+<div class="wrap">
+  <div class="meta"><span>Osis Humas · Sekolah Kita</span><span>Edisi 07 · November 2026</span></div>
+  <header class="mast">
+    <h1>Tharra<span class="dot">.</span></h1>
+    <div class="issue">Ruang siswa<b>Katakan &amp; Aksara</b></div>
+  </header>
+  <nav>
+    <a class="on" href="#">Beranda</a><a href="#">Katakan</a><a href="#">Aksara</a><a href="#">Lacak</a>
+    <a class="cta" href="#">Tulis aspirasi</a>
+  </nav>
+  <div class="kick">Laporan utama</div>
+  <h2>Sebagian hal lebih mudah <em>ditulis</em> daripada diucapkan.</h2>
+  <p class="quick">Cara pakai: pilih ruang, tulis satu paragraf, simpan kode balasan.</p>
+  <p><span class="cap">A</span>da yang tertahan karena takut menyakiti orang. Ada yang hilang karena tidak pernah ada tempatnya. Dua-duanya biasanya berakhir sama: berputar di kepala, lalu selesai tanpa jejak.</p>
+  <p>Halaman ini dibuat supaya tidak selalu begitu. Tidak perlu rapi, tidak perlu panjang — satu paragraf sudah cukup.</p>
+  <div class="note"><span>Penanggung jawab · Divisi Humas</span><span>Jadwal baca · Senin &amp; Kamis</span></div>
+
+  <section class="howto" id="panduan">
+    <h3>Cara pakai</h3>
+    <p class="quick">Tiga langkah, kurang dari dua menit.</p>
+    <ol class="steps">
+      <li><span class="n">01</span><div><b>Pilih ruang</b>Anonim untuk keluhan, akun untuk mading dan surat.</div></li>
+      <li><span class="n">02</span><div><b>Tulis satu paragraf</b>Sebut lokasi atau waktu kalau ada.</div></li>
+      <li><span class="n">03</span><div><b>Pantau balasan</b>Simpan kode yang muncul setelah mengirim.</div></li>
+    </ol>
+  </section>
+
+  <section class="card">
+    <h3>Dua ruang</h3>
+    <p>Katakan untuk aspirasi anonim. Aksara untuk mading dan surat antar kelas.</p>
+    <a class="inlineabout" data-about href="#">Masih bingung apa itu Tharra? →</a>
+  </section>
+
+  <div class="foot">Tharra · Katakan &amp; Aksara</div>
+</div>
+
+<dialog id="aboutSheet">
+  <div class="sheet">
+    <button class="x" onclick="document.getElementById('aboutSheet').close()" aria-label="Tutup">×</button>
+    <span class="tag">Tentang halaman ini</span>
+    <h4>Apa itu Tharra?</h4>
+    <p>Ruang tempat siswa menulis hal yang sulit diucapkan. Dua ruang: <b>Katakan</b> untuk aspirasi tanpa nama, <b>Aksara</b> untuk mading dan surat.</p>
+    <p>Yang menulis tidak perlu akun. Yang membaca adalah pengurus, setiap Senin dan Kamis.</p>
+  </div>
+</dialog>
+
+<div style="max-width:600px;margin:26px auto 0;padding:12px 20px;border-top:1px solid #D5C4A2;font-size:10.5px;line-height:1.65;color:#574B39">
+  <b>Di dalam panduan:</b> baris tautan di kartu “Dua ruang”. Paling logis secara informasi (muncul saat orang sedang mencari cara pakai), tapi baru terlihat setelah digulir — tidak menolong yang bingung di layar pertama.
+</div>
+<script>
+function openSheet(){ var d=document.getElementById('aboutSheet'); if(d.showModal) d.showModal(); else d.setAttribute('open',''); }
+document.addEventListener('click', function(e){
+  var t=e.target.closest('[data-about]');
+  if(t){ e.preventDefault(); openSheet(); }
+});
+document.getElementById('aboutSheet').addEventListener('click', function(e){
+  if(e.target === this) this.close();
+});
+</script>
+</body></html>
