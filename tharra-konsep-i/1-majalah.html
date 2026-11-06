@@ -828,7 +828,14 @@ html.intro-run body{animation:gridSettle 2.2s cubic-bezier(.55,0,.35,1) both}
     }
 
     function startAfterPaint() {
-      requestAnimationFrame(function () { requestAnimationFrame(play); });
+      var started = false;
+      function go() { if (started) return; started = true; requestAnimationFrame(function () { requestAnimationFrame(play); }); }
+      if (document.fonts && document.fonts.ready) {
+        document.fonts.ready.then(go);
+        window.setTimeout(go, 900);   // jangan tunggu selamanya
+      } else {
+        go();
+      }
     }
     if (document.readyState === 'complete') startAfterPaint();
     else window.addEventListener('load', startAfterPaint);
