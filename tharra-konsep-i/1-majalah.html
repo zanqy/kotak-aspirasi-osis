@@ -368,8 +368,9 @@ a{color:inherit}
 
 /* typesetting intro */
 .w,.ch{display:inline-block}
+.wi{display:inline}
 html.intro-run .tsb{opacity:0}
-html.intro-run .ts .w,html.intro-run .ts .ch{opacity:0}
+html.intro-run .ts .w,html.intro-run .ts .ch,html.intro-run .tsi .wi{opacity:0}
 @media(prefers-reduced-motion:reduce){html.intro-run .tsb,html.intro-run .ts .w,html.intro-run .ts .ch{opacity:1}}
 
 /* ---- intro ---- */
@@ -735,6 +736,20 @@ html.intro-run .peek{opacity:0}
         } else if (node.nodeType === 1) { splitWords(node); }
       });
     }
+    function splitInline(el) {
+      Array.prototype.slice.call(el.childNodes).forEach(function (node) {
+        if (node.nodeType === 3) {
+          var frag = document.createDocumentFragment();
+          node.textContent.split(/(\s+)/).forEach(function (part) {
+            if (!part.trim()) { frag.appendChild(document.createTextNode(part)); return; }
+            var sp = document.createElement('span');
+            sp.className = 'wi'; sp.textContent = part;
+            frag.appendChild(sp);
+          });
+          el.replaceChild(frag, node);
+        } else if (node.nodeType === 1) { splitInline(node); }
+      });
+    }
     function splitChars(el) {
       var txt = el.textContent;
       el.textContent = '';
@@ -764,16 +779,16 @@ html.intro-run .peek{opacity:0}
     var mast = document.querySelector('.mast h1');
     if (mast) {
       splitChars(mast); mast.classList.add('ts');
-      Array.prototype.forEach.call(mast.querySelectorAll('.ch'), function (c) { add(c, 'type', 520, 0); t += 135; });
-      pause(360);
+      Array.prototype.forEach.call(mast.querySelectorAll('.ch'), function (c) { add(c, 'type', 480, 0); t += 104; });
+      pause(120);
     }
 
     /* 3 — label edisi di kanan */
     var issue = document.querySelector('.mast .issue');
     if (issue) {
       splitWords(issue); issue.classList.add('ts');
-      Array.prototype.forEach.call(issue.querySelectorAll('.w'), function (w) { add(w, 'rise', 300, 78); });
-      pause(260);
+      Array.prototype.forEach.call(issue.querySelectorAll('.w'), function (w) { add(w, 'rise', 280, 58); });
+      pause(180);
     }
 
     /* 4 — navigasi: bar dulu, lalu tautannya */
@@ -782,8 +797,8 @@ html.intro-run .peek{opacity:0}
     var nav = document.querySelector('.nav .links');
     if (nav) {
       splitWords(nav); nav.classList.add('ts');
-      Array.prototype.forEach.call(nav.querySelectorAll('.w'), function (w) { add(w, 'slideL', 280, 66); });
-      pause(240);
+      Array.prototype.forEach.call(nav.querySelectorAll('.w'), function (w) { add(w, 'slideL', 280, 50); });
+      pause(170);
     }
     /* tombol merah ikut menyusul */
     var cta = document.querySelector('.navcta');
@@ -797,31 +812,34 @@ html.intro-run .peek{opacity:0}
     var kick = document.querySelector('.lead .kick');
     if (kick) {
       splitChars(kick); kick.classList.add('ts');
-      Array.prototype.forEach.call(kick.querySelectorAll('.ch'), function (c) { add(c, 'kern', 320, 30); });
-      pause(280);
+      Array.prototype.forEach.call(kick.querySelectorAll('.ch'), function (c) { add(c, 'kern', 300, 24); });
+      pause(200);
     }
 
     /* 7 — judul, paling lambat */
     var h2 = document.querySelector('.lead h2');
     if (h2) {
       splitWords(h2); h2.classList.add('ts');
-      Array.prototype.forEach.call(h2.querySelectorAll('.w'), function (w) { add(w, 'title', 540, 128); });
-      pause(320);
+      Array.prototype.forEach.call(h2.querySelectorAll('.w'), function (w) { add(w, 'title', 480, 88); });
+      pause(210);
     }
 
     /* 8 — baris cara pakai */
     var quick = document.querySelector('.quickline');
     if (quick) {
       splitWords(quick); quick.classList.add('ts');
-      Array.prototype.forEach.call(quick.querySelectorAll('.w'), function (w) { add(w, 'rise', 300, 58); });
-      pause(280);
+      Array.prototype.forEach.call(quick.querySelectorAll('.w'), function (w) { add(w, 'rise', 280, 42); });
+      pause(190);
     }
 
-    /* 9 — dua paragraf: naik utuh, tidak dipecah per kata (drop cap & pembungkusan tetap utuh) */
+    /* 9 — dua paragraf: kata demi kata, tapi hanya opacity (inline, tata letak tak berubah) */
     Array.prototype.forEach.call(document.querySelectorAll('.dek .body p'), function (para, pi) {
-      para.classList.add('tsb');
-      add(para, 'rise', 420, 0);
-      pause(pi === 0 ? 300 : 240);
+      splitInline(para);
+      para.classList.add('tsi');
+      Array.prototype.forEach.call(para.querySelectorAll('.wi'), function (w) {
+        add(w, 'ink', 260, 0); t += 38;
+      });
+      pause(pi === 0 ? 220 : 180);
     });
 
     /* 10 — kolom catatan di kanan */
@@ -836,13 +854,14 @@ html.intro-run .peek{opacity:0}
     }
 
     /* total ditahan ±8 detik */
-    var TARGET = 8000;
+    var TARGET = 6400;
     var k = Math.min(1, TARGET / Math.max(t, 1));
     Q.forEach(function (q) { q.delay = Math.round(q.delay * k); });
     var total = Math.round(t * k) + 480;
 
     var KF = {
       fade:  [{ opacity: 0 }, { opacity: 1 }],
+      ink:   [{ opacity: 0 }, { opacity: 1 }],
       type:  [{ opacity: 0, transform: 'translateY(-44px) rotate(6deg) scale(1.05)' },
               { opacity: 1, transform: 'translateY(-32px) rotate(4.6deg) scale(1.035)', offset: .18 },
               { opacity: 1, transform: 'translateY(3px) rotate(-1.2deg) scale(.996)', offset: .68 },
@@ -865,7 +884,7 @@ html.intro-run .peek{opacity:0}
               { opacity: 1, transform: 'translateY(-4px) rotate(-.6deg) scale(1.003)', offset: .7 },
               { opacity: 1, transform: 'none' }]
     };
-    var EASE = { fade: 'linear', type: 'cubic-bezier(.3,1.18,.4,1)', kern: 'cubic-bezier(.25,1,.4,1)',
+    var EASE = { fade: 'linear', ink: 'linear', type: 'cubic-bezier(.3,1.18,.4,1)', kern: 'cubic-bezier(.25,1,.4,1)',
       rise: 'cubic-bezier(.25,1,.4,1)', slideL: 'cubic-bezier(.25,1,.4,1)',
       title: 'cubic-bezier(.3,1.15,.4,1)' };
 
@@ -885,8 +904,8 @@ html.intro-run .peek{opacity:0}
 
     function cleanup() {
       root.classList.remove('intro-run');
-      Array.prototype.forEach.call(document.querySelectorAll('.ts,.tsb'), function (el) {
-        el.classList.remove('ts', 'tsb');
+      Array.prototype.forEach.call(document.querySelectorAll('.ts,.tsb,.tsi'), function (el) {
+        el.classList.remove('ts', 'tsb', 'tsi');
       });
     }
 
