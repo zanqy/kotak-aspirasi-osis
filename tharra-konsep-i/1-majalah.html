@@ -817,17 +817,11 @@ html.intro-run .peek{opacity:0}
       pause(280);
     }
 
-    /* 9 — dua paragraf, berhenti tiap ganti baris */
+    /* 9 — dua paragraf: naik utuh, tidak dipecah per kata (drop cap & pembungkusan tetap utuh) */
     Array.prototype.forEach.call(document.querySelectorAll('.dek .body p'), function (para, pi) {
-      splitWords(para); para.classList.add('ts');
-      var lastTop = null;
-      Array.prototype.forEach.call(para.querySelectorAll('.w'), function (w) {
-        var top = w.offsetTop;
-        if (lastTop !== null && top > lastTop + 4) t += 220;
-        lastTop = top;
-        add(w, 'rise', 300, 0); t += 50;
-      });
-      pause(pi === 0 ? 300 : 220);
+      para.classList.add('tsb');
+      add(para, 'rise', 420, 0);
+      pause(pi === 0 ? 300 : 240);
     });
 
     /* 10 — kolom catatan di kanan */
