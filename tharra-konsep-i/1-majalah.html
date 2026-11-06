@@ -365,8 +365,14 @@ a{color:inherit}
   .nav .navcta{padding:0 12px;font-size:9px}
   .hide-sm{display:none}
 }
-/* ---- intro: hanya transform + opacity, hanya yang terlihat ---- */
-html.intro-run .ir{opacity:0;will-change:transform,opacity}
+
+/* typesetting intro */
+.w,.ch{display:inline-block}
+html.intro-run .tsb{opacity:0}
+html.intro-run .ts .w,html.intro-run .ts .ch{opacity:0}
+@media(prefers-reduced-motion:reduce){html.intro-run .tsb,html.intro-run .ts .w,html.intro-run .ts .ch{opacity:1}}
+
+/* ---- intro ---- */
 /* cincin hentakan saat tab mendarat */
 .impact-ring{position:fixed;width:96px;height:96px;border-radius:50%;border:1.5px solid rgba(180,49,31,.5);
   pointer-events:none;z-index:41;margin:-48px 0 0 -48px;will-change:transform,opacity}
@@ -442,55 +448,10 @@ html.intro-run .ir{opacity:0;will-change:transform,opacity}
   .nav .navcta{padding:0 12px;font-size:9px}
   .hide-sm{display:none}
 }
-/* ---- intro penyusunan halaman ---- */
-/* saat intro: blok disembunyikan dulu, lalu dicetak baris demi baris */
-@media(min-width:761px){
-  html.intro-run .meta-row,
-  html.intro-run .mast,
-  html.intro-run .nav,
-  html.intro-run .lead > *,
-  html.intro-run .dek .body p,
-  html.intro-run .dek .side-note,
-  html.intro-run .howto,
-  html.intro-run .howto-steps li,
-  html.intro-run .figures,
-  html.intro-run .figures .fig,
-  html.intro-run .main,
-  html.intro-run .main .ruang,
-  html.intro-run .main .indeks,
-  html.intro-run .indeks li{clip-path:inset(0 100% 0 0)}
-}
-@media(max-width:760px){
-  html.intro-run .meta-row,
-  html.intro-run .mast,
-  html.intro-run .nav,
-  html.intro-run .lead > *,
-  html.intro-run .dek .body p,
-  html.intro-run .dek .side-note,
-  html.intro-run .howto,
-  html.intro-run .howto-steps li,
-  html.intro-run .figures,
-  html.intro-run .figures .fig,
-  html.intro-run .main,
-  html.intro-run .main .ruang,
-  html.intro-run .main .indeks,
-  html.intro-run .indeks li{opacity:0}
-}
+/* ---- intro: typesetting ---- */
+/* bagian jauh di bawah layar tidak di-layout saat awal, supaya pembagian kata tidak memicu reflow panjang */
+.pull,.sect,.rules,.foot{content-visibility:auto;contain-intrinsic-size:auto 520px}
 html.intro-run .peek{opacity:0}
-html.intro-run body{animation:gridSettle 2.2s cubic-bezier(.55,0,.35,1) both}
-@keyframes gridSettle{from{background-size:26px 26px}to{background-size:6px 6px}}
-/* mata pisau: garis tipis di batas lembar yang sedang ditarik */
-.reveal-edge{position:fixed;left:0;right:0;top:0;height:3px;z-index:45;pointer-events:none;
-  background:linear-gradient(90deg,rgba(180,49,31,0),rgba(180,49,31,.55) 20%,rgba(180,49,31,.55) 80%,rgba(180,49,31,0));
-  box-shadow:0 10px 26px -6px rgba(60,40,14,.45)}
-@media(prefers-reduced-motion:reduce){
-  html.intro-run .meta-row,html.intro-run .mast,html.intro-run .nav,html.intro-run .lead > *,
-  html.intro-run .dek .body p,html.intro-run .dek .side-note,html.intro-run .howto,
-  html.intro-run .howto-steps li,html.intro-run .figures,html.intro-run .figures .fig,
-  html.intro-run .main,html.intro-run .main .ruang,html.intro-run .main .indeks,
-  html.intro-run .indeks li{clip-path:none}
-  html.intro-run .peek{opacity:1}
-}
 </style>
 </head>
 <body>
@@ -733,122 +694,189 @@ html.intro-run body{animation:gridSettle 2.2s cubic-bezier(.55,0,.35,1) both}
 
 
 <script>
-  /* Intro: blok masuk bergelombang; hanya yang terlihat, hanya transform+opacity. */
+  /* Intro: halaman disusun seperti menyusun huruf — tiap benda satu giliran. */
   (function () {
     var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     var seen;
-    try { seen = sessionStorage.getItem('tharra-assemble'); } catch (e) { seen = '1'; }
+    try { seen = sessionStorage.getItem('tharra-typeset'); } catch (e) { seen = '1'; }
     if (reduce || seen) return;
 
     var root = document.documentElement;
     root.classList.add('intro-run');
+    try { sessionStorage.setItem('tharra-typeset', '1'); } catch (e) {}
 
-    var ORDER = ['.meta-row', '.mast', '.nav', '.lead .kick', '.lead h2', '.quickline',
-      '.dek .body p', '.dek .side-note', '.howto', '.howto-steps', '.figures', '.main'];
-
-    var all = [];
-    ORDER.forEach(function (sel) {
-      Array.prototype.forEach.call(document.querySelectorAll(sel), function (el) { all.push(el); });
-    });
-
-    // hanya yang ada di layar pertama; sisanya tidak disentuh sama sekali
-    var vh = window.innerHeight || 800;
-    var targets = all.filter(function (el) {
-      var r = el.getBoundingClientRect();
-      return r.top < vh * 0.92;
-    });
-    targets.forEach(function (el) { el.classList.add('ir'); });
-
-    try { sessionStorage.setItem('tharra-assemble', '1'); } catch (e) {}
-
-    function count(el) {
-      var raw = el.textContent.trim();
-      var num = parseInt(raw.replace(/[^0-9]/g, ''), 10);
-      if (!num) return;
-      var suffix = raw.replace(/[0-9]/g, '');
-      var t0 = performance.now(), dur = 600;
-      el.textContent = '0' + suffix;
-      (function step(t) {
-        var p = Math.min(1, (t - t0) / dur);
-        el.textContent = Math.round(num * (1 - Math.pow(1 - p, 3))) + suffix;
-        if (p < 1) requestAnimationFrame(step);
-      })(performance.now());
-    }
-
-    function play() {
-      window.__start = performance.now();
-      var small = window.innerWidth <= 760;
-      var stepMs = small ? 52 : 62;
-      var dur = small ? 460 : 520;
-      var n = targets.length;
-
-      targets.forEach(function (el, i) {
-        el.animate([
-          { opacity: 0, transform: 'translate3d(0,' + (small ? 14 : 20) + 'px,0)' },
-          { opacity: 1, transform: 'translate3d(0,-2px,0)', offset: .72 },
-          { opacity: 1, transform: 'translate3d(0,0,0)' }
-        ], { duration: dur, delay: 40 + i * stepMs, easing: 'cubic-bezier(.22,1,.36,1)', fill: 'both' });
-      });
-
-      var waveEnd = 40 + n * stepMs + dur;
-
-      var figs = document.querySelectorAll('.fig b');
-      Array.prototype.forEach.call(figs, function (el, k) {
-        window.setTimeout(function () { count(el); }, Math.max(200, waveEnd - 320) + k * 80);
-      });
-
-      var tab = document.getElementById('peekBtn');
-      if (tab) {
-        var t0 = waveEnd - 80;
-        tab.animate([
-          { opacity: 0, transform: 'translateY(-56px) rotate(-7deg) scale(1.02)' },
-          { opacity: 1, offset: .12 },
-          { opacity: 1, transform: 'translateY(6px) rotate(1.2deg) scale(.98)', offset: .68 },
-          { opacity: 1, transform: 'translate3d(0,0,0)' }
-        ], { duration: 520, delay: t0, easing: 'cubic-bezier(.35,.85,.3,1)', fill: 'both' });
-
-        var ring = document.createElement('div');
-        ring.className = 'impact-ring';
-        var r = tab.getBoundingClientRect();
-        ring.style.left = (r.left + r.width / 2) + 'px';
-        ring.style.top = (r.top + r.height / 2) + 'px';
-        document.body.appendChild(ring);
-        ring.animate([{ transform: 'scale(.3)', opacity: .65 }, { transform: 'scale(1.8)', opacity: 0 }],
-          { duration: 560, delay: t0 + 380, easing: 'cubic-bezier(.2,.7,.3,1)', fill: 'both' })
-          .onfinish = function () { ring.remove(); };
-
-        var seal = tab.querySelector('.pk-seal');
-        if (seal) {
-          seal.animate([
-            { opacity: 0, transform: 'scale(.3) rotate(-18deg)' },
-            { opacity: 1, transform: 'scale(1.16) rotate(4deg)', offset: .55 },
-            { opacity: 1, transform: 'scale(1) rotate(-6deg)' }
-          ], { duration: 460, delay: t0 + 520, easing: 'cubic-bezier(.22,1,.36,1)', fill: 'both' });
+    function splitWords(el) {
+      Array.prototype.slice.call(el.childNodes).forEach(function (node) {
+        if (node.nodeType === 3) {
+          var frag = document.createDocumentFragment();
+          node.textContent.split(/(\s+)/).forEach(function (part) {
+            if (!part.trim()) { frag.appendChild(document.createTextNode(part)); return; }
+            var sp = document.createElement('span');
+            sp.className = 'w'; sp.textContent = part;
+            frag.appendChild(sp);
+          });
+          el.replaceChild(frag, node);
+        } else if (node.nodeType === 1) {
+          splitWords(node);
         }
-      }
-
-      window.setTimeout(function () {
-        root.classList.remove('intro-run');
-        targets.forEach(function (el) { el.classList.remove('ir'); el.style.willChange = ''; });
-      }, 3200);
+      });
+    }
+    function splitChars(el) {
+      var txt = el.textContent;
+      el.textContent = '';
+      Array.prototype.slice.call(txt).forEach(function (c) {
+        if (c === ' ') { el.appendChild(document.createTextNode(' ')); return; }
+        var sp = document.createElement('span');
+        sp.className = 'ch'; sp.textContent = c;
+        el.appendChild(sp);
+      });
     }
 
-    function startAfterPaint() {
-      var started = false;
-      function go() { if (started) return; started = true; requestAnimationFrame(function () { requestAnimationFrame(play); }); }
-      if (document.fonts && document.fonts.ready) {
-        document.fonts.ready.then(go);
-        window.setTimeout(go, 900);   // jangan tunggu selamanya
-      } else {
-        go();
-      }
-    }
-    if (document.readyState === 'complete') startAfterPaint();
-    else window.addEventListener('load', startAfterPaint);
+    var limit = window.innerHeight * 0.96;
+    function above(el) { return el.getBoundingClientRect().top < limit; }
 
-    window.setTimeout(function () { root.classList.remove('intro-run'); }, 4000);
+    var Q = [], t = 220;
+    function add(el, kind, dur, gap) {
+      if (!el) return;
+      Q.push({ el: el, kind: kind, dur: dur, delay: Math.round(t) });
+      t += gap;
+    }
+    function pause(ms) { t += ms; }
+
+    /* 1 — baris meta */
+    var meta = document.querySelector('.meta-row');
+    if (meta) { meta.classList.add('tsb'); add(meta, 'rise', 340, 0); pause(260); }
+
+    /* 2 — THARRA, huruf per huruf */
+    var mast = document.querySelector('.mast h1');
+    if (mast) {
+      splitChars(mast); mast.classList.add('ts');
+      Array.prototype.forEach.call(mast.querySelectorAll('.ch'), function (c) { add(c, 'type', 520, 0); t += 135; });
+      pause(380);
+    }
+
+    /* 3 — label edisi di kanan */
+    var issue = document.querySelector('.mast .issue');
+    if (issue && above(issue)) {
+      splitWords(issue); issue.classList.add('ts');
+      Array.prototype.forEach.call(issue.querySelectorAll('.w'), function (w) { add(w, 'rise', 300, 78); });
+      pause(280);
+    }
+
+    /* 4 — navigasi */
+    var nav = document.querySelector('.nav .links');
+    if (nav) {
+      splitWords(nav); nav.classList.add('ts');
+      Array.prototype.forEach.call(nav.querySelectorAll('.w'), function (w) { add(w, 'slideL', 280, 66); });
+      pause(320);
+    }
+
+    /* 5 — label merah */
+    var kick = document.querySelector('.lead .kick');
+    if (kick) {
+      splitChars(kick); kick.classList.add('ts');
+      Array.prototype.forEach.call(kick.querySelectorAll('.ch'), function (c) { add(c, 'kern', 320, 30); });
+      pause(300);
+    }
+
+    /* 6 — judul, paling lambat */
+    var h2 = document.querySelector('.lead h2');
+    if (h2) {
+      splitWords(h2); h2.classList.add('ts');
+      Array.prototype.forEach.call(h2.querySelectorAll('.w'), function (w) { add(w, 'title', 540, 128); });
+      pause(360);
+    }
+
+    /* 7 — baris cara pakai */
+    var quick = document.querySelector('.quickline');
+    if (quick) {
+      splitWords(quick); quick.classList.add('ts');
+      Array.prototype.forEach.call(quick.querySelectorAll('.w'), function (w) { add(w, 'rise', 300, 58); });
+      pause(320);
+    }
+
+    /* 8 — paragraf pertama, berhenti tiap ganti baris */
+    var para = document.querySelector('.dek .body p');
+    if (para && above(para)) {
+      splitWords(para); para.classList.add('ts');
+      var lastTop = null;
+      Array.prototype.forEach.call(para.querySelectorAll('.w'), function (w) {
+        var top = w.offsetTop;
+        if (lastTop !== null && top > lastTop + 4) t += 240;
+        lastTop = top;
+        add(w, 'rise', 300, 0); t += 54;
+      });
+      pause(300);
+    }
+
+    /* jadikan total ±6,4 detik tanpa mengubah ritme relatif */
+    var TARGET = 6400;
+    var k = Math.min(1, TARGET / Math.max(t, 1));
+    Q.forEach(function (q) { q.delay = Math.round(q.delay * k); });
+    var total = Math.round(t * k) + 520;
+
+    var KF = {
+      type: [{ opacity: 0, transform: 'translateY(-44px) rotate(6deg) scale(1.05)' },
+             { opacity: 1, transform: 'translateY(-32px) rotate(4.6deg) scale(1.035)', offset: .18 },
+             { opacity: 1, transform: 'translateY(3px) rotate(-1.2deg) scale(.996)', offset: .68 },
+             { opacity: 1, transform: 'translateY(-1px) rotate(.4deg)', offset: .86 },
+             { opacity: 1, transform: 'none' }],
+      kernel: [],
+      kern: [{ opacity: 0, transform: 'translateX(-22px)' },
+             { opacity: 1, transform: 'translateX(-15px)', offset: .18 },
+             { opacity: 1, transform: 'translateX(2px)', offset: .74 },
+             { opacity: 1, transform: 'none' }],
+      rise: [{ opacity: 0, transform: 'translateY(20px)' },
+             { opacity: 1, transform: 'translateY(13px)', offset: .15 },
+             { opacity: 1, transform: 'translateY(-3px)', offset: .72 },
+             { opacity: 1, transform: 'none' }],
+      slideL: [{ opacity: 0, transform: 'translateX(-26px)' },
+               { opacity: 1, transform: 'translateX(-18px)', offset: .15 },
+               { opacity: 1, transform: 'translateX(3px)', offset: .74 },
+               { opacity: 1, transform: 'none' }],
+      title: [{ opacity: 0, transform: 'translateY(26px) rotate(2deg) scale(.98)' },
+              { opacity: 1, transform: 'translateY(19px) rotate(1.5deg)', offset: .16 },
+              { opacity: 1, transform: 'translateY(-4px) rotate(-.6deg) scale(1.003)', offset: .7 },
+              { opacity: 1, transform: 'none' }]
+    };
+    var EASE = { type: 'cubic-bezier(.3,1.18,.4,1)', kern: 'cubic-bezier(.25,1,.4,1)',
+      rise: 'cubic-bezier(.25,1,.4,1)', slideL: 'cubic-bezier(.25,1,.4,1)',
+      title: 'cubic-bezier(.3,1.15,.4,1)' };
+
+    var anims = [];
+    Q.forEach(function (q) {
+      anims.push(q.el.animate(KF[q.kind], {
+        duration: q.dur, delay: q.delay, easing: EASE[q.kind], fill: 'both'
+      }));
+    });
+
+    /* tab "Apa ini?" menyusul paling akhir */
+    var tab = document.getElementById('peekBtn');
+    if (tab) {
+      var t0 = total - 420;
+      anims.push(tab.animate([
+        { opacity: 0, transform: 'translateY(-46px) rotate(-6deg)' },
+        { opacity: 1, transform: 'translateY(4px) rotate(1deg)', offset: .68 },
+        { opacity: 1, transform: 'none' }
+      ], { duration: 440, delay: t0, easing: 'cubic-bezier(.35,.85,.3,1)', fill: 'both' }));
+    }
+
+    function cleanup() {
+      root.classList.remove('intro-run');
+      document.querySelectorAll('.ts,.tsb').forEach(function (el) {
+        el.classList.remove('ts', 'tsb');
+        el.querySelectorAll('.w,.ch').forEach(function (sp) {
+          sp.replaceWith(document.createTextNode(sp.textContent));
+        });
+        el.normalize();
+      });
+    }
+
+    window.setTimeout(cleanup, total + 120);
+    // jaring pengaman
+    window.setTimeout(function () { root.classList.remove('intro-run'); }, total + 1500);
   })();
-</script>
+  </script>
 
 <script>
   (function () {
