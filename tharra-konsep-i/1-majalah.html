@@ -326,7 +326,10 @@ a{color:inherit}
 .sheet .aksi button{background:transparent;color:var(--soft);border:1px solid var(--line)}
 
 @media(max-width:560px){
-  .peek{top:auto;bottom:92px;transform:none;padding:13px 8px;font-size:9px}
+  .peek{top:auto;bottom:18px;right:12px;transform:none;width:46px;height:46px;padding:0;
+    display:grid;place-items:center;border-radius:50%;box-shadow:-8px 6px 18px -10px rgba(40,26,8,.85)}
+  .peek .pk-txt,.peek .pk-bar{display:none}
+  .peek .pk-seal{width:26px;height:26px;font-size:13px}
   .pk-bar{display:none}
   .peek:hover{transform:translateX(-3px)}
   .peek.intro{animation:peekInSm 3.4s cubic-bezier(.22,1,.36,1) .8s both}
@@ -400,7 +403,10 @@ html.intro-run .ir{opacity:0;will-change:transform,opacity}
 .sheet .aksi button{background:transparent;color:var(--soft);border:1px solid var(--line)}
 
 @media(max-width:560px){
-  .peek{top:auto;bottom:92px;transform:none;padding:13px 8px;font-size:9px}
+  .peek{top:auto;bottom:18px;right:12px;transform:none;width:46px;height:46px;padding:0;
+    display:grid;place-items:center;border-radius:50%;box-shadow:-8px 6px 18px -10px rgba(40,26,8,.85)}
+  .peek .pk-txt,.peek .pk-bar{display:none}
+  .peek .pk-seal{width:26px;height:26px;font-size:13px}
   .pk-bar{display:none}
   .peek:hover{transform:translateX(-3px)}
   .peek.intro{animation:peekInSm 3.4s cubic-bezier(.22,1,.36,1) .8s both}
