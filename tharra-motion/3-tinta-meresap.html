@@ -91,6 +91,7 @@ let raf=null;
 function play(){
   if(raf) cancelAnimationFrame(raf);
   const t0=performance.now(), dur=1500;
+  window.__stopInk=function(){ if(raf) cancelAnimationFrame(raf); raf=null; };
   function step(t){
     const p=Math.min(1,(t-t0)/dur);
     const eased=1-Math.pow(1-p,2.1);
