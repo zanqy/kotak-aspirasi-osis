@@ -458,6 +458,26 @@ html.pond .peek{opacity:0}
 html.intro-run .wrap > *{opacity:0}
 @media(prefers-reduced-motion:reduce){html.intro-run .wrap > *{opacity:1}}
 html.intro-run .peek{opacity:0}
+
+/* kartu 'Apa ini?' di baris LAPORAN UTAMA */
+html.intro-run .aboutcard{opacity:0}
+.lead .kick{position:relative}
+.lead .kick::after{position:relative;z-index:1}
+.aboutcard{position:absolute;top:50%;right:0;transform:translateY(-50%) rotate(-1deg);
+  display:inline-flex;align-items:center;gap:8px;height:26px;width:150px;padding:0 9px;overflow:hidden;white-space:nowrap;
+  background:var(--card);border:1px solid var(--line);z-index:4;text-decoration:none;
+  font-family:var(--fm);font-size:8.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--soft);
+  box-shadow:2px 5px 12px -10px rgba(40,26,8,.9)}
+.aboutcard .q{display:grid;place-items:center;flex:0 0 auto;width:16px;height:16px;border:1px solid var(--red);
+  border-radius:50%;color:var(--red);font-size:8px;line-height:1}
+.aboutcard b{color:var(--red);font-weight:400}
+.aboutcard .long{display:none}
+.aboutcard .short{display:inline}
+.aboutcard.grow .long{display:inline}
+.aboutcard.grow .short{display:none}
+.aboutcard:hover{border-color:#C9B48D}
+@media(max-width:560px){.aboutcard{height:24px;width:138px;font-size:8px;letter-spacing:.1em;padding:0 8px}}
+@media(prefers-reduced-motion:reduce){.aboutcard{transform:translateY(-50%)}}
 </style>
 <script>
   /* Kunci tampilan sebelum body dilukis: kalau intro akan jalan, mulai dari kertas kosong. */
@@ -500,7 +520,13 @@ html.intro-run .peek{opacity:0}
   </div>
 
   <section class="lead">
-    <div class="kick">Laporan utama</div>
+    <div class="kick"><span class="kick-label">Laporan utama</span>
+      <a class="aboutcard" data-about href="#" aria-haspopup="dialog" aria-label="Apa itu Tharra">
+        <span class="q" aria-hidden="true">?</span>
+        <span class="long">Baru di sini? Apa itu <b>Tharra</b> →</span>
+        <span class="short">Apa ini? <b>Tharra</b></span>
+      </a>
+    </div>
     <h2>Sebagian hal lebih mudah ditulis daripada <i>diucapkan</i>.</h2>
     <p class="quickline"><b>Cara pakai:</b> pilih ruang, tulis satu paragraf, simpan kode balasan. <a href="#cara-pakai">Rinciannya →</a></p>
 
@@ -676,13 +702,6 @@ html.intro-run .peek{opacity:0}
 
 </div>
 
-
-<button class="peek" id="peekBtn" type="button" aria-haspopup="dialog" aria-controls="aboutSheet">
-  <span class="pk-bar" aria-hidden="true"></span>
-  <span class="pk-txt">Apa ini?</span>
-  <span class="pk-seal" aria-hidden="true">?</span>
-</button>
-
 <dialog class="sheet" id="aboutSheet" aria-labelledby="aboutTitle">
   <div class="sheet-in">
     <div class="top">
@@ -761,7 +780,7 @@ html.intro-run .peek{opacity:0}
       });
     }
 
-    var Q = [], t = 200;
+    var Q = [], t = 200, cardAt = 0;
     function add(el, kind, dur, gap) {
       if (!el) return;
       Q.push({ el: el, kind: kind, dur: dur, delay: Math.round(t) });
@@ -809,10 +828,11 @@ html.intro-run .peek{opacity:0}
     add(lead, 'fade', 280, 0); pause(60);
 
     /* 6 — label merah, huruf merapat */
-    var kick = document.querySelector('.lead .kick');
-    if (kick) {
-      splitChars(kick); kick.classList.add('ts');
-      Array.prototype.forEach.call(kick.querySelectorAll('.ch'), function (c) { add(c, 'kern', 300, 24); });
+    var kickLabel = document.querySelector('.kick-label');
+    if (kickLabel) {
+      splitChars(kickLabel); kickLabel.classList.add('ts');
+      Array.prototype.forEach.call(kickLabel.querySelectorAll('.ch'), function (c) { add(c, 'kern', 300, 24); });
+      cardAt = t;
       pause(200);
     }
 
@@ -893,13 +913,45 @@ html.intro-run .peek{opacity:0}
     });
     root.classList.remove('pond');
 
-    var tab = document.getElementById('peekBtn');
-    if (tab) {
-      tab.animate([
-        { opacity: 0, transform: 'translateY(-46px) rotate(-6deg)' },
-        { opacity: 1, transform: 'translateY(4px) rotate(1deg)', offset: .68 },
-        { opacity: 1, transform: 'none' }
-      ], { duration: 440, delay: total - 420, easing: 'cubic-bezier(.35,.85,.3,1)', fill: 'both' });
+    function cardSequence() {
+      var card = document.querySelector('.aboutcard');
+      var row = document.querySelector('.lead .kick');
+      var label = document.querySelector('.kick-label');
+      if (!card || !row || !label) return;
+      var kr = row.getBoundingClientRect();
+      var lw = label.getBoundingClientRect().width;
+      var startX = Math.round(lw + 10);
+      var full = Math.max(80, Math.round(kr.width - startX));
+      var small = Math.min(150, Math.round(kr.width * 0.45));
+      var endLeft = Math.round(kr.width - small);
+
+      card.classList.add('grow');
+      card.style.opacity = '0';
+      card.style.left = startX + 'px';
+      card.style.width = '0px';
+      card.style.right = 'auto';
+
+      card.animate([
+        { width: '0px', opacity: 0 },
+        { width: (full * 0.25) + 'px', opacity: 1, offset: .18 },
+        { width: full + 'px', opacity: 1 }
+      ], { duration: 700, delay: 80, easing: 'cubic-bezier(.45,0,.25,1)', fill: 'both' });
+
+      card.animate([
+        { left: startX + 'px', width: full + 'px' },
+        { left: endLeft + 'px', width: small + 'px' }
+      ], { duration: 760, delay: 1320, easing: 'cubic-bezier(.6,0,.3,1)', fill: 'both' });
+
+      window.setTimeout(function () {
+        card.classList.remove('grow');
+        card.style.left = endLeft + 'px';
+        card.style.width = small + 'px';
+        card.style.opacity = '1';
+      }, 2090);
+    }
+
+    if (cardAt > 0) {
+      window.setTimeout(cardSequence, Math.round(cardAt * k) + 120);
     }
 
     function cleanup() {
@@ -919,21 +971,15 @@ html.intro-run .peek{opacity:0}
 
 <script>
   (function () {
-    const btn = document.getElementById('peekBtn');
+    const btn = document.querySelector('[data-about]');
 
-    // Animasi selip hanya sekali per sesi, dan tidak dipaksa jika pengguna memilih gerak minimal.
-    const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    if (!reduce && btn && !sessionStorage.getItem('tharra-peek') && !sessionStorage.getItem('tharra-assemble')) {
-      btn.classList.add('intro');
-      btn.addEventListener('animationend', () => {
-        btn.classList.remove('intro');
-        try { sessionStorage.setItem('tharra-peek', '1'); } catch (e) {}
-      }, { once: true });
-    }
     const dlg = document.getElementById('aboutSheet');
     const open = () => { dlg.showModal ? dlg.showModal() : dlg.setAttribute('open', ''); };
     const close = () => { dlg.close ? dlg.close() : dlg.removeAttribute('open'); };
-    btn.addEventListener('click', open);
+    document.addEventListener('click', function (e) {
+      var t = e.target.closest && e.target.closest('[data-about]');
+      if (t) { e.preventDefault(); open(); }
+    });
     document.getElementById('closeSheet').addEventListener('click', close);
     document.getElementById('closeSheet2').addEventListener('click', close);
     document.getElementById('toHowto').addEventListener('click', close);
