@@ -779,6 +779,11 @@ html.intro-run .aboutcard{opacity:0}
       t += gap;
     }
     function pause(ms) { t += ms; }
+    /* penjadwal absolut: elemen yang bergerak sendiri, tidak ikut antrean */
+    function at(el, kind, dur, when) {
+      if (!el) return;
+      Q.push({ el: el, kind: kind, dur: dur, delay: Math.round(when) });
+    }
 
     /* 1 — baris meta */
     var meta = document.querySelector('.meta-row');
@@ -798,8 +803,9 @@ html.intro-run .aboutcard{opacity:0}
     var issue = document.querySelector('.mast .issue');
     if (issue) {
       splitWords(issue); issue.classList.add('ts');
-      Array.prototype.forEach.call(issue.querySelectorAll('.w'), function (w) { add(w, 'rise', 280, 58); });
-      pause(180);
+      Array.prototype.forEach.call(issue.querySelectorAll('.w'), function (w, i) {
+        at(w, 'rise', 300, 700 + i * 70);      // jalur sendiri
+      });
     }
 
     /* 4 — navigasi: bar dulu, lalu tautannya */
@@ -811,9 +817,9 @@ html.intro-run .aboutcard{opacity:0}
       Array.prototype.forEach.call(nav.querySelectorAll('.w'), function (w) { add(w, 'slideL', 280, 50); });
       pause(170);
     }
-    /* tombol merah ikut menyusul */
+    /* tombol merah: jalur sendiri, masuk lebih lambat dari nav */
     var cta = document.querySelector('.navcta');
-    if (cta) { cta.classList.add('tsb'); add(cta, 'rise', 300, 0); pause(280); }
+    if (cta) { cta.classList.add('tsb'); at(cta, 'stamp', 420, 1450); }
 
     /* 5 — bagian laporan utama dibuka */
     var lead = document.querySelector('.lead');
@@ -873,6 +879,9 @@ html.intro-run .aboutcard{opacity:0}
 
     var KF = {
       fade:  [{ opacity: 0 }, { opacity: 1 }],
+      stamp: [{ opacity: 0, transform: 'translateY(10px) scale(.94)' },
+              { opacity: 1, transform: 'translateY(-2px) scale(1.03)', offset: .58 },
+              { opacity: 1, transform: 'none' }],
       ink:   [{ opacity: 0 }, { opacity: 1 }],
       type:  [{ opacity: 0, transform: 'translateY(-44px) rotate(6deg) scale(1.05)' },
               { opacity: 1, transform: 'translateY(-32px) rotate(4.6deg) scale(1.035)', offset: .18 },
@@ -896,7 +905,7 @@ html.intro-run .aboutcard{opacity:0}
               { opacity: 1, transform: 'translateY(-4px) rotate(-.6deg) scale(1.003)', offset: .7 },
               { opacity: 1, transform: 'none' }]
     };
-    var EASE = { fade: 'linear', ink: 'linear', type: 'cubic-bezier(.3,1.18,.4,1)', kern: 'cubic-bezier(.25,1,.4,1)',
+    var EASE = { fade: 'linear', ink: 'linear', stamp: 'cubic-bezier(.3,1.2,.4,1)', type: 'cubic-bezier(.3,1.18,.4,1)', kern: 'cubic-bezier(.25,1,.4,1)',
       rise: 'cubic-bezier(.25,1,.4,1)', slideL: 'cubic-bezier(.25,1,.4,1)',
       title: 'cubic-bezier(.3,1.15,.4,1)' };
 
