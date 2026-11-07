@@ -302,11 +302,10 @@ a{color:inherit}
   position:fixed;top:0;right:0;left:auto;height:100dvh;width:min(430px,94vw);max-width:none;max-height:none;
   margin:0;padding:0;border:none;background:var(--card);color:var(--ink);
   box-shadow:-40px 0 70px -46px rgba(30,20,8,.95);
-  animation:slidein .28s cubic-bezier(.22,1,.36,1);
 }
-.sheet::backdrop{background:rgba(30,20,8,.45)}
+.sheet::backdrop{background:rgba(30,20,8,.45);opacity:0;transition:opacity .26s ease}
+.sheet.shown::backdrop{opacity:1}
 .sheet[open]{display:block}
-@keyframes slidein{from{transform:translateX(24px);opacity:0}to{transform:none;opacity:1}}
 
 .sheet-in{height:100%;overflow-y:auto;display:flex;flex-direction:column;
   padding:26px 24px calc(30px + env(safe-area-inset-bottom))}
@@ -349,8 +348,7 @@ a{color:inherit}
     100%{transform:translate(0,0) rotate(0)}
   }
   .sheet{top:auto;bottom:0;right:0;left:0;width:100%;height:auto;max-height:88dvh;
-    border-radius:10px 10px 0 0;animation:slideup .3s cubic-bezier(.22,1,.36,1)}
-  @keyframes slideup{from{transform:translateY(30px);opacity:0}to{transform:none;opacity:1}}
+    border-radius:10px 10px 0 0}
   .sheet dl > div{grid-template-columns:84px 1fr}
 }
 
@@ -386,11 +384,10 @@ html.intro-run .ts .w,html.intro-run .ts .ch,html.intro-run .tsi .wi{opacity:0}
   position:fixed;top:0;right:0;left:auto;height:100dvh;width:min(430px,94vw);max-width:none;max-height:none;
   margin:0;padding:0;border:none;background:var(--card);color:var(--ink);
   box-shadow:-40px 0 70px -46px rgba(30,20,8,.95);
-  animation:slidein .28s cubic-bezier(.22,1,.36,1);
 }
-.sheet::backdrop{background:rgba(30,20,8,.45)}
+.sheet::backdrop{background:rgba(30,20,8,.45);opacity:0;transition:opacity .26s ease}
+.sheet.shown::backdrop{opacity:1}
 .sheet[open]{display:block}
-@keyframes slidein{from{transform:translateX(24px);opacity:0}to{transform:none;opacity:1}}
 
 .sheet-in{height:100%;overflow-y:auto;display:flex;flex-direction:column;
   padding:26px 24px calc(30px + env(safe-area-inset-bottom))}
@@ -433,8 +430,7 @@ html.intro-run .ts .w,html.intro-run .ts .ch,html.intro-run .tsi .wi{opacity:0}
     100%{transform:translate(0,0) rotate(0)}
   }
   .sheet{top:auto;bottom:0;right:0;left:0;width:100%;height:auto;max-height:88dvh;
-    border-radius:10px 10px 0 0;animation:slideup .3s cubic-bezier(.22,1,.36,1)}
-  @keyframes slideup{from{transform:translateY(30px);opacity:0}to{transform:none;opacity:1}}
+    border-radius:10px 10px 0 0}
   .sheet dl > div{grid-template-columns:84px 1fr}
 }
 
@@ -972,19 +968,54 @@ html.intro-run .aboutcard{opacity:0}
 
 <script>
   (function () {
-    const btn = document.querySelector('[data-about]');
-
     const dlg = document.getElementById('aboutSheet');
-    const open = () => { dlg.showModal ? dlg.showModal() : dlg.setAttribute('open', ''); };
-    const close = () => { dlg.close ? dlg.close() : dlg.removeAttribute('open'); };
+    const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    let running = null;
+
+    function isMobile() { return window.matchMedia('(max-width:940px)').matches; }
+
+    function openSheet() {
+      if (dlg.open) return;
+      dlg.showModal ? dlg.showModal() : dlg.setAttribute('open', '');
+      if (reduce) { dlg.classList.add('shown'); return; }
+      if (running) { running.cancel(); running = null; }
+
+      requestAnimationFrame(function () {
+        dlg.classList.add('shown');
+        running = dlg.animate(isMobile()
+          ? [{ transform: 'translateY(100%)' },
+             { transform: 'translateY(-6px)', offset: .74 },
+             { transform: 'translateY(0)' }]
+          : [{ transform: 'translateX(34px)', opacity: 0 },
+             { transform: 'translateX(-4px)', opacity: 1, offset: .78 },
+             { transform: 'translateX(0)', opacity: 1 }],
+          { duration: isMobile() ? 470 : 330,
+            easing: 'cubic-bezier(.32,.72,0,1)', fill: 'both' });
+        running.onfinish = function () { running = null; };
+      });
+    }
+
+    function closeSheet() {
+      if (!dlg.open) return;
+      if (reduce) { dlg.classList.remove('shown'); dlg.close(); return; }
+      if (running) { running.cancel(); running = null; }
+      dlg.classList.remove('shown');
+      running = dlg.animate(isMobile()
+        ? [{ transform: 'translateY(0)' }, { transform: 'translateY(100%)' }]
+        : [{ transform: 'translateX(0)', opacity: 1 }, { transform: 'translateX(26px)', opacity: 0 }],
+        { duration: 270, easing: 'cubic-bezier(.5,0,.75,0)', fill: 'both' });
+      running.onfinish = function () { running = null; dlg.close(); };
+    }
+
     document.addEventListener('click', function (e) {
       var t = e.target.closest && e.target.closest('[data-about]');
-      if (t) { e.preventDefault(); open(); }
+      if (t) { e.preventDefault(); openSheet(); }
     });
-    document.getElementById('closeSheet').addEventListener('click', close);
-    document.getElementById('closeSheet2').addEventListener('click', close);
-    document.getElementById('toHowto').addEventListener('click', close);
-    dlg.addEventListener('click', (e) => { if (e.target === dlg) close(); });
+    document.getElementById('closeSheet').addEventListener('click', closeSheet);
+    document.getElementById('closeSheet2').addEventListener('click', closeSheet);
+    document.getElementById('toHowto').addEventListener('click', closeSheet);
+    dlg.addEventListener('click', function (e) { if (e.target === dlg) closeSheet(); });
+    dlg.addEventListener('cancel', function (e) { e.preventDefault(); closeSheet(); });
   })();
 </script>
 
