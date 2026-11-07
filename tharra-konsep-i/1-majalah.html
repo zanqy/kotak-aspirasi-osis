@@ -166,9 +166,13 @@ a{color:inherit}
 .faq summary{list-style:none;cursor:pointer;display:flex;justify-content:space-between;gap:12px;
   font-family:var(--fd);font-size:15.5px;font-weight:600;letter-spacing:-.01em}
 .faq summary::-webkit-details-marker{display:none}
-.faq summary .pm{font-family:var(--fm);font-size:13px;color:var(--red);flex:none}
+.faq summary .pm{font-family:var(--fm);font-size:13px;color:var(--red);flex:none;
+  transition:transform .3s cubic-bezier(.3,.9,.3,1);display:inline-block}
 .faq details[open] summary .pm{transform:rotate(45deg)}
-.faq p{font-family:var(--fd);font-size:13.5px;line-height:1.6;color:var(--soft);margin:8px 0 0;max-width:46ch}
+.faq details.closing summary .pm{transform:rotate(0deg)}
+.faq summary:hover .pm{color:#8f2517}
+.faq p{font-family:var(--fd);font-size:13.5px;line-height:1.6;color:var(--soft);margin:8px 0 0;max-width:46ch;
+  overflow:hidden}
 
 /* ---------- aturan ---------- */
 .rules{display:grid;grid-template-columns:.9fr 1.1fr;gap:34px;padding:30px 0;border-bottom:1px solid var(--line)}
@@ -1088,5 +1092,68 @@ html.intro-run .aboutcard{opacity:0}
 })();
 </script>
 
+
+<script>
+/* Tanya jawab: buka-tutup dengan tinggi yang dianimasikan (bukan lompat). */
+(function () {
+  var items = Array.prototype.slice.call(document.querySelectorAll('.faq details'));
+  if (!items.length) return;
+  var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  items.forEach(function (det) {
+    var sum = det.querySelector('summary');
+    var body = det.querySelector('p');
+    if (!sum || !body) return;
+    var running = null;
+
+    // keadaan awal: isi yang sudah terbuka dipasang tanpa animasi
+    body.style.height = det.open ? 'auto' : '0px';
+    body.style.opacity = det.open ? '1' : '0';
+
+    sum.addEventListener('click', function (e) {
+      e.preventDefault();
+      if (running) { running.cancel(); running = null; }
+
+      if (reduce) {
+        det.open = !det.open;
+        body.style.height = det.open ? 'auto' : '0px';
+        body.style.opacity = det.open ? '1' : '0';
+        return;
+      }
+
+      if (det.open) {
+        // menutup
+        var h0 = body.getBoundingClientRect().height;
+        running = body.animate([
+          { height: h0 + 'px', opacity: 1, marginTop: '8px' },
+          { height: '0px', opacity: 0, marginTop: '0px' }
+        ], { duration: 260, easing: 'cubic-bezier(.5,0,.3,1)', fill: 'both' });
+        det.classList.add('closing');
+        running.onfinish = function () {
+          det.classList.remove('closing');
+          det.open = false;
+          body.style.height = '0px';
+          body.style.opacity = '0';
+          running = null;
+        };
+      } else {
+        // membuka
+        det.open = true;
+        body.style.height = '0px';
+        var h1 = body.scrollHeight;
+        running = body.animate([
+          { height: '0px', opacity: 0, marginTop: '0px' },
+          { height: h1 + 'px', opacity: 1, marginTop: '8px' }
+        ], { duration: 340, easing: 'cubic-bezier(.3,.9,.3,1)', fill: 'both' });
+        running.onfinish = function () {
+          body.style.height = 'auto';
+          body.style.opacity = '1';
+          running = null;
+        };
+      }
+    });
+  });
+})();
+</script>
 </body>
 </html>
