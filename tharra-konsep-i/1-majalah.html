@@ -478,6 +478,13 @@ html.intro-run .aboutcard{opacity:0}
 .aboutcard:hover{border-color:#C9B48D}
 @media(max-width:560px){.aboutcard{height:24px;width:138px;font-size:8px;letter-spacing:.1em;padding:0 8px}}
 @media(prefers-reduced-motion:reduce){.aboutcard{transform:translateY(-50%)}}
+
+/* keadaan kosong: menunggu data dari backend */
+.indeks ol .empty{font-family:var(--fm);font-size:10px;letter-spacing:.06em;color:var(--faint);list-style:none;
+  border:1px dashed var(--line);padding:18px 12px;text-align:center;line-height:1.6;margin-top:10px}
+.empty-card{border:1px dashed var(--line);background:none;padding:22px 14px;text-align:center;
+  font-size:10.5px;letter-spacing:.08em;color:var(--faint);grid-column:1/-1}
+.fig b{color:var(--faint)}
 </style>
 <script>
   /* Kunci tampilan sebelum body dilukis: kalau intro akan jalan, mulai dari kertas kosong. */
@@ -559,10 +566,10 @@ html.intro-run .aboutcard{opacity:0}
   </section>
 
   <section class="figures">
-    <div class="fig"><b>128<i>+</i></b><span>Aspirasi masuk semester ini</span></div>
-    <div class="fig"><b>92<i>%</i></b><span>Dibalas dalam 7 hari</span></div>
-    <div class="fig"><b>24</b><span>Surat terkirim lewat Aksara</span></div>
-    <div class="fig"><b>6<i> hari</i></b><span>Jeda pembaruan mading</span></div>
+    <div class="fig" data-fill="fig-aspirasi" aria-label="Jumlah aspirasi masuk semester ini belum tersedia"><b aria-hidden="true">—</b><span>Aspirasi masuk semester ini</span></div>
+    <div class="fig" data-fill="fig-dibalas" aria-label="Persentase aspirasi yang dibalas belum tersedia"><b aria-hidden="true">—</b><span>Dibalas dalam 7 hari</span></div>
+    <div class="fig" data-fill="fig-surat" aria-label="Jumlah surat terkirim belum tersedia"><b aria-hidden="true">—</b><span>Surat terkirim lewat Aksara</span></div>
+    <div class="fig" data-fill="fig-jeda" aria-label="Jeda pembaruan mading belum tersedia"><b aria-hidden="true">—</b><span>Jeda pembaruan mading</span></div>
   </section>
 
   <section class="main">
@@ -598,12 +605,9 @@ html.intro-run .aboutcard{opacity:0}
 
     <aside class="indeks">
       <span class="k">Isi terbaru</span>
-      <ol>
-        <li><div class="row"><span class="no">01</span><span>Lampu koridor lantai 2</span><span class="dots"></span><span class="st">dibalas</span></div></li>
-        <li><div class="row"><span class="no">02</span><span>Kantin: harga &amp; antrean</span><span class="dots"></span><span class="st hot">baru</span></div></li>
-        <li><div class="row"><span class="no">03</span><span>Surat untuk XI-3</span><span class="dots"></span><span class="st hot">baru</span></div></li>
-        <li><div class="row"><span class="no">04</span><span>Jadwal ekstrakurikuler</span><span class="dots"></span><span class="st">arsip</span></div></li>
-        <li><div class="row"><span class="no">05</span><span>Karya: puisi kelas X</span><span class="dots"></span><span class="st">mading</span></div></li>
+      <!-- diisi dari API: <li><div class="row">…</div></li> -->
+      <ol id="daftar-aspirasi" data-state="empty">
+        <li class="empty">Belum ada kiriman bulan ini.</li>
       </ol>
       <div class="tip">
         <b>Pertama kali di sini?</b>
@@ -612,36 +616,20 @@ html.intro-run .aboutcard{opacity:0}
     </aside>
   </section>
 
-  <section class="pull">
+  <section class="pull" hidden data-fill="kutipan">
     <span class="mark">“</span>
     <div>
-      <blockquote>Yang paling sering masuk bukan masalah besar, tapi hal kecil yang tidak pernah ditanyakan siapa-siapa.</blockquote>
+      <blockquote>—</blockquote>
       <cite>Rekap aspirasi bulan lalu · Humas</cite>
     </div>
-    <div class="aside">Dari 128 kiriman semester ini, 61 di antaranya soal fasilitas kelas dan kantin.</div>
+    <div class="aside">—</div>
   </section>
 
   <section class="sect">
     <div class="head"><h2>Dari mading</h2><span>Terbit minggu ini</span></div>
-    <div class="mading">
-      <article class="post">
-        <div class="m"><span>Mading · XI-3</span><span>12 Nov</span></div>
-        <h3>Terima kasih setelah pensi</h3>
-        <p>Surat pendek untuk kelas yang bersih-bersih paling akhir tanpa diminta.</p>
-        <a href="../index.html">Baca surat →</a>
-      </article>
-      <article class="post">
-        <div class="m"><span>Karya · X-2</span><span>10 Nov</span></div>
-        <h3>Tiga puisi tentang koridor</h3>
-        <p>Karya siswa yang ditempel di mading sayap barat minggu ini.</p>
-        <a href="../index.html">Baca karya →</a>
-      </article>
-      <article class="post">
-        <div class="m"><span>Pengumuman</span><span>08 Nov</span></div>
-        <h3>Jadwal ekstrakurikuler berubah</h3>
-        <p>Beberapa jadwal bergeser karena ujian tengah semester.</p>
-        <a href="../index.html">Lihat jadwal →</a>
-      </article>
+    <div class="mading" data-state="empty">
+      <!-- diisi dari API: <article class="post">…</article> -->
+      <div class="empty-card">Belum ada kiriman minggu ini.</div>
     </div>
   </section>
 
