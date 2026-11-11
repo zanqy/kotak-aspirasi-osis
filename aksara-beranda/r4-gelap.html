@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>R4 — Gelap Berkelompok · Beranda AKSARA</title>
+<link rel="stylesheet" href="base.css">
+<style>
+/* R4 — pola kelompok gelap ala Linear mobile: label kecil, baris berikon, pemisah tipis.
+   Referensi: linear.app/changelog/2025-10-16-mobile-app-redesign */
+body{background:#0B0906}
+.shell{background:#14110C;color:#EDE7DA;padding-top:16px}
+.top{display:flex;align-items:center;justify-content:space-between;gap:10px}
+.top .wordmark{font-size:23px;color:#F4EEE1}
+.top .wordmark i{color:#E0674A}
+.top .act{display:inline-flex;align-items:center;gap:7px;padding:7px 12px;border-radius:999px;
+  background:rgba(224,103,74,.16);border:1px solid rgba(224,103,74,.42);color:#F0B4A3;
+  font-family:var(--fm);font-size:8.5px;letter-spacing:.12em;text-transform:uppercase;text-decoration:none}
+
+.hello{margin-top:20px}
+.hello h1{font-family:var(--fd);font-weight:800;font-size:1.6rem;line-height:1.08;letter-spacing:-.03em;color:#F4EEE1}
+.hello p{font-family:var(--fs);font-size:.86rem;color:rgba(237,231,218,.55);margin-top:5px}
+
+.sect{margin-top:20px}
+.sect .label{display:flex;justify-content:space-between;align-items:baseline;
+  font-family:var(--fm);font-size:8.5px;letter-spacing:.16em;text-transform:uppercase;color:rgba(237,231,218,.38);
+  padding-bottom:6px;border-bottom:1px solid rgba(237,231,218,.1)}
+.rows a{display:flex;align-items:center;gap:12px;padding:13px 2px;text-decoration:none;
+  border-bottom:1px solid rgba(237,231,218,.08)}
+.rows a:last-child{border-bottom:0}
+.rows svg{width:19px;height:19px;stroke:currentColor;fill:none;stroke-width:1.5;stroke-linecap:round;
+  stroke-linejoin:round;color:rgba(237,231,218,.55);flex:0 0 auto}
+.rows a.hot svg{color:#E0674A}
+.rows .txt{flex:1;min-width:0}
+.rows b{font-family:var(--fd);font-weight:600;font-size:.96rem;letter-spacing:-.015em;display:block;
+  color:#F4EEE1;line-height:1.2}
+.rows span{display:block;font-size:.76rem;color:rgba(237,231,218,.45);margin-top:2px}
+.rows .chev{font-family:var(--fm);font-size:.8rem;color:rgba(237,231,218,.3)}
+
+.who{margin-top:22px;padding-top:12px;border-top:1px solid rgba(237,231,218,.12);
+  display:flex;align-items:center;gap:10px}
+.who .ava{width:30px;height:30px;border-radius:50%;background:rgba(237,231,218,.1);color:#F4EEE1;
+  display:grid;place-items:center;font-family:var(--fd);font-weight:800;font-size:.85rem}
+.who b{font-family:var(--fd);font-size:.88rem;color:#F4EEE1;display:block;letter-spacing:-.012em}
+.who span{font-family:var(--fm);font-size:8.5px;letter-spacing:.1em;text-transform:uppercase;color:rgba(237,231,218,.4)}
+.foot{margin-top:14px;border-top:1px solid rgba(237,231,218,.1);color:rgba(237,231,218,.3)}
+</style>
+</head>
+<body>
+<main class="shell">
+
+  <header class="top">
+    <div class="wordmark">AKSARA<i>.</i></div>
+    <a class="act" href="/aksara/mading/umum">Tempel +</a>
+  </header>
+
+  <section class="hello">
+    <h1>Halo, Auzan.</h1>
+    <p>Mading, surat, kartu — semuanya satu ketukan dari sini.</p>
+  </section>
+
+  <section class="sect">
+    <div class="label"><span>Ruang</span><span>02</span></div>
+    <div class="rows">
+      <a class="hot" href="/aksara/mading/umum">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="4" width="7" height="7" rx="1"/><rect x="14" y="4" width="7" height="7" rx="1"/><rect x="3" y="15" width="7" height="5" rx="1"/><rect x="14" y="15" width="7" height="5" rx="1"/></svg>
+        <span class="txt"><b>Mading Umum</b><span>Papan publik</span></span>
+        <span class="chev">›</span>
+      </a>
+      <a href="/aksara/mading/pribadi">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="10" width="14" height="10" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg>
+        <span class="txt"><b>Kamarku</b><span>Hanya untukmu</span></span>
+        <span class="chev">›</span>
+      </a>
+    </div>
+  </section>
+
+  <section class="sect">
+    <div class="label"><span>Korespondensi</span><span>02</span></div>
+    <div class="rows">
+      <a href="/aksara/surat">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="6" width="18" height="12" rx="2"/><path d="m4 8 8 5 8-5"/></svg>
+        <span class="txt"><b>Kotak Surat</b><span>Masuk &amp; terkirim</span></span>
+        <span class="chev">›</span>
+      </a>
+      <a href="/aksara/kirim">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12 20 4l-6 16-3-7-7-1Z"/></svg>
+        <span class="txt"><b>Kirim Surat</b><span>Pos kilat redaksi</span></span>
+        <span class="chev">›</span>
+      </a>
+    </div>
+  </section>
+
+  <section class="sect">
+    <div class="label"><span>Akun</span><span>pengurus</span></div>
+    <div class="rows">
+      <a href="/aksara/profil">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><circle cx="9" cy="11" r="2.2"/><path d="M6 16c.6-1.6 1.7-2.3 3-2.3s2.4.7 3 2.3"/></svg>
+        <span class="txt"><b>Kartu Pelajarku</b><span>Identitas &amp; peran</span></span>
+        <span class="chev">›</span>
+      </a>
+      <a href="/aksara/urusan">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="9" cy="9" r="3"/><path d="M4 19c.8-3 2.9-4.4 5-4.4S13.2 16 14 19"/><path d="M16 8h5M16 12h5M16 16h3"/></svg>
+        <span class="txt"><b>Urusan Redaksi</b><span>Anggota &amp; peran</span></span>
+        <span class="chev">›</span>
+      </a>
+    </div>
+  </section>
+
+  <div class="who">
+    <span class="ava">A</span>
+    <span style="flex:1"><b>Auzan Shidqi</b><span>XI-3 · pengurus</span></span>
+    <a class="mono mono--sm" href="/aksara/profil" style="text-decoration:none;color:rgba(237,231,218,.5)">Kartu →</a>
+  </div>
+
+  <div class="foot mono mono--sm">
+    <span>EDISI 231 · RABU 11 NOV 2026</span>
+    <span>1 senyum</span>
+  </div>
+</main>
+</body>
+</html>

@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>R3 — Daftar Polos · Beranda AKSARA</title>
+<link rel="stylesheet" href="base.css">
+<style>
+/* R3 — pola daftar tipografis tanpa kartu (Things 3): jarak lega, garis rambut, tanpa kotak.
+   Referensi: culturedcode.com/things — daftar "Areas/Projects". */
+.shell{padding:18px 20px calc(26px + env(safe-area-inset-bottom))}
+.head{display:flex;align-items:baseline;justify-content:space-between;gap:10px}
+.head .wordmark{font-size:22px}
+.head .ed{text-align:right;line-height:1.5}
+
+.hello{margin-top:22px}
+.hello h1{font-family:var(--fd);font-weight:800;font-size:clamp(1.85rem,8.4vw,2.15rem);line-height:1.03;
+  letter-spacing:-.035em}
+.hello p{font-family:var(--fs);font-style:italic;font-size:.9rem;color:var(--soft);margin-top:7px}
+
+.sect{margin-top:26px}
+.sect .label{font-family:var(--fm);font-size:8.5px;letter-spacing:.18em;text-transform:uppercase;color:var(--faint)}
+.rows{margin-top:6px}
+.rows a{display:grid;grid-template-columns:1fr auto;align-items:baseline;gap:14px;
+  padding:15px 0;border-bottom:1px solid var(--line);text-decoration:none}
+.rows a:first-child{border-top:1px solid var(--line)}
+.rows b{font-family:var(--fd);font-weight:700;font-size:1.12rem;letter-spacing:-.024em;display:block;line-height:1.2}
+.rows span{display:block;font-size:.8rem;color:var(--soft);margin-top:3px;line-height:1.45}
+.rows .arrow{font-family:var(--fm);font-size:.9rem;color:var(--faint);transform:translateY(-1px)}
+.rows a:active b{color:var(--red)}
+
+.mark{margin-top:26px;padding-top:14px;border-top:1px solid var(--line-strong);
+  display:flex;align-items:center;justify-content:space-between;gap:10px}
+.mark b{font-family:var(--fd);font-size:.92rem;letter-spacing:-.012em}
+.mark span{font-family:var(--fm);font-size:8.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--faint)}
+</style>
+</head>
+<body>
+<main class="shell">
+
+  <header class="head">
+    <div class="wordmark">AKSARA<i>.</i></div>
+    <div class="ed mono faint">Edisi 231<br>Rabu · 11 Nov 2026</div>
+  </header>
+
+  <section class="hello">
+    <h1>Auzan.</h1>
+    <p>Enam tempat. Pilih satu.</p>
+  </section>
+
+  <section class="sect">
+    <div class="label">Ruang</div>
+    <div class="rows">
+      <a href="/aksara/mading/umum"><span><b>Mading Umum</b><span>Papan publik, siapa pun boleh menempel</span></span><span class="arrow">→</span></a>
+      <a href="/aksara/mading/pribadi"><span><b>Kamarku</b><span>Hanya kamu yang bisa membukanya</span></span><span class="arrow">→</span></a>
+    </div>
+  </section>
+
+  <section class="sect">
+    <div class="label">Korespondensi</div>
+    <div class="rows">
+      <a href="/aksara/surat"><span><b>Kotak Surat</b><span>Surat masuk &amp; terkirim</span></span><span class="arrow">→</span></a>
+      <a href="/aksara/kirim"><span><b>Kirim Surat</b><span>Pos kilat redaksi</span></span><span class="arrow">→</span></a>
+    </div>
+  </section>
+
+  <section class="sect">
+    <div class="label">Akun · pengurus</div>
+    <div class="rows">
+      <a href="/aksara/profil"><span><b>Kartu Pelajarku</b><span>Identitas &amp; peran</span></span><span class="arrow">→</span></a>
+      <a href="/aksara/urusan"><span><b>Urusan Redaksi</b><span>Anggota &amp; peran</span></span><span class="arrow">→</span></a>
+    </div>
+  </section>
+
+  <div class="mark">
+    <div>
+      <b>AKSARA · edisi 231</b><br>
+      <span>XI-3 · 1 senyum</span>
+    </div>
+    <a class="mono mono--sm faint" href="#" style="text-decoration:none">Keluar</a>
+  </div>
+</main>
+</body>
+</html>

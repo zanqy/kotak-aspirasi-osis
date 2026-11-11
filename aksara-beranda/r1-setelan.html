@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>R1 — Daftar Setelan · Beranda AKSARA</title>
+<link rel="stylesheet" href="base.css">
+<style>
+/* R1 — pola "grouped inset list" (Apple HIG / Settings iOS).
+   Referensi: developer.apple.com/design/human-interface-guidelines/lists-and-tables */
+body{background:#D8CCB2}
+.shell{background:#E6DCC6;padding-top:14px}
+.topbar{display:flex;align-items:center;justify-content:space-between;gap:10px;padding-bottom:8px}
+.topbar .wordmark{font-size:22px}
+.topbar .who{text-align:right;line-height:1.5}
+
+.title{margin:10px 0 4px}
+.title h1{font-family:var(--fd);font-weight:800;font-size:1.7rem;line-height:1.05;letter-spacing:-.03em}
+.title p{font-size:.82rem;color:var(--soft);margin-top:3px}
+
+.glabel{margin:16px 4px 6px;display:flex;justify-content:space-between;align-items:baseline}
+.group{background:var(--card);border:1px solid var(--line);border-radius:13px;overflow:hidden}
+.row{display:flex;align-items:center;gap:11px;padding:11px 13px;text-decoration:none;
+  border-bottom:1px solid var(--line)}
+.row:last-child{border-bottom:0}
+.row .glyph{width:26px;height:26px;border-radius:7px;display:grid;place-items:center;flex:0 0 auto;
+  background:rgba(34,29,21,.07);font-family:var(--fm);font-size:8.5px;letter-spacing:.06em;color:var(--soft)}
+.row .txt{flex:1;min-width:0}
+.row b{font-family:var(--fd);font-weight:700;font-size:.94rem;letter-spacing:-.015em;display:block;line-height:1.2}
+.row span{display:block;font-size:.75rem;color:var(--soft);margin-top:2px}
+.row .chev{font-family:var(--fm);font-size:.85rem;color:var(--faint)}
+.row--hot .glyph{background:rgba(192,59,33,.12);color:var(--red)}
+.row--hot b{color:var(--red)}
+
+.tip{margin:14px 4px 0;font-family:var(--fs);font-style:italic;font-size:.8rem;line-height:1.55;color:var(--soft)}
+</style>
+</head>
+<body>
+<main class="shell">
+
+  <div class="topbar">
+    <div class="wordmark">AKSARA<i>.</i></div>
+    <div class="who mono mono--sm faint">Edisi 231<br>Rabu · 11 Nov 2026</div>
+  </div>
+
+  <div class="title">
+    <h1>Beranda</h1>
+    <p>Auzan Shidqi · XI-3 · pengurus</p>
+  </div>
+
+  <div class="glabel mono mono--sm faint"><span>Ruang</span><span>2</span></div>
+  <div class="group">
+    <a class="row row--hot" href="/aksara/mading/umum">
+      <span class="glyph">01</span>
+      <span class="txt"><b>Mading Umum</b><span>Papan publik, siapa pun boleh menempel</span></span>
+      <span class="chev">›</span>
+    </a>
+    <a class="row" href="/aksara/mading/pribadi">
+      <span class="glyph">02</span>
+      <span class="txt"><b>Kamarku</b><span>Hanya kamu yang bisa membukanya</span></span>
+      <span class="chev">›</span>
+    </a>
+  </div>
+
+  <div class="glabel mono mono--sm faint"><span>Korespondensi</span><span>2</span></div>
+  <div class="group">
+    <a class="row" href="/aksara/surat">
+      <span class="glyph">03</span>
+      <span class="txt"><b>Kotak Surat</b><span>Surat masuk &amp; terkirim</span></span>
+      <span class="chev">›</span>
+    </a>
+    <a class="row" href="/aksara/kirim">
+      <span class="glyph">04</span>
+      <span class="txt"><b>Kirim Surat</b><span>Pos kilat redaksi</span></span>
+      <span class="chev">›</span>
+    </a>
+  </div>
+
+  <div class="glabel mono mono--sm faint"><span>Akun</span><span>pengurus</span></div>
+  <div class="group">
+    <a class="row" href="/aksara/profil">
+      <span class="glyph">05</span>
+      <span class="txt"><b>Kartu Pelajarku</b><span>Identitas &amp; peran</span></span>
+      <span class="chev">›</span>
+    </a>
+    <a class="row" href="/aksara/urusan">
+      <span class="glyph">06</span>
+      <span class="txt"><b>Urusan Redaksi</b><span>Anggota &amp; peran</span></span>
+      <span class="chev">›</span>
+    </a>
+  </div>
+
+  <p class="tip">Semua isi ada di halaman masing-masing — beranda cuma daftar pintu.</p>
+
+  <div class="foot mono mono--sm">
+    <span>AKSARA · EDISI 231</span>
+    <span>Keluar</span>
+  </div>
+</main>
+</body>
+</html>

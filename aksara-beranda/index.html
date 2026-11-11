@@ -3,33 +3,36 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Enam beranda AKSARA — pratinjau</title>
+<title>Referensi beranda AKSARA — putaran dua</title>
 <link rel="stylesheet" href="base.css">
 <style>
-.shell{max-width:520px}
+.shell{max-width:540px}
 header.top{padding-bottom:12px;border-bottom:2px solid var(--ink)}
 .wordmark{font-size:34px}
-h1{font-family:var(--fd);font-weight:800;font-size:clamp(1.6rem,6.4vw,1.95rem);line-height:1.08;
-  letter-spacing:-.03em;margin-top:12px}
-.lede{font-size:.9rem;line-height:1.6;color:var(--soft);margin-top:7px}
+h1{font-family:var(--fd);font-weight:800;font-size:clamp(1.55rem,6.2vw,1.9rem);line-height:1.08;
+  letter-spacing:-.03em;margin-top:11px}
+.lede{font-size:.88rem;line-height:1.6;color:var(--soft);margin-top:6px}
 .lede b{color:var(--ink)}
 
-.func{margin-top:12px;padding:11px 12px;border-left:2px solid rgba(192,59,33,.5);
-  font-family:var(--fs);font-style:italic;font-size:.84rem;line-height:1.6;color:var(--soft)}
-.func b{font-style:normal;color:var(--ink)}
+.h2row{display:flex;align-items:baseline;justify-content:space-between;gap:10px;margin-top:22px}
+.h2{font-family:var(--fd);font-weight:800;font-size:1.04rem;letter-spacing:-.02em}
+.h2row .c{font-family:var(--fm);font-size:8.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--faint)}
 
-.list{list-style:none;margin:16px 0 0;padding:0;display:grid;gap:10px}
-.item{display:block;text-decoration:none;padding:13px 14px;border:1px solid var(--line);border-radius:12px;
-  background:var(--card);transition:transform .18s ease, box-shadow .18s ease}
-.item:active{transform:scale(.99)}
+.list{list-style:none;margin:9px 0 0;padding:0;display:grid;gap:9px}
+.item{display:block;text-decoration:none;padding:12px 13px;border:1px solid var(--line);border-radius:12px;background:var(--card)}
 .item .no{font-family:var(--fm);font-size:8.5px;letter-spacing:.14em;color:var(--red)}
-.item b{display:block;font-family:var(--fd);font-weight:800;font-size:1.02rem;letter-spacing:-.02em;margin-top:3px}
-.item span.d{display:block;font-size:.82rem;line-height:1.5;color:var(--soft);margin-top:3px}
-.item .go{display:flex;justify-content:space-between;align-items:center;margin-top:8px;
-  font-family:var(--fm);font-size:8.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--faint)}
-.note{margin-top:16px;padding:12px 13px;border:1px dashed var(--line-strong);border-radius:10px;font-size:.8rem;
-  line-height:1.55;color:var(--soft)}
-@media (min-width:560px){.item:hover{transform:translateY(-2px);box-shadow:0 18px 30px -26px rgba(0,0,0,.5)}}
+.item b{display:block;font-family:var(--fd);font-weight:800;font-size:1rem;letter-spacing:-.02em;margin-top:3px}
+.item span.d{display:block;font-size:.8rem;line-height:1.5;color:var(--soft);margin-top:3px}
+.item .ref{display:block;font-family:var(--fm);font-size:8px;letter-spacing:.1em;text-transform:uppercase;
+  color:var(--faint);margin-top:6px}
+.item .go{display:flex;justify-content:space-between;margin-top:8px;font-family:var(--fm);font-size:8.5px;
+  letter-spacing:.12em;text-transform:uppercase;color:var(--faint)}
+
+.refs{margin-top:18px;padding:13px;border:1px dashed var(--line-strong);border-radius:11px}
+.refs .h{font-family:var(--fm);font-size:8.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--faint)}
+.refs ul{margin:8px 0 0;padding-left:16px;font-size:.8rem;line-height:1.65;color:var(--soft)}
+.refs a{color:var(--ink)}
+.note{margin-top:12px;font-family:var(--fs);font-style:italic;font-size:.8rem;line-height:1.55;color:var(--soft)}
 </style>
 </head>
 <body>
@@ -37,57 +40,84 @@ h1{font-family:var(--fd);font-weight:800;font-size:clamp(1.6rem,6.4vw,1.95rem);l
 
   <header class="top">
     <div class="wordmark">AKSARA<i>.</i></div>
-    <p class="mono mono--sm faint" style="margin-top:5px">Pratinjau beranda anggota · enam arah</p>
+    <p class="mono mono--sm faint" style="margin-top:5px">Putaran dua · dari pola aplikasi nyata</p>
   </header>
 
-  <h1>Enam cara menyusun pintu.</h1>
-  <p class="lede">Semua varian ini <b>sama fungsinya</b> dengan beranda <code>/aksara</code> sekarang: enam tautan ke halaman lain. Tidak ada tempelan, surat, atau angka di sini — isinya tetap di halaman masing-masing.</p>
+  <h1>Lima beranda, lima rujukan.</h1>
+  <p class="lede">Kali ini bukan karangan sendiri: tiap varian meniru <b>satu pola yang sudah terbukti</b> di aplikasi lain, lalu diterjemahkan ke palet AKSARA. Fungsinya tetap sama — enam pintu, tanpa isi.</p>
 
-  <p class="func"><b>Isi tiap layar:</b> sapaan + nama &amp; kelas dari <code>students/{uid}</code>, lalu Mading Umum, Kamarku, Kotak Surat, Kirim Surat, Kartu Pelajarku, dan Urusan Redaksi (khusus pengurus). Kaki halaman: edisi &amp; tanggal.</p>
+  <div class="h2row">
+    <div class="h2">Set R — dari referensi</div>
+    <span class="c">5 varian</span>
+  </div>
 
   <ol class="list">
-    <li><a class="item" href="v1-satu-pintu.html">
-      <span class="no">01</span><b>Satu Pintu</b>
-      <span class="d">Mading Umum jadi kartu besar, empat pintu lain jadi grid 2×2, urusan di strip merah.</span>
-      <span class="go"><span>Hierarki · paling jelas</span><span>Buka →</span></span>
+    <li><a class="item" href="r1-setelan.html">
+      <span class="no">R1</span><b>Daftar Setelan</b>
+      <span class="d">Kelompok berbingkai, baris berikon, garis rambut di antara baris. Terasa familiar dan tidak mungkin salah tekan.</span>
+      <span class="ref">Rujukan · Apple HIG — grouped inset list</span>
+      <span class="go"><span>Paling aman</span><span>Buka →</span></span>
     </a></li>
 
-    <li><a class="item" href="v2-daftar.html">
-      <span class="no">02</span><b>Daftar Berkas</b>
-      <span class="d">Enam baris bernomor, satu aksi utama di bawah. Paling cepat dipindai.</span>
-      <span class="go"><span>Daftar · paling tenang</span><span>Buka →</span></span>
+    <li><a class="item" href="r2-kartu.html">
+      <span class="no">R2</span><b>Kartu Ruang</b>
+      <span class="d">Tiap tujuan satu kartu dengan pita warna di atas — cara Classroom memisahkan kelas.</span>
+      <span class="ref">Rujukan · Google Classroom — halaman Classes</span>
+      <span class="go"><span>Paling berwarna</span><span>Buka →</span></span>
     </a></li>
 
-    <li><a class="item" href="v3-tombol.html">
-      <span class="no">03</span><b>Papan Tombol</b>
-      <span class="d">Enam tombol berikon di grid 2×3, terasa bisa ditekan seperti papan kunci.</span>
-      <span class="go"><span>Visual · paling ramah</span><span>Buka →</span></span>
+    <li><a class="item" href="r3-polos.html">
+      <span class="no">R3</span><b>Daftar Polos</b>
+      <span class="d">Tanpa kotak, tanpa ikon. Tipografi besar, jarak lega, garis rambut. Membaca jadi satu tarikan napas.</span>
+      <span class="ref">Rujukan · Things 3 — daftar area</span>
+      <span class="go"><span>Paling tenang</span><span>Buka →</span></span>
     </a></li>
 
-    <li><a class="item" href="v4-bertab.html">
-      <span class="no">04</span><b>Bertab</b>
-      <span class="d">Enam pintu dikelompokkan tiga berkas: Ruang, Surat, Akun. Tab-nya bekerja.</span>
-      <span class="go"><span>Kelompok · ruang sempit</span><span>Buka →</span></span>
+    <li><a class="item" href="r4-gelap.html">
+      <span class="no">R4</span><b>Gelap Berkelompok</b>
+      <span class="d">Kanvas gelap, label kecil, baris berikon, pemisah tipis — bahasa Linear di ponsel.</span>
+      <span class="ref">Rujukan · Linear — mobile redesign 2025</span>
+      <span class="go"><span>Paling tegas</span><span>Buka →</span></span>
     </a></li>
 
-    <li><a class="item" href="v5-slip.html">
-      <span class="no">05</span><b>Slip</b>
-      <span class="d">Kartu anggota tampil sebagai slip berstempel di atas, pintu jadi daftar di bawahnya.</span>
-      <span class="go"><span>Identitas dulu</span><span>Buka →</span></span>
-    </a></li>
-
-    <li><a class="item" href="v6-rak.html">
-      <span class="no">06</span><b>Rak</b>
-      <span class="d">Tiga rak berlabel — ruang baca, korespondensi, akun — masing-masing dua pintu.</span>
-      <span class="go"><span>Bagian · paling teratur</span><span>Buka →</span></span>
+    <li><a class="item" href="r5-tumpukan.html">
+      <span class="no">R5</span><b>Tumpukan Kartu</b>
+      <span class="d">Kartu bertumpuk seperti Wallet; yang depan paling sering dipakai, ketuk untuk menumpuk ke belakang.</span>
+      <span class="ref">Rujukan · Apple Wallet — card stack</span>
+      <span class="go"><span>Paling interaktif</span><span>Buka →</span></span>
     </a></li>
   </ol>
 
-  <p class="note">Catatan: nama, kelas, dan peran di sini contoh (Auzan Shidqi · XI-3 · pengurus). Tidak ada angka rekaan, tidak ada pengumuman atau agenda — aplikasinya memang tidak punya data itu.</p>
+  <div class="h2row">
+    <div class="h2">Set V — percobaan pertama</div>
+    <span class="c">6 varian</span>
+  </div>
+
+  <ol class="list">
+    <li><a class="item" href="v1-satu-pintu.html"><span class="no">V1</span><b>Satu Pintu</b><span class="d">Satu kartu utama + grid 2×2.</span><span class="go"><span>Buka →</span></span></a></li>
+    <li><a class="item" href="v2-daftar.html"><span class="no">V2</span><b>Daftar Berkas</b><span class="d">Enam baris bernomor.</span><span class="go"><span>Buka →</span></span></a></li>
+    <li><a class="item" href="v3-tombol.html"><span class="no">V3</span><b>Papan Tombol</b><span class="d">Grid 2×3 berikon.</span><span class="go"><span>Buka →</span></span></a></li>
+    <li><a class="item" href="v4-bertab.html"><span class="no">V4</span><b>Bertab</b><span class="d">Ruang / Surat / Akun.</span><span class="go"><span>Buka →</span></span></a></li>
+    <li><a class="item" href="v5-slip.html"><span class="no">V5</span><b>Slip</b><span class="d">Kartu anggota di atas.</span><span class="go"><span>Buka →</span></span></a></li>
+    <li><a class="item" href="v6-rak.html"><span class="no">V6</span><b>Rak</b><span class="d">Tiga rak berlabel.</span><span class="go"><span>Buka →</span></span></a></li>
+  </ol>
+
+  <div class="refs">
+    <div class="h">Bacaan rujukan</div>
+    <ul>
+      <li><a href="https://developer.android.com/design/ui/mobile/guides/layout-and-content/layout-and-nav-patterns">Android — layout &amp; navigation patterns</a></li>
+      <li><a href="https://m1.material.io/patterns/navigation.html">Material — navigation patterns</a></li>
+      <li><a href="https://linear.app/changelog/2025-10-16-mobile-app-redesign">Linear — mobile app redesign</a></li>
+      <li><a href="https://www.notion.com/en-gb/releases/2026-05-04">Notion — new home on mobile</a></li>
+      <li><a href="https://culturedcode.com/things/features/">Things 3 — daftar &amp; area</a></li>
+    </ul>
+  </div>
+
+  <p class="note">Isi tiap layar tetap: sapaan, nama &amp; kelas, enam pintu, kaki edisi. Tidak ada tempelan, surat, angka, atau agenda.</p>
 
   <div class="foot mono mono--sm">
     <span>THARRA — AKSARA</span>
-    <span>PRATINJAU 1/1</span>
+    <span>PUTARAN 2/2</span>
   </div>
 </main>
 </body>

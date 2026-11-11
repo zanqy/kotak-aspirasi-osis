@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>R2 — Kartu Ruang · Beranda AKSARA</title>
+<link rel="stylesheet" href="base.css">
+<style>
+/* R2 — pola kartu berkelas (Google Classroom): tiap tujuan satu kartu berpita warna.
+   Referensi: support.google.com/edu/classroom — halaman utama "Classes". */
+.head{display:flex;align-items:flex-end;justify-content:space-between;gap:12px;padding-bottom:10px}
+.head .wordmark{font-size:24px}
+.head .ed{text-align:right;line-height:1.5}
+
+.hello{margin-top:12px;padding-bottom:12px;border-bottom:1px solid var(--line)}
+.hello b{font-family:var(--fd);font-size:1.05rem;letter-spacing:-.02em;display:block}
+.hello span{font-family:var(--fm);font-size:8.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--faint)}
+
+.cards{display:grid;gap:10px;margin-top:13px}
+.room{display:block;text-decoration:none;background:var(--card);border:1px solid var(--line);
+  border-radius:14px;overflow:hidden}
+.band{height:7px;background:var(--ink)}
+.room--red .band{background:var(--red)}
+.room--green .band{background:var(--green)}
+.room--olive .band{background:#7A6A3F}
+.room--ink .band{background:var(--ink)}
+.room--rose .band{background:#A8563C}
+
+.body{display:flex;align-items:center;gap:12px;padding:12px 13px}
+.body .txt{flex:1;min-width:0}
+.room h2{font-family:var(--fd);font-weight:800;font-size:1.08rem;letter-spacing:-.024em;line-height:1.15}
+.room p{font-size:.78rem;color:var(--soft);margin-top:3px;line-height:1.4}
+.room .num{font-family:var(--fm);font-size:8.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--faint)}
+.room .go{width:28px;height:28px;border-radius:50%;display:grid;place-items:center;flex:0 0 auto;
+  background:rgba(34,29,21,.06);font-family:var(--fm);font-size:.8rem;color:var(--soft)}
+
+.foot-note{margin-top:13px;display:flex;align-items:flex-start;gap:8px;font-family:var(--fs);font-style:italic;
+  font-size:.8rem;line-height:1.5;color:var(--soft)}
+.foot-note::before{content:"—";color:var(--faint)}
+</style>
+</head>
+<body>
+<main class="shell">
+
+  <header class="head">
+    <div class="wordmark">AKSARA<i>.</i></div>
+    <div class="ed mono faint">Edisi 231<br>Rabu · 11 Nov 2026</div>
+  </header>
+
+  <div class="hello">
+    <b>Halo, Auzan Shidqi.</b>
+    <span>XI-3 · pengurus</span>
+  </div>
+
+  <div class="cards">
+    <a class="room room--ink" href="/aksara/mading/umum">
+      <div class="band"></div>
+      <div class="body">
+        <span class="txt"><h2>Mading Umum</h2><p>Papan publik, siapa pun boleh menempel</p></span>
+        <span class="go">→</span>
+      </div>
+    </a>
+
+    <a class="room room--olive" href="/aksara/mading/pribadi">
+      <div class="band"></div>
+      <div class="body">
+        <span class="txt"><h2>Kamarku</h2><p>Hanya kamu yang bisa membukanya</p></span>
+        <span class="go">→</span>
+      </div>
+    </a>
+
+    <a class="room room--red" href="/aksara/surat">
+      <div class="band"></div>
+      <div class="body">
+        <span class="txt"><h2>Kotak Surat</h2><p>Surat masuk &amp; terkirim</p></span>
+        <span class="go">→</span>
+      </div>
+    </a>
+
+    <a class="room room--rose" href="/aksara/kirim">
+      <div class="band"></div>
+      <div class="body">
+        <span class="txt"><h2>Kirim Surat</h2><p>Pos kilat redaksi</p></span>
+        <span class="go">→</span>
+      </div>
+    </a>
+
+    <a class="room room--green" href="/aksara/profil">
+      <div class="band"></div>
+      <div class="body">
+        <span class="txt"><h2>Kartu Pelajarku</h2><p>Identitas &amp; peran</p></span>
+        <span class="go">→</span>
+      </div>
+    </a>
+
+    <a class="room room--red" href="/aksara/urusan">
+      <div class="band"></div>
+      <div class="body">
+        <span class="txt"><h2>Urusan Redaksi</h2><p>Khusus pengurus · anggota &amp; peran</p></span>
+        <span class="go">→</span>
+      </div>
+    </a>
+  </div>
+
+  <p class="foot-note">Enam kartu, enam pintu. Isi tetap dibuka di halamannya.</p>
+
+  <div class="foot mono mono--sm">
+    <span>AKSARA · EDISI 231</span>
+    <span>1 senyum</span>
+  </div>
+</main>
+</body>
+</html>

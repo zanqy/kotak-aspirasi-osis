@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>R5 — Tumpukan Kartu · Beranda AKSARA</title>
+<link rel="stylesheet" href="base.css">
+<style>
+/* R5 — pola tumpukan kartu (Apple Wallet): kartu depan paling penting, sisanya mengintip.
+   Referensi: developer.apple.com/design/human-interface-guidelines/wallet */
+.head{display:flex;align-items:flex-end;justify-content:space-between;gap:12px;padding-bottom:9px;
+  border-bottom:1px solid var(--line-strong)}
+.head .wordmark{font-size:clamp(32px,9.6vw,40px)}
+.head .ed{text-align:right;line-height:1.5}
+
+.hello{margin-top:12px}
+.hello h1{font-family:var(--fd);font-weight:800;font-size:1.5rem;letter-spacing:-.03em;line-height:1.07}
+.hello p{font-size:.82rem;color:var(--soft);margin-top:4px}
+
+.deck{position:relative;margin-top:16px;height:236px}
+.wc{position:absolute;left:0;right:0;top:0;border-radius:16px;padding:15px 16px;text-decoration:none;
+  border:1px solid var(--line-strong);background:var(--card);display:flex;flex-direction:column;
+  transform-origin:50% 0;transition:transform .38s cubic-bezier(.3,.9,.3,1), box-shadow .38s ease;
+  box-shadow:0 -4px 12px -10px rgba(34,29,21,.7)}
+.wc .k{display:flex;justify-content:space-between;align-items:baseline;
+  font-family:var(--fm);font-size:8.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--faint)}
+.wc h2{font-family:var(--fd);font-weight:800;font-size:1.35rem;letter-spacing:-.03em;margin-top:auto;line-height:1.1}
+.wc p{font-size:.78rem;color:var(--soft);margin-top:4px}
+.wc .go{margin-top:9px;font-family:var(--fm);font-size:8.5px;letter-spacing:.14em;text-transform:uppercase;
+  color:var(--red)}
+.wc--ink{background:var(--ink);color:#F2ECDE;border-color:transparent}
+.wc--ink .k,.wc--ink p{color:rgba(242,236,222,.6)}
+.wc--ink .go{color:#E7A896}
+.wc--red{background:var(--red);color:#FBF6E7;border-color:transparent}
+.wc--red .k,.wc--red p{color:rgba(251,246,231,.72)}
+.wc--red .go{color:#FBF6E7}
+
+.hint{display:flex;align-items:center;gap:7px;margin-top:2px;font-family:var(--fm);font-size:8.5px;
+  letter-spacing:.12em;text-transform:uppercase;color:var(--faint)}
+
+.list{list-style:none;margin:14px 0 0;padding:0;border-top:1px solid var(--line)}
+.list a{display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid var(--line);
+  text-decoration:none}
+.list .n{font-family:var(--fm);font-size:8.5px;color:var(--faint);width:16px}
+.list b{font-family:var(--fd);font-weight:600;font-size:.9rem;letter-spacing:-.014em;flex:1}
+.list .go{font-family:var(--fm);font-size:.8rem;color:var(--faint)}
+.list li.done a{opacity:.42}
+</style>
+</head>
+<body>
+<main class="shell">
+
+  <header class="head">
+    <div class="wordmark">AKSARA<i>.</i></div>
+    <div class="ed mono faint">Edisi 231<br>Rabu · 11 Nov 2026</div>
+  </header>
+
+  <section class="hello">
+    <h1>Halo, Auzan.</h1>
+    <p>Enam kartu. Yang paling atas yang paling sering dipakai.</p>
+  </section>
+
+  <div class="deck" id="deck">
+    <a class="wc wc--ink" href="/aksara/mading/umum" data-i="0">
+      <span class="k"><span>Papan publik</span><span>01</span></span>
+      <h2>Mading Umum</h2>
+      <p>Semua tempelan sekolah, dibaca siapa pun.</p>
+      <span class="go">Buka mading →</span>
+    </a>
+    <a class="wc" href="/aksara/surat" data-i="1">
+      <span class="k"><span>Korespondensi</span><span>03</span></span>
+      <h2>Kotak Surat</h2>
+      <p>Surat masuk dan terkirim.</p>
+      <span class="go">Buka kotak →</span>
+    </a>
+    <a class="wc" href="/aksara/kirim" data-i="2">
+      <span class="k"><span>Korespondensi</span><span>04</span></span>
+      <h2>Kirim Surat</h2>
+      <p>Pos kilat redaksi, satu paragraf cukup.</p>
+      <span class="go">Tulis surat →</span>
+    </a>
+    <a class="wc" href="/aksara/mading/pribadi" data-i="3">
+      <span class="k"><span>Ruang</span><span>02</span></span>
+      <h2>Kamarku</h2>
+      <p>Hanya kamu yang bisa membukanya.</p>
+      <span class="go">Masuk kamar →</span>
+    </a>
+    <a class="wc wc--red" href="/aksara/urusan" data-i="4">
+      <span class="k"><span>Pengurus</span><span>06</span></span>
+      <h2>Urusan Redaksi</h2>
+      <p>Anggota, peran, dan izin.</p>
+      <span class="go">Buka urusan →</span>
+    </a>
+    <a class="wc" href="/aksara/profil" data-i="5">
+      <span class="k"><span>Akun</span><span>05</span></span>
+      <h2>Kartu Pelajarku</h2>
+      <p>Identitas dan peranmu di AKSARA.</p>
+      <span class="go">Lihat kartu →</span>
+    </a>
+  </div>
+
+  <div class="hint">Ketuk kartu depan untuk menumpuk ke belakang</div>
+
+  <ul class="list" id="list">
+    <li><a href="/aksara/mading/umum"><span class="n">01</span><b>Mading Umum</b><span class="go">→</span></a></li>
+    <li><a href="/aksara/mading/pribadi"><span class="n">02</span><b>Kamarku</b><span class="go">→</span></a></li>
+    <li><a href="/aksara/surat"><span class="n">03</span><b>Kotak Surat</b><span class="go">→</span></a></li>
+    <li><a href="/aksara/kirim"><span class="n">04</span><b>Kirim Surat</b><span class="go">→</span></a></li>
+    <li><a href="/aksara/profil"><span class="n">05</span><b>Kartu Pelajarku</b><span class="go">→</span></a></li>
+    <li><a href="/aksara/urusan"><span class="n">06</span><b>Urusan Redaksi</b><span class="go">→</span></a></li>
+  </ul>
+
+  <div class="foot mono mono--sm">
+    <span>AKSARA · EDISI 231</span>
+    <span>1 senyum</span>
+  </div>
+</main>
+
+<script>
+  (function () {
+    var deck = document.getElementById('deck');
+    var cards = [].slice.call(deck.querySelectorAll('.wc'));
+    var order = cards.slice();
+
+    function paint() {
+      order.forEach(function (c, i) {
+        c.style.transform = 'translateY(' + (i * 13) + 'px) scale(' + (1 - i * 0.018) + ')';
+        c.style.zIndex = String(100 - i);
+        c.style.opacity = i > 3 ? '0' : '1';
+        c.style.pointerEvents = i === 0 ? 'auto' : 'none';
+      });
+    }
+
+    deck.addEventListener('click', function (e) {
+      var front = order[0];
+      if (e.target.closest('.wc') !== front) return;
+      e.preventDefault();
+      front.style.transform = 'translateY(-26px) scale(.97)';
+      front.style.opacity = '0';
+      setTimeout(function () {
+        order.push(order.shift());
+        paint();
+      }, 190);
+    });
+
+    paint();
+  })();
+</script>
+</body>
+</html>
