@@ -64,11 +64,25 @@
 .idcard .t span{font-family:var(--fm);font-size:8.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--faint)}
 .idcard .go{margin-left:auto;font-family:var(--fm);font-size:.78rem;color:var(--faint)}
 
-.perf{height:0;border-top:1px dashed var(--line-strong);margin:13px 0 0;position:relative}
-.perf::before,.perf::after{content:"";position:absolute;top:-6px;width:11px;height:11px;border-radius:50%;
+.perf{height:0;border-top:1px dashed var(--line-strong);margin:13px 0 0;position:relative}.perf::before,.perf::after{content:"";position:absolute;top:-6px;width:11px;height:11px;border-radius:50%;
   background:var(--paper);border:1px solid var(--line-strong)}
 .perf::before{left:-6px}
 .perf::after{right:-6px}
+
+.announce{display:flex;align-items:center;gap:9px;margin-top:12px;padding:10px 12px;border:1px solid var(--line);
+  border-radius:10px;background:rgba(253,251,244,.6);text-decoration:none}
+.announce b{font-family:var(--fd);font-size:.84rem;font-weight:600;letter-spacing:-.012em}
+.announce .arrow{margin-left:auto;font-family:var(--fm);font-size:.78rem;color:var(--faint)}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:13px}
+.stat{padding:9px 10px;border:1px solid var(--line);border-radius:10px;background:rgba(253,251,244,.55)}
+.stat b{font-family:var(--fd);font-weight:800;font-size:1.15rem;line-height:1;display:block;letter-spacing:-.03em}
+.stat span{display:block;margin-top:4px;font-family:var(--fm);font-size:8.5px;letter-spacing:.1em;
+  text-transform:uppercase;color:var(--faint);line-height:1.3}
+
+.quote{margin-top:13px;padding-left:12px;border-left:2px solid rgba(192,59,33,.45)}
+.quote p{font-family:var(--fd);font-style:italic;font-size:.94rem;line-height:1.5;letter-spacing:-.012em}
+.quote cite{display:block;margin-top:5px;font-family:var(--fm);font-style:normal;font-size:8.5px;
+  letter-spacing:.12em;text-transform:uppercase;color:var(--faint)}
 </style>
 </head>
 <body>
@@ -111,12 +125,29 @@
     </div>
   </section>
 
+  <div class="stats">
+    <div class="stat"><b>04</b><span>Tempelan</span></div>
+    <div class="stat"><b>02</b><span>Surat</span></div>
+    <div class="stat"><b>12</b><span>Anggota</span></div>
+  </div>
+
+  <blockquote class="quote">
+    <p>“Yang paling sering masuk bukan masalah besar, tapi hal kecil yang tidak pernah ditanyakan siapa-siapa.”</p>
+    <cite>Rekap aspirasi · Humas</cite>
+  </blockquote>
+
   <div class="perf"></div>
 
   <a class="idcard" href="#">
     <span class="ava">A</span>
     <span class="t"><b>Auzan Shidqi</b><span>XI-3 · anggota · edisi 231</span></span>
     <span class="go">Kartu →</span>
+  </a>
+
+  <a class="announce" href="#">
+    <span class="mono kicker">Pengumuman</span>
+    <b>Mading sayap timur ditutup sampai Kamis.</b>
+    <span class="arrow">→</span>
   </a>
 
   <div class="foot mono mono--sm">
