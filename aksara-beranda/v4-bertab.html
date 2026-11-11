@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>04 — Bertab · Beranda AKSARA</title>
+<link rel="stylesheet" href="base.css">
+<style>
+/* ===== 04 BERTAB — enam pintu dikelompokkan tiga berkas ===== */
+.head{display:flex;align-items:flex-end;justify-content:space-between;gap:12px;padding-bottom:9px;
+  border-bottom:1px solid var(--line-strong)}
+.head .wordmark{font-size:clamp(32px,9.5vw,40px)}
+.head .ed{text-align:right;line-height:1.5}
+
+.hello{margin-top:12px}
+.hello h1{font-family:var(--fd);font-weight:800;font-size:clamp(1.45rem,6.6vw,1.7rem);line-height:1.08;
+  letter-spacing:-.028em}
+.hello p{font-size:.84rem;color:var(--soft);margin-top:4px}
+
+.tabs{display:flex;gap:4px;margin-top:15px;align-items:flex-end}
+.tabs button{appearance:none;border:1px solid var(--line);border-bottom:0;background:rgba(253,251,244,.4);
+  color:var(--soft);font-family:var(--fm);font-size:8.5px;letter-spacing:.13em;text-transform:uppercase;
+  padding:9px 12px 8px;border-radius:9px 9px 0 0;position:relative;top:1px;cursor:pointer}
+.tabs button[aria-selected="true"]{background:var(--card);color:var(--ink);border-color:var(--line-strong);
+  box-shadow:inset 0 -2px 0 var(--red)}
+.panel{background:var(--card);border:1px solid var(--line-strong);border-radius:0 12px 12px 12px;
+  padding:6px 13px 8px;min-height:250px}
+.panel[hidden]{display:none}
+
+.door{display:flex;align-items:center;gap:11px;padding:14px 0;border-bottom:1px dotted var(--line);
+  text-decoration:none}
+.door:last-child{border-bottom:0}
+.door .glyph{width:30px;height:30px;border-radius:9px;display:grid;place-items:center;flex:0 0 auto;
+  background:rgba(34,29,21,.06);font-family:var(--fm);font-size:.8rem;color:var(--soft)}
+.door .txt{flex:1;min-width:0}
+.door b{font-family:var(--fd);font-weight:800;font-size:.98rem;letter-spacing:-.02em;display:block;line-height:1.2}
+.door span{display:block;font-size:.76rem;color:var(--soft);margin-top:2px;line-height:1.4}
+.door .arrow{font-family:var(--fm);font-size:.82rem;color:var(--faint)}
+.door--hot .glyph{background:rgba(192,59,33,.1);color:var(--red)}
+
+.hint{margin-top:12px;padding:10px 12px;border-left:2px solid rgba(192,59,33,.45);
+  font-family:var(--fs);font-style:italic;font-size:.84rem;line-height:1.55;color:var(--soft)}
+
+.idline{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:14px;
+  padding-top:11px;border-top:1px solid var(--line)}
+.idline b{font-family:var(--fd);font-size:.88rem;letter-spacing:-.012em;display:block}
+.idline span{font-family:var(--fm);font-size:8.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--faint)}
+.others{display:flex;flex-wrap:wrap;gap:6px;margin-top:12px}
+.others .k{width:100%;margin-bottom:2px}
+.others a{font-family:var(--fm);font-size:8.5px;letter-spacing:.1em;text-transform:uppercase;
+  color:var(--soft);text-decoration:none;border:1px solid var(--line);border-radius:999px;padding:5px 10px}
+.others a:hover{color:var(--ink);border-color:var(--line-strong)}
+</style>
+</head>
+<body>
+<main class="shell">
+
+  <header class="head">
+    <div class="wordmark">AKSARA<i>.</i></div>
+    <div class="ed mono faint">Edisi 231<br>Rabu · 11 Nov 2026</div>
+  </header>
+
+  <section class="hello">
+    <h1>Halo, Auzan Shidqi<span style="color:var(--red)">.</span></h1>
+    <p>Pilih berkasnya dulu, pintunya di dalam.</p>
+  </section>
+
+  <div class="tabs" role="tablist" aria-label="Kelompok halaman">
+    <button role="tab" aria-selected="true" aria-controls="p-ruang" id="t-ruang">Ruang</button>
+    <button role="tab" aria-selected="false" aria-controls="p-surat" id="t-surat">Surat</button>
+    <button role="tab" aria-selected="false" aria-controls="p-akun" id="t-akun">Akun</button>
+  </div>
+
+  <section class="panel" id="p-ruang" role="tabpanel" aria-labelledby="t-ruang">
+    <a class="door door--hot" href="/aksara/mading/umum">
+      <span class="glyph">01</span>
+      <span class="txt"><b>Mading Umum</b><span>Papan publik, siapa pun boleh menempel</span></span>
+      <span class="arrow">→</span>
+    </a>
+    <a class="door" href="/aksara/mading/pribadi">
+      <span class="glyph">02</span>
+      <span class="txt"><b>Kamarku</b><span>Hanya kamu yang bisa membukanya</span></span>
+      <span class="arrow">→</span>
+    </a>
+  </section>
+
+  <section class="panel" id="p-surat" role="tabpanel" aria-labelledby="t-surat" hidden>
+    <a class="door door--hot" href="/aksara/surat">
+      <span class="glyph">03</span>
+      <span class="txt"><b>Kotak Surat</b><span>Surat masuk &amp; terkirim</span></span>
+      <span class="arrow">→</span>
+    </a>
+    <a class="door" href="/aksara/kirim">
+      <span class="glyph">04</span>
+      <span class="txt"><b>Kirim Surat</b><span>Pos kilat redaksi</span></span>
+      <span class="arrow">→</span>
+    </a>
+  </section>
+
+  <section class="panel" id="p-akun" role="tabpanel" aria-labelledby="t-akun" hidden>
+    <a class="door" href="/aksara/profil">
+      <span class="glyph">05</span>
+      <span class="txt"><b>Kartu Pelajarku</b><span>Identitas &amp; peran</span></span>
+      <span class="arrow">→</span>
+    </a>
+    <a class="door" href="/aksara/urusan">
+      <span class="glyph">06</span>
+      <span class="txt"><b>Urusan Redaksi</b><span>Khusus pengurus · anggota &amp; peran</span></span>
+      <span class="arrow">→</span>
+    </a>
+  </section>
+
+  <div class="others">
+    <span class="mono mono--sm faint k">Pintu lain</span>
+    <a href="/aksara/mading/umum">Mading Umum</a>
+    <a href="/aksara/mading/pribadi">Kamarku</a>
+    <a href="/aksara/surat">Kotak Surat</a>
+    <a href="/aksara/kirim">Kirim Surat</a>
+  </div>
+
+  <p class="hint">Beranda ini pintu, bukan isi — tempelan dan surat tetap dibuka di halamannya sendiri.</p>
+
+  <div class="idline">
+    <div>
+      <b>Auzan Shidqi</b>
+      <span>XI-3 · pengurus</span>
+    </div>
+    <a class="mono mono--sm faint" href="/aksara/profil" style="text-decoration:none">Kartu →</a>
+  </div>
+
+  <div class="foot mono mono--sm">
+    <span>AKSARA · EDISI 231</span>
+    <span>Keluar</span>
+  </div>
+</main>
+
+<script>
+  var tabs = [].slice.call(document.querySelectorAll('[role="tab"]'));
+  tabs.forEach(function (t) {
+    t.addEventListener('click', function () {
+      tabs.forEach(function (x) {
+        var on = x === t;
+        x.setAttribute('aria-selected', on ? 'true' : 'false');
+        document.getElementById(x.getAttribute('aria-controls')).hidden = !on;
+      });
+    });
+  });
+</script>
+</body>
+</html>

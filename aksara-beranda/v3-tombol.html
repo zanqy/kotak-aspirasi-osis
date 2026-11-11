@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>03 — Papan Tombol · Beranda AKSARA</title>
+<link rel="stylesheet" href="base.css">
+<style>
+/* ===== 03 PAPAN TOMBOL — enam pintu sebagai tombol berikon ===== */
+.top{display:flex;align-items:center;justify-content:space-between;gap:10px}
+.top .wordmark{font-size:24px}
+.top .chip{background:var(--ink);color:#F2ECDE;border-color:transparent}
+
+.greet{margin-top:16px}
+.greet h1{font-family:var(--fd);font-weight:800;font-size:clamp(1.55rem,7vw,1.85rem);line-height:1.05;
+  letter-spacing:-.03em}
+.greet p{font-size:.84rem;color:var(--soft);margin-top:4px}
+
+.keys{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-top:14px}
+.key{display:flex;flex-direction:column;justify-content:space-between;gap:12px;text-decoration:none;
+  padding:12px 13px 13px;border-radius:13px;border:1px solid var(--line);background:var(--card);
+  min-height:130px;transition:transform .16s ease, box-shadow .16s ease}
+.key:active{transform:translateY(1px) scale(.995)}
+.key svg{width:22px;height:22px;stroke:currentColor;fill:none;stroke-width:1.4;stroke-linecap:round;stroke-linejoin:round;
+  color:var(--red)}
+.key b{font-family:var(--fd);font-weight:800;font-size:.98rem;letter-spacing:-.02em;display:block;line-height:1.15}
+.key span{display:block;font-family:var(--fs);font-size:.73rem;line-height:1.4;color:var(--soft);margin-top:3px}
+.key--dark{background:var(--ink);color:#F2ECDE;border-color:transparent}
+.key--dark svg{color:#E7A896}
+.key--dark span{color:rgba(242,236,222,.62)}
+.key--red{background:rgba(192,59,33,.07);border-color:rgba(192,59,33,.34)}
+.key--red svg{color:var(--red)}
+
+.wide{grid-column:1 / -1;flex-direction:row;align-items:center;min-height:auto}
+.wide .txt{flex:1}
+
+.idbar{display:flex;align-items:center;gap:10px;margin-top:14px;padding:11px 12px;border-radius:11px;
+  border:1px solid var(--line);background:rgba(253,251,244,.55)}
+.idbar .ava{width:32px;height:32px;border-radius:50%;background:var(--ink);color:#F2ECDE;display:grid;
+  place-items:center;font-family:var(--fd);font-weight:800;font-size:.88rem}
+.idbar b{font-family:var(--fd);font-size:.9rem;display:block;letter-spacing:-.012em}
+.idbar span{font-family:var(--fm);font-size:8.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--faint)}
+.idbar .edit{margin-left:auto;font-family:var(--fm);font-size:8.5px;letter-spacing:.12em;text-transform:uppercase;
+  color:var(--red);text-decoration:none}
+</style>
+</head>
+<body>
+<main class="shell">
+
+  <header class="top">
+    <div class="wordmark">AKSARA<i>.</i></div>
+    <span class="chip mono mono--sm">Edisi 231</span>
+  </header>
+
+  <section class="greet">
+    <h1>Halo, Auzan.</h1>
+    <p>Enam tombol. Tidak ada yang bisa salah tekan.</p>
+  </section>
+
+  <div class="keys">
+    <a class="key key--dark" href="/aksara/mading/umum">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="4" width="7" height="7" rx="1"/><rect x="14" y="4" width="7" height="7" rx="1"/><rect x="3" y="15" width="7" height="5" rx="1"/><rect x="14" y="15" width="7" height="5" rx="1"/></svg>
+      <div><b>Mading Umum</b><span>Papan publik</span></div>
+    </a>
+
+    <a class="key" href="/aksara/mading/pribadi">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="10" width="14" height="10" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg>
+      <div><b>Kamarku</b><span>Hanya untukmu</span></div>
+    </a>
+
+    <a class="key" href="/aksara/surat">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="6" width="18" height="12" rx="2"/><path d="m4 8 8 5 8-5"/></svg>
+      <div><b>Kotak Surat</b><span>Masuk &amp; terkirim</span></div>
+    </a>
+
+    <a class="key" href="/aksara/kirim">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12 20 4l-6 16-3-7-7-1Z"/></svg>
+      <div><b>Kirim Surat</b><span>Pos kilat</span></div>
+    </a>
+
+    <a class="key" href="/aksara/profil">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><circle cx="9" cy="11" r="2.2"/><path d="M6 16c.6-1.6 1.7-2.3 3-2.3s2.4.7 3 2.3"/><path d="M15 10h3M15 13h2"/></svg>
+      <div><b>Kartu Pelajar</b><span>Identitas &amp; peran</span></div>
+    </a>
+
+    <a class="key key--red" href="/aksara/urusan">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="9" cy="9" r="3"/><path d="M4 19c.8-3 2.9-4.4 5-4.4S13.2 16 14 19"/><path d="M16 8h5M16 12h5M16 16h3"/></svg>
+      <div><b>Urusan</b><span>Pengurus</span></div>
+    </a>
+  </div>
+
+  <div class="idbar">
+    <span class="ava">A</span>
+    <span style="flex:1"><b>Auzan Shidqi</b><span>XI-3 · pengurus</span></span>
+    <a class="edit" href="/aksara/profil">Ubah</a>
+  </div>
+
+  <div class="foot mono mono--sm">
+    <span>AKSARA · EDISI 231</span>
+    <span>1 senyum</span>
+  </div>
+</main>
+</body>
+</html>

@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>06 — Rak · Beranda AKSARA</title>
+<link rel="stylesheet" href="base.css">
+<style>
+/* ===== 06 RAK — enam pintu disusun tiga rak ===== */
+.head{display:flex;align-items:flex-end;justify-content:space-between;gap:12px;padding-bottom:10px;
+  border-bottom:2px solid var(--ink)}
+.head .wordmark{font-size:clamp(33px,9.6vw,41px)}
+.head .ed{text-align:right;line-height:1.5}
+
+.hello{margin-top:13px}
+.hello h1{font-family:var(--fd);font-weight:800;font-size:clamp(1.5rem,6.8vw,1.75rem);line-height:1.07;
+  letter-spacing:-.028em}
+.hello p{font-size:.85rem;color:var(--soft);margin-top:4px}
+
+.rak{margin-top:15px}
+.rak + .rak{margin-top:13px}
+.rak-label{display:flex;align-items:baseline;justify-content:space-between;gap:10px}
+.rak-label .mono{color:var(--red)}
+.rak-label .count{font-family:var(--fm);font-size:8.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--faint)}
+
+.shelf{display:grid;gap:7px;margin-top:7px;padding-top:8px;border-top:1px solid var(--line-strong)}
+.item{display:flex;align-items:center;gap:11px;padding:11px 12px;border-radius:11px;text-decoration:none;
+  border:1px solid var(--line);background:var(--card)}
+.item .no{font-family:var(--fd);font-weight:900;font-size:1rem;color:var(--red);width:16px;flex:0 0 16px;
+  letter-spacing:-.04em}
+.item .txt{flex:1;min-width:0}
+.item b{font-family:var(--fd);font-weight:800;font-size:.96rem;letter-spacing:-.02em;display:block;line-height:1.2}
+.item span{display:block;font-size:.74rem;color:var(--soft);margin-top:2px;line-height:1.4}
+.item .arrow{font-family:var(--fm);font-size:.8rem;color:var(--faint)}
+.item--dark{background:var(--ink);color:#F2ECDE;border-color:transparent}
+.item--dark .no{color:#E7A896}
+.item--dark span{color:rgba(242,236,222,.62)}
+.item--dark .arrow{color:rgba(242,236,222,.7)}
+.item--red{background:rgba(192,59,33,.06);border-color:rgba(192,59,33,.32)}
+.item--red b{color:var(--red)}
+
+.who{margin-top:14px;display:flex;align-items:center;gap:9px;padding-top:11px;border-top:1px solid var(--line)}
+.who b{font-family:var(--fd);font-size:.86rem;letter-spacing:-.012em}
+.who span{font-family:var(--fm);font-size:8.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--faint)}
+</style>
+</head>
+<body>
+<main class="shell">
+
+  <header class="head">
+    <div class="wordmark">AKSARA<i>.</i></div>
+    <div class="ed mono faint">Edisi 231<br>Rabu · 11 Nov 2026</div>
+  </header>
+
+  <section class="hello">
+    <h1>Halo, Auzan.</h1>
+    <p>Tiga rak, enam pintu. Semua isi tetap di dalam.</p>
+  </section>
+
+  <section class="rak">
+    <div class="rak-label">
+      <span class="mono">Ruang baca</span>
+      <span class="count">2 pintu</span>
+    </div>
+    <div class="shelf">
+      <a class="item item--dark" href="/aksara/mading/umum">
+        <span class="no">01</span>
+        <span class="txt"><b>Mading Umum</b><span>Papan publik, siapa pun boleh menempel</span></span>
+        <span class="arrow">→</span>
+      </a>
+      <a class="item" href="/aksara/mading/pribadi">
+        <span class="no">02</span>
+        <span class="txt"><b>Kamarku</b><span>Hanya kamu yang bisa membukanya</span></span>
+        <span class="arrow">→</span>
+      </a>
+    </div>
+  </section>
+
+  <section class="rak">
+    <div class="rak-label">
+      <span class="mono">Korespondensi</span>
+      <span class="count">2 pintu</span>
+    </div>
+    <div class="shelf">
+      <a class="item" href="/aksara/surat">
+        <span class="no">03</span>
+        <span class="txt"><b>Kotak Surat</b><span>Surat masuk &amp; terkirim</span></span>
+        <span class="arrow">→</span>
+      </a>
+      <a class="item" href="/aksara/kirim">
+        <span class="no">04</span>
+        <span class="txt"><b>Kirim Surat</b><span>Pos kilat redaksi</span></span>
+        <span class="arrow">→</span>
+      </a>
+    </div>
+  </section>
+
+  <section class="rak">
+    <div class="rak-label">
+      <span class="mono">Akun</span>
+      <span class="count">pengurus</span>
+    </div>
+    <div class="shelf">
+      <a class="item" href="/aksara/profil">
+        <span class="no">05</span>
+        <span class="txt"><b>Kartu Pelajarku</b><span>Identitas &amp; peran</span></span>
+        <span class="arrow">→</span>
+      </a>
+      <a class="item item--red" href="/aksara/urusan">
+        <span class="no">06</span>
+        <span class="txt"><b>Urusan Redaksi</b><span>Anggota &amp; peran</span></span>
+        <span class="arrow">→</span>
+      </a>
+    </div>
+  </section>
+
+  <div class="who">
+    <div style="flex:1">
+      <b>Auzan Shidqi</b><br>
+      <span>XI-3 · pengurus</span>
+    </div>
+    <a class="mono mono--sm faint" href="/aksara/profil" style="text-decoration:none">Kartu →</a>
+  </div>
+
+  <div class="foot mono mono--sm">
+    <span>AKSARA · EDISI 231</span>
+    <span>1 senyum</span>
+  </div>
+</main>
+</body>
+</html>

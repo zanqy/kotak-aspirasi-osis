@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>01 — Satu Pintu · Beranda AKSARA</title>
+<link rel="stylesheet" href="base.css">
+<style>
+/* ===== 01 SATU PINTU — satu tujuan utama, sisanya grid ===== */
+.mast{display:flex;align-items:flex-end;justify-content:space-between;gap:14px;padding-bottom:9px;
+  border-bottom:2px solid var(--ink)}
+.mast .wordmark{font-size:clamp(34px,10vw,42px)}
+.mast .ed{text-align:right;line-height:1.5}
+
+.hello{margin-top:13px}
+.hello h1{font-family:var(--fd);font-weight:800;font-size:clamp(1.6rem,7.2vw,1.9rem);line-height:1.06;
+  letter-spacing:-.03em}
+.hello p{font-family:var(--fs);font-style:italic;font-size:.9rem;color:var(--soft);margin-top:4px}
+
+.hero{display:block;margin-top:14px;padding:16px;border-radius:16px;text-decoration:none;
+  background:var(--ink);color:#F2ECDE;position:relative;overflow:hidden}
+.hero::after{content:"";position:absolute;right:-46px;top:-56px;width:160px;height:160px;border-radius:50%;
+  border:1px solid rgba(242,236,222,.14)}
+.hero .top{display:flex;justify-content:space-between;align-items:center;gap:10px;color:rgba(242,236,222,.7)}
+.hero h2{font-family:var(--fd);font-weight:800;font-size:1.5rem;letter-spacing:-.03em;margin-top:9px;line-height:1.1}
+.hero p{font-size:.84rem;color:rgba(242,236,222,.66);margin-top:5px;max-width:24ch}
+.hero .go{display:inline-flex;align-items:center;gap:7px;margin-top:12px;font-family:var(--fm);
+  font-size:8.5px;letter-spacing:.14em;text-transform:uppercase;color:#F2ECDE;
+  border-bottom:1px solid rgba(242,236,222,.4);padding-bottom:2px}
+
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-top:10px}
+.tile{display:block;text-decoration:none;padding:12px;border-radius:12px;border:1px solid var(--line);
+  background:var(--card);min-height:96px}
+.tile .k{font-family:var(--fm);font-size:8.5px;letter-spacing:.13em;text-transform:uppercase;color:var(--faint)}
+.tile b{display:block;font-family:var(--fd);font-weight:800;font-size:1rem;letter-spacing:-.022em;margin-top:5px;line-height:1.15}
+.tile span{display:block;font-size:.74rem;line-height:1.42;color:var(--soft);margin-top:4px}
+
+.urusan{display:flex;align-items:center;gap:10px;margin-top:10px;padding:12px 13px;border-radius:12px;
+  border:1px solid rgba(192,59,33,.38);background:rgba(192,59,33,.07);text-decoration:none}
+.urusan b{font-family:var(--fd);font-size:.94rem;letter-spacing:-.015em;display:block}
+.urusan span{font-family:var(--fm);font-size:8.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--faint)}
+.urusan .arrow{margin-left:auto;font-family:var(--fm);font-size:.8rem;color:var(--red)}
+
+.identity{display:flex;align-items:center;gap:10px;margin-top:13px;padding-top:11px;border-top:1px solid var(--line)}
+.identity .ava{width:30px;height:30px;border-radius:50%;background:var(--ink);color:#F2ECDE;display:grid;
+  place-items:center;font-family:var(--fd);font-weight:800;font-size:.85rem}
+.identity b{font-family:var(--fd);font-size:.88rem;display:block;letter-spacing:-.01em}
+.identity span{font-family:var(--fm);font-size:8.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--faint)}
+</style>
+</head>
+<body>
+<main class="shell">
+
+  <header class="mast">
+    <div class="wordmark">AKSARA<i>.</i></div>
+    <div class="ed mono faint">Edisi 231<br>Rabu · 11 Nov 2026</div>
+  </header>
+
+  <section class="hello">
+    <h1>Halo, Auzan Shidqi<span style="color:var(--red)">.</span></h1>
+    <p>Mau ke mana sore ini?</p>
+  </section>
+
+  <a class="hero" href="/aksara/mading/umum">
+    <div class="top mono mono--sm"><span>Papan publik</span><span>01</span></div>
+    <h2>Mading Umum</h2>
+    <p>Semua tempelan sekolah, dibaca siapa pun. Di sini kamu mulai.</p>
+    <span class="go">Buka mading →</span>
+  </a>
+
+  <div class="grid">
+    <a class="tile" href="/aksara/mading/pribadi"><span class="k">02</span><b>Kamarku</b><span>Hanya kamu yang bisa membukanya</span></a>
+    <a class="tile" href="/aksara/surat"><span class="k">03</span><b>Kotak Surat</b><span>Surat masuk &amp; terkirim</span></a>
+    <a class="tile" href="/aksara/kirim"><span class="k">04</span><b>Kirim Surat</b><span>Pos kilat redaksi</span></a>
+    <a class="tile" href="/aksara/profil"><span class="k">05</span><b>Kartu Pelajar</b><span>Identitas &amp; peran</span></a>
+  </div>
+
+  <a class="urusan" href="/aksara/urusan">
+    <span>
+      <b>Urusan Redaksi</b>
+      <span>Pengurus · anggota &amp; peran</span>
+    </span>
+    <span class="arrow">→</span>
+  </a>
+
+  <div class="identity">
+    <span class="ava">A</span>
+    <span style="flex:1"><b>Auzan Shidqi</b><span>XI-3 · pengurus</span></span>
+    <a class="mono mono--sm faint" href="/aksara/profil" style="text-decoration:none">Kartu →</a>
+  </div>
+
+  <div class="foot mono mono--sm">
+    <span>AKSARA · EDISI 231</span>
+    <span>1 senyum</span>
+  </div>
+</main>
+</body>
+</html>

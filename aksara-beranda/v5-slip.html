@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>05 — Slip · Beranda AKSARA</title>
+<link rel="stylesheet" href="base.css">
+<style>
+/* ===== 05 SLIP — identitas dulu, pintu menyusul ===== */
+.top{display:flex;align-items:center;justify-content:space-between;gap:10px;padding-bottom:9px;
+  border-bottom:1px solid var(--line-strong)}
+.top .wordmark{font-size:26px}
+
+.slip{position:relative;margin-top:14px;border:1px solid var(--line-strong);border-radius:12px;
+  background:var(--card);padding:14px 15px 13px;box-shadow:5px 5px 0 rgba(34,29,21,.9);overflow:hidden}
+.slip::before{content:"";position:absolute;left:0;top:0;bottom:0;width:5px;background:var(--red)}
+.slip .row1{display:flex;align-items:flex-start;justify-content:space-between;gap:10px}
+.slip .k{font-family:var(--fm);font-size:8.5px;letter-spacing:.15em;text-transform:uppercase;color:var(--faint)}
+.slip h1{font-family:var(--fd);font-weight:800;font-size:1.35rem;line-height:1.08;letter-spacing:-.03em;margin-top:5px}
+.slip .meta{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}
+.slip .meta .chip{background:rgba(34,29,21,.05)}
+.slip .cut{border-top:1px dashed var(--line-strong);margin:12px -15px 11px;position:relative}
+.slip .cut::before,.slip .cut::after{content:"";position:absolute;top:-6px;width:11px;height:11px;border-radius:50%;
+  background:var(--paper);border:1px solid var(--line-strong)}
+.slip .cut::before{left:-6px}.slip .cut::after{right:-6px}
+.slip .footrow{display:flex;align-items:center;justify-content:space-between;gap:10px}
+.slip .footrow .mono{line-height:1.5}
+.slip .stamp{width:46px;height:46px;border:1.5px solid rgba(192,59,33,.5);border-radius:50%;display:grid;
+  place-items:center;text-align:center;color:rgba(192,59,33,.72);transform:rotate(-8deg);
+  font-family:var(--fd);font-size:8px;font-weight:700;line-height:1.2;letter-spacing:.04em}
+
+.seclabel{display:flex;align-items:center;gap:8px;margin-top:16px;color:var(--faint)}
+.seclabel::after{content:"";flex:1;height:1px;background:var(--line)}
+
+.doors{list-style:none;margin:8px 0 0;padding:0}
+.doors a{display:grid;grid-template-columns:1fr 18px;gap:10px;align-items:center;text-decoration:none;
+  padding:10px 0;border-bottom:1px solid var(--line)}
+.doors li:last-child a{border-bottom:0}
+.doors b{font-family:var(--fd);font-weight:700;font-size:.94rem;letter-spacing:-.018em;display:block;line-height:1.2}
+.doors span{display:block;font-family:var(--fm);font-size:8.5px;letter-spacing:.1em;text-transform:uppercase;
+  color:var(--faint);margin-top:3px}
+.doors .arrow{font-family:var(--fm);font-size:.82rem;color:var(--faint);text-align:right}
+.doors li.hot b{color:var(--red)}
+
+.actions{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-top:14px}
+</style>
+</head>
+<body>
+<main class="shell">
+
+  <header class="top">
+    <div class="wordmark">AKSARA<i>.</i></div>
+    <span class="mono mono--sm faint">Edisi 231</span>
+  </header>
+
+  <section class="slip">
+    <div class="row1">
+      <div>
+        <span class="k">Kartu anggota · berlaku</span>
+        <h1>Auzan Shidqi</h1>
+      </div>
+      <div class="stamp">AKSARA<br>SAH</div>
+    </div>
+
+    <div class="meta">
+      <span class="chip">XI-3</span>
+      <span class="chip">Pengurus</span>
+      <span class="chip">Sejak Agu 2026</span>
+    </div>
+
+    <div class="cut"></div>
+
+    <div class="footrow">
+      <span class="mono mono--sm faint">11 NOV 2026<br>1 SENYUM</span>
+      <a class="mono mono--sm" href="/aksara/profil" style="text-decoration:none;color:var(--red)">Ubah kartu →</a>
+    </div>
+  </section>
+
+  <div class="seclabel mono mono--sm">Pintu</div>
+
+  <ul class="doors">
+    <li class="hot"><a href="/aksara/mading/umum"><span><b>Mading Umum</b><span>Papan publik</span></span><span class="arrow">→</span></a></li>
+    <li><a href="/aksara/mading/pribadi"><span><b>Kamarku</b><span>Hanya untukmu</span></span><span class="arrow">→</span></a></li>
+    <li><a href="/aksara/surat"><span><b>Kotak Surat</b><span>Masuk &amp; terkirim</span></span><span class="arrow">→</span></a></li>
+    <li><a href="/aksara/kirim"><span><b>Kirim Surat</b><span>Pos kilat redaksi</span></span><span class="arrow">→</span></a></li>
+    <li><a href="/aksara/urusan"><span><b>Urusan Redaksi</b><span>Pengurus · anggota &amp; peran</span></span><span class="arrow">→</span></a></li>
+  </ul>
+
+  <div class="actions">
+    <a class="btn btn--red" href="/aksara/kirim">Kirim surat <span class="arrow">→</span></a>
+    <a class="btn btn--ghost" href="/aksara/mading/umum">Tempel</a>
+  </div>
+
+  <div class="foot mono mono--sm">
+    <span>AKSARA · EDISI 231</span>
+    <span>Keluar</span>
+  </div>
+</main>
+</body>
+</html>
