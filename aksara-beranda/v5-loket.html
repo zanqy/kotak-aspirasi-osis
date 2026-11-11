@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>05 — Loket · Beranda AKSARA</title>
+<link rel="stylesheet" href="base.css">
+<style>
+/* ===== 05 LOKET — beranda sebagai loket surat ===== */
+.ticker{background:var(--ink);color:#F2ECDE;overflow:hidden;padding:7px 0;margin:-16px -18px 0}
+.ticker .track{display:flex;gap:26px;white-space:nowrap;animation:run 26s linear infinite;
+  font-family:var(--fm);font-size:8.5px;letter-spacing:.16em;text-transform:uppercase}
+.ticker span{opacity:.82}
+.ticker span b{color:#E7A896;font-weight:500}
+@keyframes run{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+@media (prefers-reduced-motion:reduce){.ticker .track{animation:none}}
+
+.top{display:flex;align-items:flex-start;justify-content:space-between;gap:10px;margin-top:15px}
+.top .wordmark{font-size:32px}
+.top .loc{text-align:right;line-height:1.5}
+
+.hello{margin-top:14px;padding-bottom:12px;border-bottom:2px solid var(--ink)}
+.hello .mono{color:var(--faint)}
+.hello h1{font-family:var(--fd);font-weight:800;font-size:clamp(1.6rem,7.4vw,1.95rem);line-height:1.05;
+  letter-spacing:-.03em;margin-top:6px}
+.hello p{font-size:.84rem;color:var(--soft);margin-top:5px}
+
+.slip{position:relative;margin-top:14px;background:var(--card);border:1px solid var(--line-strong);
+  padding:14px 14px 12px;box-shadow:4px 4px 0 rgba(34,29,21,.9)}
+.slip .cut{position:absolute;left:0;right:0;top:52px;border-top:1px dashed var(--line-strong)}
+.slip .cut::before,.slip .cut::after{content:"";position:absolute;top:-6px;width:11px;height:11px;border-radius:50%;
+  background:var(--paper);border:1px solid var(--line-strong)}
+.slip .cut::before{left:-6px}.slip .cut::after{right:-6px}
+.slip .no{display:flex;align-items:flex-start;justify-content:space-between;gap:10px}
+.slip .no b{font-family:var(--fd);font-weight:900;font-size:2.6rem;line-height:.82;letter-spacing:-.05em}
+.slip .no .mono{text-align:right;color:var(--faint);line-height:1.5}
+.slip .body{padding-top:22px}
+.slip h2{font-family:var(--fd);font-weight:800;font-size:1.02rem;letter-spacing:-.02em}
+.slip p{font-size:.82rem;color:var(--soft);margin-top:4px;line-height:1.5}
+.slip .act{display:flex;gap:7px;margin-top:10px}
+.slip .act .btn{flex:1;justify-content:center;padding:10px;font-size:.86rem}
+
+.sect{margin-top:16px}
+.sect .head{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:2px}
+.leaders{list-style:none;margin:0;padding:0}
+.leaders li{display:flex;align-items:baseline;gap:7px;padding:8px 0;border-bottom:1px solid var(--line)}
+.leaders li:last-child{border-bottom:0}
+.leaders .n{font-family:var(--fm);font-size:8.5px;letter-spacing:.08em;color:var(--red);flex:0 0 14px}
+.leaders .t{font-family:var(--fd);font-size:.87rem;letter-spacing:-.012em;text-decoration:none;white-space:nowrap;
+  overflow:hidden;text-overflow:ellipsis;max-width:62%}
+.leaders .dots{flex:1;border-bottom:1px dotted var(--line-strong);transform:translateY(-3px);min-width:8px}
+.leaders .w{font-family:var(--fm);font-size:8.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--faint)}
+
+.actions{display:grid;grid-template-columns:1.15fr 1fr;gap:9px;margin-top:15px}
+
+.stamp{margin-top:16px;display:flex;align-items:center;justify-content:space-between;gap:12px;
+  padding-top:12px;border-top:1px solid var(--line)}
+.stamp .circle{width:52px;height:52px;border:1.5px solid rgba(192,59,33,.55);border-radius:50%;
+  display:grid;place-items:center;text-align:center;color:rgba(192,59,33,.75);transform:rotate(-7deg)}
+.stamp .circle b{font-family:var(--fd);font-size:8.5px;letter-spacing:.06em;line-height:1.25}
+.stamp .who b{font-family:var(--fd);font-size:.88rem;display:block;letter-spacing:-.01em}
+.stamp .who span{font-family:var(--fm);font-size:8.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--faint)}
+</style>
+</head>
+<body>
+<main class="shell">
+
+  <div class="ticker" aria-hidden="true">
+    <div class="track">
+      <span>AKSARA · EDISI 231 · SELASA 11 NOV 2026 · 4 TEMPELAN BARU · 2 SURAT MENUNGGU · 1 SENYUM</span>
+      <span>AKSARA · EDISI 231 · SELASA 11 NOV 2026 · 4 TEMPELAN BARU · 2 SURAT MENUNGGU · 1 SENYUM</span>
+    </div>
+  </div>
+
+  <header class="top">
+    <div>
+      <div class="wordmark">AKSARA<i>.</i></div>
+      <p class="mono mono--sm faint" style="margin-top:5px">Loket mading &amp; surat</p>
+    </div>
+    <div class="loc mono faint">Edisi 231<br>7.14 pagi<br>Loket buka</div>
+  </header>
+
+  <section class="hello">
+    <span class="mono">Nomor antreanmu</span>
+    <h1>Halo, Auzan.</h1>
+    <p>Dua surat masuk menunggu dibuka. Dinding umum bertambah empat.</p>
+  </section>
+
+  <article class="slip">
+    <div class="no">
+      <b>02</b>
+      <span class="mono mono--sm">Surat belum dibaca<br>terlama: kemarin</span>
+    </div>
+    <div class="cut" aria-hidden="true"></div>
+    <div class="body">
+      <h2>Nadia · XI-1 <span class="chip chip--red">anonim</span></h2>
+      <p>"Aku cuma mau tahu, kamu masih simpan surat yang waktu itu?"</p>
+      <div class="act">
+        <a class="btn btn--red" href="#">Buka</a>
+        <a class="btn btn--ghost" href="#">Semua</a>
+      </div>
+    </div>
+  </article>
+
+  <section class="sect">
+    <div class="head">
+      <span class="mono kicker">Dinding umum</span>
+      <a class="mono mono--sm faint" href="#" style="text-decoration:none">Semua →</a>
+    </div>
+    <ol class="leaders">
+      <li><span class="n">01</span><a class="t" href="#">Koridor sayap barat gelap sejak Senin</a><span class="dots"></span><span class="w">2 j</span></li>
+      <li><span class="n">02</span><a class="t" href="#">Terima kasih untuk yang bersih-bersih</a><span class="dots"></span><span class="w">5 j</span></li>
+      <li><span class="n">03</span><a class="t" href="#">Puisi: jam istirahat terlalu cepat</a><span class="dots"></span><span class="w">kmr</span></li>
+      <li><span class="n">04</span><a class="t" href="#">Fotografi pindah ke aula mulai Kamis</a><span class="dots"></span><span class="w">kmr</span></li>
+    </ol>
+  </section>
+
+  <div class="actions">
+    <a class="btn btn--ink" href="#">Tempel di mading <span class="arrow">+</span></a>
+    <a class="btn btn--ghost" href="#">Kirim surat</a>
+  </div>
+
+  <div class="stamp">
+    <div class="circle"><b>AKSARA<br>SAH</b></div>
+    <div class="who" style="flex:1">
+      <b>Auzan Shidqi</b>
+      <span>XI-3 · anggota · kartu pelajar</span>
+    </div>
+    <a class="mono mono--sm faint" href="#" style="text-decoration:none">Kartu →</a>
+  </div>
+
+  <div class="foot mono mono--sm">
+    <span>AKSARA · LOKET 01</span>
+    <span>Keluar</span>
+  </div>
+</main>
+</body>
+</html>

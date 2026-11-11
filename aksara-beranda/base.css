@@ -1,0 +1,95 @@
+/* Dasar bersama untuk enam varian beranda AKSARA (pratinjau).
+   Semua varian memakai palet, huruf, dan ritme yang sama; yang berbeda tata letaknya. */
+@import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..900;1,9..144,300..900&family=IBM+Plex+Mono:wght@400;500;600&family=Spectral:ital,wght@0,400;0,500;0,600;1,400;1,500&display=swap');
+
+:root{
+  --paper:#E9DDC4;
+  --card:#FDFBF4;
+  --ink:#221D15;
+  --red:#C03B21;
+  --green:#3E5A3A;
+  --soft:rgba(34,29,21,.62);
+  --faint:rgba(34,29,21,.42);
+  --line:rgba(34,29,21,.16);
+  --line-strong:rgba(34,29,21,.3);
+  --fd:'Fraunces',Georgia,serif;
+  --fs:'Spectral',Georgia,serif;
+  --fm:'IBM Plex Mono',ui-monospace,monospace;
+}
+
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:#D9CBAD;color:var(--ink);font-family:var(--fs);
+  -webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
+img{max-width:100%}
+a{color:inherit}
+
+.shell{position:relative;max-width:430px;margin:0 auto;min-height:100dvh;background:var(--paper);
+  padding:16px 18px calc(26px + env(safe-area-inset-bottom));overflow-x:hidden}
+.shell--flush{padding:0 0 calc(26px + env(safe-area-inset-bottom))}
+
+@media (min-width:560px){
+  body{padding:26px 0}
+  .shell{min-height:calc(100dvh - 52px);border-radius:20px;box-shadow:0 34px 70px -46px rgba(0,0,0,.65)}
+}
+
+/* tipografi bantu */
+.mono{font-family:var(--fm);font-size:9.5px;letter-spacing:.16em;text-transform:uppercase;line-height:1.4}
+.mono--sm{font-size:8.5px;letter-spacing:.14em}
+.kicker{color:var(--red)}
+.soft{color:var(--soft)}
+.faint{color:var(--faint)}
+.display{font-family:var(--fd);font-weight:800;letter-spacing:-.025em;line-height:1.05}
+.serif{font-family:var(--fs)}
+.italic{font-style:italic}
+h1,h2,h3,h4,p{margin:0}
+
+.rule{height:0;border:0;border-top:1px solid var(--line);margin:14px 0}
+.rule--strong{border-top:2px solid var(--ink)}
+.rule--red{border-top:1px solid rgba(192,59,33,.5)}
+
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px}
+.card--dark{background:var(--ink);color:#F2ECDE;border-color:transparent}
+.card--flat{background:transparent;border-style:dashed}
+
+.btn{display:flex;align-items:center;gap:10px;padding:13px 16px;border-radius:12px;text-decoration:none;
+  font-family:var(--fd);font-weight:800;font-size:.98rem;letter-spacing:-.012em;
+  transition:transform .18s ease,filter .18s ease}
+.btn:active{transform:scale(.985)}
+.btn .arrow{margin-left:auto;font-family:var(--fm);font-weight:400;font-size:.8rem}
+.btn--red{background:var(--red);color:#FBF6E7}
+.btn--ink{background:var(--ink);color:#F2ECDE}
+.btn--ghost{border:1px solid var(--line-strong);background:transparent;color:var(--ink)}
+.btn--sm{padding:10px 13px;font-size:.9rem;border-radius:10px}
+
+.chip{display:inline-flex;align-items:center;gap:6px;padding:3px 8px;border-radius:999px;
+  border:1px solid var(--line);font-family:var(--fm);font-size:8.5px;letter-spacing:.12em;
+  text-transform:uppercase;color:var(--soft);white-space:nowrap}
+.chip--red{border-color:rgba(192,59,33,.45);color:var(--red);background:rgba(192,59,33,.06)}
+.chip--ink{background:var(--ink);color:#F2ECDE;border-color:transparent}
+.dot{width:5px;height:5px;border-radius:50%;background:var(--red);display:inline-block}
+
+.row{display:flex;align-items:center;gap:10px}
+.between{display:flex;align-items:baseline;justify-content:space-between;gap:12px}
+
+.foot{margin-top:18px;padding-top:10px;border-top:1px solid var(--line);
+  display:flex;justify-content:space-between;gap:10px;color:var(--faint)}
+
+/* label pemisah bagian */
+.sect-label{display:flex;align-items:center;gap:8px;color:var(--faint)}
+.sect-label::after{content:"";flex:1;height:1px;background:var(--line)}
+
+/* logo */
+.wordmark{font-family:var(--fd);font-weight:900;letter-spacing:-.04em;line-height:.9}
+.wordmark i{font-style:normal;color:var(--red)}
+
+/* kartu tempelan dasar */
+.note{position:relative;padding:12px 12px 11px;border-radius:3px;background:var(--card);
+  border:1px solid var(--line);box-shadow:0 8px 16px -14px rgba(34,29,21,.8)}
+.note h3{font-family:var(--fd);font-weight:700;font-size:.92rem;line-height:1.25;letter-spacing:-.015em}
+.note p{font-size:.78rem;line-height:1.5;color:var(--soft);margin-top:5px}
+.note .meta{display:flex;justify-content:space-between;gap:8px;margin-top:8px;color:var(--faint)}
+
+/* tap feedback umum */
+.tap{transition:transform .18s ease, background .18s ease}
+.tap:active{transform:scale(.99)}

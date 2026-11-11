@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Enam beranda AKSARA — pratinjau</title>
+<link rel="stylesheet" href="base.css">
+<style>
+.shell{max-width:520px}
+header.top{padding-bottom:12px;border-bottom:2px solid var(--ink)}
+.wordmark{font-size:34px}
+h1{font-family:var(--fd);font-weight:800;font-size:clamp(1.6rem,6.4vw,1.95rem);line-height:1.08;
+  letter-spacing:-.03em;margin-top:12px}
+.lede{font-size:.9rem;line-height:1.6;color:var(--soft);margin-top:7px}
+.lede b{color:var(--ink)}
+
+.list{list-style:none;margin:16px 0 0;padding:0;display:grid;gap:10px}
+.item{display:block;text-decoration:none;padding:13px 14px;border:1px solid var(--line);border-radius:12px;
+  background:var(--card);transition:transform .18s ease, box-shadow .18s ease}
+.item:active{transform:scale(.99)}
+.item .no{font-family:var(--fm);font-size:8.5px;letter-spacing:.14em;color:var(--red)}
+.item b{display:block;font-family:var(--fd);font-weight:800;font-size:1.02rem;letter-spacing:-.02em;margin-top:3px}
+.item span.d{display:block;font-size:.82rem;line-height:1.5;color:var(--soft);margin-top:3px}
+.item .go{display:flex;justify-content:space-between;align-items:center;margin-top:8px;
+  font-family:var(--fm);font-size:8px;letter-spacing:.12em;text-transform:uppercase;color:var(--faint)}
+.note{margin-top:16px;padding:12px 13px;border:1px dashed var(--line-strong);border-radius:10px;font-size:.8rem;
+  line-height:1.55;color:var(--soft)}
+@media (min-width:560px){.item:hover{transform:translateY(-2px);box-shadow:0 18px 30px -26px rgba(0,0,0,.5)}}
+</style>
+</head>
+<body>
+<main class="shell">
+
+  <header class="top">
+    <div class="wordmark">AKSARA<i>.</i></div>
+    <p class="mono mono--sm faint" style="margin-top:5px">Pratinjau beranda · enam arah</p>
+  </header>
+
+  <h1>Enam cara mengisi beranda.</h1>
+  <p class="lede">Semuanya memakai <b>bahan yang sama</b> — edisi, empat tempelan, dua surat, satu pengumuman — dan data contoh yang masuk akal. Yang berbeda cuma cara menyusunnya. Buka di HP, jangan di desktop.</p>
+
+  <ol class="list">
+    <li><a class="item" href="v1-koran.html">
+      <span class="no">01</span><b>Koran Pagi</b>
+      <span class="d">Beranda dibaca seperti halaman depan: satu laporan utama, daftar pendek di bawah, kotak surat di kaki.</span>
+      <span class="go"><span>Editorial · teks jadi</span><span>Buka →</span></span>
+    </a></li>
+
+    <li><a class="item" href="v2-papan.html">
+      <span class="no">02</span><b>Papan Tempel</b>
+      <span class="d">Tempelan tampil sebagai kertas di papan: warna, selotip, sedikit miring. Ada saringan dan tombol tempel yang selalu kelihatan.</span>
+      <span class="go"><span>Visual · paling ramai</span><span>Buka →</span></span>
+    </a></li>
+
+    <li><a class="item" href="v3-ringkas.html">
+      <span class="no">03</span><b>Ringkas</b>
+      <span class="d">Tiga angka besar dulu, lalu dua daftar pendek. Paling cepat dibaca, paling sedikit hiasan.</span>
+      <span class="go"><span>Data · paling tenang</span><span>Buka →</span></span>
+    </a></li>
+
+    <li><a class="item" href="v4-meja.html">
+      <span class="no">04</span><b>Meja Kerja</b>
+      <span class="d">Kepala gelap, tiga berkas bersusun (Mading · Surat · Aksi) yang bisa dipindah, kartu pelajar di bawah.</span>
+      <span class="go"><span>Fungsional · bertab</span><span>Buka →</span></span>
+    </a></li>
+
+    <li><a class="item" href="v5-loket.html">
+      <span class="no">05</span><b>Loket</b>
+      <span class="d">Surat jadi slip bernomor antrean dengan garis potong. Dinding umum jadi daftar bertitik.</span>
+      <span class="go"><span>Konsep · paling khas</span><span>Buka →</span></span>
+    </a></li>
+
+    <li><a class="item" href="v6-agenda.html">
+      <span class="no">06</span><b>Agenda</b>
+      <span class="d">Minggu dalam lima kotak, agenda sebagai garis waktu. Cocok kalau sekolah sering mengumumkan jadwal.</span>
+      <span class="go"><span>Kalender · kontekstual</span><span>Buka →</span></span>
+    </a></li>
+  </ol>
+
+  <p class="note">Catatan: nama, surat, dan tempelan di sini fiktif — tujuannya menguji kepadatan, bukan isi. Semua tombol belum tersambung.</p>
+
+  <div class="foot mono mono--sm">
+    <span>THARRA — AKSARA</span>
+    <span>PRATINJAU 1/1</span>
+  </div>
+</main>
+</body>
+</html>
